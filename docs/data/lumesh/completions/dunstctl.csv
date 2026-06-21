@@ -5,3 +5,23 @@ dunstctl, history-pop history-rm, , , ,@f @r,121,
 dunstctl, set-paused, , ,true false toggle,@f @r,122, 
 dunstctl, rule, , , ,@f @r,123, 
 dunstctl, rules, , ,--json,@f @r,124, 
+
+dunstctl, , , ,action,@f,125,Perform the default action, or open the context menu of the notification at the given position
+dunstctl, , , ,close,@f,126,Close the last notification or optionally the notification with given ID
+dunstctl, , , ,close-all,@f,127,Close all the notifications
+dunstctl, , , ,context,@f,128,Open context menu
+dunstctl, , , ,count,@f,129,Show the number of notifications
+dunstctl, , , ,history-clear,@f,130,Delete all notifications from history
+dunstctl, , , ,history-pop,@f,131,Pop the latest notification from history or optionally the notification with given ID
+dunstctl, , , ,history-rm,@f,132,Remove the notification from history with given ID
+dunstctl, , , ,is-paused,@f,133,Check if pause level is greater than 0
+dunstctl, , , ,set-paused,@f,134,Set the pause status
+dunstctl, , , ,get-pause-level,@f,135,Get the current pause level
+dunstctl, , , ,set-pause-level,@f,136,Set the pause level
+dunstctl, , , ,rule,@f,137,Enable or disable a rule by its name
+dunstctl, , , ,reload,@f,138,Reload the settings of the running instance, optionally with specific configuration files
+dunstctl, , , ,debug,@f,139,Print debugging information
+dunstctl, , , ,help,@f,140,Show help
+dunstctl,reload, , , , ,141,
+dunstctl, , , ,history,@f,142,Display notification history (in JSON)
+dunstctl, , , ,rules,@f,143,Displays configured rules (optionally in JSON)

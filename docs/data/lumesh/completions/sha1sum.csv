@@ -11,3 +11,5 @@ sha1sum, , ,strict, , ,109,exit non-zero for improperly formatted checksum lines
 sha1sum, ,w,warn, , ,110,warn about improperly formatted checksum lines
 sha1sum, , ,help, , ,111,display this help and exit
 sha1sum, , ,version, , ,112,output version information and exit
+
+sha1sum, , , , , ,113,

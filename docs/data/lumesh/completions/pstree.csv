@@ -18,3 +18,6 @@ pstree, ,u,uid-changes, , ,116,show uid transitions
 pstree, ,U,unicode, , ,117,use UTF-8 line drawing characters
 pstree, ,V,version, , ,118,display version information
 pstree, ,Z,security-context, , ,119,show SELinux security contexts
+
+pstree, , , , ,@f,120,
+pstree, ,N,ns-sort, , ,121,sort by namespace type

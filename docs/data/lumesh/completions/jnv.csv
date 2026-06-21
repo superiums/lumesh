@@ -6,3 +6,5 @@ jnv, ,d,expand-depth, ,@r,104,Initial depth to which JSON nodes are expanded in 
 jnv, ,l,suggestion-list-length, ,@r,105,Number of suggestions visible in the list. [default: 3]
 jnv, ,h,help, ,@f,106,Print help (see a summary with '-h')
 jnv, ,V,version, ,@f,107,Print version
+
+jnv, ,e,edit-mode, , ,108,Edit mode for the interface. [default: insert]

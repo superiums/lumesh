@@ -1,3 +1,8 @@
 cmd,conds,short,long,params,dirs,pri,desc
 goimports, , ,srcdir, ,@r,101,Choose imports as if source code is from dir
 goimports, ,h,help, , ,102,Show help
+
+goimports, ,d, , , ,103,Display diffs instead of rewriting files
+goimports, ,e, , , ,104,Report all errors
+goimports, ,l, , , ,105,List files whose formatting differs from goimport's
+goimports, ,w, , , ,106,Write result to (source) file instead of stdout

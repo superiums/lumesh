@@ -99,3 +99,6 @@ ls, ,,,,,196,195,"for -l: Format size/count number groups with ,/locale"
 ls, ,G,,, ,197,Enable colorized output
 ls, ,c, , , ,198,"Sort by changed time
 ls, ,u, , , ,199,"Sort by access time
+
+ls, ,c, , , ,200,Sort by changed time, (-l) show ctime
+ls, ,u, , , ,201,Sort by access time, (-l) show atime

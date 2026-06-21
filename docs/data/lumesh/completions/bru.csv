@@ -10,3 +10,6 @@ bru,run,f,format,json junit html, ,108,Format of the file results
 bru,run, ,insecure, , ,109,Allow insecure connections
 bru,run, ,tests-only, , ,110,Only run requests that have a test
 bru,run, ,bail, , ,111,"Stop execution after a failure of a request, test or assertion"
+
+bru,run,r, , , ,112,Indicates a recursive run
+bru,run,f,format, , ,113,Format of the file results

@@ -1,2 +1,43 @@
 cmd,conds,short,long,params,dirs,pri,desc
 nmcli, ,h,help, , ,101,Print help information
+
+nmcli, , , , , ,102,Command-line tool to control NetworkManager
+nmcli,general logging , , , , ,103,
+nmcli,networking connectivity , , , , ,104,Re-check the connectivity
+nmcli,radio all , , , , ,105,
+nmcli,radio wifi , , , , ,106,
+nmcli,radio wwan , , , , ,107,
+nmcli,connection show , ,active, , ,108,List only active profiles
+nmcli,connection show , ,order, , ,109,Custom connection ordering
+nmcli,connection show , , , ,@k,110,
+nmcli,connection up, , , ,@k,111,
+nmcli,connection up ifname, , , ,@k,112,
+nmcli,connection up ap, , , , ,113,
+nmcli,connection up , , , , ,114,Specify NSP to connect to (only for WiMAX)
+nmcli,connection down , , , ,@k,115,
+nmcli,connection add , , , , ,116,
+nmcli,connection add ifname, , , , ,117,
+nmcli,connection modify , ,temporary, , ,118,
+nmcli,connection modify , , , ,@k,119,
+nmcli,connection clone , ,temporary, , ,120,
+nmcli,connection clone , , , ,@k,121,
+nmcli,connection edit , , , ,@k,122,
+nmcli,connection edit type , , , , ,123,
+nmcli,connection delete , , , ,@k,124,
+nmcli,connection monitor , , , ,@k,125,
+nmcli,connection import , ,temporary, , ,126,
+nmcli,connection import , , , , ,127,
+nmcli,connection export , , , ,@k,128,
+nmcli,device set , , , , ,129,
+nmcli,device wifi list , , , , ,130,
+nmcli,device wifi list ifname , , , , ,131,
+nmcli,device wifi list bssid , , , , ,132,
+nmcli,device wifi connect , , , ,@k,133,
+nmcli,device wifi connect ifname , , , , ,134,
+nmcli,device wifi connect bssid , , , , ,135,
+nmcli,device wifi hotspot , , , , ,136,
+nmcli,device wifi hotspot ifname , , , , ,137,
+nmcli,device wifi rescan , , , , ,138,
+nmcli,device wifi rescan ifname , , , , ,139,
+nmcli,device wifi rescan ssid , , , , ,140,
+nmcli,device lldp , , , , ,141,

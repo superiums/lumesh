@@ -13,3 +13,13 @@ sphinx-apidoc, ,P,private, , ,111,Include _private modules
 sphinx-apidoc, , ,implicit-namespaces, , ,112,Interpret module paths according to PEP-0420
 sphinx-apidoc, ,M,module-first, , ,113,Put module doc before submodule doc
 sphinx-apidoc, ,t,templatedir, , ,114,Template directory for template files
+
+sphinx-apidoc, ,o, , , ,115,Directory to place all output
+sphinx-apidoc, ,q, , , ,116,No output on stdout
+sphinx-apidoc, ,s, , , ,117,File suffix
+sphinx-apidoc, ,d, , , ,118,Maximum depth of submodules
+sphinx-apidoc, ,a, , , ,119,Append module_path to sys.path
+sphinx-apidoc, ,H, , , ,120,Project name
+sphinx-apidoc, ,A, , , ,121,Project author
+sphinx-apidoc, ,V, , , ,122,Project version
+sphinx-apidoc, ,R, , , ,123,Project release

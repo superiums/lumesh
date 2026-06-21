@@ -21,3 +21,5 @@ usermod, ,V,del-subuids, , ,119,Remove a range of subordinate uids from the user
 usermod, ,w,add-subgids, , ,120,Add a range of subordinate gids to the user's account
 usermod, ,W,del-subgids, , ,121,Remove a range of subordinate gids from the user's account
 usermod, ,Z,selinux-user, , ,122,The new SELinux user for the user's login
+
+usermod, , , , , ,123,

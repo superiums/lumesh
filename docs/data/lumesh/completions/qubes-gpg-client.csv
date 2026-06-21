@@ -66,3 +66,8 @@ qubes-gpg-client, , ,version, , ,164,"Display version and supported algorithms, 
 qubes-gpg-client, , ,with-colons, , ,165,Print key listings delimited by colons
 qubes-gpg-client, , ,with-fingerprint, , ,166,Like --fingerprint but only change the output format
 qubes-gpg-client, , ,with-keygrip, , ,167,Include the keygrip in the key listings
+
+qubes-gpg-client, , ,display-charset, , ,168,Set the native character set
+qubes-gpg-client, , ,s2k-mode, , ,169,Selects how passphrases are mangled
+qubes-gpg-client, , ,trust-model, , ,170,Specify trust model
+qubes-gpg-client, , , , , ,171,

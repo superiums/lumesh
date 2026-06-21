@@ -30,3 +30,10 @@ code, , ,disable-lcd-text, , ,132,Disable LCD font rendering
 code, , ,disable-gpu, , ,133,Disable GPU hardware acceleration
 code, , ,disable-chromium-sandbox, , ,134,Disable the Chromium sandbox environment
 code, , ,telemetry, , ,135,Shows all telemetry events which VS code collects
+
+code,list-extensions, ,show-versions, , ,136,Show versions of installed extensions
+code,list-extensions, ,category, ,@f @r,137,Filters installed extensions by provided category
+code,install-extension, ,force, , ,138,Updates to the latest version
+code,install-extension, ,pre-release, , ,139,Installs the pre-release version
+code, , ,sync, , ,140,Turn sync on or off
+code, , ,log, , ,141,Log level to use (default: info)

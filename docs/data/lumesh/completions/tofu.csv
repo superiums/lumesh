@@ -104,3 +104,26 @@ tofu, untaint, , , ,@r,241,Path to write state
 tofu, validate, , , ,@f,243,Produce output in JSON format
 tofu, validate, , , ,@f,244,"If specified, output won't contain any color"
 tofu, workspace && select delete, , , ,@f,247, 
+
+tofu, , , ,apply,@f,248,Build or change infrastructure
+tofu, , , ,destroy,@f,249,Destroy infrastructure
+tofu, , , ,console,@f,250,Interactive console for OpenTofu interpolations
+tofu, , , ,fmt,@f,251,Rewrite config files to canonical format
+tofu, , , ,get,@f,252,Download and install modules for the configuration
+tofu, , , ,graph,@f,253,Create a visual graph of OpenTofu resources
+tofu, , , ,import,@f,254,Import existing infrastructure into OpenTofu
+tofu, , , ,init,@f,255,Initialize a new or existing OpenTofu configuration
+tofu, , , ,login,@f,256,Retrieves auth token for the given hostname
+tofu, , , ,logout,@f,257,Removes auth token for the given hostname
+tofu, , , ,output,@f,258,Read an output from a state file
+tofu, , , ,plan,@f,259,Generate and show an execution plan
+tofu, , , ,providers,@f,260,Print tree of modules with their provider requirements
+tofu, , , ,refresh,@f,261,Update local state file against real resources
+tofu, , , ,show,@f,262,Inspect OpenTofu state or plan
+tofu, , , ,state,@r,263,Advanced state management
+tofu, , , ,taint,@f,264,Manually mark a resource for recreation
+tofu, , , ,test,@f,265,Runs automated test of shared modules
+tofu, , , ,untaint,@f,266,Manually unmark a resource as tainted
+tofu, , , ,validate,@f,267,Validate the OpenTofu files
+tofu, , , ,version,@f,268,Print the OpenTofu version
+tofu, , , ,workspace,@f,269,Workspace management

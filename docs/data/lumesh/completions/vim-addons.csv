@@ -7,3 +7,19 @@ vim-addons, ,t,target-dir, , ,113,set the addons target directory
 vim-addons, ,v,verbose, , ,114,increase verbosity
 vim-addons, ,y,system-dir, , ,115,set the system-wide target directory
 vim-addons, ,w,system-wide, , ,116,set target directory to the system-wide one
+
+vim-addons, , , ,list,@f,117,list the names of the addons available in the system
+vim-addons, , , ,status,@f,118,show the status of the addons available in the system
+vim-addons, , , ,install,@f @r,119,install one or more addons under ~/.vim
+vim-addons, , , ,remove,@f @r,120,remove one or more addons from ~/.vim
+vim-addons, , , ,disable,@f @r,121,disable  one  or more addons to be used by the current user
+vim-addons, , , ,amend,@f @r,122,undo the effects of a previous disable command
+vim-addons, , , ,files,@f @r,123,list, one per line, the files composing the specified addons
+vim-addons, , , ,show,@f @r,124,displays detailed information about the specified addons
+vim-addons,status, , , ,@E @f @r,125,vim-addons list
+vim-addons,install, , , ,@E @f @r,126,vim-addons status | awk '\$2 != 'installed' && \$1 != '#' { print \$1}'
+vim-addons,remove, , , ,@E @f @r,127,vim-addons status | awk '\$2 != 'removed' && \$1 != '#' { print \$1}'
+vim-addons,disable, , , ,@E @f @r,128,vim-addons status | awk '\$2 != 'disable' && \$1 != '#' { print \$1}'
+vim-addons,amend, , , ,@E @f @r,129,vim-addons list
+vim-addons,files, , , ,@E @f @r,130,vim-addons list
+vim-addons,show, , , ,@E @f @r,131,vim-addons list

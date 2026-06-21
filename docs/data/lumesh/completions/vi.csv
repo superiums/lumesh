@@ -2,3 +2,14 @@ cmd,conds,short,long,params,dirs,pri,desc
 vi, ,r, , ,@r,101,Recover file after crash
 vi, ,t, , ,@r,102,Edit the file containing a tag
 t, , , , ,@r,103,Begin editing by executing the specified  editor command
+
+vi, , , , , ,104,
+vi, ,s, , , ,105,Suppress all interactive user feedback
+vi, ,C, , , ,106,Encrypt/decrypt text
+vi, ,l, , , ,107,Set up for editing LISP programs
+vi, ,L, , , ,108,List saved file names after crash
+vi, ,R, , , ,109,Read-only mode
+vi, ,S, , , ,110,Use linear search for tags if tag file not sorted
+vi, ,v, , , ,111,Start in display editing state
+vi, ,V, , , ,112,Verbose mode
+vi, ,x, , , ,113,Encrypt/decrypt text

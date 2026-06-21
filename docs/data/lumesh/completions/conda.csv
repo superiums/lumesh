@@ -1,2 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 conda, ,h,help, , ,101,Show help and exit
+
+conda, , , , , ,102,
+conda,env, , ,create, ,103,Create a new environment
+conda,env, , ,list, ,104,List all conda environments
+conda,env create,f,file, , ,105,Create environment from yaml file

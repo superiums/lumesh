@@ -1,2 +1,291 @@
 cmd,conds,short,long,params,dirs,pri,desc
 fossil, , ,help, , ,403,Print help
+
+fossil, , , ,add,@f @r,404,Add files to checkout
+fossil,add, ,case-sensitive,yes no,@f @r,405,Case insensitive file matching
+fossil,add, ,dotfiles, , ,406,Include dotfiles
+fossil,add, ,ignore, ,@r,407,Files to ignore
+fossil,add, ,clean, ,@r,408,Files to ignore
+fossil,add, , , ,@E @f @r,409,__fish_fossil extra --rel-paths
+fossil, , , ,addremove,@f,410,Remove and add files to checkout
+fossil,addremove, ,case-sensitive,yes no,@f @r,411,Case insensitive file matching
+fossil,addremove, ,dotfiles, , ,412,Include dotfiles
+fossil,addremove, ,ignore, ,@r,413,Files to ignore
+fossil,addremove, ,clean, ,@r,414,Files to ignore
+fossil,addremove,n,dry-run, , ,415,Display actions without running
+fossil, , , ,all,@f,416,Check all repositories
+fossil,all, , ,changes,@f,417,List changes
+fossil,all, , ,ignore, ,418,Ignore repository
+fossil, , , , ,@E @f @r,419,__fish_fossil all ls
+fossil,all, , ,list ls, ,420,Display locations
+fossil,all, , ,pull, ,421,Pull repositories
+fossil,all, , ,push, ,422,Push repositories
+fossil,all, , ,rebuild, ,423,Rebuild repositories
+fossil,all, , ,sync, ,424,Sync repositories
+fossil, , , ,annotate, ,425,Shows file modifications
+fossil,annotate, ,filevers, , ,426,Show file versions
+fossil,annotate,l,log, , ,427,List all analyzed versions
+fossil,annotate,n,limit, ,@f @r,428,Limit analyzed versions
+fossil, , , ,bisect,@f,429,Find regressions
+fossil,bisect, , ,bad,@f @r,430,Identify version as not working
+fossil,bisect, , ,good,@f @r,431,Identify version as working
+fossil,bisect, , ,log, ,432,Show log of bisects in test order
+fossil,bisect, , ,chart, ,433,Show log of bisects in check-in order
+fossil,bisect, , ,next, ,434,Skip version
+fossil,bisect, , ,options, ,435,Show bisect options
+fossil, , , ,auto-next,@f @r,436,Automatically run bisect next
+fossil, , , ,direct-only,@f @r,437,Follow only primary parent-child links
+fossil, , , ,display,@f @r,438,Command to show after bisect next
+fossil, , , ,on off,@f @r,439,Automatically run bisect next
+fossil, , , ,chart,@f @r,440,Show log of bisects in check-in order
+fossil, , , ,log,@f @r,441,Show log of bisects in test order
+fossil, , , ,status,@f @r,442,List versions between bad and good
+fossil, , , ,none,@f @r,443,Don
+fossil,bisect, , ,reset, ,444,Reinitialize bisect
+fossil,bisect, , ,vlist ls status, ,445,List versions between bad and good
+fossil, ,a,all, , ,446,Show all versions
+fossil,bisect, , ,undo, ,447,Undo latest bad/good command.
+fossil, , , ,branch,@f,448,Create a new branch
+fossil,branch, , ,new,@f @r,449,Create new branch
+fossil, , ,private, , ,450,Make branch local
+fossil, , ,bgcolor, ,@f @r,451,Set background color
+fossil, , ,nosign, , ,452,Don
+fossil, , ,date-override, ,@f @r,453,Override date
+fossil, , ,user-override, ,@f @r,454,Override user
+fossil,branch, , ,list ls,@f @r,455,List branches
+fossil, ,c,closed, , ,456,Show closed branches
+fossil,branch,R,repository, ,@r,457,Run command on repository
+fossil, , , ,cat, ,458,Print a file
+fossil,cat,R,repository, ,@r,459,Run command on repository
+fossil,cat,r, , ,@E @f @r,460,__fish_fossil tag list
+fossil, , , ,changes,@f,461,List local changes
+fossil,changes, ,abs-paths, , ,462,Display absolute paths
+fossil,changes, ,rel-paths, , ,463,Display relative paths
+fossil,changes, ,sha1sum, , ,464,Verify file status using SHA1
+fossil,changes, ,header, , ,465,Identify the repository if there are changes
+fossil, , , ,co checkout,@f,466,Checkout version
+fossil,co checkout, , , ,@E @f @r,467,__fish_fossil tag list
+fossil,co checkout, ,force, , ,468,Ignore edited files
+fossil,co checkout, ,force-missing, , ,469,Ignore missing content
+fossil,co checkout, ,keep, , ,470,Only update the manifest
+fossil,co checkout, ,latest, , ,471,Update to latest version
+fossil, , , ,clean, ,472,Delete all extra files
+fossil,clean, ,case-sensitive,yes no,@f @r,473,Case insensitive file matching
+fossil,clean, ,dotfiles, , ,474,Include dotfiles
+fossil,clean, ,ignore, ,@r,475,Files to ignore
+fossil,clean, ,clean, ,@r,476,Files to clean without prompting
+fossil,clean,f,force, , ,477,Remove without prompting
+fossil,clean,n,dry-run, , ,478,Display actions without running
+fossil,clean, ,temp, , ,479,Only remove Fossil temporary files
+fossil,clean,v,verbose, , ,480,Show removed files
+fossil, , , ,clone, ,481,Clone repository
+fossil,clone,A,admin-user, ,@f @r,482,Make username an administrator
+fossil,clone, ,private, , ,483,Clone private branches
+fossil,clone, ,ssl-identity, ,@r,484,Use SSL identity
+fossil, , , ,ci commit, ,485,Create new revision
+fossil,ci commit, , , ,@E @f @r,486,__fish_fossil changes --rel-paths | cut -c12-
+fossil,ci commit, ,allow-conflict, , ,487,Allow unresolved merge conflicts
+fossil,ci commit, ,allow-empty, , ,488,Allow empty check-ins
+fossil,ci commit, ,allow-fork, , ,489,Allow forking
+fossil,ci commit, ,allow-older, , ,490,Allow commit older than ancestor
+fossil,ci commit, ,baseline, , ,491,Use a baseline manifest
+fossil,ci commit, ,bgcolor, ,@f @r,492,Apply color to check-in
+fossil,ci commit, ,branch, ,@f @r,493,Check-in to new branch
+fossil,ci commit, ,branchcolor, ,@f @r,494,Apply color to branch
+fossil,ci commit, ,close, , ,495,Close the branch
+fossil,ci commit, ,delta, , ,496,Use a delta manifest
+fossil,ci commit,m,comment, ,@f @r,497,Commit comment
+fossil,ci commit,M,message-file, ,@r,498,Read commit comment from a file
+fossil,ci commit, ,mimetype, ,@f @r,499,Mimetype of commit comment
+fossil,ci commit,n,dry-run, , ,500,Display actions without running
+fossil,ci commit, ,no-warnings, , ,501,Omit all warnings
+fossil,ci commit, ,nosign, , ,502,Don
+fossil,ci commit, ,private, , ,503,Don
+fossil,ci commit, ,tag, ,@f @r,504,Assign a tag to the checkin
+fossil, , , ,diff gdiff, ,505,Show differences
+fossil,diff gdiff, ,binary, ,@r,506,Binary files glob pattern
+fossil,diff gdiff, ,branch, ,@E @f @r,507,__fish_fossil tag list
+fossil,diff gdiff, ,brief, , ,508,Show file names only
+fossil,diff gdiff,c,context, ,@f @r,509,Context lines
+fossil,diff gdiff, ,diff-binary,yes no,@f @r,510,Include binary files
+fossil,diff gdiff,r,from, ,@E @f @r,511,__fish_fossil tag list
+fossil,diff gdiff,i,internal, , ,512,Use internal diff logic
+fossil,diff gdiff,y,side-by-side, , ,513,Side-by-side diff
+fossil,diff gdiff, ,tk, , ,514,Launch GUI
+fossil,diff gdiff, ,to, ,@E @f @r,515,__fish_fossil tag list
+fossil,diff gdiff, ,unified, , ,516,Unified diff
+fossil,diff gdiff,v,verbose, , ,517,Output complete text
+fossil,diff gdiff,W,width, ,@f @r,518,Line width in side-by-side diff
+fossil, , , ,export, ,519,Export repository to git
+fossil,export, ,export-marks, ,@r,520,Export rids of exported data to file
+fossil,export, ,import-marks, ,@r,521,Read rids of data to ignore from file
+fossil,export,R,repository, ,@r,522,Run command on repository
+fossil, , , ,extras, ,523,Show files that aren
+fossil,extras, ,abs-paths, , ,524,Display absolute paths
+fossil,extras, ,case-sensitive,yes no,@f @r,525,Case insensitive file matching
+fossil,extras, ,dotfiles, , ,526,Include dotfiles
+fossil,extras, ,ignore, ,@r,527,Files to ignore
+fossil,extras, ,rel-paths, , ,528,Display relative paths
+fossil, , , ,finfo, ,529,Print complete file history
+fossil,finfo,b,brief, , ,530,Display one-line summary
+fossil,finfo, ,case-sensitive,yes no,@f @r,531,Case insensitive file matching
+fossil,finfo,n,limit, ,@f @r,532,Limit analyzed versions
+fossil,finfo, ,offset, ,@f @r,533,Skip changes
+fossil,finfo,p,print, , ,534,Select print mode
+fossil,finfo,r,revision, ,@E @f @r,535,__fish_fossil tag list
+fossil,finfo,s,status, , ,536,Select status mode
+fossil, , , ,help,@f,537,Display help
+fossil,help,a,all, , ,538,Show main and auxiliary commands
+fossil,help,t,test, , ,539,Show test commands only
+fossil,help,x,aux, , ,540,Show auxiliary commands only
+fossil,help,w,www, , ,541,Show list of web UI pages
+fossil, , , ,import, ,542,Import repository from git
+fossil,import, ,incremental, , ,543,Allow importing into existing repository
+fossil,import,R,repository, ,@r,544,Run command on repository
+fossil,import,v,verbose, , ,545,Show extra information
+fossil, , , ,init new, ,546,Create a repository
+fossil,init new, ,template, ,@r,547,Copy settings from repository
+fossil,init new,A,admin-user, ,@r,548,Make username an administrator
+fossil,init new, ,date-override, ,@f @r,549,Override date
+fossil, , , ,json, ,550,Make JSON request
+fossil,json,R,repository, ,@r,551,Run command on repository
+fossil, , , ,ls, ,552,List files
+fossil,ls,r, , ,@E @f @r,553,__fish_fossil tag list
+fossil,ls, ,age, , ,554,Show commit time
+fossil,ls,v,verbose, , ,555,Provide extra information
+fossil, , , ,merge, ,556,Merge commits
+fossil,merge, , , ,@E,557,__fish_fossil tag list
+fossil,merge, ,baseline, ,@E @f @r,558,__fish_fossil tag list
+fossil,merge, ,binary, ,@r,559,Binary files glob pattern
+fossil,merge, ,case-sensitive,yes no,@f @r,560,Case insensitive file matching
+fossil,merge,f,force, , ,561,Allow empty merge
+fossil,merge, ,integrate, , ,562,Close merged branch
+fossil,merge,n,dry-run, , ,563,Display actions without running
+fossil,merge,v,verbose, , ,564,Show extra information
+fossil, , , ,mv, ,565,Move file
+fossil,mv, ,case-sensitive,yes no,@f @r,566,Case insensitive file matching
+fossil, , , ,open, ,567,Open repository
+fossil,open, ,keep, , ,568,Only modify manifest
+fossil,open, ,nested, , ,569,Allow opening inside an opened repository
+fossil, , , ,pull, ,570,Pull from a repository
+fossil,pull,R,repository, ,@r,571,Run command on repository
+fossil,pull, ,private, ,@r,572,Pull private branches
+fossil, , , ,push, ,573,Push into a repository
+fossil,push,R,repository, ,@r,574,Run command on repository
+fossil,push, ,private, , ,575,Pull private branches
+fossil, , , ,rebuild, ,576,Rebuild a repository
+fossil,rebuild, ,cluster, , ,577,Compute clusters
+fossil,rebuild, ,compress, , ,578,Compress database
+fossil,rebuild, ,force, , ,579,Force rebuild even with errors
+fossil,rebuild, ,noverify, , ,580,Skip BLOB table verification
+fossil,rebuild, ,pagesize,512 1024 2048 4096 8192 16384 32768 65536,@f @r,581,Set the database pagesize
+fossil,rebuild, ,randomize, , ,582,Scan in random order
+fossil,rebuild, ,vacuum, , ,583,Run VACUUM
+fossil,rebuild, ,deanalyze, , ,584,Remove ANALYZE tables
+fossil,rebuild, ,analyze, , ,585,Run ANALYZE
+fossil,rebuild, ,wal, , ,586,Set Write-Ahead-Log journalling
+fossil,rebuild, ,stats, , ,587,Show statistics
+fossil, , , ,remote-url, ,588,Default server URL
+fossil, , , ,revert,@f,589,Revert a commit
+fossil,revert, , , ,@E,590,__fish_fossil tag list
+fossil,revert,r, , ,@E @f @r,591,__fish_fossil tag list
+fossil, , , ,rm delete, ,592,Remove a file from repository
+fossil,rm delete, ,hard, , ,593,Remove files from this checkout
+fossil,rm delete, ,soft, , ,594,Skip removing files from this checkout
+fossil,rm delete,n,dry-run, , ,595,Display actions without running
+fossil,rm delete, ,case-sensitive,yes no,@f @r,596,Case insensitive file matching
+fossil, , , ,settings,@f,597,Manage settings
+fossil,settings, , ,access-log,@f @r,598,Log accesses
+fossil,settings, , ,allow-symlinks,@f @r,599,Allow symbolic links
+fossil,settings, , ,auto-captcha,@f @r,600,Allow automatically filling CAPTCHA
+fossil,settings, , ,auto-hyperlink,@f @r,601,Use JavaScript to enable hyperlinks
+fossil,settings, , ,auto-shun,@f @r,602,Pull list of shunned references from server
+fossil,settings, , ,autosync,@f @r,603,Automatically sync the repository
+fossil,settings, , ,binary-glob,@f @r,604,Binary files glob pattern
+fossil,settings, , ,case-sensitive,@f @r,605,Case insensitive file matching
+fossil,settings, , ,clean-glob,@f @r,606,Files to clean without prompting
+fossil,settings, , ,clearsign,@f @r,607,Sign commits using GPG
+fossil,settings, , ,crnl-glob,@f @r,608,Non-standard line endings allowed glob pattern
+fossil,settings, , ,default-perms,@f @r,609,Permissions given to new users
+fossil,settings, , ,diff-binary,@f @r,610,Allow binary files to be diffed
+fossil,settings, , ,diff-command,@f @r,611,External diff command
+fossil,settings, , ,dont-push,@f @r,612,Disallow pushing to the repository
+fossil,settings, , ,editor,@f @r,613,Text editor for writing check-in comments
+fossil,settings, , ,empty-dirs,@f @r,614,List of empty directories
+fossil,settings, , ,encoding-glob,@f @r,615,Non-UTF-8 files glob pattern
+fossil,settings, , ,gdiff-command,@f @r,616,Command to use for graphical diff
+fossil,settings, , ,gmerge-command,@f @r,617,Command to use for graphical merge
+fossil,settings, , ,http-port,@f @r,618,HTTP port for fossil ui
+fossil,settings, , ,https-login,@f @r,619,Send login credentials using HTTPS
+fossil,settings, , ,ignore-glob,@f @r,620,Files to ignore glob pattern
+fossil,settings, , ,keep-glob,@f @r,621,Files to keep when cleaning
+fossil,settings, , ,localauth,@f @r,622,Require authentication for localhost logins
+fossil,settings, , ,main-branch,@f @r,623,Primary branch
+fossil,settings, , ,manifest,@f @r,624,Automatically create manifest files
+fossil,settings, , ,max-upload,@f @r,625,HTTP request size limit
+fossil,settings, , ,mtime-changes,@f @r,626,Use modification times
+fossil,settings, , ,pgp-command,@f @r,627,PGP command
+fossil,settings, , ,proxy,@f @r,628,HTTP proxy URL
+fossil,settings, , ,relative-paths,@f @r,629,Report relative paths
+fossil,settings, , ,repo-cksum,@f @r,630,Compute checksums over all files
+fossil,settings, , ,self-register,@f @r,631,Allow users to register themselves
+fossil,settings, , ,ssh-command,@f @r,632,Command to use for SSH protocol
+fossil,settings, , ,ssl-ca-location,@f @r,633,Location of SSL CA root certificates
+fossil,settings, , ,ssl-identity,@f @r,634,SSL private certificate path
+fossil,settings, , ,tcl,@f @r,635,Allow Tcl scripting
+fossil,settings, , ,tcl-setup,@f @r,636,Tcl initialization script
+fossil,settings, , ,th1-setup,@f @r,637,TH1 initialization script
+fossil,settings, , ,web-browser,@f @r,638,Web browser name
+fossil,settings, ,global, , ,639,Set globally
+fossil, , , ,sqlite3,@f,640,Run SQL commands
+fossil, , , ,stash,@f,641,Manage stashes
+fossil,stash, , ,save snapshot,@f @r,642,Save current changes
+fossil, ,m,comment, ,@f @r,643,Stash comment
+fossil,stash, , ,list ls,@f @r,644,List all stashes
+fossil, ,v,verbose, , ,645,Show information about files
+fossil,stash, , ,show,@f @r,646,Show stash contents
+fossil,stash, , ,pop,@f @r,647,Pop last stash
+fossil,stash, , ,apply,@f @r,648,Apply stash
+fossil,stash, , ,goto,@f @r,649,Updates to stash state
+fossil,stash, , ,drop rm,@f @r,650,Forget about stash
+fossil,status, ,abs-paths, , ,651,Display absolute paths
+fossil,status, ,rel-paths, , ,652,Display relative paths
+fossil,status, ,sha1sum, , ,653,Verify file status using SHA1
+fossil, , , ,sync, ,654,Sync with a repository
+fossil,sync,R,repository, ,@r,655,Run command on repository
+fossil,sync, ,private, ,@r,656,Sync private branches
+fossil, , , ,tag, ,657,Manage tags
+fossil,tag, , ,add,@f @r,658,Add tag to check-in
+fossil, , ,raw, , ,659,Add raw tag
+fossil, , ,propagate, , ,660,Propagate tag
+fossil,tag, , ,remove,@f @r,661,Remove tag from check-in
+fossil,tag, , ,find,@f @r,662,Find tag
+fossil, ,t,type,ci e,@f @r,663,Find tag type
+fossil, ,n,limit, ,@f @r,664,Limit number of tags
+fossil,tag, , ,list,@f @r,665,List tags
+fossil, , , ,timeline, ,666,Show timeline
+fossil,timeline,n,limit, ,@f @r,667,Limit timeline entries
+fossil,timeline,t,type,ci e t w,@f @r,668,Output only event type
+fossil,timeline,v,verbose, , ,669,Output list of files changed
+fossil, , , ,ui, ,670,Open web UI
+fossil, , , ,server, ,671,Start web server
+fossil,ui server, ,localauth, , ,672,Enable automatic login for localhost
+fossil,server, ,localhost, , ,673,Only listen on localhost
+fossil,ui server,P,port, , ,674,Port to listen on
+fossil,ui server, ,th-trace, , ,675,Trace TH1 execution
+fossil,ui server, ,baseurl, , ,676,Use base URL
+fossil,ui server, ,notfound, , ,677,Redirect
+fossil,ui server, ,files, , ,678,Static files glob
+fossil,ui server, ,scgi, , ,679,Use SCGI rather than HTTP
+fossil, , , ,undo, ,680,Undo the changes
+fossil,undo,n,dry-run, , ,681,Display actions without running
+fossil, , , ,update, ,682,Update version
+fossil,update, ,case-sensitive,yes no,@f @r,683,Case insensitive file matching
+fossil,update, ,debug, , ,684,Print debug information
+fossil,update, ,latest, , ,685,Update to latest version
+fossil,update,n,dry-run, , ,686,Display actions without running
+fossil,update,v,verbose, , ,687,Print information about all files
+fossil, , , ,version, ,688,Print fossil version
+fossil,version,v,verbose, , ,689,Print version of optional features
+fossil,changes,v,verbose, , ,690,Say (none) if there are no changes
+fossil,finfo,l,log, , ,691,Select log mode (default)

@@ -10,3 +10,6 @@ optimus-manager, , ,print-startup, , ,108,Print the GPU mode that will be used o
 optimus-manager, , ,unset-temp-config, , ,109,Undo --temp-config (unset temp config path)
 optimus-manager, , ,no-confirm, , ,110,Do not ask for confirmation and skip all warnings when switching GPUs
 optimus-manager, , ,cleanup, , ,111,Remove auto-generated configuration files left over by the daemon
+
+optimus-manager, , , , ,@f,112,
+optimus-manager, , ,switch, , ,113,Set the GPU mode to MODE. You need to log out then log in to apply the change

@@ -1,3 +1,9 @@
 cmd,conds,short,long,params,dirs,pri,desc
 fusermount, , , , ,@f @r,101,Mount point
 fusermount, ,o, , ,@f @r,102,Mount options
+
+fusermount, ,h, , , ,103,Display help and exit
+fusermount, ,v, , , ,104,Display version and exit
+fusermount, ,u, , , ,105,Unmount
+fusermount, ,q, , , ,106,Quiet
+fusermount, ,z, , , ,107,Lazy unmount

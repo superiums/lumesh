@@ -17,3 +17,5 @@ git-sizer, , ,exclude, ,@f @r,115,Don't process refs with specified PREFIX
 git-sizer, , ,include-regexp, ,@f @r,116,Process refs matching specified regex
 git-sizer, , ,exclude-regexp, ,@f @r,117,Don't process refs matching specified regex
 git-sizer, , ,show-refs, ,@f,118,Show refs which are being included/excluded
+
+git-sizer, , ,names,none hash full,@f @r,119,How to display names of large objects

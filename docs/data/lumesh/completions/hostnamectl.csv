@@ -10,3 +10,8 @@ hostnamectl, ,M,machine, ,@f @r,110,Execute operation on local container
 hostnamectl, ,h,help, , ,111,Print short help
 hostnamectl, , ,version, , ,112,Print version
 hostnamectl, , ,json,short pretty off, ,113,Show output as JSON
+
+hostnamectl, , , , ,@f,114,
+hostnamectl,set-chassis chassis, , , , ,115,
+hostnamectl,set-deployment deployment, , , , ,116,
+hostnamectl, , ,json, , ,117,Show output as JSON

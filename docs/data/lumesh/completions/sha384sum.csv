@@ -11,3 +11,5 @@ sha384sum, , ,strict, , ,109,exit non-zero for improperly formatted checksum lin
 sha384sum, ,w,warn, , ,110,warn about improperly formatted checksum lines
 sha384sum, , ,help, , ,111,display this help and exit
 sha384sum, , ,version, , ,112,output version information and exit
+
+sha384sum, , , , , ,113,

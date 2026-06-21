@@ -13,3 +13,5 @@ eopkg, ,p,password, , ,117,
 eopkg, ,u,username, , ,118, 
 eopkg, ,v,verbose, , ,119,Detailed output
 eopkg, ,y,yes-all, , ,120,Assume yes for all yes/no queries
+
+eopkg, , , , ,@f,121,

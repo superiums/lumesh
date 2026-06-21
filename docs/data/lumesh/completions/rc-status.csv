@@ -13,3 +13,5 @@ rc-status, ,v,version, , ,111,Display software version
 rc-status, ,q,quiet, , ,112,Run quietly
 rc-status, ,C,nocolor, , ,113,Disable color output
 rc-status, ,V,version, , ,114,Display software version
+
+rc-status,= 1, , , , ,115,

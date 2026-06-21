@@ -9,3 +9,9 @@ homectl, ,M,machine, , ,107,Operate on local container
 homectl, , ,identity, , ,108,Read JSON identity from file
 homectl, , ,json,pretty short off, ,109,Output inspection data in JSON
 homectl, , ,export-format,full stripped minimal, ,110,Strip JSON inspection data
+
+homectl, , , , ,@f,111,
+homectl, , ,json, , ,112,Output inspection data in JSON
+homectl, , ,export-format, , ,113,Strip JSON inspection data
+homectl, ,j, , , ,114,Equivalent to --json (on TTY) or short (otherwise)
+homectl, ,E, , , ,115,Equals -j --export-format (twice to minimal)

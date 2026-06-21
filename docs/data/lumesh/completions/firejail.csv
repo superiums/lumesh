@@ -29,3 +29,5 @@ firejail, , ,bind, , ,127,Bind-mount file on top of another
 firejail, , ,private, , ,128,Mount temporary home directories and delete on exit
 firejail, , ,netfilter, , ,129,Enable firewall given by this file
 firejail, , ,net, , ,130,Enable network namespace connected to this interface
+
+firejail, , , , ,@f,131,

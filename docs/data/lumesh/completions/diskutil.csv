@@ -41,3 +41,64 @@ diskutil, coreStorage, , ,changeVolumePassphrase,@f,205,Change a CoreStorage log
 diskutil, coreStorage, , ,resizeVolume,@f,206,Resize a CoreStorage volume
 diskutil, coreStorage, , ,resizeDisk,@f,207,Resize a CoreStorage physical volume disk
 diskutil, coreStorage, , ,resizeStack,@f,208,Resize a CoreStorage logical/physical volume set
+
+diskutil, , , ,list,@f,209,List disks
+diskutil,list, , , ,@f,210,Return a property list
+diskutil, , , ,info,@f,211,Get detailed information about a specific whole disk or partition
+diskutil,info, , , ,@f,212,Return a property list
+diskutil, , , ,activity,@f,213,Continuously display system-wide disk manipulation activity
+diskutil, , , ,listFilesystems,@f,214,Show the file system personalities available
+diskutil,listFilesystems, , , ,@f,215,Return a property list
+diskutil, , , ,umount,@f,216,Unmount a single volume
+diskutil,umount, , , ,@E @f,217,__fish_diskutil_mounted_volumes
+diskutil,umountDisk, , , ,@E @f,218,__fish_diskutil_mounted_volumes
+diskutil, , , ,eject,@f,219,Eject a volume or disk
+diskutil,eject, , , ,@E @f,220,__fish_diskutil_mounted_volumes ; __fish_diskutil_devices
+diskutil, , , ,mount,@f,221,Mount a single volume
+diskutil,mount, , , ,@r,222,Specify mount point
+diskutil,mountDisk, , , ,@E @f,223,__fish_diskutil_devices
+diskutil, , , ,rename,@f,224,Rename a volume
+diskutil,rename, , , ,@E @f,225,__fish_diskutil_devices
+diskutil, , , ,enableJournal,@f,226,Enable journaling on an HFS+ volume
+diskutil,enableJournal, , , ,@E @f,227,__fish_diskutil_devices
+diskutil, , , ,disableJournal,@f,228,Disable journaling on an HFS+ volume
+diskutil,disableJournal, , , ,@E @f,229,__fish_diskutil_devices
+diskutil, , , ,moveJournal,@f,230,Create a 512MB Apple_Journal partition
+diskutil,moveJournal, , , ,@E @f,231,__fish_diskutil_devices
+diskutil, , , ,enableOwnership,@f,232,Enable ownership of a volume
+diskutil,enableOwnership, , , ,@E @f,233,__fish_diskutil_devices
+diskutil, , , ,disableOwnership,@f,234,Disable ownership of a volume
+diskutil,disableOwnership, , , ,@E @f,235,__fish_diskutil_devices
+diskutil, , , ,verifyVolume,@f,236,Verify the file system data structures of a volume
+diskutil,verifyVolume, , , ,@E @f,237,__fish_diskutil_devices
+diskutil, , , ,repairVolume,@f,238,Repair the file system data structures of a volume
+diskutil,repairVolume, , , ,@E @f,239,__fish_diskutil_devices
+diskutil, , , ,verifyDisk,@f,240,Verify the partition map layout of a whole disk
+diskutil,verifyDisk, , , ,@E @f,241,__fish_diskutil_devices
+diskutil, , , ,repairDisk,@f,242,Repair the partition map layout of a whole disk
+diskutil,repairDisk, , , ,@E @f,243,__fish_diskutil_devices
+diskutil, , , ,eraseDisk,@f,244,Erase an existing disk
+diskutil,eraseDisk, , , ,@E @f,245,__fish_diskutil_devices
+diskutil, , , ,reformat,@f,246,Erase an existing volume by writing out a new empty file system
+diskutil,reformat, , , ,@E @f,247,__fish_diskutil_devices
+diskutil,eraseOptical, , , ,@E @f,248,__fish_diskutil_devices
+diskutil, , , ,zeroDisk,@f,249,Erase a device, writing zeros to the media
+diskutil,zeroDisk, , , ,@E @f,250,__fish_diskutil_devices
+diskutil, , , ,randomDisk,@f,251,Erase a whole disk, writing random data to the media
+diskutil,randomDisk, , , ,@E @f,252,__fish_diskutil_devices
+diskutil, , , ,secureErase,@f,253,Erase, using a secure method
+diskutil,secureErase, , , ,@E @f,254,__fish_diskutil_devices
+diskutil,partitionDisk, , , ,@E @f,255,__fish_diskutil_devices
+diskutil,resizeVolume, , , ,@E @f,256,__fish_diskutil_devices
+diskutil, , , ,splitPartition,@f,257,Destructively split a volume into multiple partitions
+diskutil,splitPartition, , , ,@E @f,258,__fish_diskutil_devices
+diskutil, , , ,mergePartitions,@f,259,Merge two or more partitions on a disk
+diskutil,mergePartitions, , , ,@E @f,260,__fish_diskutil_devices
+diskutil, , , ,apfs,@f,261,Merge two or more partitions on a disk
+diskutil, , , ,appleRAID,@f,262,Create, manipulate and destroy AppleRAID volumes
+diskutil, , , ,coreStorage,@f,263,Create, manipulate and destroy CoreStorage volumes
+diskutil, , , ,umountDisk,@f,264,Unmount an entire disk (all volumes)
+diskutil, , , ,mountDisk,@f,265,Mount an entire disk (all mountable volumes)
+diskutil, , , ,eraseOptical,@f,266,Erase optical media (CD/RW, DVD/RW, etc.)
+diskutil, , , ,partitionDisk,@f,267,(re)Partition a disk, removing all volumes
+diskutil, , , ,resizeVolume,@f,268,Non-destructively resize a volume (partition)

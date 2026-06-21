@@ -17,3 +17,6 @@ complete, , ,escape, , ,115,Make -C escape special characters
 complete, ,n,condition, , ,116,Completion only used if command has zero exit status
 complete, ,w,wraps, , ,117,Inherit completions from specified command
 complete, ,k,keep-order, , ,118,Keep order of arguments instead of sorting alphabetically
+
+complete, , , , , ,119,
+complete, , ,color, , ,120,When to colorize output

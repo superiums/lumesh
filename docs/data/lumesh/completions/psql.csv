@@ -32,3 +32,5 @@ psql, ,p,port, ,@f @r,130,Database server port
 psql, ,U,username, ,@f @r,131,Database user name
 psql, ,w,no-password, , ,132,Never prompt for password
 psql, ,W,password, , ,133,Force password prompt (should happen automatically)
+
+psql, , , , ,@E @f,134,__fish_complete_pg_database

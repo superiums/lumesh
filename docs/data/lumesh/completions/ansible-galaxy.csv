@@ -2,3 +2,9 @@ cmd,conds,short,long,params,dirs,pri,desc
 ansible-galaxy, ,h,help, , ,102,Show help message
 ansible-galaxy, collection, , ,download, ,105, 
 ansible-galaxy, role, , ,init, ,106, 
+
+ansible-galaxy, , ,version, , ,107,Show version and config
+ansible-galaxy, , , , , ,108,
+ansible-galaxy,collection, , ,download init build publish install list verify, ,109,
+ansible-galaxy,role, , ,init remove delete list search import setup info install, ,110,
+ansible-galaxy, ,v,verbose, , ,111,Verbose mode (-vvv for more, -vvvv for connection debugging)

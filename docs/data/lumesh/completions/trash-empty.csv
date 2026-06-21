@@ -8,3 +8,5 @@ trash-empty, , ,all-users, ,@f,106,empty trashcan of all users
 trash-empty, ,i,interactive, ,@f,107,prompt before emptying
 trash-empty, ,f, , ,@f,108,don't ask before emptying
 trash-empty, , ,dry-run, ,@f,109,show which files would have been removed
+
+trash-empty, , ,print-completion, ,@f,110,print shell completion script

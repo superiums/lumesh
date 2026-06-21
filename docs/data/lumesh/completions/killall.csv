@@ -8,3 +8,13 @@ killall, ,w,wait, , ,106,Wait for all killed processes to die
 killall, ,v,version, , ,107,Print version
 killall, ,u, , ,@f @r,108,kill given user's processes
 killall, ,c, , ,@f @r,109,Limit to processes matching pattern
+
+killall, , , , , ,110,
+killall, ,v, , , ,111,Print what is done
+killall, ,e, , , ,112,Use effective UID instead of the real UID for -u
+killall, ,l, , , ,113,List names of available signals
+killall, ,m, , , ,114,Case sensitive process matching
+killall, ,s, , , ,115,Simulate, send no signals
+killall, ,d, , , ,116,Simulate & summarize, send no signals
+killall, ,t, , , ,117,Limit to processes on specified TTY
+killall, ,z, , , ,118,Don't skip zombies

@@ -11,3 +11,30 @@ yarn, list, ,depth, ,@f,122,
 yarn, version, ,new-version, ,@f,132, 
 yarn, version, ,message, ,@f,133, 
 yarn, version, ,no-git-tag-version, ,@f,134, 
+
+yarn,remove, , , ,@f,135,
+yarn,add, , , ,@f,136,
+yarn, , , ,help,@f,137,Show available commands and flags
+yarn, , , ,add,@f,138,Add packages
+yarn, , , ,bin,@f,139,Show location of Yarn `bin` folder
+yarn, , , ,cache,@f,140,Manage Yarn cache
+yarn, , , ,config,@f,141,Manage Yarn configuration
+yarn, , , ,exec,@f,142,Run binaries
+yarn, , , ,info,@f,143,Show information about a package
+yarn, , , ,init,@f,144,Interactively create or update `package.json`
+yarn, , , ,install,@f,145,Install packages
+yarn, , , ,link,@f,146,Symlink a package
+yarn, , , ,list,@f,147,List installed packages
+yarn, , , ,node,@f,148,Run Node with the hook already setup
+yarn, , , ,pack,@f,149,Create compressed archive of packages
+yarn, , , ,remove,@f,150,Remove packages
+yarn, , , ,run,@f,151,Run a defined package script
+yarn, , , , , ,152,
+yarn, , , ,unlink,@f,153,Unlink a previously created symlink
+yarn, , , ,unplug,@f,154,Force unpack packages
+yarn, , , ,up,@f,155,Upgrade packages
+yarn, , , ,upgrade-interactive,@f,156,Upgrade packages interactively
+yarn, , , ,version,@f,157,Update the package version
+yarn, , , ,why,@f,158,Show why a package is installed
+yarn, , , ,workspace,@f,159,Manage workspace packages
+yarn, , , ,workspaces,@f,160,Show workspaces information

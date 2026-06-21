@@ -3,3 +3,20 @@ python2, ,c, , ,@f @r,101,Execute argument as command
 python2, ,h,help, , ,102,Display help and exit
 python2, ,W, ,ignore default all module once error,@f @r,103,Warning control
 python2, ,Q, ,old new warn warnall,@f @r,106,Division control
+
+python2, ,B, , , ,107,Don
+python2, ,d, , , ,108,Debug on
+python2, ,E, , , ,109,Ignore environment variables
+python2, ,i, , , ,110,Interactive mode after executing commands
+python2, ,O, , , ,111,Enable optimizations
+python2, , , , , ,112,Remove doc-strings in addition to the -O optimizations
+python2, ,s, , , ,113,Don
+python2, ,S, , , ,114,Disable import of site module
+python2, ,u, , , ,115,Unbuffered input and output
+python2, ,v, , , ,116,Verbose mode
+python2, ,V, , , ,117,Display version and exit
+python2, ,x, , , ,118,Skip first line of source, allowing use of non-Unix forms of #!cmd
+python2, , , ,-,@f,119,Read program from stdin
+python2, ,3, , , ,120,Warn about Python 3.x incompatibilities that 2to3 cannot trivially fix
+python2, ,t, , , ,121,Warn on mixed tabs and spaces
+python2, ,m, , , ,122,Run library module as a script (terminates option list)

@@ -8,3 +8,7 @@ makedepend, ,o, , ,@r,106,Object file suffix
 makedepend, ,p, , ,@r,107,Object file prefix
 makedepend, ,s, , ,@r,108,Starting string delimiter
 makedepend, ,w, , ,@r,109,Line width
+
+makedepend, ,a, , , ,110,Append dependencies to makefile
+makedepend, ,v, , , ,111,Verbose mode
+makedepend, ,m, , , ,112,Warn about multiple inclusion

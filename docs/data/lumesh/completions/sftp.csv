@@ -8,3 +8,9 @@ sftp, ,P, , ,@f @r,106,Port to connect to on the remote host
 sftp, ,R, , ,@f @r,107,How many requests may be outstanding
 sftp, ,S, , ,@r,108,Program to use for the encrypted connection
 sftp, ,s, , ,@f @r,109,The SSH2 subsystem or the path for an sftp server
+
+sftp, ,a, , , ,110,Attempt to continue interrupted transfers
+sftp, ,f, , , ,111,Flush files to disk after transfer
+sftp, ,N, , , ,112,Disables quiet mode
+sftp, ,p, , , ,113,Preserve timestamps from the original files transferred
+sftp, ,r, , , ,114,Recursively copy entire directories

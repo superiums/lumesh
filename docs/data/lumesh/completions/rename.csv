@@ -47,3 +47,11 @@ rename, , ,nows, , ,153,Replace all whitespace with underscores
 rename, , ,rews, , ,154,Replace all underscores with whitespace
 rename, , ,noctrl, , ,155,Replace all control chars with underscores
 rename, , ,nometa, , ,156,Replace all shell meta-chars with underscores
+
+rename,-n no-act,v,verbose, , ,157,Show which files would be renamed
+rename, ,o,no-overwrite, , ,158,Don't overwrite existing files
+rename,-s symlink,o,no-overwrite, , ,159,Don't overwrite symlink targets
+rename, , ,fullpath, , ,160,Rename any directory component
+rename, ,d,nofullpath, , ,161,Rename only filename component
+rename, ,l,symlink, , ,162,Symlink instead of renaming
+rename, ,L,hardlink, , ,163,Hardlink instead of renaming

@@ -20,3 +20,37 @@ src, log,v, , ,@f @r,129,Be more verbose
 src, log,l, , ,@f @r,130,Limit per-file log entries
 src, log,u,patch, , ,131,Print unified-format diff
 src, ,S, , ,@r,140,Set repository directory
+
+src, , , ,help,@f,141,Displays help for commands
+src, , , ,commit, ,142,Enters a commit for the specified files
+src,commit,e, , , ,143,Further edit commit message
+src, , , ,amend,@r,144,Amends the stored comment for a specified revision
+src,amend,e, , , ,145,Further edit commit message
+src, , , ,checkout,@r,146,Refresh working copy from history
+src, , , ,cat,@r,147,Send the specified revision of the files to standard output
+src, , , ,status,@r,148,Show status of files
+src,status,a, , , ,149,Show all files
+src, , , ,tag,@r,150,List/create/delete tags
+src,tag,l, , , ,151,List tags
+src, , , ,branch,@r,152,List/create/delete branches
+src,branch,l, , , ,153,List branches
+src, , , ,rename,@r,154,Rename tag/branch
+src, , , ,list,@r,155,List information about commits
+src, , , ,log,@r,156,List information about commits
+src,log,c, , , ,157,Print context diff
+src,-s p patch, , , , ,158,Ignore whitespace changes
+src,-s u, , , , ,159,Ignore whitespace changes
+src, , , ,diff,@r,160,Print diff
+src,diff,u, , , ,161,Print unified-format diff
+src,diff,c, , , ,162,Print context diff
+src,diff, , , , ,163,Ignore whitespace changes
+src, , , ,ls,@r,164,List all registered files
+src, , , ,visualize,@r,165,Emit DOT visualization
+src, , , ,move,@r,166,Rename a workfile and its history
+src, , , ,copy,@r,167,Copy a file and its master
+src, , , ,fast-export,@r,168,Export as a Git fast-import stream
+src, , , ,fast-import,@r,169,Parse a git-fast-import stream from stdin
+src,fast-import,p, , , ,170,Discards metadata
+src, , , ,release,@r,171,Release locks on files
+src, ,d, , , ,172,Enable debugging output
+src, ,T, , , ,173,Set up for fast-export tests

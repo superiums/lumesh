@@ -9,3 +9,6 @@ amixer, ,q,quiet, , ,107,be quiet
 amixer, ,i,inactive, , ,108,show also inactive controls
 amixer, ,a,abstract,none basic, ,109,select abstraction level
 amixer, ,s,stdin, , ,110,Read and execute commands from stdin sequentially
+
+amixer,sset sget get set, , , , ,111,
+amixer, ,a,abstract, , ,112,select abstraction level

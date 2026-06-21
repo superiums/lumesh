@@ -781,3 +781,40 @@ cargo,verify-project,Z, , , ,930,"Unstable (nightly-only) flags to Cargo
 cargo,version,Z, , , ,931,"Unstable (nightly-only) flags to Cargo
 cargo,yank,Z, , , ,932,"Unstable (nightly-only) flags to Cargo
 cargo,help,Z, , , ,933,"Unstable (nightly-only) flags to Cargo
+
+cargo, ,Z, , , ,934,Unstable (nightly-only) flags to Cargo
+cargo,bench,Z, , , ,935,Unstable (nightly-only) flags to Cargo
+cargo,b build,Z, , , ,936,Unstable (nightly-only) flags to Cargo
+cargo,c check,Z, , , ,937,Unstable (nightly-only) flags to Cargo
+cargo,clean,Z, , , ,938,Unstable (nightly-only) flags to Cargo
+cargo,complete,Z, , , ,939,Unstable (nightly-only) flags to Cargo
+cargo,d doc,Z, , , ,940,Unstable (nightly-only) flags to Cargo
+cargo,fetch,Z, , , ,941,Unstable (nightly-only) flags to Cargo
+cargo,fix,Z, , , ,942,Unstable (nightly-only) flags to Cargo
+cargo,generate-lockfile,Z, , , ,943,Unstable (nightly-only) flags to Cargo
+cargo,git-checkout,Z, , , ,944,Unstable (nightly-only) flags to Cargo
+cargo,init,Z, , , ,945,Unstable (nightly-only) flags to Cargo
+cargo,install,Z, , , ,946,Unstable (nightly-only) flags to Cargo
+cargo,locate-project,Z, , , ,947,Unstable (nightly-only) flags to Cargo
+cargo,login,Z, , , ,948,Unstable (nightly-only) flags to Cargo
+cargo,logout,Z, , , ,949,Unstable (nightly-only) flags to Cargo
+cargo,metadata,Z, , , ,950,Unstable (nightly-only) flags to Cargo
+cargo,new,Z, , , ,951,Unstable (nightly-only) flags to Cargo
+cargo,owner,Z, , , ,952,Unstable (nightly-only) flags to Cargo
+cargo,package,Z, , , ,953,Unstable (nightly-only) flags to Cargo
+cargo,pkgid,Z, , , ,954,Unstable (nightly-only) flags to Cargo
+cargo,publish,Z, , , ,955,Unstable (nightly-only) flags to Cargo
+cargo,read-manifest,Z, , , ,956,Unstable (nightly-only) flags to Cargo
+cargo,r run,Z, , , ,957,Unstable (nightly-only) flags to Cargo
+cargo,rustc,Z, , , ,958,Unstable (nightly-only) flags to Cargo
+cargo,rustdoc,Z, , , ,959,Unstable (nightly-only) flags to Cargo
+cargo,search,Z, , , ,960,Unstable (nightly-only) flags to Cargo
+cargo,t test,Z, , , ,961,Unstable (nightly-only) flags to Cargo
+cargo,tree,Z, , , ,962,Unstable (nightly-only) flags to Cargo
+cargo,uninstall,Z, , , ,963,Unstable (nightly-only) flags to Cargo
+cargo,update,Z, , , ,964,Unstable (nightly-only) flags to Cargo
+cargo,vendor,Z, , , ,965,Unstable (nightly-only) flags to Cargo
+cargo,verify-project,Z, , , ,966,Unstable (nightly-only) flags to Cargo
+cargo,version,Z, , , ,967,Unstable (nightly-only) flags to Cargo
+cargo,yank,Z, , , ,968,Unstable (nightly-only) flags to Cargo
+cargo,help,Z, , , ,969,Unstable (nightly-only) flags to Cargo

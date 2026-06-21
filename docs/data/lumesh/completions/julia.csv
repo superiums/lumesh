@@ -40,3 +40,16 @@ julia, , ,output-bc, , ,138,Generate LLVM bitcode
 julia, , ,output-asm, , ,139,Generate an assembly
 julia, , ,output-incremental,no,@f @r,140,Generate an incremental output file
 julia, , ,trace-compile,stdout stderr,@f @r,141,Print precompile statements
+
+julia, , ,handle-signals,yes,@f @r,142,Julia's default signal handlers
+julia, , ,compiled-modules,yes,@f @r,143,Incremental precompilation of modules
+julia, ,i, , , ,144,Interactive mode
+julia, , ,banner,yes,@f @r,145,Startup banner
+julia, , ,color,yes,@f @r,146,Color text
+julia, , ,depwarn,yes,@f @r,147,Syntax and method deprecation warnings
+julia, , ,warn-overwrite,yes,@f @r,148,Method overwrite warnings
+julia, , ,warn-scope,yes,@f @r,149,Warning for ambiguous top-level scope
+julia, , ,inline,yes,@f @r,150,Control inlining
+julia, , ,check-bounds,yes,@f @r,151,Emit bounds checks
+julia, , ,math-mode,ieee,@f @r,152,Unsafe floating point optimizations
+julia, , ,compile,yes,@f @r,153,JIT compiler

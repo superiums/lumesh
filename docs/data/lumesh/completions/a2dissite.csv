@@ -1,3 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
 a2dissite, ,q,quiet, , ,101,Don't show informative messages
 a2dissite, ,p,purge, , ,102,Purge all traces of module
+
+a2dissite, , , , , ,103,

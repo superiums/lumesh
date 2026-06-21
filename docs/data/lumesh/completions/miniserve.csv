@@ -48,3 +48,15 @@ miniserve, ,I,disable-indexing, , ,146,Disable indexing
 miniserve, , ,enable-webdav, , ,147,Enable read-only WebDAV support (PROPFIND requests)
 miniserve, ,h,help, , ,148,Print help (see more with '--help')
 miniserve, ,V,version, , ,149,Print version
+
+miniserve, ,O,default-sorting-order,asc desc,@f @r,150,Default sorting order for file list
+miniserve, ,c,color-scheme,squirrel archlinux zenburn monokai,@f @r,151,Default color scheme
+miniserve, ,d,color-scheme-dark,squirrel archlinux zenburn monokai,@f @r,152,Default color scheme
+miniserve, ,m,media-type,image audio video,@f @r,153,Specify uploadable media types
+miniserve, ,o,on-duplicate-files,error overwrite rename,@f @r,154,What to do if existing files with same name is present during file upload
+miniserve, , ,print-completions,bash elvish fish powershell zsh,@f @r,155,Generate completion file for a shell
+miniserve, , ,size-display,human exact,@f @r,156,Show served file size in exact bytes
+miniserve, , ,log-color,auto always never,@f @r,157,Set the color style of the log output
+miniserve, , ,quiet, , ,158,Reduce output and silence warnings
+miniserve, , ,pastebin, , ,159,Enable creating pastebin
+miniserve, ,S,default-sorting-method,name size date,@f @r,160,Default sorting method for file list

@@ -1,2 +1,4 @@
 cmd,conds,short,long,params,dirs,pri,desc
 apt-setup, , , ,probe, ,101,Probe a CD
+
+apt-setup, ,N, , , ,102,Run in non-interactive mode

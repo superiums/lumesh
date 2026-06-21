@@ -4,3 +4,11 @@ ffplay, ,v, ,quiet panic fatal error warning info verbose debug trace,@f @r,102,
 ffplay, , , , ,@f @r,103,Seek by bytes
 ffplay, , , , ,@f @r,104,Select show mode
 ffplay, , , , ,@f @r,105,Force decoder
+
+ffplay, ,L, , , ,106,Show license
+ffplay, ,x, , , ,107,Force displayed width
+ffplay, ,y, , , ,108,Force displayed height
+ffplay, ,s, , , ,109,Set frame size
+ffplay, ,t, , , ,110,Play
+ffplay, ,f, , , ,111,Force format
+ffplay, ,i, , , ,112,Read specified file

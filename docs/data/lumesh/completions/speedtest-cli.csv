@@ -19,3 +19,5 @@ speedtest-cli, , ,timeout, , ,117,HTTP timeout in seconds
 speedtest-cli, , ,secure, , ,118,Use HTTPS instead of HTTP with speedtest.net operated servers
 speedtest-cli, , ,no-pre-allocate, , ,119,Do not pre allocate upload data
 speedtest-cli, , ,version, , ,120,Show the version number and exit
+
+speedtest-cli, , ,csv-delimiter,',' ';' ' ',121,108,Single character delimiter to use in CSV output

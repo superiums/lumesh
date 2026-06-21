@@ -49,3 +49,120 @@ obnam, , ,ssh-command, , ,147,Executable to be used instead of 'ssh'
 obnam, -l, , ,no yes ask ssh-config, ,148,ssh host key check
 obnam, , ,ssh-key, , ,149,Use FILENAME as the ssh RSA key
 obnam, , ,ssh-known-hosts,\\~/.ssh/known_hosts, ,150,FILENAME of the known_hosts file
+
+obnam, , , ,add-key,@f,151,Add a key to the repository
+obnam, , , ,backup,@f,152,Backup data to repository
+obnam, , , ,client-keys,@f,153,List clients and their keys in the repository
+obnam, , , ,clients,@f,154,List clients using the repository
+obnam, , , ,diff,@f,155,Show difference between two generations
+obnam, , , ,force-lock,@f,156,Force a locked repository to be open
+obnam, , , ,fsck,@f,157,Verify internal consistency of backup repository
+obnam, , , ,generations,@f,158,List backup generations for client
+obnam, , , ,genids,@f,159,List generation ids for client
+obnam, , , ,help,@f,160,Print help
+obnam, , , ,help-all,@f,161,Print help, including hidden subcommands
+obnam, , , ,kdirstat,@f,162,List contents of a generation in kdirstat cache format
+obnam, , , ,list-errors,@f,163,List error codes and explanations
+obnam, , , ,list-formats,@f,164,List available repository formats
+obnam, , , ,list-keys,@f,165,List keys and repository toplevels they are used in
+obnam, , , ,list-toplevels,@f,166,List repository toplevel directories and their keys
+obnam, , , ,ls,@f,167,List contents of a generation
+obnam, , , ,mount,@f,168,Mount a backup repository as a FUSE filesystem
+obnam, , , ,nagios-last-backup-age,@f,169,Check if the most recent generation is recent enough
+obnam, , , ,remove-client,@f,170,Remove client and its key from repository
+obnam, , , ,remove-key,@f,171,Remove a key from the repository
+obnam, , , ,restore,@f,172,Restore some or all files from a generation
+obnam, , , ,verify,@f,173,Verify that live data and backed up data match
+obnam, , ,always-restore-setuid, ,@f,174,Restore setuid/setgid bits in restored files
+obnam, , ,no-always-restore-setuid, ,@f,175,Do not restore setuid/setgid bits in restored files
+obnam, , ,checksum-algorithm,sha512 sha224 sha256 sha384,@f,176,Use CHECKSUM algorithm
+obnam, , ,compress-with,none deflate,@f,177,Compress repository with
+obnam, , ,critical-age, ,@f,178,For --nagios-last-backup-age: maximum age
+obnam, , ,dump-repo-file-metadata, ,@f,179,Dump metadata about files
+obnam, , ,no-dump-repo-file-metadata, ,@f,180,Do not dump metadata about files
+obnam, , ,generate-manpage, ,@f,181,Generate man page
+obnam, , ,generation, ,@f,182,Which generation to restore
+obnam, ,h,help, ,@f,183,Show this help message and exit
+obnam, , ,keep, ,@f,184,Policy for what generations to keep when forgetting.
+obnam, , ,lock-timeout, ,@f,185,Wait TIMEOUT seconds for an existing lock
+obnam, , ,no-act, ,@f,186,Do not actually change anything
+obnam, , ,no-no-act, ,@f,187,Actually commit changes
+obnam, , ,quiet, ,@f,188,Show only errors, no progress updates
+obnam, , ,no-quiet, ,@f,189,Show errors and progress updates
+obnam, , ,repository-format,6 green-albatross-20160813,@f,190,Use FORMAT for new repositories
+obnam, , ,verbose, ,@f,191,Be more verbose
+obnam, , ,no-verbose, ,@f,192,Do not be verbose
+obnam, , ,verify-randomly, ,@f,193,Verify N files randomly from the backup
+obnam, , ,version, ,@f,194,Show version number and exit
+obnam, , ,checkpoint, ,@f,195,Make a checkpoint after a given SIZE
+obnam, , ,deduplicate,fatalist never verify,@f,196,Deduplicate mode
+obnam, , ,exclude-caches, ,@f,197,Exclude directories tagged as cache
+obnam, , ,no-exclude-caches, ,@f,198,Include directories tagged as cache
+obnam, , ,include, ,@f,199,REGEXP for pathnames to include, even if matches --exclude
+obnam, , ,leave-checkpoints, ,@f,200,Leave checkpoint generations at the end of backup
+obnam, , ,no-leave-checkpoints, ,@f,201,Omit checkpoint generations at the end of backup
+obnam, , ,one-file-system, ,@f,202,Do not follow mount points
+obnam, , ,no-one-file-system, ,@f,203,Follow mount points
+obnam, , ,small-files-in-btree, ,@f,204,Put small files directly into the B-tree
+obnam, , ,no-small-files-in-btree, ,@f,205,No not put small files into the B-tree
+obnam, , ,dump-config, ,@f,206,Write out the current configuration
+obnam, , ,dump-setting-names, ,@f,207,Write out setting names
+obnam, , ,help-all, ,@f,208,Show all options
+obnam, , ,list-config-files, ,@f,209,List config files
+obnam, , ,no-default-configs, ,@f,210,Clear list of configuration files to read
+obnam, , ,crash-limit, ,@f,211,Artificially crash the program after COUNTER files
+obnam, , ,pretend-time, ,@f,212,Pretend it is TIMESTAMP
+obnam, , ,testing-fail-matching, ,@f,213,Simulate failures for files that match REGEXP
+obnam, , ,encrypt-with, ,@f,214,PGP key with which to encrypt
+obnam, , ,key-details, ,@f,215,Show additional user IDs
+obnam, , ,no-key-details, ,@f,216,Do not show additional user IDs
+obnam, , ,keyid, ,@f,217,PGP key id
+obnam, , ,symmetric-key-bits, ,@f,218,Size of symmetric key
+obnam, , ,weak-random, ,@f,219,Use /dev/urandom instead of /dev/random
+obnam, , ,no-weak-random, ,@f,220,Use default /dev/random
+obnam, , ,fsck-fix, ,@f,221,fsck should try to fix problems
+obnam, , ,no-fsck-fix, ,@f,222,fsck should not try to fix problems
+obnam, , ,fsck-ignore-chunks, ,@f,223,Ignore chunks when checking integrity
+obnam, , ,no-fsck-ignore-chunks, ,@f,224,Check chunks when checking integrity
+obnam, , ,fsck-ignore-client, ,@f,225,Do not check data for client NAME
+obnam, , ,fsck-last-generation-only, ,@f,226,Check only the last generation
+obnam, , ,no-fsck-last-generation-only, ,@f,227,Check all generations
+obnam, , ,fsck-rm-unused, ,@f,228,fsck should remove unused chunks
+obnam, , ,no-fsck-rm-unused, ,@f,229,fsck should remove unused chunks
+obnam, , ,fsck-skip-checksums, ,@f,230,Do not check checksums of files
+obnam, , ,no-fsck-skip-checksums, ,@f,231,Check checksums of files
+obnam, , ,fsck-skip-dirs, ,@f,232,Do not check directories
+obnam, , ,no-fsck-skip-dirs, ,@f,233,Check directories
+obnam, , ,fsck-skip-files, ,@f,234,Do not check files
+obnam, , ,no-fsck-skip-files, ,@f,235,Check files
+obnam, , ,fsck-skip-generations, ,@f,236,Do not check any generations
+obnam, , ,no-fsck-skip-generations, ,@f,237,Check all generations
+obnam, , ,fsck-skip-per-client-b-trees, ,@f,238,Do not check per-client B-trees
+obnam, , ,no-fsck-skip-per-client-b-trees, ,@f,239,Check per-client B-trees
+obnam, , ,fsck-skip-shared-b-trees, ,@f,240,Do not check shared B-trees
+obnam, , ,no-fsck-skip-shared-b-trees, ,@f,241,Check shared B-trees
+obnam, , ,log-level,debug info warning error critical fatal,@f,242,Log at LEVEL
+obnam, , ,log-max, ,@f,243,Rotate logs larger than SIZE
+obnam, , ,log-mode, ,@f,244,Set permissions of logfiles to MODE
+obnam, , ,fuse-opt, ,@f,245,Options to pass to FUSE
+obnam, , ,dump-memory-profile,none simple meliae heapy,@f,246,Make memory profiling dumps using METHOD
+obnam, , ,memory-dump-interval, ,@f,247,Make memory profiling dumps at SECONDS
+obnam, , ,chunk-size, ,@f,248,Size of chunks of file data
+obnam, , ,chunkids-per-group, ,@f,249,Encode NUM chunk ids per group
+obnam, , ,idpath-bits, ,@f,250,Chunk id level size
+obnam, , ,idpath-depth, ,@f,251,Depth of chunk id mapping
+obnam, , ,idpath-skip, ,@f,252,Chunk id mapping lowest bits skip
+obnam, , ,lru-size, ,@f,253,Size of LRU cache for B-tree nodes
+obnam, , ,node-size, ,@f,254,Size of B-tree nodes on disk
+obnam, , ,upload-queue-size, ,@f,255,Length of upload queue for B-tree nodes
+obnam, , ,chunk-bag-size, ,@f,256,Approx max SIZE of bag combining chunk objects
+obnam, , ,chunk-cache-size, ,@f,257,In-memory cache SIZE for chunk objects
+obnam, , ,dir-bag-size, ,@f,258,Approx max SIZE of bags combining dir objects
+obnam, , ,dir-cache-size, ,@f,259,In-memory cache SIZE for dir objects
+obnam, , ,pure-paramiko, ,@f,260,Use only paramiko, no openssh
+obnam, , ,no-pure-paramiko, ,@f,261,Use openssh if available
+obnam, , ,ssh-host-keys-check,no yes ask ssh-config,@f,262,ssh host key check
+obnam, , , ,dump-repo,@f,263,Dump (some) data structures from a repository
+obnam, , , ,forget,@f,264,Forget (remove) specified backup generations
+obnam, , ,client-name, ,@f,265,Name of client
+obnam, , ,log-keep, ,@f,266,Keep last N logs (10)

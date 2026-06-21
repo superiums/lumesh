@@ -33,3 +33,18 @@ tmuxp, shell, ,use-pythonrc, , ,139,Load ~/.pythonrc.py
 tmuxp, shell, ,no-startup, , ,140,Do not load ~/.pythonrc.py
 tmuxp, shell, ,use-vi-mode, , ,141,Use vi input mode
 tmuxp, shell, ,no-vi-mode, , ,142,Do not use vi input mode
+
+tmuxp, , , , ,@f,143,
+tmuxp, , , ,load, ,144,Load tmuxp workspace
+tmuxp, , , ,shell, ,145,Launch python shell
+tmuxp, , , ,import, ,146,Import workspace
+tmuxp, , , ,convert, ,147,Convert workspace
+tmuxp, , , ,debug-info, ,148,Print diagnostics
+tmuxp, , , ,ls, ,149,List workspaces
+tmuxp, , , ,edit, ,150,Edit workspace
+tmuxp, , , ,freeze, ,151,Freeze session to worskpace
+tmuxp,load, , , ,@E,152,__fish_tmuxp_ls
+tmuxp,load,d, , , ,153,Detached session
+tmuxp,load,2, , , ,154,Assume 256 color support
+tmuxp,load,8, , , ,155,Assume 88 color support
+tmuxp,edit, , , ,@E,156,__fish_tmuxp_ls

@@ -6,3 +6,5 @@ lpinfo, , ,language, ,@f @r,104,Specifies the language to match when listing dri
 lpinfo, , ,make-and-model, ,@f @r,105,Specifies the make and model to match when listing drivers with the -m option
 lpinfo, , ,product, ,@f @r,106,Specifies the product to match when listing drivers with the -m option
 lpinfo, , ,timeout, ,@f @r,107,Specifies the timeout when listing devices with the -v option (sec)
+
+lpinfo, ,l, , , ,108,Shows a 'long' listing of devices or drivers

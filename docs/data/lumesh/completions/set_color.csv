@@ -9,3 +9,5 @@ set_color, ,r,reverse, , ,107,Reverse color text
 set_color, ,u,underline,single double curly dotted dashed, ,108,Underline style
 set_color, ,h,help, , ,109,Display help and exit
 set_color, ,c,print-colors, , ,110,Print a list of all accepted color names
+
+set_color, ,s,strikethrough, , ,111,Strikethrough

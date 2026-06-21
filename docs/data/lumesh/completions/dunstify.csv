@@ -14,3 +14,15 @@ dunstify, ,p,printid, , ,112,"Print id, which can be used to update/replace this
 dunstify, ,r,replace, ,@f @r,113,Set id of this notification.
 dunstify, ,C,close, ,@f @r,114,Close the notification with the specified ID
 dunstify, ,b,block, , ,115,Block until notification is closed and print close reason
+
+dunstify, ,a,app-name, ,@r,116,Name of your application
+dunstify, ,h,hint, ,@f @r,117,User specified hints
+dunstify, ,t,expire-time, ,@f @r,118,The time in milliseconds until the notification expires
+dunstify, ,I,raw-icon, ,@r,119,Path to the icon to be sent as raw image data
+dunstify, , ,serverinfo, , ,120,Print server information and exit
+dunstify, ,p,print-id, , ,121,Print id, which can be used to update/replace this notification
+dunstify, ,r,replace-id, ,@E @f @r,122,__fish_dunstify_history
+dunstify, ,w,wait, , ,123,Block until notification is closed and print close reason
+dunstify, ,e,transient, , ,124,Mark the notification as transient
+dunstify, , ,stack-tag, , ,125,Set dunst stack tag hint
+dunstify, ,v,version, , ,126,Print version information

@@ -8,3 +8,6 @@ clasp, ,W,why, , ,106,Display some debugging info upon exit
 clasp, pull, ,versionNumber, , ,133,A project version to pull
 clasp, status, ,json, , ,136,Show in JSON format
 clasp, list, ,noShorten, , ,145,Do not shorten long names
+
+clasp, , , , , ,146,Log in to script.google.com
+clasp,help, , , , ,147,

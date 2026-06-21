@@ -6,3 +6,5 @@ gpasswd, ,r,remove-password, , ,104,Remove the GROUP's password
 gpasswd, ,R,restrict, , ,105,Restrict access to GROUP to its members
 gpasswd, ,M,members, , ,106,Set the list of members of GROUP
 gpasswd, ,A,administrators, , ,107,set the list of administrators for GROUP
+
+gpasswd, , , , , ,108,

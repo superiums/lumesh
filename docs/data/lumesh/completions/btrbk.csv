@@ -30,3 +30,18 @@ btrbk, list, , ,source,@f,142,List configured source/snapshot relations
 btrbk, list, , ,volume,@f,143,List configured volume sections
 btrbk, list, , ,target,@f,144,List configured targets
 btrbk, run dryrun snapshot resume prune clean, , , ,@f @r,145, 
+
+btrbk, , , ,run,@f,146,Run snapshot and backup operations
+btrbk, , , ,dryrun,@f,147,Show what would be executed without running btrfs commands
+btrbk, , , ,snapshot,@f,148,Run snapshot operations only
+btrbk, , , ,resume,@f,149,Run backup operations and delete snapshots
+btrbk, , , ,prune,@f,150,Only delete snapshots and backups
+btrbk, , , ,stats,@f,151,Print snapshot/backup statistics
+btrbk, , , ,usage,@f,152,Print filesystem usage
+btrbk, , , ,ls,@f,153,List all btrfs subvolumes below a given path
+btrbk, , , ,origin,@f,154,Print origin information for a subvolume
+btrbk, , , ,diff,@f,155,List file changes between related subvolumes
+btrbk, , , ,extents,@f,156,Calculate accurate disk space usage for a path
+btrbk, , , ,list,@f,157,List snapshots and backups
+btrbk, , , ,archive,@f,158,Recursively copy all subvolumes (src -> dst)
+btrbk, , , ,clean,@f,159,Delete incomplete (garbled) backups

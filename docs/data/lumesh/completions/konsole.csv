@@ -23,3 +23,8 @@ konsole, , ,notransparency, , ,121,Disable transparent backgrounds
 konsole, , ,list-profiles, , ,122,List the available profiles
 konsole, , ,list-profile-properties, , ,123,List all the profile properties
 konsole, , ,force-reuse, , ,124,Force re-using existing instance
+
+konsole, , , , ,@f,125,
+konsole, , ,help, , ,126,Show help and exit
+konsole, , ,version, , ,127,Show version and exit
+konsole, ,p, , , ,128,<P=V> Change profile property

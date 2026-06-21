@@ -11,3 +11,8 @@ systemd-cryptenroll, , ,tpm2-pcrs, ,@f @r,109,Bind the enrollment of TPM2 device
 systemd-cryptenroll, , ,wipe-slot, , ,110,Wipes one or more LUKS2 key slots
 systemd-cryptenroll, ,h,help, , ,111,Print a short help
 systemd-cryptenroll, , ,version, , ,112,Print a short version string
+
+systemd-cryptenroll, , , , , ,113,
+systemd-cryptenroll, , ,fido2-with-client-pin, , ,114,Require to enter a PIN when unlocking the volume
+systemd-cryptenroll, , ,fido2-with-user-presence, , ,115,Require to verify presence when unlocking the volume
+systemd-cryptenroll, , ,fido2-with-user-verification, , ,116,Require user verification when unlocking the volume

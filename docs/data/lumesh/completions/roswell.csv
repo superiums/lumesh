@@ -40,3 +40,42 @@ ros, template, , ,import, ,153,Import template
 ros, template, , ,help, ,154,Print usage and subcommands description
 ros, config, , ,show, ,155,show TARGET.
 ros, config, , ,set, ,156,set TARGET VALUE.
+
+roswell, , , , ,@f,157,Run repl
+roswell,help, , , , ,158,
+roswell,run,l, , , ,159,load lisp FILE while building
+roswell,run, ,load, , ,160,load lisp FILE while building
+roswell,run,S, , , ,161,override source registry of asdf systems
+roswell,run, ,source-registry, , ,162,override source registry of asdf systems
+roswell,run,s, , , ,163,load asdf SYSTEM while building
+roswell,run, ,system, , ,164,load asdf SYSTEM while building
+roswell,run,p, , , ,165,change current package to PACKAGE
+roswell,run, ,package, , ,166,change current package to PACKAGE
+roswell,run, , , , ,167,combination of -s SP and -p SP
+roswell,run, ,system-package, , ,168,combination of -s SP and -p SP
+roswell,run,e, , , ,169,evaluate FORM while building
+roswell,run, ,eval, , ,170,evaluate FORM while building
+roswell,run, ,require, , ,171,require MODULE while building
+roswell,run,q, , , ,172,quit lisp here
+roswell,run, ,quit, , ,173,quit lisp here
+roswell,run,i, , , ,174,evaluate FORM after restart
+roswell,run, ,init, , ,175,evaluate FORM after restart
+roswell,run, ,print, , ,176,evaluate and princ FORM after restart
+roswell,run, ,write, , ,177,evaluate and write FORM after restart
+roswell,run,F, , , ,178,evaluate FORM before dumping IMAGE
+roswell,run, ,final, , ,179,evaluate FORM before dumping IMAGE
+roswell,run, , ,+R, ,180,skip /etc/rosrc, ~/.roswell/init.lisp
+roswell,run, ,no-rc, , ,181,skip /etc/rosrc, ~/.roswell/init.lisp
+roswell,run,A, , , ,182,use new asdf
+roswell,run, ,asdf, , ,183,use new asdf
+roswell,run, , ,+Q, ,184,do not use quicklisp
+roswell,run, ,noquicklisp, , ,185,do not use quicklisp
+roswell,run,v, , , ,186,be quite noisy while building
+roswell,run, ,verbose, , ,187,be quite noisy while building
+roswell,run, ,test, , ,188,for test purpose
+roswell,list, , , , ,189,
+roswell,template, , , , ,190,Create new template
+roswell,config, , , , ,191,show TARGET.
+ros,run,r, , , ,192,restart from build by calling (FUNC)
+ros,run,E, , , ,193,restart from build by calling (FUNC argv)
+ros,template, , , , ,194,Remove (delete) files from template.

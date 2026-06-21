@@ -24,3 +24,6 @@ grub-mkrescue, , ,xorriso, ,@r,122,Use given file as xorriso
 grub-mkrescue, ,?,help, , ,123,Show help
 grub-mkrescue, , ,usage, , ,124,Show short usage message
 grub-mkrescue, ,V,version, , ,125,Show program version
+
+grub-mkrescue, , ,compress,no\tNo\ compression xz\tXZ gz\tGZ lzo\tLZO,@f @r,126,Compress GRUB files
+grub-mkrescue, , ,core-compress,xz\tXZ\ compression none\tNo\ compression auto\tAuto,@f @r,127,Choose compression to use for core image

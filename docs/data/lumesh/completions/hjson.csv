@@ -1,2 +1,12 @@
 cmd,conds,short,long,params,dirs,pri,desc
 hjson, , , , ,@k,110, 
+
+hjson, ,j,json, , ,111,output formatted json
+hjson, ,c,compact, , ,112,output condensed json
+hjson, , , ,-sl, ,113,output the opening brace on the same line
+hjson, , , ,-quote, ,114,quote all strings
+hjson, , , ,-quote=all, ,115,quote all strings and keys
+hjson, , , ,-js, ,116,output in JSON-compatible format
+hjson, , , ,-rt, ,117,round trip comments
+hjson, , , ,-nocol, ,118,disable color output
+hjson, , , ,-cond=, ,119,set condense option [default 60]

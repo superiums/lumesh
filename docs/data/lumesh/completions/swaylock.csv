@@ -52,3 +52,57 @@ Sets the color of the text when verifying., , ,text-ver-color, , ,150,
 Sets the color of the text when invalid., , ,text-wrong-color, , ,151, 
 Same as --scaling=tile., ,t,tiling, , ,152, 
 Show the version number and quit., ,v,version, , ,153, 
+
+swaylock, , ,bs-hl-color, , ,154,Sets the color of backspace highlight segments.
+swaylock, , ,caps-lock-bs-hl-color, , ,155,Sets the color of backspace highlight segments when Caps Lock is active.
+swaylock, , ,caps-lock-key-hl-color, , ,156,Sets the color of the key press highlight segments when Caps Lock is active.
+swaylock, ,c,color, , ,157,Turn the screen into the given color instead of white.
+swaylock, ,C,config, , ,158,Path to the config file.
+swaylock, ,f,daemonize, , ,159,Detach from the controlling terminal after locking.
+swaylock, ,d,debug, , ,160,Enable debugging output.
+swaylock, ,L,disable-caps-lock-text, , ,161,Disable the Caps Lock text.
+swaylock, , ,font, , ,162,Sets the font of the text.
+swaylock, , ,font-size, , ,163,Sets a fixed font size for the indicator text.
+swaylock, ,h,help, , ,164,Show help message and quit.
+swaylock, ,K,hide-keyboard-layout, , ,165,Hide the current xkb layout while typing.
+swaylock, ,e,ignore-empty-password, , ,166,When an empty password is provided, do not validate it.
+swaylock, ,i,image, , ,167,Display the given image, optionally only on the given output.
+swaylock, ,l,indicator-caps-lock, , ,168,Show the current Caps Lock state also on the indicator.
+swaylock, , ,indicator-idle-visible, , ,169,Sets the indicator to show even if idle.
+swaylock, , ,indicator-radius, , ,170,Sets the indicator radius.
+swaylock, , ,indicator-thickness, , ,171,Sets the indicator thickness.
+swaylock, , ,indicator-x-position, , ,172,Sets the horizontal position of the indicator.
+swaylock, , ,indicator-y-position, , ,173,Sets the vertical position of the indicator.
+swaylock, , ,inside-caps-lock-color, , ,174,Sets the color of the inside of the indicator when Caps Lock is active.
+swaylock, , ,inside-clear-color, , ,175,Sets the color of the inside of the indicator when cleared.
+swaylock, , ,inside-color, , ,176,Sets the color of the inside of the indicator.
+swaylock, , ,inside-ver-color, , ,177,Sets the color of the inside of the indicator when verifying.
+swaylock, , ,inside-wrong-color, , ,178,Sets the color of the inside of the indicator when invalid.
+swaylock, , ,key-hl-color, , ,179,Sets the color of the key press highlight segments.
+swaylock, , ,layout-bg-color, , ,180,Sets the background color of the box containing the layout text.
+swaylock, , ,layout-border-color, , ,181,Sets the color of the border of the box containing the layout text.
+swaylock, , ,layout-text-color, , ,182,Sets the color of the layout text.
+swaylock, , ,line-caps-lock-color, , ,183,Sets the color of the line between the inside and ring when Caps Lock is active.
+swaylock, , ,line-clear-color, , ,184,Sets the color of the line between the inside and ring when cleared.
+swaylock, , ,line-color, , ,185,Sets the color of the line between the inside and ring.
+swaylock, ,n,line-uses-inside, , ,186,Use the inside color for the line between the inside and ring.
+swaylock, ,r,line-uses-ring, , ,187,Use the ring color for the line between the inside and ring.
+swaylock, , ,line-ver-color, , ,188,Sets the color of the line between the inside and ring when verifying.
+swaylock, , ,line-wrong-color, , ,189,Sets the color of the line between the inside and ring when invalid.
+swaylock, ,u,no-unlock-indicator, , ,190,Disable the unlock indicator.
+swaylock, , ,ring-caps-lock-color, , ,191,Sets the color of the ring of the indicator when Caps Lock is active.
+swaylock, , ,ring-clear-color, , ,192,Sets the color of the ring of the indicator when cleared.
+swaylock, , ,ring-color, , ,193,Sets the color of the ring of the indicator.
+swaylock, , ,ring-ver-color, , ,194,Sets the color of the ring of the indicator when verifying.
+swaylock, , ,ring-wrong-color, , ,195,Sets the color of the ring of the indicator when invalid.
+swaylock, ,s,scaling, , ,196,Image scaling mode: stretch, fill, fit, center, tile, solid_color.
+swaylock, , ,separator-color, , ,197,Sets the color of the lines that separate highlight segments.
+swaylock, ,F,show-failed-attempts, , ,198,Show current count of failed authentication attempts.
+swaylock, ,k,show-keyboard-layout, , ,199,Display the current xkb layout while typing.
+swaylock, , ,text-caps-lock-color, , ,200,Sets the color of the text when Caps Lock is active.
+swaylock, , ,text-clear-color, , ,201,Sets the color of the text when cleared.
+swaylock, , ,text-color, , ,202,Sets the color of the text.
+swaylock, , ,text-ver-color, , ,203,Sets the color of the text when verifying.
+swaylock, , ,text-wrong-color, , ,204,Sets the color of the text when invalid.
+swaylock, ,t,tiling, , ,205,Same as --scaling=tile.
+swaylock, ,v,version, , ,206,Show the version number and quit.

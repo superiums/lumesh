@@ -2,3 +2,27 @@ cmd,conds,short,long,params,dirs,pri,desc
 figlet, ,f, , ,@f @r,101,Select font
 figlet, ,C, , ,@k,102,Add given control file
 figlet, ,I, ,0 1 2 3 4 5,@f @r,103,Print information given infocode
+
+figlet, ,d, , , ,104,Change font directory
+figlet, ,c, , , ,105,Center output horizontally
+figlet, ,l, , , ,106,Make output flush-left
+figlet, ,r, , , ,107,Make output flush-right
+figlet, ,x, , , ,108,Set justification according to text direction
+figlet, ,t, , , ,109,Set output to terminal width
+figlet, ,w, , , ,110,Set output width
+figlet, ,p, , , ,111,Put FIGlet into `paragraph mode`
+figlet, ,n, , , ,112,Put FIGlet back to normal
+figlet, ,E, , , ,113,Turns off German character set processing
+figlet, ,N, , , ,114,Clear control file list
+figlet, ,s, , , ,115,Cause `smushing`
+figlet, ,S, , , ,116,Cause `smushing`
+figlet, ,k, , , ,117,Cause `kerning`
+figlet, ,W, , , ,118,Makes FIGlet all FIGcharacters at full width
+figlet, ,o, , , ,119,Cause `overlapped`
+figlet, ,m, , , ,120,Specify layout mode between 1 and 63
+figlet, ,v, , , ,121,Print version and copyright
+figlet, ,L, , , ,122,Print left-to-right
+figlet, ,R, , , ,123,Print right-to-left
+figlet, ,X, , , ,124,Print with default text direction
+figlet, ,D, , , ,125,Switch to German (ISO 646-DE) character set
+figlet, ,I, ,0,@f @r,126,Print information given infocode

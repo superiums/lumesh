@@ -7,3 +7,6 @@ status, job-control, , ,interactive,@f,105,Set only interactive jobs under job c
 status, job-control, , ,none,@f,106,Set no jobs under job control
 status, get-file, , , ,@F @f,107, 
 status, list-files, , , ,@F @f,108, 
+
+status,test-terminal-feature, , ,scroll-content-up\t'Command for scrolling up terminal contents',@f,109,
+status, , , , ,@E @f,110,status language list-available

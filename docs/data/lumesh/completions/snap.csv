@@ -4,3 +4,5 @@ snap, ,v,version, ,@f @r,106,Print the version and exit
 
 snap, ,,,,@F,107,
 snap,interfaces,,,,@E @f,108,__fish_snap_installed_snaps
+
+snap,known, , , ,@f,109,

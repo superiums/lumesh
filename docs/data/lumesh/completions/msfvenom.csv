@@ -25,3 +25,6 @@ msfvenom, ,k,keep, , ,123,Inject the payload as a new thread (for template)
 msfvenom, ,v,var-name, ,@f @r,124,Custom variable name for certain output formats
 msfvenom, ,t,timeout, ,@f @r,125,Number of seconds to wait when reading the payload
 msfvenom, ,h,help, , ,126,Show help message
+
+msfvenom, , , , ,@f,127,
+msfvenom, ,l,list, , ,128,List all modules for type

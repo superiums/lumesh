@@ -2,3 +2,13 @@ cmd,conds,short,long,params,dirs,pri,desc
 gdb, ,d, , ,@D @f @r,101,Add directory with source files
 gdb, , , , ,@D @f @r,102,Set GDB's working directory
 gdb, , ,args, , ,103,Pass arguments to the program after its name
+
+gdb, ,h, , , ,104,List all options, with brief explanations
+gdb, ,s, , ,@r,105,Read symbol table from <file>
+gdb, ,e, , ,@r,106,Set executable
+gdb, ,c, , ,@r,107,Use <file> as a core dump to examine
+gdb, ,x, , ,@r,108,Execute GDB commands from <file>
+gdb, ,n, , , ,109,Do not execute commands from any .gdbinit files
+gdb, ,q, , , ,110,Quiet
+gdb, ,f, , , ,111,Used by Emacs
+gdb, ,b, , , ,112,Set throughput in bps for remote debugging

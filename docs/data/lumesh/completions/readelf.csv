@@ -66,3 +66,9 @@ readelf, ,W,wide, , ,164,Allow output width to exceed 80 characters
 readelf, ,T,silent-truncation, , ,165,"If a symbol name is truncated, don't add [...] suffix"
 readelf, ,H,help, , ,166,Display this information
 readelf, ,v,version, , ,167,Display the version number of readelf
+
+readelf, , ,sym-base,0\t'Mixed' 8\t'Octal' 10\t'Decimal' 16\t'Hexadecimal',@f @r,168,Force base for symbol sizes
+readelf, ,U,unicode,d\t'default' l\t'locale' e\t'escape' x\t'hex' h\t'highlight' i\t'invalid',@f @r,169,Controls the display of non-ASCII characters in identifier names
+readelf, ,x,hex-dump, ,@f @r,170,Dump the contents of specified section as bytes
+readelf, ,p,string-dump, ,@f @r,171,Dump the contents of specified section as strings
+readelf, ,R,relocated-dump, ,@f @r,172,Dump the relocated contents of of specified section

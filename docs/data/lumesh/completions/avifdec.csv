@@ -8,3 +8,5 @@ avifdec, ,q,quality, ,@f @r,106,Output quality
 avifdec, ,u,upsampling,automatic fastest best nearest bilinear,@f @r,107,Chroma upsampling
 avifdec, ,i,info, , ,108,Display all image information
 avifdec, , ,ignore-icc, , ,109,Ignore an embedded ICC profile
+
+avifdec, ,c,codec,aom dav1d libgav1,@f @r,110,AV1 codec to use

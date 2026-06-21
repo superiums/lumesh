@@ -8,3 +8,5 @@ trash, ,R,recursive, ,@f,106,ignored (for GNU rm compatibility)
 trash, , ,trash-dir, ,@F,107,specify trash folder
 trash, ,v,verbose, ,@f,108,be verbose
 trash, , ,version, ,@f,109,show version number
+
+trash, , ,print-completion, ,@f,110,print shell completion script

@@ -16,3 +16,12 @@ run0, , ,background, , ,114,Change the terminal background color to the specifie
 run0, , ,pty, , ,115,Request allocation of a pseudo TTY for stdio
 run0, , ,pipe, , ,116,Request redirect pipe for stdio
 run0, , ,shell-prompt-prefix, , ,117,Set a shell prompt prefix string
+
+run0, , , , , ,118,
+run0, , ,unit, ,@f @r,119,Run under the specified unit name
+run0, , ,via-shell, , ,120,Invoke command via target user's login shell
+run0, ,i, , , ,121,Shortcut for --via-shell --chdir='~'
+run0, , ,pty-late, , ,122,Just like --pty, but leave TTY access to agents until unit is started up
+run0, , ,lightweight, , ,123,Control whether to register a session with service manager or without
+run0, , ,area, ,@f @r,124,Home area to log into
+run0, , ,empower, , ,125,Give privileges to selected or current user

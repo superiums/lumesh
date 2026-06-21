@@ -3,3 +3,96 @@ bundle, ,r,retry, , ,101,Specify the number of times you wish to attempt network
 bundle, , ,no-color, , ,102,Disable colorization in output
 bundle, ,V,verbose, , ,103,Enable verbose output mode
 bundle, ,v,version, , ,105,Prints version information
+
+bundle, , ,help, ,@f,106,Display a help page
+bundle, , , ,install,@f,107,Install the gems specified by the Gemfile or Gemfile.lock
+bundle,install, ,gemfile, ,@f,108,The location of the Gemfile bundler should use
+bundle,install, ,path, ,@f,109,The location to install the gems in the bundle to
+bundle,install, ,system, ,@f,110,Installs the gems in the bundle to the system location
+bundle,install, ,without, ,@f,111,A space-separated list of groups to skip installing
+bundle,install, ,local, ,@f,112,Use cached gems instead of connecting to rubygems.org
+bundle,install, ,deployment, ,@f,113,Switches bundler's defaults into deployment mode.
+bundle,install, ,binstubs, ,@f,114,Create a directory containing executables that run in the context of the bundle
+bundle,install, ,shebang, ,@f,115,Specify a ruby executable to use with generated binstubs
+bundle,install, ,standalone, ,@f,116,Make a bundle that can work without RubyGems or Bundler at run-time
+bundle,install,P,trust-policy, ,@f,117,Apply a RubyGems security policy: {High,Medium,Low,No}Security
+bundle,install,j,jobs, ,@f,118,Install gems parallelly by starting size number of parallel workers
+bundle,install, ,no-cache, ,@f,119,Do not update the cache in vendor/cache with the newly bundled gems
+bundle,install, ,quiet, ,@f,120,Do not print progress information to stdout
+bundle,install, ,clean, ,@f,121,Run bundle clean automatically after install
+bundle,install, ,full-index, ,@f,122,Use the rubygems modern index instead of the API endpoint
+bundle,install, ,no-prune, ,@f,123,Do not remove stale gems from the cache
+bundle,install, ,frozen, ,@f,124,Do not allow the Gemfile.lock to be updated after this install
+bundle, , , ,update,@f,125,Update dependencies to their latest versions
+bundle,update, ,source, ,@f,126,The name of a :git or :path source used in the Gemfile
+bundle,update, ,local, ,@f,127,Do not attempt to fetch gems remotely and use the gem cache instead
+bundle,update, ,quiet, ,@f,128,Only output warnings and errors
+bundle,update, ,full-index, ,@f,129,Use the rubygems modern index instead of the API endpoint
+bundle,update,j,jobs, ,@f,130,Specify the number of jobs to run in parallel
+bundle,update,g,group, ,@f,131,Update a specific group
+bundle,update, , , ,@E @f,132,__fish_bundled_gems
+bundle, , , ,package,@f,133,Package the .gem files into vendor/cache directory
+bundle, , , ,binstubs,@f,134,Install the binstubs of the listed gem
+bundle,binstubs, ,force, ,@f,135,Overwrite existing binstubs if they exist
+bundle,binstubs, , , ,@E @f,136,__fish_bundled_gems
+bundle, , , ,exec,@f,137,Execute a script in the context of the current bundle
+bundle,exec, ,keep-file-descriptors, ,@f,138,Exec runs a command, providing it access to the gems in the bundle
+bundle, , , ,help,@f,139,Describe available tasks or one specific task
+bundle,help, , ,install,@f,140,Install the gems specified by the Gemfile or Gemfile.lock
+bundle,help, , ,update,@f,141,Update dependencies to their latest versions
+bundle,help, , ,package,@f,142,Package .gem files into the vendor/cache directory
+bundle,help, , ,exec,@f,143,Execute a script in the context of the current bundle
+bundle,help, , ,config,@f,144,Specify and read configuration options for bundler
+bundle,help, , ,check,@f,145,Check bundler requirements for your application
+bundle,help, , ,list,@f,146,Show all of the gems in the current bundle
+bundle,help, , ,show,@f,147,Show the source location of a particular gem in the bundle
+bundle,help, , ,outdated,@f,148,Show all of the outdated gems in the current bundle
+bundle,help, , ,console,@f,149,Start an IRB session in the context of the current bundle
+bundle,help, , ,viz,@f,150,Generate a visual representation of your dependencies
+bundle,help, , ,init,@f,151,Generate a simple Gemfile
+bundle,help, , ,gem,@f,152,Create a simple gem, suitable for development with bundler
+bundle,help, , ,platform,@f,153,Displays platform compatibility information
+bundle,help, , ,cleanup,@f,154,Cleans up unused gems in your bundler directory
+bundle, , , ,check,@f,155,Check if the requirements are installed and available to bundler
+bundle,check, ,gemfile, ,@f,156,The location of the Gemfile bundler should use
+bundle,check, ,dry-run, ,@f,157,Lock the Gemfile
+bundle, , , ,list,@f,158,Show lists the names and versions of all gems that are required by your Gemfile
+bundle,list, ,paths, ,@f,159,List the paths of all gems required by your Gemfile
+bundle,list, , , ,@E @f,160,__fish_bundled_gems
+bundle, , , ,show,@f,161,Show lists the names and versions of all gems that are required by your Gemfile
+bundle,show, ,paths, ,@f,162,List the paths of all gems required by your Gemfile
+bundle,show, , , ,@E @f,163,__fish_bundled_gems
+bundle, , , ,outdated,@f,164,Show all of the outdated gems in the current bundle
+bundle,outdated, ,pre, ,@f,165,Check for newer pre-release gems
+bundle,outdated, ,source, ,@f,166,Check against a specific source
+bundle,outdated, ,local, ,@f,167,Use cached gems instead of attempting to fetch gems remotely
+bundle,outdated, ,strict, ,@f,168,Only list newer versions allowed by your Gemfile requirements
+bundle,outdated, , , ,@E @f,169,__fish_bundled_gems
+bundle, , , ,console,@f,170,Start an IRB session in the context of the current bundle
+bundle,open, , , ,@E @f,171,__fish_bundled_gems
+bundle, , , ,viz,@f,172,Generate a visual representation of your dependencies
+bundle,viz,v,version, ,@f,173,Show each gem version
+bundle,viz,r,requirements, ,@f,174,Show the version of each required dependency
+bundle, , , ,init,@f,175,Generate a simple Gemfile, placed in the current directory
+bundle,init, ,gemspec, ,@f,176,Use a specified .gemspec to create the Gemfile
+bundle, , , ,gem,@f,177,Create a simple gem, suitable for development with bundler
+bundle,gem,b,bin, ,@f,178,Generate a binary for your library
+bundle,gem,e,edit, ,@f,179,Path to your editor
+bundle,gem, ,ext, ,@f,180,Generate the boilerplate for C extension code
+bundle, , , ,platform,@f,181,Displays platform compatibility information
+bundle,platform, ,ruby, ,@f,182,Only display Ruby directive information
+bundle, , , ,clean,@f,183,Cleans up unused gems in your bundler directory
+bundle,clean, ,dry-run, ,@f,184,Only print out changes, do not actually clean gems
+bundle,clean, ,force, ,@f,185,Forces clean even if --path is not set
+bundle, , , ,cache,@f,186,Cache all the gems to vendor/cache
+bundle,cache, ,no-prune, ,@f,187,Do not remove stale gems from the cache
+bundle, , , ,licenses,@f,188,Prints the license of all gems in the bundle
+bundle, , , ,env,@f,189,Print information about the environment Bundler is running under
+bundle,binstubs, ,path, ,@f,190,Binstub destination directory (default bin)
+bundle,help, , ,open,@f,191,Open an installed gem in your $EDITOR
+bundle,check, ,path, ,@f,192,Specify a path other than the system default (BUNDLE_PATH or GEM_HOME)
+bundle, , , ,open,@f,193,Open an installed gem in your $EDITOR
+bundle,viz,f,file, ,@f,194,The name to use for the generated file (see format option)
+bundle,viz,F,format, ,@f,195,Output a specific format (png, jpg, svg, dot, …)
+bundle,gem,t,test, ,@f,196,Generate a test directory for your library (rspec or minitest)
+bundle,cache, ,all, ,@f,197,Include all sources (including path and git)

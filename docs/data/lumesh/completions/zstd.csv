@@ -31,3 +31,7 @@ zstd, ,v,verbose, , ,129,Be verbose
 zstd, ,q,quiet, , ,130,Suppress warnings
 zstd, , ,no-progress, , ,131,Do not show the progress bar
 zstd, , ,no-check, , ,132,Disable integrity check
+
+zstd, , , , , ,133,Set compression level
+zstd, ,r, , , ,134,Recurse directories
+zstd, ,H, , , ,135,Show long help

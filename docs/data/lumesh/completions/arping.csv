@@ -13,3 +13,27 @@ arping, ,T, , ,@f @r,111,Set target address when pinging MACs that won't respond
 arping, ,V, , ,@f @r,112,VLAN tag to set
 arping, ,w, , ,@f @r,113,Timeout before ping exits (seconds)
 arping, ,W, , ,@f @r,114,Time to wait between pings (seconds)
+
+arping, , , , , ,115,
+arping, ,b, , , ,116,Send only MAC level broadcasts
+arping, ,D, , , ,117,Duplicate address detection mode
+arping, ,f, , , ,118,Finish after the first reply
+arping, ,I, , , ,119,Network device where to send packets
+arping, ,h, , , ,120,Print help page
+arping, ,q, , , ,121,Quiet output
+arping, ,0, , , ,122,Ping with source IP address 0.0.0.0
+arping, ,a, , , ,123,Audible ping
+arping, ,A, , , ,124,Only count addresses matching requested address
+arping, ,B, , , ,125,Use instead of host if you want to address 255.255.255.255
+arping, ,d, , , ,126,Find duplicate replies
+arping, ,e, , , ,127,Audible ping, but beep when there is no reply
+arping, ,F, , , ,128,Don't try to be smart about the interface name
+arping, ,p, , , ,129,Turn on promiscuous mode on interface
+arping, ,P, , , ,130,Send ARP replies instead of requests
+arping, ,r, , , ,131,Raw output: only the MAC/IP address is displayed
+arping, ,R, , , ,132,Raw output: Like -r but shows the other one
+arping, ,S, , , ,133,Ping with this source IP address
+arping, ,u, , , ,134,Show index=received/sent
+arping, ,U, , , ,135,Send unsolicited ARP
+arping, ,v, , , ,136,Verbose output
+arping, ,z, , , ,137,Enable seccomp

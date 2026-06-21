@@ -29,3 +29,8 @@ traceroute, ,D,dccp, , ,127,Use DCCP requests for probes
 traceroute, ,P,protocol, ,@f @r,128,Use raw packet of specified protocol for tracerouting
 traceroute, , ,mtu, , ,129,Discover MTU along the path
 traceroute, , ,back, , ,130,Print the number of backward hops
+
+traceroute, ,4, , , ,131,Force IPv4 tracerouting
+traceroute, ,6, , , ,132,Force IPv6 tracerouting
+traceroute, ,n, , , ,133,Do not map IP addresses to host names
+traceroute, ,r, , , ,134,Bypass the normal routing tables

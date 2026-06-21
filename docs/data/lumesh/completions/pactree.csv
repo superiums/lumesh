@@ -9,3 +9,5 @@ pactree, ,r,reverse, , ,107,Show reverse dependencies
 pactree, ,s,sync, , ,108,Search sync DBs instead of local
 pactree, ,u,unique, , ,109,Show dependencies with no duplicates (implies -l)
 pactree, , ,config, , ,110,Set an alternate configuration file
+
+pactree, , , , , ,111,

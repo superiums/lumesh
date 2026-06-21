@@ -34,3 +34,13 @@ yum,list, , ,obsoletes, ,141,List packages that are obsoleted by packages in rep
 yum,clean, , ,packages,@f @r,142,Delete cached package files
 yum,clean, , ,headers,@f @r,143,Delete cached header files
 yum,clean, , ,all,@f @r,144,Delete all cache contents
+
+yum,list, , ,all, ,145,List all packages
+yum,list, , ,available, ,146,List packages available for installation
+yum,list, , ,updates, ,147,List packages with updates available
+yum,list, , ,installed, ,148,List installed packages
+yum,list, , ,extras, ,149,List packages not available in repositories
+yum,list, , ,obsoletes, ,150,List packages that are obsoleted by packages in repositories
+yum,clean, , ,packages,@f @r,151,Delete cached package files
+yum,clean, , ,headers,@f @r,152,Delete cached header files
+yum,clean, , ,all,@f @r,153,Delete all cache contents

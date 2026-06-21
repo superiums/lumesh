@@ -21,3 +21,8 @@ cdrecord, , , ,index=, ,119,Sets an index list for the next track
 cdrecord, , , ,padsize=, ,120,Set the amount of data to be appended as padding to the next track
 cdrecord, , , ,pregap=, ,121,Set the pre-gap size for the next track
 cdrecord, , , ,tsize=, ,122,Specify valid amount of data on raw disk for next track's master image
+
+cdrecord, , , , , ,173,Display version
+cdrecord, ,v, , , ,174,Increment the level of general verbosity by one
+cdrecord, ,V, , , ,175,Increment the verbose level in respect of SCSI command transport by one
+cdrecord, ,s, , , ,176,Do not print out a status report for failed SCSI commands

@@ -13,3 +13,10 @@ gdbus, call,t,timeout, ,@f @r,117,Timeout in seconds
 gdbus, emit,s,signal, ,@f @r,118,Signal and interface name
 gdbus, wait,a,activate, ,@f @r,119,Service to activate
 gdbus, wait,t,timeout, ,@f @r,120,Timeout to wait
+
+gdbus, , , ,introspect,@f,121,Introspect a remote object
+gdbus, , , ,monitor,@f,122,Monitor a remote object
+gdbus, , , ,call,@f,123,Invoke a method on a remote object
+gdbus, , , ,emit,@f,124,Emit a signal
+gdbus, , , ,wait,@f,125,Wait for a bus name to appear
+gdbus, , , ,help,@f,126,Prints help

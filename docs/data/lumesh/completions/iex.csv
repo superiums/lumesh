@@ -13,3 +13,6 @@ iex, , ,hidden, ,@f,111,Makes a hidden node
 iex, , ,detached, ,@f,112,Starts the Erlang VM detached from console
 iex, , ,remsh, ,@f,113,Connects to a node using a remote shell
 iex, , ,dot-iex, , ,114,Overrides default .iex file and uses path instead
+
+iex, ,r, , , ,115,Requires the given files/patterns
+iex, ,S, , , ,116,Finds and executes the given script

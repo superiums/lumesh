@@ -1681,3 +1681,5 @@ git,lock, , , ,@D @f,1833,Worktree
 git, , , , ,@D @f @n @r,1834,Worktree
 git,unlock, , , ,@D @f,1835,Worktree
 git,ls-tree, ,name-status, ,@f,1836,Show only names (same as name-only)
+
+git, ,z, , ,@f,1837,Do not munge pathnames

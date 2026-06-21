@@ -14,3 +14,14 @@ mutt, ,i, , ,@r,112,Specify a file to include into the body of a message
 mutt, ,m, , ,@r,113,Specify a default mailbox type
 mutt, ,Q, , ,@r,114,Query a configuration variables value
 mutt, ,s, , ,@r,115,Specify the subject of the message
+
+mutt, ,D, , , ,116,Print the value of all configuration options to stdout
+mutt, ,h, , , ,117,Display help
+mutt, ,n, , , ,118,Bypass the system configuration file
+mutt, ,p, , , ,119,Resume a postponed message
+mutt, ,R, , , ,120,Open a mailbox in read-only mode
+mutt, ,v, , , ,121,Display the Mutt version number and compile-time definitions
+mutt, ,x, , , ,122,Emulate the mailx compose mode
+mutt, ,y, , , ,123,Start Mutt with a listing of all mailboxes
+mutt, ,z, , , ,124,When used with -f, causes Mutt not to start if there are no messages
+mutt, ,Z, , , ,125,Open the first mailbox which contains new mail

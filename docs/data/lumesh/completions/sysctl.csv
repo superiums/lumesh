@@ -12,3 +12,11 @@ sysctl, , ,system, , ,110,Load settings from all system configuration files
 sysctl, ,r,pattern, , ,111,Only apply settings that match pattern
 sysctl, ,h,help, , ,112,Display help text and exit.
 sysctl, ,V,version, , ,113,Display version information and exit.
+
+sysctl, , , , ,@E @f,114,__fish_sysctl_values
+sysctl, ,a, , , ,115,Display all non-opaque values currently available
+sysctl, ,A, , , ,116,Display all MIB variables
+sysctl, ,b, , , ,117,Output values in a binary format
+sysctl, ,n, , , ,118,Show only values, not names
+sysctl, ,w, , , ,119,Set values
+sysctl, ,X, , , ,120,Like -A, but prints a hex dump

@@ -63,3 +63,6 @@ gcc, ,u,,, ,160,"Pretend the symbol symbol is undefined, to force linking of lib
 gcc, ,G,,, ,161,Put global and static objects <= num bytes into the small data or bss sections
 gcc, ,g, , , ,162,"Produce debugging information in OS’s native format (stabs
 gcc, , , ,"medlow\t'Medium/Low code model: 64-bit addresses,32 64-bit addresses be bits code in linked low medmid\t'Medium/Middle memory' model: must of programs the,163,the text/data segments must be less than 2GB in size and the data segment must be located within 2GB of the text segment' medany\t'Medium/Anywhere code model: 64-bit addresses
+
+gcc, ,g, , , ,163,Produce debugging information in OS’s native format (stabs, COFF, XCOFF, or DWARF 2)
+gcc, , , ,medlow medmid medany embmedany, ,1083,

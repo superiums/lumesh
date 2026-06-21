@@ -7,3 +7,5 @@ wl-copy, ,p,primary, , ,105,Use the 'primary' clipboard
 wl-copy, ,n,trim-newline, , ,106,Do not copy the trailing newline character
 wl-copy, ,t,type, ,@f @r,107,Override the inferred MIME type for the content
 wl-copy, ,s,seat, ,@f @r,108,Pick the seat to work with
+
+wl-copy, , , , ,@f @r,109,

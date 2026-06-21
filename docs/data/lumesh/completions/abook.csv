@@ -6,3 +6,5 @@ abook, , ,add-email, , ,104,Read email message from stdin and add the sender
 abook, , ,add-email-quiet, , ,105,Same as --add-email. Without confirmation
 abook, , ,convert, , ,106,Convert address book files
 abook, , ,formats, , ,111,Print available formats
+
+abook, ,h, , , ,112,Show usage

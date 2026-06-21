@@ -9,3 +9,11 @@ apt-spy, ,u, , ,@f,107,Custom URL to get mirror list
 apt-spy, ,n, , ,@f,108,Number of top servers
 apt-spy, , , ,update,@f,109,Update mirror list
 apt-spy, ,v, , ,@f,110,Version number
+
+apt-spy, ,h, , , ,111,Display help and exit
+apt-spy, ,c, , , ,112,Conf file
+apt-spy, ,f, , , ,113,File to grab servers
+apt-spy, ,i, , , ,114,File as input
+apt-spy, ,m, , , ,115,Mirror-list file
+apt-spy, ,o, , , ,116,Output sources.list file
+apt-spy, ,w, , , ,117,Write top servers to file

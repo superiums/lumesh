@@ -6,3 +6,8 @@ mosh, , ,server, , ,105,Command to run server helper on remote machine (default:
 mosh, , ,ssh, , ,106,SSH command to run when setting up session (example: 'ssh -p 2222') (default: 'ssh')
 mosh, , ,predict,adaptive always never experimental,@f,107,Controls use of speculative local echo
 mosh, ,p,port, , ,108,Use a particular server-side UDP port or port range
+
+mosh, ,a, , , ,109,Synonym for --predict=always
+mosh, ,n, , , ,110,Synonym for --predict=never
+mosh, , , ,(__fish_print_users)@,@E,111,User
+mosh,-ge 2, , , ,@E @f @r,112,__fish_complete_subcommand --fcs-skip=2

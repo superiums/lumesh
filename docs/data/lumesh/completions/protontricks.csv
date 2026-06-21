@@ -12,3 +12,7 @@ protontricks, , ,background-wineserver, , ,110,Launch a wineserver process to im
 protontricks, , ,no-background-wineserver, , ,111,Do not launch wineserver process
 protontricks, , ,cwd-app, , ,112,Change to the Steam app directory when launching command
 protontricks, ,V,version, , ,113,Show version number and exit
+
+protontricks, , , , ,@f,114,
+protontricks, ,L,list-all, , ,115,List all games for all Steam installations
+protontricks, ,S,search-all, , ,116,Search for game(s) with the given name among all Steam installations

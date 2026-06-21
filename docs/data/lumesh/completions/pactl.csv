@@ -8,3 +8,7 @@ pactl, load-module, , , ,@f,106,
 pactl, set-default-sink, , , ,@f,117, 
 pactl, , ,version, ,@f,118,Print a short version and exit
 pactl, ,h,help, ,@f,119,Print help text and exit
+
+pactl,move-sink-input, , , ,@f,120,
+pactl,move-source-output, , , ,@f,121,
+pactl,set-card-profile, , , ,@f,122,

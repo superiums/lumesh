@@ -6,3 +6,13 @@ apt-mark, ,o,option, ,@r,112,Set a config option
 apt-mark, , ,color, , ,113,Turn colors on
 apt-mark, , ,no-color, , ,114,Turn colors off
 apt-mark, ,f,file, ,@r,115,Write package statistics to a file
+
+apt-mark, , , , ,@E @F,116,__fish_print_apt_packages
+apt-mark, , , ,auto,@f,117,Mark a package as automatically installed
+apt-mark, , , ,manual,@f,118,Mark a package as manually installed
+apt-mark, , , ,minimize-manual,@f,119,Mark all dependencies of meta packages as auto
+apt-mark, , , ,hold,@f,120,Hold a package, prevent automatic installation or removal
+apt-mark, , , ,unhold,@f,121,Cancel a hold on a package
+apt-mark, , , ,showauto,@f,122,Show automatically installed packages
+apt-mark, , , ,showmanual,@f,123,Show manually installed packages
+apt-mark, , , ,showhold,@f,124,Show held packages

@@ -3,3 +3,12 @@ sshfs, , , , ,@f @r,101,Hostname
 sshfs, , , , ,@D @f @r,102, 
 sshfs, ,p, , ,@f @r,103,Port
 sshfs, ,o, , ,@f @r,104,Mount options
+
+sshfs, ,V, , , ,105,Display version and exit
+sshfs, ,C, , , ,106,Compression
+sshfs, ,d, , , ,107,Enable debug
+sshfs, ,f, , , ,108,Foreground operation
+sshfs, ,s, , , ,109,Disable multi-threaded operation
+sshfs, ,r, , , ,110,Mount options
+sshfs, ,h, , , ,111,Display help and exit
+sshfs, , , ,(__fish_complete_user_at_hosts):,@E @f @r,112,Hostname

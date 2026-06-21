@@ -17,3 +17,7 @@ sbt, , , , ,@r,119,Alternate JAVA_HOME
 sbt, , , , ,@f @r,120,Pass -D option directly to the Java runtime
 sbt, , , , ,@f @r,121,Pass -X option directly to the Java runtime
 sbt, , , , ,@f @r,122,Pass -X option to sbt's scalacOptions
+
+sbt,, , ,new,@f,123,Create a new sbt project from the given template
+sbt,, , ,client,@f,124,Connect to a server with an interactive sbt prompt
+sbt, , , ,0.13.(seq 0 6)\t'' 1.0.0\t'',@f @r,125,Use specified version of sbt

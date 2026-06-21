@@ -17,3 +17,9 @@ duf, , ,usage-threshold, , ,115,"specifies the coloring threshold (yellow, red) 
 duf, , ,version, , ,116,display version
 duf, , ,warnings, , ,117,output all warnings to STDERR
 duf, , ,width, , ,118,max output width
+
+duf, , ,only, , ,119,show only specific devices, separated with commas
+duf, , ,output, , ,120,output fields, separated with commas
+duf, , ,sort, , ,121,sort output (default 'mountpoint')
+duf, , ,style, , ,122,style (default 'unicode')
+duf, , ,theme, , ,123,color themes (default 'light')

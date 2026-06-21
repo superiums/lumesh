@@ -1,3 +1,22 @@
 cmd,conds,short,long,params,dirs,pri,desc
 tcsh, , ,help, , ,101,Display help and exit
 tcsh, , ,version, , ,102,Display version and exit
+
+tcsh, ,b, , , ,103,Stop option processing
+tcsh, ,c, , , ,104,Specify commands
+tcsh, ,d, , , ,105,Load directory stack from ~/.tcshdirs
+tcsh, ,D, , , ,106,Specify environment variable
+tcsh, ,e, , , ,107,Exit when exit status is not zero
+tcsh, ,f, , , ,108,Do not load resource and startup files
+tcsh, ,F, , , ,109,Use fork instead of vfork
+tcsh, ,i, , , ,110,Use interactive mode
+tcsh, ,l, , , ,111,Use login shell
+tcsh, ,m, , , ,112,Load ~/.ttcshrc
+tcsh, ,n, , , ,113,Parse commands without executing
+tcsh, ,q, , , ,114,Accept SIGQUIT
+tcsh, ,s, , , ,115,Specify commands via stdin
+tcsh, ,t, , , ,116,Read and execute single input line
+tcsh, ,v, , , ,117,Set `verbose` shell variable
+tcsh, ,x, , , ,118,Set `echo` shell variable
+tcsh, ,V, , , ,119,Set `verbose` shell variable
+tcsh, ,X, , , ,120,Set `echo` shell variable

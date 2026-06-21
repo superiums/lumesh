@@ -34,3 +34,8 @@ mocp, ,j,jump, ,@f,132,"N{%,s} Jump to some position of the current track"
 mocp, ,o,on,shuffle autonext repeat, ,133,Turn on a control
 mocp, ,u,off,shuffle autonext repeat, ,134,Turn off a control
 mocp, ,t,toggle, , ,135,Toggle a control
+
+mocp, ,R,sound-driver, , ,136,Use the specified sound driver
+mocp, ,o,on, , ,137,Turn on a control
+mocp, ,u,off, , ,138,Turn off a control
+mocp, ,v,volume, , ,139,(+/-)LEVEL Adjust PCM volume

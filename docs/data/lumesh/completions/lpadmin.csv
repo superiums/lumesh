@@ -12,3 +12,15 @@ lpadmin, ,o, ,port-monitor=none port-monitor=bcp port-monitor=tbcp, ,110,Set the
 lpadmin, ,o, ,printer-error-policy=abort-job printer-error-policy=retry-job printer-error-policy=retry-current-job printer-error-policy=stop-printer, ,111,Set error policy if printer backend can't send job
 lpadmin, ,o, ,printer-is-shared=true, ,112,Sets dest to shared/published or unshared/unpublished
 lpadmin, ,o, ,printer-is-shared=false, ,113,Sets dest to shared/published or unshared/unpublished
+
+lpadmin, ,c, , ,@f @r,114,Adds the named printer to class
+lpadmin, ,i, , ,@f @r,115,Sets a  SysV style interface script for printer
+lpadmin, ,m, , ,@f @r,116,Sets a standard SysV interface script or PPD file
+lpadmin, ,R, , , ,117,Deletes the named option from printer
+lpadmin, ,r, , ,@f @r,118,Removes the named printer from class
+lpadmin, ,v, , ,@r,119,Sets the device-uri attribute of the printer queue
+lpadmin, ,D, , ,@f @r,120,Provides a textual description of the destination
+lpadmin, ,E, , , ,121,Enables the destination and accepts jobs
+lpadmin, ,L, , ,@f @r,122,Provides a textual location of the destination
+lpadmin, ,o, , , ,123,Specify if IPP supply level values should be reported
+lpadmin, ,u, , , ,124,Sets user-level access control on a destination

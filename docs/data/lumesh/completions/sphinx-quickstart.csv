@@ -28,3 +28,6 @@ sphinx-quickstart, , ,no-makefile, , ,126,Not create makefile
 sphinx-quickstart, , ,batchfile, , ,127,Create batchfile
 sphinx-quickstart, , ,no-batchfile, , ,128,Not create batchfile
 sphinx-quickstart, ,t,templatedir, , ,129,Template directory for template files
+
+sphinx-quickstart, ,v, , , ,130,Version of project
+sphinx-quickstart, ,d, , , ,131,Define a template variable

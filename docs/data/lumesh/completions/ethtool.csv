@@ -50,3 +50,5 @@ ethtool, , ,cable-test, , ,148,Perform a cable test and report results
 ethtool, , ,cable-test-tdr, , ,149,Perform a cable test and report raw Time Domain Reflectometer data
 ethtool, , ,monitor, , ,150,Listens to netlink notification and displays them
 ethtool, , ,show-tunnels, , ,151,Show tunnel-related capabilities and state
+
+ethtool, , , , , ,152,

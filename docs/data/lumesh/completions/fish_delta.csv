@@ -5,3 +5,5 @@ fish_delta, ,C,no-config, , ,104,Ignore config files
 fish_delta, ,d,no-diff, , ,105,Don't display the full diff
 fish_delta, ,n,new, , ,106,Include new files
 fish_delta, ,V,vendor,ignore user default, ,107,Choose how to count vendor files
+
+fish_delta, ,V,vendor, , ,108,Choose how to count vendor files

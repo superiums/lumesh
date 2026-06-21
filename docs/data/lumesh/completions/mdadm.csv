@@ -11,3 +11,79 @@ mdadm, , ,homehost, ,@f @r,117,Provide home host identity
 mdadm, , ,prefer, ,@f @r,118,Give name format preference
 mdadm, , ,home-cluster, ,@f @r,119,Give cluster name
 mdadm, , ,wait-clean, , ,174,Mark array as clean ASAP
+
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,A,assemble, ,@n,175,Assemble a pre-existing array
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,B,build, ,@n,176,Build a legacy array without superblocks
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,C,create, ,@n,177,Create a new array
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,F,monitor, ,@n,178,Select monitor mode
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,G,grow, ,@n,179,Change the size or shape of an active array
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,I,incremental, ,@n,180,Manage devices in array, and possibly start it
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,auto-detect, ,@n,181,Start all auto-detected arrays
+mdadm, ,e,metadata,,@E @f @r,182,Set metadata style to use
+mdadm, ,n,raid-devices, ,@f @r,183,Specify the number of active devices
+mdadm,-s B build -s C create -s G grow,x,spare-devices, ,@f @r,184,Specify the number of spare devices
+mdadm,-s B build -s C create -s G grow,z,size, ,@f @r,185,Specify the space to use from each drive
+mdadm,-s G grow,Z,array-size, ,@f @r,186,Specify the size made available on the array
+mdadm,-s B build -s C create -s G grow,c,chunk, ,@f @r,187,Specify the chunk size
+mdadm,-s B build -s C create -s G grow, ,rounding, ,@f @r,188,Specify rounding factor
+mdadm,-s B build -s C create -s G grow,l,level,__fish_mdadm_level_options,@E @f @r,189,Specify RAID level
+mdadm,-s B build -s C create -s G grow,p,parity,__fish_mdadm_layout_options,@E @f @r,190,Specify data layout
+mdadm,-s A assemble -s B build -s C create -s G grow,b,bitmap, ,@r,191,Specify file for write-intent bitmap
+mdadm,-s B build -s C create -s G grow, ,bitmap-chunk, ,@f @r,192,Specify chunksize of bitmap
+mdadm,-s B build -s C create -s G grow -s a add,W,write-mostly, , ,193,Prefer reading from other devices than these
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,readwrite, ,@n,194,Enable writes on array or device
+mdadm, ,o,readonly, , ,195,Disable writes on array
+mdadm,-s B build -s C create -s G grow, ,write-behind, ,@f @r,196,Enable write-behind mode
+mdadm,-s B build -s C create -s G grow, ,assume-clean, , ,197,Assume the array is clean
+mdadm,-s A assemble -s G grow, ,backup-file, ,@r,198,Use this file as a backup
+mdadm,-s B build -s C create -s G grow, ,data-offset, ,@f @r,199,Specify start of array data
+mdadm,-s G grow, ,continue, , ,200,Resume frozen --grow command
+mdadm,-s A assemble -s B build -s C create,N,name, ,@f @r,201,Set array name
+mdadm, ,R,run, , ,202,Run array despite warnings
+mdadm,-s A assemble -s B build -s C create,a,level,__fish_mdadm_level_options,@E @f @r,203,Give instruction for device file
+mdadm,-s A assemble -s G grow,a,add, , ,204,Add devices to array
+mdadm,-s B build -s C create -s G grow, ,nodes, , ,205,Specify max nodes in the cluster
+mdadm,-s B build -s C create -s G grow, ,write-journal, , ,206,Specify journal device for RAID-4/5/6 array
+mdadm,-s A assemble,u,uuid, ,@f @r,207,UUID of array to assemble
+mdadm,-s A assemble,m,super-minor, ,@f @r,208,Minor number of array device
+mdadm,A assemble s scan, ,no-degraded, , ,209,Refuse to start without all drives
+mdadm,-s A assemble, ,invalid-backup, , ,210,Do not ask for backup file, unavailable
+mdadm,-s A assemble,U,update,,@E @f @r,211,Update superblock properties
+mdadm,-s A assemble, ,freeze-reshape, , ,212,Freeze --grow command
+mdadm, ,t,test, , ,213,Test mode
+mdadm, ,a,add, , ,214,Hot-add listed devices
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,re-add, ,@n,215,Re-add a previously removed device
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,add-spare, ,@n,216,Hot-add listed devices as spare
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,r,remove, ,@n,217,Remove listed inactive devices
+mdadm, ,f,set-faulty, , ,218,Mark listed devices as faulty
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,replace, ,@n,219,Mark listed devices as requiring replacement
+mdadm,replace, ,with, , ,220,Give devices as replacement
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,cluster-confirm, ,@n,221,Confirm existence of device
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,Q,query, ,@n,222,Examine device for md use
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,D,detail, ,@n,223,Print details on array
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,detail-platform, ,@n,224,Print details on platform capabilities
+mdadm, ,Y,export, , ,225,Format data output as key=value pairs
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,E,examine, ,@n,226,Print content of device metadata
+mdadm, , ,sparc2.2, , ,227,Fix examination for buggy SPARC 2.2 kernel RAID
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,X,examine-bitmap, ,@n,228,Print report about bitmap
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,examine-badblocks, ,@n,229,List recorded bad blocks
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,dump, ,@n @r,230,Dump metadata to directory
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,restore, ,@n @r,231,Restore metadata from directory
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,S,stop, ,@n,232,Deactivate array
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,zero-superblock, ,@n,233,Erase possible superblock
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,kill-subarray, ,@n @r,234,Delete subarray
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,update-subarray, ,@n @r,235,Update subarray
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect,W,wait, ,@n,236,Wait for pending operations
+mdadm,-A assemble -B build -C create -F follow monitor -G grow -I incremental auto-detect, ,action,__fish_mdadm_action_options,@E @f @n @r,237,Set sync action for md devices
+mdadm,-s I incremental,r,rebuild-map, , ,238,Rebuild /run/mdadm/map
+mdadm,I incremental f fail set-faulty, ,path, ,@r,239,Automatically add eventually appearing device to array
+mdadm,-s F follow monitor,m,mail, ,@f @r,240,Mail address to send alerts to
+mdadm,-s F follow monitor,p,alert, ,@f @r,241,Program to run in case of an event
+mdadm,-s F follow monitor,y,syslog, , ,242,Record events in syslog
+mdadm,-s F follow monitor,d,delay, ,@f @r,243,Polling interval
+mdadm,-s F follow monitor,r,increment, ,@f @r,244,Generate RebuildNN events each given percentage
+mdadm,-s F follow monitor,f,daemonise, , ,245,Run monitor mode as a daemon
+mdadm,F follow monitor 1 oneshot,i,pid-file, ,@r,246,Write PID file when running as a daemon
+mdadm,-s F follow monitor,1,oneshot, , ,247,Check arrays only once
+mdadm,-s F follow monitor, ,no-sharing, , ,248,Do not move spares between arrays
+mdadm, ,b,brief, , ,249,Be more concise

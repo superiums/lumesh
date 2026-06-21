@@ -8,3 +8,6 @@ rc-service, ,C,nocolor, , ,106,Disable color output
 rc-service, ,V,version, , ,107,Display software version
 rc-service, ,v,verbose, , ,108,Run verbosely
 rc-service, ,q,quiet, , ,109,Run quietly (Does not affect errors)
+
+rc-service,= 1, , , , ,110,
+rc-service,-gt 1, , , , ,111,

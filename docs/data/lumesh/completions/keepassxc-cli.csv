@@ -36,3 +36,27 @@ keepassxc-cli, generate,e,extended, , ,157,Use extended ASCII
 keepassxc-cli, generate,x,exclude, ,@f @r,158,Exclude char set
 keepassxc-cli, generate, ,exclude-similar, , ,159,Exclude similar looking chars
 keepassxc-cli, generate, ,every-group, , ,160,Include chars from every selected group
+
+keepassxc-cli, , , ,add,@f,161,Add a new entry
+keepassxc-cli, , , ,analyze,@f,162,Analyze password for weakness and problem
+keepassxc-cli, , , ,clip,@f,163,Copy an entry's password to the clipboard
+keepassxc-cli, , , ,close,@f,164,Close the currently opened database
+keepassxc-cli, , , ,create,@f,165,Create new database
+keepassxc-cli, , , ,diceware,@f,166,Generate a new random diceware passphrase
+keepassxc-cli, , , ,edit,@f,167,Edit an entry
+keepassxc-cli, , , ,estimate,@f,168,Estimate the entropy of a password
+keepassxc-cli, , , ,exit,@f,169,Exit interactive mode
+keepassxc-cli, , , ,export,@f,170,Export the contents to stdout
+keepassxc-cli, , , ,generate,@f,171,Generate a new password
+keepassxc-cli, , , ,help,@f,172,Show command help
+keepassxc-cli, , , ,import,@f,173,Import the contents
+keepassxc-cli, , , ,locate,@f,174,Find entries quickly
+keepassxc-cli, , , ,ls,@f,175,List database entries
+keepassxc-cli, , , ,merge,@f,176,Merge two databases
+keepassxc-cli, , , ,mkdir,@f,177,Add a new group
+keepassxc-cli, , , ,mv,@f,178,Move an entry
+keepassxc-cli, , , ,open,@f,179,Open a database
+keepassxc-cli, , , ,quit,@f,180,Exit interactive mode
+keepassxc-cli, , , ,rm,@f,181,Remove an entry
+keepassxc-cli, , , ,rmdir,@f,182,Remove a group
+keepassxc-cli, , , ,show,@f,183,Show an entry's info

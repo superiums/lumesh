@@ -1,3 +1,9 @@
 cmd,conds,short,long,params,dirs,pri,desc
 gresource, , ,section, ,@f,101,Select which section to operate on
 gresource, help, , ,list details extract sections help,@f,107,Command
+
+gresource, , , ,list,@f,108,List resource sections
+gresource, , , ,details,@f,109,List resources with details
+gresource, , , ,extract,@f,110,Extract a resource
+gresource,section, , ,sections,@f @n,111,List resource sections
+gresource,section, , ,help,@f @n,112,Prints help

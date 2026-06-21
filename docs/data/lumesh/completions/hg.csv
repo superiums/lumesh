@@ -17,3 +17,55 @@ hg, ,h,help, , ,115,display help and exit
 hg, , ,hidden, , ,116,consider hidden changesets
 hg, , ,color,true false always auto never debug,@f @r,117,when to colorize
 hg, , ,pager,true false always auto never,@f @r,118,when to paginate
+
+hg, , , , ,@E @f @r,119,__fish_hg_commands
+hg,add, , , ,@E @f,120,__fish_hg_status -u
+hg,add,I,include, ,@f @r,121,include names matching the given patterns
+hg,add,X,exclude, ,@f @r,122,exclude names matching the given patterns
+hg,add,S,subrepos, , ,123,recurse into subrepositories
+hg,add,n,dry-run, , ,124,do not perform actions, just print output
+hg,add, ,mq, , ,125,operate on patch repository
+hg,branch, , , ,@E @f,126,__fish_hg_branches
+hg,branch,f,force, , ,127,set branch name even if it shadows an existing branch
+hg,branch,C,clean, , ,128,reset branch name to parent branch name
+hg,branch, ,mq, , ,129,operate on patch repository
+hg, ,f,follow, , ,130,follow changeset history, or file history across copies and renames
+hg, ,d,date, ,@f @r,131,show revisions matching date spec
+hg, ,C,copies, , ,132,show copied files
+hg, ,k,keyword, ,@f @r,133,do case-insensitive search for a given text
+hg, ,r,rev, ,@E @f @r,134,__fish_hg_labels
+hg, , ,removed, , ,135,include revisions where files were removed
+hg, ,u,user, ,@f @r,136,revisions committed by user
+hg, ,b,branch, ,@E @f @r,137,__fish_hg_branches
+hg, ,P,prune, ,@E @f @r,138,__fish_hg_labels
+hg, ,p,patch, , ,139,show patch
+hg, ,g,git, , ,140,use git extended diff format
+hg, ,l,limit, ,@f @r,141,limit number of changes displayed
+hg, ,M,no-merges, , ,142,do not show merges
+hg, , ,stat, , ,143,output diffstat-style summary of changes
+hg, ,G,graph, , ,144,show the revision DAG
+hg, ,T,template, ,@f @r,145,display with template
+hg, ,I,include, ,@f @r,146,include names matching the given patterns
+hg, ,X,exclude, ,@f @r,147,exclude names matching the given patterns
+hg, , ,mq, , ,148,operate on patch repository
+hg,qnew,e,edit, , ,149,invoke editor on commit messages
+hg,qnew,g,git, , ,150,use git extended diff format
+hg,qnew,U,currentuser, , ,151,add 'From: <current user>' to patch
+hg,qnew,u,user, ,@f @r,152,add 'From: <USER>' to patch
+hg,qnew,D,currentdate, , ,153,add 'Date: <current date>' to patch
+hg,qnew,d,date, ,@f @r,154,add 'Date: <DATE>' to patch
+hg,qnew,I,include, ,@f @r,155,include names matching the given patterns
+hg,qnew,X,exclude, ,@f @r,156,exclude names matching the given patterns
+hg,qnew,m,message, ,@f @r,157,use text as commit message
+hg,qnew,l,logfile, ,@r,158,read commit message from file
+hg,qnew,i,interactive, , ,159,interactively record a new patch
+hg,tag,f,force, , ,160,force tag
+hg,tag,l,local, , ,161,make the tag local
+hg,tag,r,rev, ,@E @f @r,162,__fish_hg_labels
+hg,tag, ,remove, , ,163,remove a tag
+hg,tag,e,edit, , ,164,invoke editor on commit messages
+hg,tag,m,message, ,@f @r,165,use <text> as commit message
+hg,tag,d,date, ,@f @r,166,record the specified date as commit date
+hg,tag,u,user, ,@f @r,167,record the specified user as committer
+hg,tag, ,mq, , ,168,operate on patch repository
+hg,tags, ,mq, , ,169,operate on patch repository

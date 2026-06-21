@@ -62,3 +62,46 @@ bat,cache, ,source, ,@D @f @r,159,Load syntaxes and themes from DIR
 bat,cache, ,target, ,@D @f @r,160,Store cache in DIR
 bat,-s -l,h, , ,@n,161,
 bat,-s -l, ,help, ,@n @f,162,
+
+bat,__bat_no_excl_args, ,binary,no-printing as-text,@f @r,163,How to treat binary content
+bat,__bat_no_excl_args,c,chop-long-lines, , ,164,Truncate all lines longer than screen width
+bat,__bat_no_excl_args,d,diff, , ,165,Only show lines with Git changes
+bat,__bat_no_excl_args, ,file-name, ,@f @r,166,Specify the display name
+bat,__bat_no_excl_args,f,force-colorization, , ,167,Force color and decorations
+bat,__bat_no_excl_args, ,ignored-suffix, ,@f @r,168,Ignore extension
+bat,__bat_no_excl_args,l,language, ,@E @f @k @r,169,__bat_complete_list_languages
+bat,__bat_no_excl_args,m,map-syntax, ,@E @f @r,170,__bat_complete_map_syntax
+bat,__bat_no_excl_args, ,nonprintable-notation,unicode caret,@f @r,171,Set notation for non-printable characters
+bat,__bat_no_excl_args,n,number, , ,172,Only show line numbers, no other decorations
+bat,__bat_no_excl_args, ,no-paging, , ,173,Alias for --paging=never
+bat,__bat_no_excl_args,p,plain, , ,174,Show plain style
+bat,__bat_no_excl_args, ,set-terminal-title, , ,175,Sets terminal title to filenames when using a pager
+bat,__bat_no_excl_args,A,show-all, , ,176,Show non-printable characters
+bat,__bat_no_excl_args,s,squeeze-blank, , ,177,Squeeze consecutive empty lines into a single empty line
+bat,__bat_no_excl_args, ,squeeze-limit, ,@f @r,178,Set the maximum number of consecutive empty lines to be printed
+bat,__bat_no_excl_args, ,strip-ansi,auto never always,@f @r,179,Specify when to strip ANSI escape sequences from the input
+bat,__bat_no_excl_args, , , , ,180,Disable decorations and paging
+bat,__bat_no_excl_args,P, , , ,181,Disable paging
+bat,__bat_no_excl_args, ,style, ,@E @f @k @r,182,__fish_complete_list , __bat_style_opts
+bat,__bat_no_excl_args, ,terminal-width, ,@f @r,183,Set terminal <width>, +<offset>, or -<offset>
+bat,__bat_no_excl_args,u,unbuffered, , ,184,This option exists for POSIX-compliance reasons
+bat,__bat_cache_no_excl, ,build, ,@f,185,Parse new definitions into cache
+bat,__bat_cache_no_excl, ,clear, ,@f,186,Reset definitions to defaults
+bat,__bat_cache_subcommand clear, ,blank, ,@f,187,Create new data instead of appending
+bat,__bat_cache_no_excl, ,acknowledgements, , ,188,Build acknowledgements.bin
+bat,__bat_no_excl_args, ,color, ,@f @r,189,When to use colored output
+bat,__bat_no_excl_args, ,decorations, ,@f @r,190,When to use --style decorations
+bat,__bat_no_excl_args,H,highlight-line, ,@f @r,191,Highlight line(s) N[:M]
+bat,__bat_no_excl_args, ,italic-text, ,@f @r,192,When to use italic text in the output
+bat,__bat_no_excl_args,r,line-range, ,@f @r,193,Only print lines [M]:[N] (either optional)
+bat,__bat_no_excl_args, ,pager, ,@f @r,194,Which pager to use
+bat,__bat_no_excl_args, ,paging, ,@f @r,195,When to use the pager
+bat,__bat_no_excl_args, ,tabs, ,@f @r,196,Set tab width
+bat,__bat_no_excl_args, ,theme, ,@f @r,197,Set the syntax highlighting theme
+bat,__bat_no_excl_args, ,theme-dark, ,@E @f @r,198,command $bat --list-themes | command cat
+bat,__bat_no_excl_args, ,theme-light, ,@E @f @r,199,command $bat --list-themes | command cat
+bat,__bat_no_excl_args, ,wrap, ,@f @r,200,Text-wrapping mode
+bat,__bat_cache_subcommand clear, ,source, ,@D @f @r,201,Load syntaxes and themes from DIR
+bat,__bat_cache_subcommand, ,target, ,@D @f @r,202,Store cache in DIR
+bat,__bat_cache_no_excl,h, , , ,203,Print a concise overview of $bat-cache help
+bat,__bat_cache_no_excl, ,help, ,@f,204,Print all $bat-cache help

@@ -16,3 +16,5 @@ vips, , ,vips-cache-dump, , ,114,Dump operation cache on exit
 vips, , ,vips-version, , ,115,Print libvips version
 vips, , ,vips-config, , ,116,Print libvips config
 vips, , ,vips-pipe-read-limit, , ,117,Pipe read limit (bytes)
+
+vips, , , , , ,118,

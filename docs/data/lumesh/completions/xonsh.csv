@@ -9,3 +9,6 @@ xonsh, , ,no-script-cache, , ,107,Do not use script cache
 xonsh, , ,cache-everything, , ,108,Use script cache
 xonsh, , ,shell-type,b best d dumb ptk prompt-toolkit prompt_toolkit rand random rl readline,@f @r,109,Specify shell type
 xonsh, , ,timings, , ,110,Show timing information
+
+xonsh, ,c, , , ,111,Command to run and exit
+xonsh, ,D, , , ,112,Specify environment variable

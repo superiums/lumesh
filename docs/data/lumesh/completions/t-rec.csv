@@ -13,3 +13,7 @@ t-rec, ,s,start-pause, , ,111,Pause time at start of animation
 t-rec, ,o,output, , ,112,"Output file (without extension); defaults to t-rec"
 t-rec, ,h,help, , ,113,Print help
 t-rec, ,V,version, , ,114,Print version
+
+t-rec, , , , , ,115,Command to run instead of shell
+t-rec, ,d,decor, , ,116,Decorate animation
+t-rec, ,b,bg, , ,117,Background color when decors are used

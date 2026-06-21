@@ -32,3 +32,8 @@ scons, ,w,print-directory, , ,130,Print the working directory
 scons, , ,warn,all no-all dependency no-dependency deprecated no-deprecated missing-sconscript no-missing-sconscript, ,131,Enable or disable warnings
 scons, , ,no-print-directory, , ,132,"Turn off -w, even if it was turned on implicitly"
 scons, ,Y,repository, , ,133,Search this repo for input and target files not in the local directory tree
+
+scons, , ,config,auto\t'Use normal dependency mechanism' force\t'Rerun all tests' cache\t'Take all results from cache',@f @r,134,How the Configure call should run the config tests
+scons, ,D, , , ,135,Like -u except for the way default targets are handled
+scons, ,Q, , , ,136,Quiet some status messages
+scons, ,U, , , ,137,Like -u option except for how default targets are handled

@@ -24,3 +24,5 @@ sass, , ,cache-location, ,@r,122,The path to save parsed Sass files
 sass, ,C,no-cache, , ,123,Don't cache parsed Sass files
 sass, , ,trace, , ,124,Show a full Ruby stack trace on error
 sass, ,q,quiet, , ,125,Silence warnings and status messages during compilation
+
+sass, , ,sourcemap,auto sfile inline none,@f @r,126,How to link generated output to the source files

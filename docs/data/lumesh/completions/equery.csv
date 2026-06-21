@@ -50,3 +50,8 @@ equery, u uses,a,all, , ,162,Include all pkg versions
 equery, u uses,i,ignore-l10n, , ,163,Don't show l10n USE flags
 equery, w which,m,include-masked, , ,164,Return highest version ebuild available
 equery, w which,e,ebuild, , ,165,Print the ebuild
+
+equery, , , , , ,166,List changelog entries for ATOM
+equery,c changes d depends g depgraph y keywords m meta u uses w which, , , , ,167,
+equery,k check f files s size, , , , ,168,
+equery,l list p portage-tree, , , , ,169,

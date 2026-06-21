@@ -7,3 +7,7 @@ mktemp, , ,tmpdir, , ,105,interpret TEMPLATE relative to DIR
 mktemp, , ,help, , ,106,display this help and exit
 mktemp, , ,version, , ,107,output version information and exit
 mktemp, ,t, , ,@r,108,generate a template using PREFIX and TMPDIR (if set)
+
+mktemp, ,d, , , ,109,create a directory, not a file
+mktemp, ,q, , , ,110,suppress diagnostics about file/dir-creation failure
+mktemp, ,u, , , ,111,file will be unlinked before mktemp exits (unsafe)

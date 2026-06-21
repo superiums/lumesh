@@ -52,3 +52,6 @@ pg_dump, ,U,username, ,@f @r,150,Connect as specified database user
 pg_dump, ,w,no-password, , ,151,Never prompt for password
 pg_dump, ,W,password, , ,152,Force password prompt (should happen automatically)
 pg_dump, , ,role, ,@f @r,153,Do SET ROLE before dump
+
+pg_dump, , , , ,@E @f,154,__fish_complete_pg_database
+pg_dump, ,F,format,p,@f @r,155,Output file format

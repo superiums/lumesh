@@ -8,3 +8,7 @@ matlab, ,Dlldb, , ,@f @r,106,Start in debug mode
 matlab, ,Ddbx, , ,@f @r,107,Start in debug mode
 matlab, , , , ,@f @r,108,Enable use of the Java debugger
 matlab, ,c, , ,@r,111,Use the specified license file
+
+matlab, ,n, , , ,112,Display the environment variables/arguments passed to the executable
+matlab, ,e, , , ,113,Display all environment variables and their values to standard output
+matlab, ,r, , ,@f @r,114,Execute the statement

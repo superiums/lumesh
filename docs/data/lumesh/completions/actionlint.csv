@@ -5,3 +5,5 @@ actionlint, , , , ,@f @r,103,regex matching to error messages you want to ignore
 actionlint, , , , ,@f @r,104,command name or path of `pyflakes`
 actionlint, , , , ,@f @r,105,command name or path of `shellcheck`
 actionlint, , , , ,@r,106,filename when reading input from stdin
+
+actionlint, ,h, , , ,107,show help message

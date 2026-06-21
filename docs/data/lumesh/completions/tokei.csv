@@ -14,3 +14,5 @@ tokei, ,i,input, ,@r,112,Gives statistics from a previous Tokei run
 tokei, ,o,output, ,@f @r,113,Choose output format
 tokei, ,s,sort,files lines code comments blanks,@f @r,114,Sort languages based on column
 tokei, ,t,type, ,@f @r,115,"Filters output by language type, comma-separated"
+
+tokei, ,s,sort, ,@f @r,116,Sort languages based on column

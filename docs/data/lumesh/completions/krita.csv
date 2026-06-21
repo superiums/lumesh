@@ -14,3 +14,5 @@ krita, , ,workspace, , ,112,open with workspace
 krita, , ,file-layer, , ,113,open with file-layer
 krita, , ,resource-location, , ,114,open with resource
 krita, , ,new-image, , ,115,open with new image
+
+krita, , , , ,@E @f @r,116,__krita_complete_image_format

@@ -32,3 +32,5 @@ grub-install, , ,target,arm-efi arm-uboot arm64-efi i386-coreboot i386-efi i386-
 grub-install, ,?,help, , ,131,Show help
 grub-install, , ,usage, , ,132,Show usage
 grub-install, , ,version, , ,133,Show version
+
+grub-install, , ,target,arm-efi\t arm-uboot\t arm64-efi\t i386-coreboot\t i386-efi\t i386-ieee1275\t i386-multiboot\t i386-pc\t i386-qemu\t i386-xen\t ia64-efi\t mips-arc\t mips-qemu_mips\t mipsel-arc\t mipsel-loongson\t mipsel-qemu_mips\t powerpc-ieee1275\t sparc64-ieee1275\t x86_64-efi\t x86_64-xen\t,@f @r,134,Install GRUB for given platform

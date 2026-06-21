@@ -14,3 +14,6 @@ asciinema, rec,y,yes, , ,114,Answer 'yes' to all prompts
 asciinema, rec,q,quiet, , ,115,"Be quiet, suppress all notices/warnings"
 asciinema, play,i,idle-time-limit, , ,117,Limit idle time during playback to given number of seconds
 asciinema, play,s,speed, , ,118,Playback speedup
+
+asciinema, , ,version, , ,119,Show program's version number and exit
+asciinema, , , , , ,120,Record terminal session

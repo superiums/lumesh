@@ -24,3 +24,13 @@ ttx, recalculate,b, , ,@f,123,
 ttx, , ,recalc-timestamp, ,@f,124,font
 ttx, , ,flavor,$woff_fmts,@f @r,125,WOFF
 ttx, , ,with-zopfli, ,@f,126,with
+
+ttx, ,f, , ,@f,127,
+ttx, ,e, , ,@f,128,
+ttx, ,y, , ,@f @r,129,
+ttx, ,b, , ,@f,130,
+ttx, ,t, , ,@f @r,131,
+ttx, ,x, , ,@f @r,132,
+ttx, ,z, , ,@f @r,133,
+ttx, , ,newline, ,@f @r,134,
+ttx, , ,flavor, ,@f @r,135,

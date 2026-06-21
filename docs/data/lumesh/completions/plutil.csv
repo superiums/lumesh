@@ -4,3 +4,11 @@ plutil, , , , ,@f @r,104,Insert VALUE into the plist
 plutil, , , , ,@f @r,105,Overwrite existing VALUE in the plist
 plutil, , , , ,@f @r,107,Removes the value at KEYPATH
 plutil, , , , ,@f @r,108,Outputs the value at KEYPATH as a new plist
+
+plutil,convert json,r, , , ,109,Pretty-print JSON
+plutil,-convert,o, , ,@r,110,Alternate path for conversion result
+plutil,-convert,e, , ,@f @r,111,Alternate extension for converted files
+plutil,convert objc, , , , ,112,Convert FILE to Obj-C literal and create a .h file
+plutil,insert;, , , , ,113,
+plutil, ,p, , , ,114,Print the plist in a human-readable fashion
+plutil, ,s, , , ,115,Be silent on success

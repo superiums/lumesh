@@ -8,3 +8,6 @@ logkeys, , ,no-func-keys, , ,108,Log only character key presses
 logkeys, , ,no-timestamps, , ,109,No timestamp to each line of log
 logkeys, , ,post-size, , ,110,"On SIZE, rotate current logfile"
 logkeys, , ,post-http, , ,111,POST the log file to URL
+
+logkeys,-u,m,keymap, ,@n,112,Use file as input KEYMAP
+logkeys,-m,u,us-keymap, ,@n,113,Treat keyboard as standard US keyboard

@@ -11,3 +11,7 @@ encfs, , ,no-default-flags, , ,109,Don't use the default FUSE flags
 encfs, , ,extpass, , ,110,Get password from an external program
 encfs, ,S,stdinpass, , ,111,Read password from standard input
 encfs, , ,anykey, , ,112,Turn off key validation checking
+
+encfs, ,f, , , ,113,Run in the foreground
+encfs, ,s, , , ,114,Run in single threaded mode
+encfs, ,o, , , ,115,Pass on options to FUSE

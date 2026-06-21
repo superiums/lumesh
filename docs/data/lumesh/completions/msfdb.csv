@@ -24,3 +24,13 @@ msfdb, , ,user, ,@f @r,129,Initial web service admin username
 msfdb, , ,pass, ,@f @r,130,Initial web service admin password
 msfdb, , ,msf-data-service, ,@f @r,131,Local msfconsole data service connection name
 msfdb, , ,no-msf-data-service, ,@f @r,132,Disable local msfconsole data service connection
+
+msfdb, , , , ,@f,133,
+msfdb, , , ,init,@f @r,134,Initialize the component
+msfdb, , , ,reinit,@f @r,135,Delete and reinitialize the component
+msfdb, , , ,delete,@f @r,136,Delete and stop the component
+msfdb, , , ,status,@f @r,137,Check component status
+msfdb, , , ,start,@f @r,138,Start the component
+msfdb, , , ,stop,@f @r,139,Stop the component
+msfdb, , , ,restart,@f @r,140,Restart the component
+msfdb, , ,environment, , ,141,Web service framework environment

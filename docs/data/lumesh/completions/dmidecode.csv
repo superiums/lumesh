@@ -12,3 +12,5 @@ dmidecode, , ,no-sysfs, , ,110,Do not attempt to read DMI data from sysfs files
 dmidecode, , ,oem-string, ,@f @r,111,Only display the value of the OEM string number N
 dmidecode, ,h,help, , ,112,Display usage information and exit
 dmidecode, ,V,version, , ,113,Display the version and exit
+
+dmidecode, , , , ,@f,114,

@@ -10,3 +10,8 @@ fuser, ,u,user, , ,108,Append the user name of the process owner to each PID
 fuser, ,v,verbose, , ,109,Verbose mode
 fuser, ,4,ipv4, , ,110,Search only for IPv4 sockets
 fuser, ,6,ip64, , ,111,Search only for IPv6 sockets
+
+fuser, ,i, , , ,112,Ask the user for confirmation before killing a process
+fuser, ,w, , , ,113,Kill only processes which have write access
+fuser, ,V, , , ,114,Print version and exit
+fuser, , , , , ,115,$name

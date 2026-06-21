@@ -11,3 +11,5 @@ sha512sum, , ,strict, , ,109,exit non-zero for improperly formatted checksum lin
 sha512sum, ,w,warn, , ,110,warn about improperly formatted checksum lines
 sha512sum, , ,help, , ,111,display this help and exit
 sha512sum, , ,version, , ,112,output version information and exit
+
+sha512sum, , , , , ,113,

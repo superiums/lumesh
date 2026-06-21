@@ -13,3 +13,5 @@ canto, ,C,conf, , ,112,Set configuration file
 canto, ,L,log, , ,113,Set client log file
 canto, ,F,fdir, , ,114,Set feed directory
 canto, ,S,sdir, , ,115,Set script directory
+
+canto,-l --checknew, , , ,@E @f,116,command canto -l

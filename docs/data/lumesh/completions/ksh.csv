@@ -1,3 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
 ksh, , , ,{+,-}{a, ,101, 
 ksh, , , ,$options, ,102, 
+
+ksh, , , , , ,103,

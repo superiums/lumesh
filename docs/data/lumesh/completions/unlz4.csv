@@ -14,3 +14,5 @@ unlz4, ,h,help, , ,112,Show help
 unlz4, ,V,version, , ,113,Show version
 unlz4, ,k,keep, , ,114,Keep input file(s) (default)
 unlz4, , ,rm, , ,115,Remove input file(s) after decompression
+
+unlz4, ,H, , , ,116,Show long help

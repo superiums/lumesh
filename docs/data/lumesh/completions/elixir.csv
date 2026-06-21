@@ -12,3 +12,6 @@ elixir, , ,cookie, ,@f,110,Sets a cookie for this distributed node
 elixir, , ,hidden, ,@f,111,Makes a hidden node
 elixir, , ,detached, ,@f,112,Starts the Erlang VM detached from console
 elixir, , ,no-halt, ,@f,113,Does not halt the Erlang VM after execution
+
+elixir, ,r, , , ,114,Requires the given files/patterns
+elixir, ,S, , , ,115,Finds and executes the given script

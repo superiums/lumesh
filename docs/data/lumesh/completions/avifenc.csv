@@ -29,3 +29,6 @@ avifenc, , ,pasp, ,@f @r,127,Add pasp property
 avifenc, , ,clap, ,@f @r,128,Add clap property
 avifenc, , ,irot, ,@f @r,129,Add irot property
 avifenc, , ,imir, ,@f @r,130,Add imir property
+
+avifenc, ,c,codec,aom rav1e svt,@f @r,131,AV1 codec to use
+avifenc, ,s,speed,0 (seq 1 9) 10 default d,@f @r,132,Encoder speed

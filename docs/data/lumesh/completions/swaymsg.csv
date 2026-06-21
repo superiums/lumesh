@@ -20,3 +20,12 @@ Gets a JSON-encoded copy of the current configuration., ,t,type,get_config, ,119
 Gets a JSON-encoded list of all seats, its properties and all assigned devices., ,t,type,get_seats, ,120, 
 Sends a tick event to all subscribed clients., ,t,type,send_tick, ,121, 
 Subscribe to a list of event types., ,t,type,subscribe, ,122, 
+
+swaymsg, ,h,help, , ,123,Show help message and quit.
+swaymsg, ,m,monitor, , ,124,Monitor subscribed events until killed.
+swaymsg, ,p,pretty, , ,125,Use pretty output even when not using a tty.
+swaymsg, ,q,quiet, , ,126,Sends the IPC message but does not print the response from sway.
+swaymsg, ,r,raw, , ,127,Use raw output even if using tty.
+swaymsg, ,t,type, , ,128,Specify the type of IPC message.
+swaymsg, ,s,socket, ,@r,129,Use the specified socket path. Otherwise, swaymsg will ask where the socket is (which is the value of $SWAYSOCK, then of $I3SOCK).
+swaymsg, ,v,version, , ,130,Print the version (of swaymsg) and quit.

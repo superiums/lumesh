@@ -1,2 +1,4 @@
 cmd,conds,short,long,params,dirs,pri,desc
 mycli, ,d,dsn, ,@f @r,101,Use DSN configured into the [alias_dsn]
+
+mycli, , , , ,@E,102,__fish_mycli_dsn

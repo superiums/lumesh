@@ -28,3 +28,11 @@ cpupower, idle-set,E,enable-all, , ,126,Enable all idle states if not enabled al
 cpupower, set,b,perf-bias, , ,127,Set relative importance of performance vs energy savings
 cpupower, info,b,perf-bias, , ,128,Get relative importance of performance vs energy savings
 cpupower, monitor,m, ,$monitors,@f @r,129,Only display this monitor
+
+cpupower,monitor,v, , , ,130,Increase verbosity if the binary was compiled with the DEBUG option set
+cpupower,monitor,c, , , ,131,Schedule the process on every core before starting and ending measuring
+cpupower,monitor,i, , , ,132,Measure interval
+cpupower,monitor,l, , , ,133,List available monitors on your system
+cpupower,idle-set,d,disable, ,@f @r,134,Disable a specific processor sleep state
+cpupower,idle-set,e,enable, ,@f @r,135,Enable a specific processor sleep state
+cpupower,monitor,m, , ,@f @r,136,Only display this monitor

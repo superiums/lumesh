@@ -4,3 +4,22 @@ sphinx-build, , ,version, , ,102,Display Sphinx version
 sphinx-build, ,b, ,html dirhtml singlehtml htmlhelp qthelp devhelp epub applehelp latex man texinfo text gettext doctest linkcheck xml pseudoxml,@f @r,103,Builder to use
 sphinx-build, ,M, ,latexpdf info,@f @r,104,Alternative to -b
 sphinx-build, , ,keep-going, , ,105,Keep going when getting warnings
+
+sphinx-build, ,a, , , ,106,Write all files
+sphinx-build, ,E, , , ,107,Do not use a saved environment
+sphinx-build, ,d, , , ,108,Path for the cached environment and doctree files
+sphinx-build, ,j, , , ,109,Build in parallel
+sphinx-build, ,c, , , ,110,Path to conf.py
+sphinx-build, ,C, , , ,111,Do not look for a conf.py
+sphinx-build, ,D, , , ,112,Override a setting in conf.py
+sphinx-build, ,A, , , ,113,Pass a value into HTML templates
+sphinx-build, ,t, , , ,114,Define tag
+sphinx-build, ,n, , , ,115,Nit-picky mode
+sphinx-build, ,v, , , ,116,Increase verbosity
+sphinx-build, ,q, , , ,117,No output on stdout
+sphinx-build, ,Q, , , ,118,No output at all
+sphinx-build, ,N, , , ,119,Do not emit colored output
+sphinx-build, ,w, , , ,120,Write warnings to given file
+sphinx-build, ,W, , , ,121,Turn warnings into errors
+sphinx-build, ,T, , , ,122,Show full traceback on exception
+sphinx-build, ,P, , , ,123,Run Pdb on exception

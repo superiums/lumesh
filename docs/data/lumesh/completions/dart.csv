@@ -59,3 +59,9 @@ dart, run, ,enable-asserts, , ,166,Enable assert statements
 dart, run, ,no-enable-asserts, , ,167,Disable assert statements
 dart, run, ,verbosity, , ,168,Sets the verbosity level of the compilation
 dart, run,D,define, , ,169,Define an environment declaration
+
+dart, , , , ,@f,170,Analyze Dart code in a directory
+dart,compile, , , , ,171,Compile Dart to an AOT snapshot
+dart,create,t,template, , ,172,The project template to use
+dart,fix,n, , , ,173,Preview the proposed changes but make no changes
+dart,pub, , , , ,174,Add a dependency to pubspec.yaml

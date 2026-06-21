@@ -48,3 +48,8 @@ ncdu, , ,group-directories-first, , ,146,Sort directories before files
 ncdu, , ,no-group-directories-first, , ,147,Do not sort directories before files
 ncdu, , ,confirm-delete, , ,148,Require a confirmation before deleting
 ncdu, , ,no-confirm-delete, , ,149,Do not require a confirmation before deleting
+
+ncdu, ,r, , , ,150,Read only mode
+ncdu, ,o, , ,@r,151,Export scanned directory
+ncdu, ,f, , ,@r,152,Import scanned directory
+ncdu, ,2, , , ,153,UI to use when scanning (0=none,2=full ncurses)

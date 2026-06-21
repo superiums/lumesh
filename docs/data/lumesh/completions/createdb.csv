@@ -15,3 +15,5 @@ createdb, ,U,username, ,@f @r,113,User name to connect as
 createdb, ,w,no-password, , ,114,Never prompt for password
 createdb, ,W,password, , ,115,Force password prompt
 createdb, , ,maintenance-db, ,@f @r,116,Alternate maintenance database
+
+createdb, , , , ,@E @f,117,__fish_complete_pg_database

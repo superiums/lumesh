@@ -1,3 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
 bower, install, , , ,@f @r,103, 
 bower, uninstall, , , ,@f @r,104, 
+
+bower, , , , ,@E @f @r,105,__bower_cmds

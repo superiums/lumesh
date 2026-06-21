@@ -5,3 +5,5 @@ userdel, ,r,remove, , ,103,remove user's home and mail directories
 userdel, ,R,root, ,@D,104,apply changes in a chroot directory
 userdel, ,P,prefix, ,@D,105,apply changes in a prefix directory
 userdel, ,Z,selinux-user, , ,106,remove SELinux user mappings
+
+userdel, , , , , ,107,

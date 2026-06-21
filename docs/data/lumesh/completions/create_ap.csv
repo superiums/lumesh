@@ -35,3 +35,7 @@ create_ap, , ,no-dns, , ,133,Disable dnsmasq DNS server
 create_ap, , ,no-dnsmasq, , ,134,Disable dnsmasq server completely
 create_ap, ,g, , ,@f @r,135,IPv4 Gateway for the Access Point
 create_ap, ,e, , ,@F,136,DNS server will consider additional hosts file
+
+create_ap, , , , ,@f,137,
+create_ap, ,n, , , ,138,Disable Internet sharing
+create_ap, ,d, , , ,139,DNS server will consider /etc/hosts

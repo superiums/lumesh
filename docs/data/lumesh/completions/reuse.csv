@@ -27,3 +27,19 @@ reuse, spdx,o,output, ,@r,138,write the bill of materials to specified file
 reuse, spdx, ,add-license-concluded, , ,139,populate the LicenseConcluded field
 reuse, spdx, ,creator-person, ,@f @r,140,name of the person signing off on the SPDX report
 reuse, spdx, ,creator-organization, ,@f @r,141,name of the organization signing off on the SPDX report
+
+reuse, , ,debug, , ,142,enable debug logging
+reuse, , ,suppress-deprecation, , ,143,hide deprecation warnings
+reuse, , ,include-submodules, , ,144,do not ignore Git submodules
+reuse, , ,include-meson-subprojects, , ,145,do not ignore Meson subprojects
+reuse, , ,no-multiprocessing, , ,146,disable multiprocessing
+reuse, , ,root, ,@r,147,set root of project
+reuse, , ,version, , ,148,show version number
+reuse, , , ,annotate,@f @r,149,add REUSE information to files
+reuse, , , ,download,@f @r,150,download license files
+reuse, , , ,init,@f @r,151,initialize REUSE project
+reuse, , , ,lint,@f @r,152,list all non-compliant files
+reuse, , , ,spdx,@f @r,153,generate SPDX bill of materials
+reuse, , , ,supported-licenses,@f @r,154,list all supported licenses
+reuse,annotate,s,style, ,@f @r,155,comment style to use
+reuse,annotate, ,copyright-style, ,@f @r,156,copyright style to use

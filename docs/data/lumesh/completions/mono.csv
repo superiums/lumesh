@@ -35,3 +35,6 @@ mono, , ,ncompile, , ,137,
 mono, , ,stats, , ,138, 
 mono, , ,wapi, , ,139, 
 mono, ,v,verbose, , ,140,Show more messages
+
+mono, , ,gc,boehm\tBoehm sgen\tSGen,@f,141,Use the Garbage Collector engine
+mono, , ,aot, ,@F,142,

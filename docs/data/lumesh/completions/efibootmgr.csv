@@ -31,3 +31,5 @@ efibootmgr, ,w,write-signature, ,@f,129,write unique sig to MBR if needed
 efibootmgr, ,y,sysprep, ,@f,130,"Operate on SysPrep variables, not Boot Variables."
 efibootmgr, ,@,append-binary-args, ,@F,131,append extra args from file (use - for stdin)
 efibootmgr, ,h,help, ,@f,132,show help/usage
+
+efibootmgr, ,e,edd, ,@f,133,force EDD 1.0 or 3.0 creation variables, or guess

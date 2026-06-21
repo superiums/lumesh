@@ -23,3 +23,5 @@ clj, , ,version, ,@f,121,Print the version to stdout and exit
 clj, ,m,main, ,@f,122,Call the -main function from namespace w/args
 clj, ,r,repl, ,@f,123,Run a repl
 clj, , , , ,@r,124,Run a script from a file or resource
+
+clj, ,J, , , ,125,Pass opt through in java_opts, ex: -J-Xmx512m

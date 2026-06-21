@@ -4,3 +4,8 @@ zabbix_proxy, ,f,foreground, ,@f,102,Run Zabbix agent in foreground.
 zabbix_proxy, ,R,runtime-control,$runtime,@f,103,Perform administrative functions.
 zabbix_proxy, ,h,help, ,@f,104,Display this help and exit.
 zabbix_proxy, ,V,version, ,@f,105,Output version information and exit.
+
+zabbix_proxy,log_level_increase,R,runtime-control, ,@E @f @r,106,__fish_prepend log_level_increase
+zabbix_proxy,log_level_decrease,R,runtime-control, ,@E @f @r,107,__fish_prepend log_level_decrease
+zabbix_proxy,diaginfo,R,runtime-control, ,@E @f @r,108,__fish_prepend diaginfo
+zabbix_proxy, ,R,runtime-control, ,@f,109,Perform administrative functions.

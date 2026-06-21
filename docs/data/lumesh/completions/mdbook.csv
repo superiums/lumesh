@@ -5,3 +5,5 @@ mdbook, init, ,force, , ,103,Skip confirmation prompts
 mdbook, init, ,theme, , ,104,Copy default theme into source folder
 mdbook, serve,p,port, ,@f @r,105,Use another port (default 3000)
 mdbook, serve,w,websocket-port, ,@f @r,106,Use another port for websocket (default 3001)
+
+mdbook, , , , ,@f,107,

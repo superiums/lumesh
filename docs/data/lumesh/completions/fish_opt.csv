@@ -1,2 +1,11 @@
 cmd,conds,short,long,params,dirs,pri,desc
 fish_opt,v validate, , ,--description, ,101, 
+
+fish_opt, , , , ,@f,102,
+fish_opt, ,h,help, , ,103,Show help
+fish_opt, ,s,short, ,@f @r,104,Specify short option
+fish_opt, ,l,long, ,@f @r,105,Specify long option
+fish_opt, , ,longonly, , ,106,Use only long option
+fish_opt, ,m,multiple-vals, , ,107,Store all values
+fish_opt, ,d,delete, , ,108,Delete option from argv_opts
+fish_opt, ,v,validate, ,@r,109,Fish script to validate option values

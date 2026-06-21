@@ -7,3 +7,6 @@ gorename, , ,offset, , ,105,File and byte offset of identifier to be renamed
 gorename, , ,tags, , ,106,Build tag
 gorename, , ,to, , ,107,New name for identifier
 gorename, ,h,help, , ,108,Show help
+
+gorename, ,d, , , ,109,Display diffs instead of rewriting files
+gorename, ,v, , , ,110,Print verbose information

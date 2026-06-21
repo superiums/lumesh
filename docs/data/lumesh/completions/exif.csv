@@ -4,3 +4,7 @@ exif, ,-l, ,0 1 EXIF GPS Interoperability,@f @r,103,$description
 exif, ,-l, , , ,104,$description
 exif, ,-l, , , ,105,$description
 exif, ,-l, , , ,106,$description
+
+exif, , , , ,@E @f,107,__fish_exif_potential_targets
+exif, , ,$long, ,@E @f @r,108,__fish_exif_target_file_tags
+exif, , ,$long,0 1 EXIF GPS Interoperability,@f @r,109,$description

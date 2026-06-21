@@ -14,3 +14,5 @@ zathura, , ,mode,presentation fullscreen,@f @r,112,Start in a non-default mode
 zathura, , ,fork, , ,113,Fork into the background
 zathura, ,h,help, , ,114,Show help options
 zathura, ,v,version, , ,115,Print version information
+
+zathura, , , , , ,116,

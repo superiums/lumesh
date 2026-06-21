@@ -1,2 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 setsid, , , , ,@f @r,101,Command to run
+
+setsid, ,c,ctty, , ,102,Set controlling terminal to current one
+setsid, ,w,wait, , ,103,Wait until program ends and return its exit value
+setsid, ,V,version, , ,104,Display version and exit
+setsid, ,h,help, , ,105,Display help and exit

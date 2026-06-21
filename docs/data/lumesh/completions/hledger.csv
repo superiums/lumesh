@@ -51,3 +51,30 @@ hledger, register,w,width, ,@f @r,210,Set output width (defaults to terminal wid
 hledger, register,O,output-format,txt csv html,@f @r,211,Select an output format
 hledger, register,o,output-file, ,@r,212,"Write output to given file; extension selects format"
 hledger, stats,o,output-file, ,@r,215,"Write output to given file; extension selects format"
+
+hledger, , , ,add,@f,216,Add transactions using guided prompts
+hledger, , , ,import, ,217,Add new transactions from other files
+hledger, , , ,check-dates,@f,218,Ensure transactions are ordered by date
+hledger, , , ,check-dupes,@f,219,Ensure accounts have different leaf names
+hledger, , , ,close equity,@f,220,Generate balance-resetting transactions
+hledger, , , ,rewrite,@f,221,Generate automated postings/diffs
+hledger, , , ,balancesheet       bs,@f,222,Show assets, liabilities, and net worth
+hledger, , , ,balancesheetequity bse,@f,223,Show assets, liabilities, and equity
+hledger, , , ,cashflow           cf,@f,224,Show changes in liquid assets
+hledger, , , ,incomestatement    is,@f,225,Show revenues and expenses
+hledger, , , ,roi,@f,226,Show return on investments
+hledger, , , ,accounts,@f,227,Show account names
+hledger, , , ,activity,@f,228,Show postings-per-interval bar charts
+hledger, , , ,balance,@f,229,Show balance changes/end balances/budgets in accounts
+hledger, , , ,commodities,@f,230,Show commodity/currency symbols
+hledger, , , ,files,@f,231,Show input file paths
+hledger, , , ,prices,@f,232,Show market-price records
+hledger, , , ,print txns,@f,233,Show transactions
+hledger, , , ,print-unique,@f,234,Show only transactions with unique descriptions
+hledger, , , ,register,@f,235,Show postings in one or more accounts & running total
+hledger, , , ,register-match,@f,236,Show a recent posting that best matches a description
+hledger, , , ,stats,@f,237,Show journal statistics
+hledger, , , ,tags,@f,238,Show tag names
+hledger, , , ,test,@f,239,Run self-tests
+hledger, , , ,help,@f,240,Show hledger manual list
+hledger, , ,debug, ,@f @r,241,Show debug output

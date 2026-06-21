@@ -8,3 +8,5 @@ trash-put, ,R,recursive, ,@f,106,ignored (for GNU rm compatibility)
 trash-put, , ,trash-dir, ,@F,107,specify trash folder
 trash-put, ,v,verbose, ,@f,108,be verbose
 trash-put, , ,version, ,@f,109,show version number
+
+trash-put, , ,print-completion, ,@f,110,print shell completion script

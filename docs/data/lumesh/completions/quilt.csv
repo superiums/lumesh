@@ -31,3 +31,136 @@ quilt, -d, , ,snapshot,@r,129,
 quilt, , , ,top, ,130,Prints name of the topmost patch in the current stack of applied patches
 quilt, , , ,unapplied,@r,131,List patches not applied or patches that follow the patch in the series file
 quilt, , , ,upgrade, ,132,Upgrade meta-data in a working tree to the current version of quilt
+
+quilt, , , , ,@f,133,
+quilt,add,P, , , ,134,Patch to add files to
+quilt,add, , , , ,135,
+quilt,annotate,P, , , ,136,Stop checking for changes at the specified patch
+quilt,annotate, , , , ,137,
+quilt,applied, , , , ,138,Up to and including
+quilt,delete,r, , ,@f,139,Remove patch file from the patches directory as well
+quilt,delete, ,backup, ,@f,140,Rename the patch file to patch~
+quilt,delete,n, , ,@f,141,Delete the next patch after topmost
+quilt,-n, , , , ,142,Patch to remove
+quilt,diff,p, , , ,143,File name style in patch
+quilt,diff, ,combine, , ,144,Combined diff between this patch and -P
+quilt,diff,z, , ,@f,145,Write to stdout
+quilt,diff,R, , ,@f,146,Reverse diff
+quilt,diff,P, , , ,147,Patch to diff
+quilt,diff, ,snapshot, ,@f,148,Diff against snapshot
+quilt,diff, ,diff, , ,149,Custom diff command
+quilt,diff, ,no-timestamps, ,@f,150,Do not include timestamps in headers
+quilt,diff, ,no-index, ,@f,151,Do not include 'Index: lines' in headers
+quilt,diff, ,sort, ,@f,152,Sort files by name
+quilt,diff, ,color, , ,153,Use syntax coloring
+quilt,diff, , , ,@F,154,
+quilt,edit, , , , ,155,
+quilt,files,v, , ,@f,156,Pretty output
+quilt,files,a, , ,@f,157,List all files in all applied patches
+quilt,files,l, , ,@f,158,Add patch name to output
+quilt,files, ,combine, , ,159,Combined listing between this patch and -P
+quilt,files, , , , ,160,List files changed by patch
+quilt,fold,R, , ,@f,161,Apply patch in reverse
+quilt,fold,q, , ,@f,162,Quiet operation
+quilt,fold,f, , ,@f,163,Force apply, even if the patch has rejects
+quilt,fold,p, , , ,164,Number of components to strip from paths
+quilt,fork, , , , ,165,
+quilt,graph, ,all, ,@f,166,Include all applied patches and their dependencies
+quilt,graph, ,reduce, ,@f,167,Eliminate transitive edges from the graph
+quilt,graph, ,lines, , ,168,Compute dependencies by the lines the patches modify
+quilt,graph, ,edge-labels, , ,169,Label graph edges with the file names
+quilt,graph,T, , , ,170,Directly produce a PostScript output file
+quilt,all, , , , ,171,Patch to graph dependencies
+quilt,grep, , , , ,172,
+quilt,-a,a, , ,@f,173,Append to patch header
+quilt,-a,r, , ,@f,174,Replace patch header
+quilt,header, ,backup, ,@f,175,Rename old version of a patch as patch~
+quilt,header, ,strip-diffstat, ,@f,176,Remove diffstat from the header
+quilt,header, ,strip-trailing-whitespace, ,@f,177,Strip whitespace at the end of lines
+quilt,header, , , , ,178,Print/change header of patch
+quilt,import,p, , , ,179,Number of directories to strip
+quilt,import,R, , ,@f,180,Apply patch in reverse
+quilt,import,P, , , ,181,Patch filename to use inside quilt
+quilt,import,f, , ,@f,182,Overwrite/update existing patches
+quilt,import,d, , , ,183,Which header to keep on overwrite
+quilt,import, , , , ,184,Patch to import
+quilt,mail, ,mbox, , ,185,Store the messages in an MBox file
+quilt,mail, ,send, ,@f,186,Send the messages directly
+quilt,mail,m, , ,@f @r,187,Text to use in the introduction
+quilt,mail,M, , ,@f @r,188,Read the introduction from file
+quilt,mail, ,prefix, ,@f @r,189,Alternate bracketed prefix for the subject
+quilt,mail, ,sender, ,@f @r,190,The envelope sender address to use
+quilt,mail, ,from, ,@f @r,191,Value for the From header
+quilt,mail, ,to, ,@f @r,192,Append recipient in the To header
+quilt,mail, ,cc, ,@f @r,193,Append recipient in the Cc header
+quilt,mail, ,bcc, ,@f @r,194,Append recipient in the Bcc header
+quilt,mail, ,subject, ,@f @r,195,Value for the From header
+quilt,mail, ,reply-to, ,@f @r,196,Add headers to reply to the message
+quilt,mail, ,charset, , ,197,Specify a message encoding
+quilt,mail, ,signature, , ,198,Append the signature to message
+quilt,mbox, , ,-mbox,@f,199,Store the messages in an MBox file
+quilt,mbox, , ,-send,@f,200,Send the messages directly
+quilt,new,p, , , ,201,File name style in patch
+quilt,new, , , , ,202,
+quilt,next, , , , ,203,
+quilt,patches,v, , ,@f,204,Pretty output
+quilt,patches, ,color, , ,205,Use syntax coloring
+quilt,patches, , , , ,206,
+quilt,pop,a, , ,@f,207,Remove all applied patches
+quilt,pop,f, , ,@f,208,Force remove and restore state from backup files
+quilt,pop,R, , ,@f,209,Always verify if the patch removes cleanly
+quilt,pop,q, , ,@f,210,Quiet operation
+quilt,pop,v, , ,@f,211,Verbose operation
+quilt,pop, ,refresh, ,@f,212,Refresh every patch before it gets unapplied
+quilt,-a, , , , ,213,Pop N patches
+quilt,previous, , , , ,214,Target patch
+quilt,push,a, , ,@f,215,Apply all patches in the series file
+quilt,push,f, , ,@f,216,Force apply, even if the patch has rejects
+quilt,push,q, , ,@f,217,Quiet operation
+quilt,push,v, , ,@f,218,Verbose operation
+quilt,push,m, , ,@f,219,Merge the patch file into the original files
+quilt,push, ,merge, , ,220,Merge the patch file into the original files
+quilt,push, ,leave-rejects, ,@f,221,Leave around the reject files patch produced
+quilt,push, ,color, , ,222,Use syntax coloring
+quilt,push, ,refresh, ,@f,223,Automatically refresh every patch after it gets applied
+quilt, ,p, , ,@n,224,File name style in patch
+quilt, ,z, , ,@f @n @r,225,Create a new patch with the changes
+quilt, ,h, , , ,226,
+quilt, ,f, , ,@f @n,227,Refresh a patch that is not on top
+quilt,refresh, ,no-timestamps, ,@f,228,Do not include timestamps in header
+quilt,refresh, ,no-index, ,@f,229,Do not include 'Index: lines' in header
+quilt,refresh, ,diffstat, ,@f,230,Add or replace diffstat section to header
+quilt,refresh, ,sort, ,@f,231,Sort files by name
+quilt,refresh, ,backup, ,@f,232,Rename old patch file to patch~
+quilt,refresh, ,strip-trailing-whitespace, ,@f,233,Strip whitespace at the end of lines
+quilt,refresh, , , , ,234,Patch to refresh
+quilt,remove,P, , , ,235,Remove files from named patch
+quilt,remove, , , , ,236,
+quilt,rename,P, , , ,237,Patch to rename
+quilt,rename, , , , ,238,
+quilt,revert,P, , , ,239,Revert changes in patch
+quilt,revert, , , , ,240,
+quilt,series, ,color, , ,241,Use syntax coloring
+quilt,series,v, , ,@f,242,Pretty output
+quilt,setup,d, , ,@f @r,243,Path prefix for the resulting source tree
+quilt,setup,v, , ,@f,244,Verbose debug output
+quilt,setup, ,sourcedir, , ,245,Directory for package sources
+quilt,setup, ,spec-filter, , ,246,Apply a filter before passing the spec file to rpmbuild
+quilt,slow, ,slow, ,@f,247,Use original method to process the spec file
+quilt,slow, ,fast, ,@f,248,Use new method to process the spec file
+quilt,setup, , , , ,249,
+quilt,snapshot,d, , ,@f,250,Only remove current snapshot
+quilt,unapplied, , , , ,251,Patch to assume as top
+quilt,diff,u, , ,@f,252,Unified diff (3 lines of context)
+quilt,diff,U, , , ,253,Unified diff (N lines of context)
+quilt,diff,c, , ,@f,254,Context diff (3 lines of context)
+quilt,diff,C, , , ,255,Context diff (N lines of context)
+quilt,-a,e, , ,@f,256,Edit header in $EDITOR
+quilt,-eq 2, , , , ,257,First patch to include
+quilt,-eq 3, , , , ,258,Last patch to include
+quilt,push, ,fuzz, , ,259,Maximum fuzz factor (in lines)
+quilt,-q,u, , ,@f @n,260,Unified diff (3 lines of context)
+quilt,-q,U, , ,@n,261,Unified diff (N lines of context)
+quilt,-q,c, , ,@f @n,262,Context diff (3 lines of context)
+quilt,-q,C, , ,@n,263,Context diff (N lines of context)
+quilt,setup, ,fuzz, , ,264,Maximum fuzz factor (in lines)

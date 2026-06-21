@@ -61,3 +61,10 @@ ps, ,X, , , ,158,"When filtering
 ps, ,G, , ,@E @f @r,159,"__fish_stripprefix='^(--group=|-\w*G)' __fish_complete_list
 ps, ,U, , ,@E @f @r,160,"__fish_stripprefix='^(--user=|-\w*U)' __fish_complete_list
 ps, ,p, , ,@E @f @r,161,"__fish_stripprefix='^(--pid=|-\w*p)' __fish_complete_list
+
+ps, ,u, , , ,162,BSD user format (user, pid, %cpu, %mem, vsz, rss, tt, state, start, time, and cmd)
+ps, ,v, , , ,163,BSD v format (pid, state, time, sl, re, pagein, vsz, rss, lim, tsiz, %cpu, %mem)
+ps, ,X, , , ,164,When filtering, skip processes without controlling terminal (default)
+ps, ,G, , ,@E @f @r,165,__fish_stripprefix='^(--group=|-\w*G)' __fish_complete_list , __fish_complete_groups
+ps, ,U, , ,@E @f @r,166,__fish_stripprefix='^(--user=|-\w*U)' __fish_complete_list , __fish_complete_users
+ps, ,p, , ,@E @f @r,167,__fish_stripprefix='^(--pid=|-\w*p)' __fish_complete_list , __fish_complete_pids

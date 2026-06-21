@@ -57,3 +57,7 @@ strace, , ,seccomp-bpf, , ,155,Try to enable use of seccomp-bpf
 strace, , ,tips, , ,156,"Show strace tips, tricks, and tweaks before exit"
 strace, ,h,help, , ,157,Print help and exit
 strace, ,V,version, , ,158,Print version and exit
+
+strace, , , , , ,159,Run tracer process as tracee's grandchild in a separate process group.
+strace, ,x, , , ,160,Print all non-ASCII strings in hex format
+strace, ,S,summary-sort-by, , ,161,Sort summary by the specified criterion

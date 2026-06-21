@@ -26,3 +26,54 @@ chronyc, smoothtime, , ,activate,@f,158,Activate time smoothing
 chronyc, smoothtime, , ,reset,@f,159,Reset time smoothing
 chronyc, cmdallow, , ,all,@f,162,Allow access to subnet and all children
 chronyc, cmddeny, , ,all,@f,164,Deny access to subnet and all children
+
+chronyc, , , ,tracking,@f,165,Show system time info
+chronyc, , , ,makestep,@f,166,Correct the clock by stepping
+chronyc, , , ,maxupdateskew,@f,167,Modify max valid skew to update frequency
+chronyc, , , ,waitsync,@f,168,Wait until synced in specified limits
+chronyc, , , ,sources,@f,169,Show info about current sources
+chronyc, , , ,sourcestats,@f,170,Show statistics about collected measurements
+chronyc, , , ,reselect,@f,171,Force reselecting sync source
+chronyc, , , ,reselectdist,@f,172,Modify reselection distance
+chronyc, , , ,activity,@f,173,Check how many NTP sources are online/offline
+chronyc, , , ,ntpdata,@f,174,Show info about last valid measurement
+chronyc, , , ,add,@f,175,
+chronyc, , , ,delete,@f,176,Remove server/peer
+chronyc, , , ,burst,@f,177,Start rapid set of measurements
+chronyc, , , ,maxdelay,@f,178,Modify max valid sample delay
+chronyc, , , ,maxdelaydevratio,@f,179,Modify max valid delay/deviation ratio
+chronyc, , , ,maxdelayratio,@f,180,Modify max valid delay/min ratio
+chronyc, , , ,maxpoll,@f,181,Modify max polling interval
+chronyc, , , ,minpoll,@f,182,Modify min polling interval
+chronyc, , , ,minstratum,@f,183,Modify min stratum
+chronyc, , , ,offline,@f,184,Set sources in subnet to offline status
+chronyc, , , ,online,@f,185,Set sources in subnet to online status
+chronyc, , , ,onoffline,@f,186,Set all sources to online/offline status according to network config
+chronyc, , , ,polltarget,@f,187,Modify poll target
+chronyc, , , ,refresh,@f,188,Refresh IP address
+chronyc, , , ,manual,@f,189,
+chronyc, , , ,settime,@f,190,Set daemon time
+chronyc, , , ,accheck,@f,191,Check whether address is allowed
+chronyc, , , ,clients,@f,192,Report on clients that have accessed the server
+chronyc, , , ,serverstats,@f,193,Show statistics of the server
+chronyc, , , ,allow,@f,194,Allow access to subnet as a default
+chronyc, , , ,deny,@f,195,Deny access to subnet as a default
+chronyc, , , ,local,@f,196,Serve time even when not synced
+chronyc, , , ,smoothing,@f,197,Show current time smoothing state
+chronyc, , , ,smoothtime,@f,198,
+chronyc, , , ,cmdaccheck,@f,199,Check whether address is allowed
+chronyc, , , ,cmdallow,@f,200,Allow access to subnet as a default
+chronyc, , , ,cmddeny,@f,201,Deny access to subnet as a default
+chronyc, , , ,rtcdata,@f,202,Print current RTC performance parameters
+chronyc, , , ,trimrtc,@f,203,Correct RTC relative to system clock
+chronyc, , , ,writertc,@f,204,Save RTC performance parameters to file
+chronyc, , , ,cyclelogs,@f,205,Close and reopen log files
+chronyc, , , ,dump,@f,206,Dump all measurements to save files
+chronyc, , , ,rekey,@f,207,Reread keys from key file
+chronyc, , , ,shutdown,@f,208,Stop daemon
+chronyc, , , ,dns,@f,209,Configure how hostname and IP address are resolved
+chronyc, , , ,timeout,@f,210,Set initial response timeout
+chronyc, , , ,retries,@f,211,Set max number of retries
+chronyc, , , ,keygen,@f,212,Generate key for key file
+chronyc, , , ,exit quit,@f,213,Leave the program
+chronyc, , , ,help,@f,214,Show help message

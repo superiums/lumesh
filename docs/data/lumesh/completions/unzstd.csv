@@ -21,3 +21,6 @@ unzstd, ,V,version, , ,119,Show version
 unzstd, ,v,verbose, , ,120,Be verbose
 unzstd, ,q,quiet, , ,121,Suppress warnings
 unzstd, , ,no-progress, , ,122,Do not show the progress bar
+
+unzstd, ,r, , , ,123,Recurse directories
+unzstd, ,H, , , ,124,Show long help

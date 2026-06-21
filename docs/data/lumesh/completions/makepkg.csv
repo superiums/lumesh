@@ -35,3 +35,5 @@ makepkg, , ,asdeps, , ,133,Passed to pacman: Install as dependencies
 makepkg, , ,noprogressbar, , ,134,Passed to pacman: Do not display a progress bar
 makepkg, , ,packagelist, , ,135,List all packages that would be built
 makepkg, , ,printsrcinfo, , ,136,Print SRCINFO to stdout
+
+makepkg, ,p, , , ,137,Use alternative <buildscript>

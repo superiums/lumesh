@@ -29,10 +29,10 @@ as, , ,version, , ,127,Print assembler version number and exit
 as, ,W,no-warn, , ,128,Suppress warnings
 as, , ,warn, , ,129,Don't suppress warnings
 as, , ,fatal-warnings, , ,130,Treat warnings as errors
-as, , ,listing-lhs-width, , ,131, 
-as, , ,listing-lhs-width2, , ,132, 
-as, , ,listing-rhs-width, , ,133, 
-as, , ,listing-cont-lines, , ,134, 
+as, , ,listing-lhs-width, , ,131,
+as, , ,listing-lhs-width2, , ,132,
+as, , ,listing-rhs-width, , ,133,
+as, , ,listing-cont-lines, , ,134,
 as, ,@, , ,@r,135,Read option from given file
 as, , ,32, , ,136,Generate 32 bits code
 as, , ,64, , ,137,Generate 64 bits code
@@ -48,5 +48,18 @@ as, , , ,att intel,@f @r,146,Use specified syntax
 as, , , ,yes no,@f @r,147,Strip all lock prefixes
 as, , , ,yes no,@f @r,148,Encode lfence mfence and sfence as lock addl $0x0 (%{re}sp)
 as, , , ,yes no,@f @r,149,Generate relax relocations
-as, , , , ,@f @r,150, 
+as, , , , ,@f @r,150,
 as, , , ,generic32 generic64 i8086 i186 i286 i386 i486 i586 i686 pentium pentiumpro pentiumii pentiumiii pentium4 prescott nocona core core2 corei7 l1om k1om iamcu k6 k6_2 athlon opteron k8 amdfam10 bdver1 bdver2 bdver3 bdver4 znver1 btver1 btver2,@f @r,151,Optimize for given CPU
+
+as, ,D, , , ,152,Produce assembler debugging messages
+as, , ,size-check,error\tDefault warning,@f @r,153,ELF .size directive check
+as, ,f, , , ,154,Skip whitespace and comment preprocessing
+as, ,J, , , ,155,Don
+as, ,K, , , ,156,Warn when differences altered for long displacements
+as, ,L, , , ,157,Keep local symbols
+as, ,R, , , ,158,Fold data section into text section
+as, ,Z, , , ,159,Generate object file even after errors
+as, ,V, , , ,160,Print assembler version number
+as, ,n, , , ,161,Don
+as, ,q, , , ,162,Quieten some warnings
+as, , , ,att\tAT\&T intel\tIntel,@f @r,163,Use specified mnemonic

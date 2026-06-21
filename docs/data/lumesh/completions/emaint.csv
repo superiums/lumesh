@@ -11,3 +11,5 @@ emaint, sync,a,auto, , ,119,Sync auto-sync enabled repos only
 emaint, sync,A,allrepos, , ,120,Sync all repos that have a sync-url defined
 emaint, sync,r,repo, , ,121,Sync the specified repo
 emaint, sync, ,sync-submodule, , ,122,Restrict sync to the specified submodule(s)
+
+emaint, , , , , ,123,Perform all supported commands

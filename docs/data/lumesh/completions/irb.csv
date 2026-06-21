@@ -24,3 +24,12 @@ irb, , ,verbose, , ,122,Show details
 irb, , ,noverbose, , ,123,Don't show details
 irb, ,v,version, , ,124,Print the version of irb
 irb, ,h,help, , ,125,Print a summary of options
+
+irb, ,f, , , ,126,Suppresses read of ~/.irbrc
+irb, ,U, , , ,127,Same as 'ruby -U'
+irb, ,w, , , ,128,Turn on warnings'
+irb, ,W, , , ,129,Set warning level
+irb, , ,context-mode, , ,130,Create Binding Object
+irb, , ,prompt, , ,131,Switch prompt mode
+irb, , ,prompt-mode, , ,132,Switch prompt mode
+irb, ,d, , , ,133,Set \$DEBUG to true

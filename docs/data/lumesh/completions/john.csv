@@ -83,3 +83,16 @@ john, , ,list,help subformats inc-modes rules externals ext-modes ext-hybrids ex
 john, , ,tune,auto report N, ,185,tuning options
 john, , ,force-tty, , ,186,set up terminal for reading keystrokes
 john, , ,format, , ,187,force hash type
+
+john, , ,subsets-prefer-short, , ,188,prefer shorter candidates over smaller subsets
+john, , ,subsets-prefer-small, , ,189,prefer smaller subsets over shorter candidates
+john, , ,save-memory, , ,190,enable memory saving at level
+john, , ,verbosity, , ,191,change verbosity
+john, , ,bare-always-valid, , ,192,treat bare hashes as valid
+john, , ,input-encoding, , ,193,input encoding
+john, , ,internal-codepage, , ,194,codepage used in rules/masks
+john, , ,target-encoding, , ,195,output encoding
+john, , ,list, , ,196,list capabilities
+john, , ,tune, , ,197,tuning options
+john, , ,subformat, , ,198,pick a benchmark format for --format=crypt
+john, , ,catch-up, , ,199,catch up with existing (paused) session NAME

@@ -26,3 +26,55 @@ xterm, , , ,vt52 vt100 vt101 vt102 vt220,@r,170,Terminal identification
 xterm, , , , ,@r,171,Terminal name for $TERM
 xterm, , , , ,@r,172,zIconBeep percentage
 xterm, ,b, , ,@r,173,Size of the inner border
+
+xterm, ,j, , , ,174,Use jump scrolling
+xterm, ,l, , , ,175,Turn on logging
+xterm, ,s, , , ,176,Turn on asynchronous scrolling
+xterm, ,t, , , ,177,Tektronix mode
+xterm, ,C, , , ,178,This window should receive console output
+xterm,, , ,+ah, ,179,Never highlight the text cursor
+xterm,, , ,+ai, ,180,Enable active icon support
+xterm,, , ,+aw, ,181,Disallow auto wraparound
+xterm,, , ,+bc, ,182,Turn off cursor blinking
+xterm,, , ,+bdc, ,183,Enable the display of bold characters
+xterm,, , ,+cb, ,184,Set the vt100 resource cutToBeginningOfLine to
+xterm,, , ,+cjk_width, ,185,Set the cjkWidth resource to
+xterm,, , ,+cm, ,186,Enable recognition of ANSI color-change escape sequences
+xterm,, , ,+cn, ,187,Cut newlines in line-mode selections
+xterm,, , ,+cu, ,188,Don
+xterm,, , ,+dc, ,189,Disable dynamic color changing
+xterm,, , ,+fbb, ,190,Don
+xterm,, , ,+fbx, ,191,Normal and bold fonts have VT100 line-drawing characters
+xterm,, , ,+hf, ,192,Don
+xterm,, , ,+hold, ,193,Close xterm
+xterm,, , ,+ie, ,194,Don
+xterm,, , ,+im, ,195,Don
+xterm,, , ,+j, ,196,Don
+xterm,, , ,+k8, ,197,Don
+xterm,, , ,+l, ,198,Turn off logging
+xterm,, , ,+lc, ,199,Turn off support for encodings according the locale setting
+xterm,, , ,+ls, ,200,The shell in xterm
+xterm,, , ,+mb, ,201,Don
+xterm,, , ,+mesg, ,202,Allow write access to the terminal
+xterm,, , ,+mk_width, ,203,Don
+xterm,, , ,+nul, ,204,Enable underlining
+xterm,, , ,+pc, ,205,Disable PC style bold colors
+xterm,, , ,+pob, ,206,Don
+xterm,, , ,+rvc, ,207,Enable characters with reverse attribute as color
+xterm,, , ,+rw, ,208,Disable reverse-wraparound
+xterm,, , ,+s, ,209,Turn off asynchronous scrolling
+xterm,, , ,+samename, ,210,Send title/icon change requests always
+xterm,, , ,+sb, ,211,Don
+xterm,, , ,+sf, ,212,Don
+xterm,, , ,+si, ,213,Move the screen to the bottom on input
+xterm,, , ,+sk, ,214,Don
+xterm,, , ,+sm, ,215,Don
+xterm,, , ,+sp, ,216,Don
+xterm,, , ,+t, ,217,VT102 mode
+xterm,, , ,+tb, ,218,Don
+xterm,, , ,+u8, ,219,Don
+xterm,, , ,+ulc, ,220,Display characters with underline attribute as color
+xterm,, , ,+ut, ,221,Write to the system utmp log file
+xterm,, , ,+vb, ,222,Don
+xterm,, , ,+wc, ,223,Don
+xterm,, , ,+wf, ,224,Don

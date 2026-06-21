@@ -33,3 +33,6 @@ scanimage, ,h,help, , ,131,Display this help message and exit
 scanimage, ,v,verbose, , ,132,Give even more status messages
 scanimage, ,B,buffer-size, ,@r,133,"Change input buffer size (in kB, default 32)"
 scanimage, ,V,version, , ,134,Print version information
+
+scanimage, , ,mode, , ,135,Scan mode
+scanimage, , ,format, , ,136,Output image format

@@ -296,3 +296,20 @@ dnf, ,,showduplicates,, ,421,Shows duplicate packages
 dnf, ,v,verbose,, ,422,Verbose mode
 dnf, ,,version,, ,423,Shows DNF version and exit
 dnf, ,y,assumeyes,, ,424,Answer yes for all questions
+
+dnf,group mark, , , , ,425,Display overview of installed and available groups
+dnf,group install, ,with-optional, , ,426,Include optional packages
+dnf,group list, ,installed, , ,427,List installed groups
+dnf,group list, ,available, , ,428,List available groups
+dnf,group list, ,hidden, , ,429,List hidden groups
+dnf,group remove, ,with-optional, , ,430,Include optional packages
+dnf,module list, ,all, , ,431,Lists all module
+dnf,module list, ,enabled, , ,432,Lists enabled module
+dnf,module list, ,disabled, , ,433,Lists disabled module
+dnf,module list, ,installed, , ,434,List  installed modules
+dnf,module info, ,profile, , ,435,Print module profiles information
+dnf,versionlock add, , , , ,436,
+dnf,versionlock exclude, , , , ,437,
+dnf,versionlock delete, , , , ,438,
+dnf,versionlock list, , , , ,439,
+dnf,versionlock clear, , , , ,440,

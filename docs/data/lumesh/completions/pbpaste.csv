@@ -1,3 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
 pbpaste, , , ,general ruler find font, ,101,Which paste board to use
 pbpaste, , , ,txt rtf ps, ,102,Tells pbpaste what type of data to look for in the pasteboard first
+
+pbpaste, , , , , ,103,Display command help

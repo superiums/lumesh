@@ -16,3 +16,24 @@ git," subtree; and push split", ,rejoin, ,@f,114,Merge the synthetic history bac
 git," subtree; and add merge", ,squash, ,@f,118,Merge subtree changes as a single commit
 git," subtree; and add merge", ,no-squash, ,@f,119,Do not merge subtree changes as a single commit
 git," subtree; and add merge",m,message, ,@f,120,Use the given message as the commit message for the merge commit
+
+git-subtree, , , ,subtree,@f,121,Manage git subtrees
+git-subtree,subtree,q,quiet, ,@f,122,Suppress output
+git-subtree,subtree,d,debug, ,@f,123,Debug output
+git-subtree,subtree,P,path, ,@f,124,Path to the subtree
+git-subtree,subtree, , ,add,@f,125,Add a new subtree to the repository
+git-subtree,subtree, , ,merge,@f,126,Merge changes from a subtree into the repository
+git-subtree,subtree, , ,split,@f,127,Extract a subtree from the repository
+git-subtree,subtree, , ,pull,@f,128,Fetch and integrate changes from a remote subtree
+git-subtree,subtree, , ,push,@f,129,Push changes to a remote subtree
+git-subtree,subtree push split, ,annotate, ,@f,130,Annotate the commit
+git-subtree,subtree push split,b,branch, ,@f,131,Branch to split
+git-subtree,subtree push split, ,ignore-joins, ,@f,132,Ignore joins during history reconstruction
+git-subtree,subtree push split, ,onto, ,@f,133,Specify the commit ID to start history reconstruction
+git-subtree,subtree push split, ,rejoin, ,@f,134,Merge the synthetic history back into the main project
+git-subtree,subtree push split rejoin, ,squash, ,@f,135,Merge subtree changes as a single commit
+git-subtree,subtree push split rejoin, ,no-squash, ,@f,136,Do not merge subtree changes as a single commit
+git-subtree,subtree push split rejoin,m,message, ,@f,137,Use the given message as the commit message for the merge commit
+git-subtree,subtree add merge, ,squash, ,@f,138,Merge subtree changes as a single commit
+git-subtree,subtree add merge, ,no-squash, ,@f,139,Do not merge subtree changes as a single commit
+git-subtree,subtree add merge,m,message, ,@f,140,Use the given message as the commit message for the merge commit

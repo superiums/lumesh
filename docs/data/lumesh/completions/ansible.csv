@@ -35,3 +35,5 @@ ansible, ,b,become, ,@f,133,Run operations with become
 ansible, , ,become-method,sudo su pbrun pfexec runas doas dzdo,@f @r,134,Privilege escalation method to use (default=sudo)
 ansible, , ,become-user, ,@f @r,135,Run operations as this user (default=root)
 ansible, ,K,ask-become-pass, ,@f,136,Ask for privilege escalation password
+
+ansible, ,P, , ,@r,137,Set the poll interval if using -B (default=15)

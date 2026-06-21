@@ -1,2 +1,237 @@
 cmd,conds,short,long,params,dirs,pri,desc
 btrfs, , ,help, ,@f,101,Display help information
+
+btrfs, , , ,receive,@f,102,Receive subvolumes from a stream
+btrfs, , , ,help,@f,103,Display help information
+btrfs, , , ,version,@f,104,Display btrfs-progs version
+btrfs, , , ,subvolume,@f,105,manage subvolumes: create, delete, list, etc
+btrfs, , , ,filesystem,@f,106,overall filesystem tasks and information
+btrfs, , , ,balance,@f,107,balance data across devices, or change block groups using filters
+btrfs, , , ,device,@f,108,manage and query devices in the filesystem
+btrfs, , , ,scrub,@f,109,verify checksums of data and metadata
+btrfs, , , ,rescue,@f,110,toolbox for specific rescue operations
+btrfs, , , ,inspect-internal,@f,111,query various internal information
+btrfs, , , ,property,@f,112,modify properties of filesystem objects
+btrfs, , , ,quota,@f,113,manage filesystem quota settings
+btrfs, , , ,qgroup,@f,114,manage quota groups
+btrfs, , , ,replace,@f,115,replace a device in the filesystem
+btrfs,subvolume create,p, , ,@f,116,Create any missing parent directories
+btrfs,subvolume delete,c,commit-after, ,@f,117,Wait for transaction commit at the end of the operation
+btrfs,subvolume delete,C,commit-each, ,@f,118,Wait for transaction commit after deleting each subvolume
+btrfs,subvolume delete,R,recursive, ,@f,119,Delete subvolumes beneath each subvolume recursively
+btrfs,subvolume delete,v,verbose, ,@f,120,Verbose output of operations
+btrfs,subvolume list,o, , ,@f,121,Print only subvolumes below specified path
+btrfs,subvolume list,a, , ,@f,122,Print all the subvolumes and absolute and relative path
+btrfs,subvolume list,p, , ,@f,123,Print parent ID
+btrfs,subvolume list,c, , ,@f,124,Print the ogeneration of the subvolume
+btrfs,subvolume list,g, , ,@f,125,Print the generation of the subvolume
+btrfs,subvolume list,q, , ,@f,126,Print the parent uuid of the snapshots
+btrfs,subvolume list,R, , ,@f,127,Print the uuid of the received snapshots
+btrfs,subvolume list,s, , ,@f,128,List only snapshots
+btrfs,subvolume list,d, , ,@f,129,List deleted subvolumes that are not yet cleaned
+btrfs,subvolume list,t, , ,@f,130,Print the result as a table
+btrfs,subvolume list,G, , ,@f @r,131,Filter the subvolumes by generation
+btrfs,subvolume list,C, , ,@f @r,132,Filter the subvolumes by ogeneration
+btrfs,subvolume list, ,sort,{gen,ogen,133,path},@f,198,List the subvolume in order
+btrfs,subvolume snapshot,r, , ,@f,134,Create a readonly snapshot
+btrfs,subvolume show,r,rootid, ,@f,135,Show rootid of the subvolume
+btrfs,subvolume show,u,uuid, ,@f,136,Show uuid of the subvolume
+btrfs,subvolume show,b,raw, ,@f,137,Show raw numbers in bytes
+btrfs,subvolume show,h,human-readable, ,@f,138,Show human friendly numbers, base 1024
+btrfs,subvolume show,H, , ,@f,139,Show human friendly numbers, base 1000
+btrfs,subvolume show,k,kbytes, ,@f,140,Show sizes in KiB, or kB with --si
+btrfs,subvolume show,m,mbytes, ,@f,141,Show sizes in MiB, or MB with --si
+btrfs,subvolume show,g,gbytes, ,@f,142,Show sizes in GiB, or GB with --si
+btrfs,subvolume show,t,tbytes, ,@f,143,Show sizes in TiB, or TB with --si
+btrfs,subvolume sync,s, , ,@f,144,Sleep NUMBER seconds between checks
+btrfs,filesystem df,b,raw, ,@f,145,Show raw numbers in bytes
+btrfs,filesystem df,h,human-readable, ,@f,146,Show human friendly numbers, base 1024
+btrfs,filesystem df,H, , ,@f,147,Show human friendly numbers, base 1000
+btrfs,filesystem df,k,kbytes, ,@f,148,Show sizes in KiB, or kB with --si
+btrfs,filesystem df,m,mbytes, ,@f,149,Show sizes in MiB, or MB with --si
+btrfs,filesystem df,g,gbytes, ,@f,150,Show sizes in GiB, or GB with --si
+btrfs,filesystem df,t,tbytes, ,@f,151,Show sizes in TiB, or TB with --si
+btrfs,filesystem du,s,summarize, ,@f,152,Display only a total for each argument
+btrfs,filesystem du, ,raw, ,@f,153,Show raw numbers in bytes
+btrfs,filesystem du, ,human-readable, ,@f,154,Show human friendly numbers, base 1024
+btrfs,filesystem du, ,kbytes, ,@f,155,Show sizes in KiB, or kB with --si
+btrfs,filesystem du, ,mbytes, ,@f,156,Show sizes in MiB, or MB with --si
+btrfs,filesystem du, ,gbytes, ,@f,157,Show sizes in GiB, or GB with --si
+btrfs,filesystem du, ,tbytes, ,@f,158,Show sizes in TiB, or TB with --si
+btrfs,filesystem show,d,all-devices, ,@f,159,Show only disks under /dev containing btrfs filesystem
+btrfs,filesystem show,m,mounted, ,@f,160,Show only mounted btrfs
+btrfs,filesystem show, ,raw, ,@f,161,Show raw numbers in bytes
+btrfs,filesystem show, ,human-readable, ,@f,162,Show human friendly numbers, base 1024
+btrfs,filesystem show, ,kbytes, ,@f,163,Show sizes in KiB, or kB with --si
+btrfs,filesystem show, ,mbytes, ,@f,164,Show sizes in MiB, or MB with --si
+btrfs,filesystem show, ,gbytes, ,@f,165,Show sizes in GiB, or GB with --si
+btrfs,filesystem show, ,tbytes, ,@f,166,Show sizes in TiB, or TB with --si
+btrfs,filesystem defragment,v, , ,@f,167,Be verbose
+btrfs,filesystem defragment,r, , ,@f,168,Defragment files recursively
+btrfs,filesystem defragment,c, , ,@f,169,Compress the file while defragmenting
+btrfs,filesystem defragment,f, , ,@f,170,Flush data to disk immediately after defragmenting
+btrfs,filesystem defragment,s, , ,@f @r,171,Defragment only from NUMBER byte onward
+btrfs,filesystem defragment,l, , ,@f @r,172,Defragment only up to LEN bytes
+btrfs,filesystem defragment,t, , ,@f @r,173,Target extent SIZE hint
+btrfs,filesystem defragment, ,step, ,@f @r,174,Defragment in steps of SIZE
+btrfs,filesystem defragment,L,level, ,@f @r,175,Specify compression levels
+btrfs,filesystem usage,b,raw, ,@f,176,Show raw numbers in bytes
+btrfs,filesystem usage,h,human-readable, ,@f,177,Show human friendly numbers, base 1024
+btrfs,filesystem usage,H, , ,@f,178,Show human friendly numbers, base 1000
+btrfs,filesystem usage,k,kbytes, ,@f,179,Show sizes in KiB, or kB with --si
+btrfs,filesystem usage,m,mbytes, ,@f,180,Show sizes in MiB, or MB with --si
+btrfs,filesystem usage,g,gbytes, ,@f,181,Show sizes in GiB, or GB with --si
+btrfs,filesystem usage,t,tbytes, ,@f,182,Show sizes in TiB, or TB with --si
+btrfs,filesystem usage,T, , ,@f,183,Show data in tabular format
+btrfs,filesystem mkswapfile,s,size, ,@f @r,184,Swapfile size
+btrfs,filesystem mkswapfile,U,uuid, ,@f @r,185,UUID for the swapfile
+btrfs,filesystem resize, ,enqueue, ,@f,186,Wait for other exclusive operations
+btrfs,balance start,d, , ,@f,187,Act on data chunks with FILTERS
+btrfs,balance start,m, , ,@f,188,Act on metadata chunks with FILTERS
+btrfs,balance start,v, , ,@f,189,Be verbose
+btrfs,balance start,f, , ,@f,190,Force a reduction of metadata integrity
+btrfs,balance start, ,full-balance, ,@f,191,Do not print warning and do not delay start
+btrfs,balance start, ,bg, ,@f,192,Run the balance as a background process
+btrfs,balance start, ,enqueue, ,@f,193,Wait for other exclusive operations
+btrfs,balance status,v, , ,@f,194,Be verbose
+btrfs,device add,K,nodiscard, ,@f,195,Do not perform TRIM on DEVICES
+btrfs,device add,f,force, ,@f,196,Force overwrite existing filesystem on the disk
+btrfs,device scan,d,all-devices, ,@f,197,Enumerate and register all devices
+btrfs,device scan,u,forget, ,@f,198,Unregister a given device or all stale devices
+btrfs,device stats,c,check, ,@f,199,Return non-zero if any stat counter is not zero
+btrfs,device stats,z,reset, ,@f,200,Show current stats and reset values to zero
+btrfs,device stats,T, , ,@f,201,Print stats in a tabular form
+btrfs,device remove, ,enqueue, ,@f,202,Wait for other exclusive operations
+btrfs,device remove, ,force, ,@f,203,Skip the safety timeout for removing multiple devices
+btrfs,device usage,b,raw, ,@f,204,Show raw numbers in bytes
+btrfs,device usage,h,human-readable, ,@f,205,Show human friendly numbers, base 1024
+btrfs,device usage,H, , ,@f,206,Show human friendly numbers, base 1000
+btrfs,device usage,k,kbytes, ,@f,207,Show sizes in KiB, or kB with --si
+btrfs,device usage,m,mbytes, ,@f,208,Show sizes in MiB, or MB with --si
+btrfs,device usage,g,gbytes, ,@f,209,Show sizes in GiB, or GB with --si
+btrfs,device usage,t,tbytes, ,@f,210,Show sizes in TiB, or TB with --si
+btrfs,scrub limit,d,devid, ,@f,211,Select the device by DEVID to apply the limit
+btrfs,scrub limit,l,limit, ,@f,212,Set the limit of the device
+btrfs,scrub limit,a,all, ,@f,213,Apply the limit to all devices
+btrfs,scrub start,B, , ,@f,214,Do not background
+btrfs,scrub start,q, , ,@f,215,Be quiet
+btrfs,scrub start,r, , ,@f,216,Read only mode
+btrfs,scrub start,R, , ,@f,217,Raw print mode, print full data instead of summary
+btrfs,scrub start, ,limit, ,@f,218,Set the scrub throughput limit
+btrfs,scrub start,f, , ,@f,219,Force starting new scrub
+btrfs,scrub resume,B, , ,@f,220,Do not background
+btrfs,scrub resume,q, , ,@f,221,Be quiet
+btrfs,scrub resume,r, , ,@f,222,Read only mode
+btrfs,scrub resume,R, , ,@f,223,Raw print mode, print full data instead of summary
+btrfs,scrub status,d, , ,@f,224,Stats per DEVICE
+btrfs,scrub status,R, , ,@f,225,Print raw stats
+btrfs,rescue chunk-recover,y, , ,@f,226,Assume an answer of YES to all questions
+btrfs,rescue chunk-recover,v, , ,@f,227,Verbose mode
+btrfs,rescue super-recover,y, , ,@f,228,Assume an answer of YES to all questions
+btrfs,rescue super-recover,v, , ,@f,229,Verbose mode
+btrfs,inspect-internal inode-resolve,v, , ,@f,230,Verbose mode
+btrfs,inspect-internal logical-resolve,P, , ,@f,231,Skip the path resolving and print the inodes instead
+btrfs,inspect-internal logical-resolve,v, , ,@f,232,Verbose mode
+btrfs,inspect-internal logical-resolve,s, , ,@f,233,Set inode container
+btrfs,inspect-internal min-dev-size, ,id, ,@f,234,Specify the DEVICE-ID to query
+btrfs,inspect-internal dump-tree,e,extents, ,@f,235,Print only extent info: extent and device trees
+btrfs,inspect-internal dump-tree,d,device, ,@f,236,Print only device info: tree root, chunk and device trees
+btrfs,inspect-internal dump-tree,r,roots, ,@f,237,Print only short root node info
+btrfs,inspect-internal dump-tree,R,backups, ,@f,238,Print short root node info and backup root info
+btrfs,inspect-internal dump-tree,u,uuid, ,@f,239,Print only the uuid tree
+btrfs,inspect-internal dump-tree,b,block, ,@f @r,240,Print info from the specified BLOCK only
+btrfs,inspect-internal dump-tree,t,tree, ,@f @r,241,Print only tree with the given ID
+btrfs,inspect-internal dump-tree, ,follow, ,@f,242,Use with -b, to show all children tree blocks of <block_num>
+btrfs,inspect-internal dump-tree, ,noscan, ,@f,243,Do not scan the devices from the filesystem
+btrfs,inspect-internal dump-tree, ,bfs, ,@f,244,Breadth-first traversal of the trees, print nodes, then leaves
+btrfs,inspect-internal dump-tree, ,dfs, ,@f,245,Depth-first traversal of the trees
+btrfs,inspect-internal dump-tree, ,hide-names, ,@f,246,Print placeholder instead of names
+btrfs,inspect-internal dump-tree, ,csum-headers, ,@f,247,Print b-tree node checksums in headers
+btrfs,inspect-internal dump-tree, ,csum-items, ,@f,248,Print checksums stored in checksum items
+btrfs,inspect-internal dump-super,f,full, ,@f,249,Print full superblock information, backup roots etc.
+btrfs,inspect-internal dump-super,a,all, ,@f,250,Print information about all superblocks
+btrfs,inspect-internal dump-super,s,super, ,@f,251,Specify which SUPER-BLOCK copy to print out
+btrfs,inspect-internal dump-super,F,force, ,@f,252,Attempt to dump superblocks with bad magic
+btrfs,inspect-internal dump-super, ,bytenr, ,@f,253,Specify alternate superblock OFFSET
+btrfs,logical-resolve,P, , ,@f,254,Print inodes instead of resolving paths
+btrfs,logical-resolve,o, , ,@f,255,Ignore offsets, find all references to an extent
+btrfs,logical-resolve,s, , ,@f @r,256,Set internal buffer size for storing file names
+btrfs,inspect-internal tree-stats,b, , ,@f,257,Show raw numbers in bytes
+btrfs,inspect-internal list-chunks, ,raw, ,@f,258,Show raw numbers in bytes
+btrfs,inspect-internal list-chunks, ,human-readable, ,@f,259,Show human friendly numbers, base 1024
+btrfs,inspect-internal list-chunks, ,kbytes, ,@f,260,Show sizes in KiB, or kB with --si
+btrfs,inspect-internal list-chunks, ,mbytes, ,@f,261,Show sizes in MiB, or MB with --si
+btrfs,inspect-internal list-chunks, ,gbytes, ,@f,262,Show sizes in GiB, or GB with --si
+btrfs,inspect-internal list-chunks, ,tbytes, ,@f,263,Show sizes in TiB, or TB with --si
+btrfs,inspect-internal map-swapfile,r,resume-offset, ,@f,264,Print the value suitable as resume offset for /sys/power/resume_offset.
+btrfs,inspect-internal tree-stats,t, , ,@f @r,265,Print stats only for the given treeid
+btrfs,inspect-internal tree-stats,b,raw, ,@f,266,Show raw numbers in bytes
+btrfs,inspect-internal tree-stats, ,human-readable, ,@f,267,Show human friendly numbers, base 1024
+btrfs,inspect-internal tree-stats, ,kbytes, ,@f,268,Show sizes in KiB, or kB with --si
+btrfs,inspect-internal tree-stats, ,mbytes, ,@f,269,Show sizes in MiB, or MB with --si
+btrfs,inspect-internal tree-stats, ,gbytes, ,@f,270,Show sizes in GiB, or GB with --si
+btrfs,inspect-internal tree-stats, ,tbytes, ,@f,271,Show sizes in TiB, or TB with --si
+btrfs,property get,t, , ,@f,272,List properties for the given object type
+btrfs,property set,t, , ,@f,273,List properties for the given object type
+btrfs,property list,t, , ,@f,274,List properties for the given object type
+btrfs,quota enable,s,simple, ,@f,275,Use simple quotas
+btrfs,quota rescan,s,status, ,@f,276,Show status of a running rescan operation
+btrfs,quota rescan,w,wait, ,@f,277,Wait for rescan operation to finish
+btrfs,quota rescan,W,wait-norescan, ,@f,278,Wait for rescan to finish without starting it
+btrfs,qgroup assign, ,rescan, ,@f,279,Schedule qutoa rescan if needed
+btrfs,qgroup assign, ,no-rescan, ,@f,280,Don
+btrfs,qgroup show,p, , ,@f,281,Print parent qgroup id
+btrfs,qgroup show,c, , ,@f,282,Print child qgroup id
+btrfs,qgroup show,r, , ,@f,283,Print limit of referenced size of qgroup
+btrfs,qgroup show,e, , ,@f,284,Print limit of exclusive size of qgroup
+btrfs,qgroup show,F, , ,@f,285,List all qgroups including ancestral qgroups
+btrfs,qgroup show,f, , ,@f,286,List all qgroups excluding ancestral qgroups
+btrfs,qgroup show, ,raw, ,@f,287,Show raw numbers in bytes
+btrfs,qgroup show, ,human-readable, ,@f,288,Show human friendly numbers, base 1024
+btrfs,qgroup show, ,kbytes, ,@f,289,Show sizes in KiB, or kB with --si
+btrfs,qgroup show, ,mbytes, ,@f,290,Show sizes in MiB, or MB with --si
+btrfs,qgroup show, ,gbytes, ,@f,291,Show sizes in GiB, or GB with --si
+btrfs,qgroup show, ,tbytes, ,@f,292,Show sizes in TiB, or TB with --si
+btrfs,qgroup show, ,sort,{qgroupid,rfer,293,max_rfer,max_excl},@f,441,List qgroups sorted by specified items
+btrfs,qgroup show, ,sync, ,@f,294,Force sync of the filesystem before getting info
+btrfs,qgroup limit,c, , ,@f,295,Limit amount of data after compression
+btrfs,qgroup limit,e, , ,@f,296,Limit space exclusively assigned to this qgroup
+btrfs,replace start,r, , ,@f,297,Only read from <srcdev> if no other zero-defect mirror exists
+btrfs,replace start,f, , ,@f,298,Force using and overwriting <targetdev>
+btrfs,replace start,B, , ,@f,299,Do not background
+btrfs,replace start, ,enqueue, ,@f,300,Wait if there's another exclusive operation running
+btrfs,replace start,K,nodiscard, ,@f,301,Do not perform TRIM on DEVICES
+btrfs,replace status,1, , ,@f,302,Only print once until the replace operation finishes
+btrfs, , , ,check,@f,303,Check structural integrity of a filesystem (unmounted).
+btrfs, , , ,restore,@f,304,Try to restore files from a damaged filesystem (unmounted)
+btrfs, , , ,send,@f,305,Send the subvolume(s) to stdout.
+btrfs,subvolume create,i, , ,@f,306,Add subvolume to a qgroup (can be given multiple times)
+btrfs,subvolume list,u, , ,@f,307,Print the uuid of subvolumes (and snapshots)
+btrfs,subvolume list,r, , ,@f,308,List readonly subvolumes (including snapshots)
+btrfs,subvolume snapshot,i, , ,@f,309,Add snapshot to a qgroup (can be given multiple times)
+btrfs,subvolume show, ,iec, ,@f,310,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,subvolume show, ,si, ,@f,311,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,filesystem df, ,iec, ,@f,312,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,filesystem df, ,si, ,@f,313,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,filesystem du, ,iec, ,@f,314,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,filesystem du, ,si, ,@f,315,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,filesystem show, ,iec, ,@f,316,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,filesystem show, ,si, ,@f,317,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,filesystem usage, ,iec, ,@f,318,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,filesystem usage, ,si, ,@f,319,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,balance start,s, , ,@f,320,Act on system chunks with FILTERS (only under -f)
+btrfs,device usage, ,iec, ,@f,321,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,device usage, ,si, ,@f,322,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,scrub start,d, , ,@f,323,Stats per device (-B only)
+btrfs,scrub start,c, , ,@f,324,Set ioprio class (see ionice(1) manpage)
+btrfs,scrub start,n, , ,@f,325,Set ioprio classdata (see ionice(1) manpage)
+btrfs,scrub resume,d, , ,@f,326,Stats per device (-B only)
+btrfs,scrub resume,c, , ,@f,327,Set ioprio class (see ionice(1) manpage)
+btrfs,scrub resume,n, , ,@f,328,Set ioprio classdata (see ionice(1) manpage)
+btrfs,inspect-internal list-chunks, ,sort, ,@f,329,Sort by a column (ascending)
+btrfs,inspect-internal list-chunks, ,iec, ,@f,330,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,inspect-internal list-chunks, ,si, ,@f,331,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,inspect-internal tree-stats, ,iec, ,@f,332,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,inspect-internal tree-stats, ,si, ,@f,333,Use 1000 as a base (kB, MB, GB, TB)
+btrfs,qgroup show, ,iec, ,@f,334,Use 1024 as a base (KiB, MiB, GiB, TiB)
+btrfs,qgroup show, ,si, ,@f,335,Use 1000 as a base (kB, MB, GB, TB)

@@ -30,3 +30,7 @@ zstdmt, ,v,verbose, , ,128,Be verbose
 zstdmt, ,q,quiet, , ,129,Suppress warnings
 zstdmt, , ,no-progress, , ,130,Do not show the progress bar
 zstdmt, , ,no-check, , ,131,Disable integrity check
+
+zstdmt, , , , , ,132,Set compression level
+zstdmt, ,r, , , ,133,Recurse directories
+zstdmt, ,H, , , ,134,Show long help

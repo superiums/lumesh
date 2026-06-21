@@ -268,3 +268,129 @@ dotnet, tool && restore, ,ignore-failed-sources, ,@f,357,Treat package source fa
 dotnet, tool && restore, ,no-cache, ,@f,358,Don't cache packages and HTTP requests
 dotnet, tool && restore, ,interactive, ,@f,359,Allow interactive input/action
 dotnet, tool && restore,v,verbosity,$msbuild_verbosity_levels,@f @r,360,Set the MSBuild verbosity level
+
+dotnet, , ,additionalprobingpath, ,@f,361,Path containing probing policy and assemblies to probe
+dotnet, , ,additional-deps, ,@f,362,Path to additional deps.json
+dotnet, , ,depsfile, ,@f,363,Path to deps.json
+dotnet, , ,fx-version, ,@f,364,Version of the .NET runtime to use
+dotnet, , ,roll-forward,LatestPatch Minor LatestMinor Major LatestMajor Disable,@f @r,365,Roll forward to framework version
+dotnet, , ,runtimeconfig, ,@f,366,Path to runtimeconfig.json
+dotnet, , ,info, ,@f,367,Display .NET information
+dotnet, , ,list-runtimes, ,@f,368,Display the installed runtimes
+dotnet, , ,list-sdks, ,@f,369,Display the installed SDKs
+dotnet, , ,version, ,@f,370,Display .NET SDK version
+dotnet, , , ,add,@f,371,Add a package/reference
+dotnet, , , ,build,@f,372,Build a .NET project
+dotnet, , , ,build-server,@f,373,Interact with build servers
+dotnet, , , ,clean,@f,374,Clean build outputs
+dotnet, , , ,help,@f,375,Show help
+dotnet, , , ,list,@f,376,List project references
+dotnet, , , ,msbuild,@f,377,Run MSBuild commands
+dotnet, , , ,new,@f,378,Create a new .NET project
+dotnet, , , ,nuget,@f,379,Run additional NuGet commands
+dotnet, , , ,pack,@f,380,Create a NuGet package
+dotnet, , , ,publish,@f,381,Publish a .NET project for deployment
+dotnet, , , ,remove,@f,382,Remove a package/reference
+dotnet, , , ,restore,@f,383,Restore dependencies
+dotnet, , , ,run,@f,384,Run the application from source
+dotnet, , , ,sln,@f,385,Modify Visual Studio solution files
+dotnet, , , ,store,@f,386,Store assemblies
+dotnet, , , ,test,@f,387,Run unit tests
+dotnet, , , ,tool,@f,388,Manage .NET tool
+dotnet, , , ,vstest,@f,389,Run VSTest commands
+dotnet, , , ,client-cert,@f,390,Add a client certificate configuration
+dotnet, , , ,source,@f,391,Add a NuGet source
+dotnet, ,v,version, ,@f @r,392,Version of the package to add
+dotnet, ,f,framework, ,@f @r,393,Add the reference only when targeting a specific framework
+dotnet, ,n,no-restore, ,@f,394,Add the reference without performing restore preview and compatibility check
+dotnet, ,s,source, ,@f,395,NuGet package source to use during the restore
+dotnet, , ,package-directory, ,@f,396,Directory to restore packages
+dotnet, , ,interactive, ,@f,397,Allow interactive input/action
+dotnet, , ,prerelease, ,@f,398,Allow prerelease packages to be installed
+dotnet, , , ,shutdown,@f,399,Shutdown build servers
+dotnet, , ,msbuild, ,@f,400,Shutdown the MSBuild build server
+dotnet, , ,vbcscompiler, ,@f,401,Shutdown the VB/C# compiler build server
+dotnet, , ,razor, ,@f,402,Shutdown the Razor build server
+dotnet, , ,outdated, ,@f,403,List packages that have newer versions
+dotnet, , ,deprecated, ,@f,404,List packages that have been deprecated
+dotnet, , ,framework, ,@f @r,405,Choose a framework to show its packages
+dotnet, , ,include-transitive, ,@f,406,List transitive and top-level packages
+dotnet, , ,include-prerelease, ,@f,407,Consider packages with prerelease versions
+dotnet, , ,highest-patch, ,@f,408,Consider only the packages with a matching major and minor version numbers
+dotnet, , ,highest-minor, ,@f,409,Consider only the packages with a matching major version number
+dotnet, , ,config, ,@f,410,Path to the NuGet config file to use
+dotnet, , ,source, ,@f,411,NuGet sources to use
+dotnet, ,s,package-source, ,@f,412,Package source name
+dotnet, , ,path, ,@f,413,Path to certificate file
+dotnet, , ,password, ,@f @r,414,Password for the certificate
+dotnet, , ,store-password-in-clear-text, ,@f,415,Enable storing password for the certificate
+dotnet, , ,store-location, ,@f,416,Certificate store location
+dotnet, , ,store-name, ,@f,417,Certificate store name
+dotnet, , ,find-by, ,@f,418,Search method to find certificate in certificate store
+dotnet, , ,find-value, ,@f,419,Search the certificate store for the supplied value
+dotnet, ,f,force, ,@f,420,Skip certificate validation
+dotnet, , ,configfile, ,@f,421,NuGet configuration file
+dotnet, ,n,name, ,@f,422,Name of the source
+dotnet, ,u,username, ,@f @r,423,Username to be used
+dotnet, ,p,password, ,@f @r,424,Password to be used
+dotnet, , ,valid-authentication-types, ,@f,425,Comma-separated list of valid authentication types
+dotnet, , ,force-english-output, ,@f,426,Run the application with locale set to English
+dotnet, , ,non-interactive, ,@f,427,Don't prompt for user input or confirmations
+dotnet, ,k,api-key, ,@f @r,428,API key for the server
+dotnet, , ,no-service-endpoint, ,@f,429,Doesn't append 'api/v2/package' to the source URL
+dotnet, , ,format, ,@f @r,430,Format of the list command output
+dotnet, ,c,clear, ,@f,431,Clear the selected local resources or cache location
+dotnet, ,l,list, ,@f,432,List the selected local resources or cache location
+dotnet, , ,symbol-source, ,@f,433,Symbol server URL to use
+dotnet, ,t,timeout, ,@f @r,434,Timeout for pushing to a server
+dotnet, , ,symbol-api-key, ,@f @r,435,API key for the symbol server
+dotnet, ,d,disable-buffering, ,@f,436,Disable buffering when pushing to an HTTP server
+dotnet, ,n,no-symbols, ,@f,437,Doesn't push symbols
+dotnet, , ,skip-duplicate, ,@f,438,Treat any 409 Conflict response as a warning
+dotnet, , ,all, ,@f,439,Specify that all verifications possible should be performed
+dotnet, , ,certificate-fingerprint, ,@f @r,440,Verify that the certificate matches with the fingerprints
+dotnet, ,r,runtime, ,@f @r,441,Target runtime to restore packages
+dotnet, , ,packages, ,@f,442,Directory to restore packages
+dotnet, , ,disable-parallel, ,@f,443,Prevent restoring multiple projects in parallel
+dotnet, , ,no-cache, ,@f,444,Don't cache packages and HTTP requests
+dotnet, , ,ignore-failed-sources, ,@f,445,Treat package source failures as warnings
+dotnet, , ,no-dependencies, ,@f,446,Don't restore P2P references
+dotnet, , ,use-lock-file, ,@f,447,Enable project lock file to be generated
+dotnet, , ,locked-mode, ,@f,448,Don't allow updating project lock file
+dotnet, , ,lock-file-path, ,@f,449,Output location where project lock file is written
+dotnet, , ,force-evaluate, ,@f,450,Force restore to reevaluate all dependencies
+dotnet, ,p,project, ,@f,451,Path to the project file to run
+dotnet, , ,launch-profile, ,@f @r,452,Name of the launch profile to use
+dotnet, , ,no-launch-profile, ,@f,453,Don't attempt to use launchSettings.json
+dotnet, , ,no-build, ,@f,454,Don't build the project before running
+dotnet, , ,no-restore, ,@f,455,Don't restore the project before building
+dotnet, , ,force, ,@f,456,Force all dependencies to be resolved
+dotnet, , ,in-root, ,@f,457,Place project in root of the solution
+dotnet, ,s,solution-folder, ,@f,458,Destination solution folder path to add the projects
+dotnet, ,g,global, ,@f,459,Specify that the installation is user-wide
+dotnet, , ,local, ,@f,460,Specify a local tool installation
+dotnet, , ,tool-path, ,@f,461,Directory where the tool will be installed
+dotnet, , ,tool-manifest, ,@f,462,Path to the manifest file
+dotnet, , ,add-source, ,@f,463,Add an additional NuGet package source to use during installation
+dotnet, , ,detail, ,@f,464,Show detail result of the query
+dotnet, , ,skip, ,@f @r,465,Specify the number of query results to skip
+dotnet, , ,take, ,@f @r,466,Specify the number of query results to show
+dotnet,build,c,configuration, ,@f @r,467,Configuration to use
+dotnet,build,v,verbosity, ,@f @r,468,Set the MSBuild verbosity level
+dotnet,clean,c,configuration, ,@f @r,469,Configuration to clean
+dotnet,clean,v,verbosity, ,@f @r,470,Set the MSBuild verbosity level
+dotnet,list && package,v,verbosity, ,@f @r,471,Set the MSBuild verbosity level
+dotnet,nuget && verify,v,verbosity, ,@f @r,472,Set the verbosity level
+dotnet,pack,c,configuration, ,@f @r,473,Configuration to use
+dotnet,pack,v,verbosity, ,@f,474,Set the MSBuild verbosity level
+dotnet,publish,c,configuration, ,@f @r,475,Configuration to publish
+dotnet,publish,v,verbosity, ,@f @r,476,Set the MSBuild verbosity level
+dotnet,restore && tool,v,verbosity, ,@f @r,477,Set the MSBuild verbosity level
+dotnet,run && tool,c,configuration, ,@f @r,478,Configuration to run
+dotnet,run && tool,v,verbosity, ,@f @r,479,Set the MSBuild verbosity level
+dotnet,store,v,verbosity, ,@f @r,480,Set the MSBuild verbosity level
+dotnet,test,c,configuration, ,@f @r,481,Configuration to use
+dotnet,test,v,verbosity, ,@f @r,482,Set the MSBuild verbosity level
+dotnet,tool && install,v,verbosity, ,@f @r,483,Set the MSBuild verbosity level
+dotnet,tool && update,v,verbosity, ,@f @r,484,Set the MSBuild verbosity level
+dotnet,tool && restore,v,verbosity, ,@f @r,485,Set the MSBuild verbosity level

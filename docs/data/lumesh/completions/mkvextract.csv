@@ -12,3 +12,19 @@ mkvextract, ,r,redirect-output, ,@r,120,Redirect all messages into a file
 mkvextract, , ,debug, ,@r,121,Turn on debugging for a specific feature
 mkvextract, , ,engage, ,@r,122,Turn on an experimental feature
 mkvextract, , ,gui-mode, , ,123,Enable GUI mode
+
+mkvextract, , , ,tracks,@f @n,124,Extract tracks to external files
+mkvextract, , , ,tags,@f @n,125,Extract tags as XML
+mkvextract, , , ,attachments,@f @n,126,Extract attachments
+mkvextract, , , ,chapters,@f @n,127,Extract chapters as XML
+mkvextract, , , ,cuesheet,@f @n,128,Extract chapters and tags as CUE sheet
+mkvextract, , , ,timecodes_v2,@f @n,129,Extract timecodes of a track as timecode v2 file
+mkvextract, , , ,cues,@f @n,130,Extract cue information as text file
+mkvextract, , , , ,@E @f,131,__fish_mkvextract_print_tracks
+mkvextract, ,c, , ,@f @r,132,Convert text subtitles to a charset
+mkvextract, , ,cuesheet, ,@f,133,Also try to extract the CUE sheet
+mkvextract, , ,blockadd, ,@f @r,134,Keep only the BlockAdditions up to the specified level
+mkvextract, , ,raw, ,@f,135,Extract the data to a raw file
+mkvextract, , ,fullraw, ,@f,136,Extract the data to a raw file including the CodecPrivate as header
+mkvextract, ,s,simple, ,@f,137,Exports the chapter information in a simple format
+mkvextract, , ,simple-language, ,@f @r,138,Uses the chapter names of the specified language

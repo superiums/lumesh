@@ -1,2 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 bd, ,h, , ,@f @r,101,Display help and exit
+
+bd, , , , ,@f,102,
+bd, ,c, , , ,103,Classic mode: goes back to the first directory named as the string
+bd, ,s, , , ,104,Seems mode: goes back to the first directory containing string
+bd, ,i, , , ,105,Case insensitive move (implies seems mode)

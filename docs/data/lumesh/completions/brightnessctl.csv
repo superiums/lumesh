@@ -12,3 +12,9 @@ brightnessctl, ,r,restore, , ,114,Restore previously-saved state
 brightnessctl, ,d,device, , ,115,Device Name
 brightnessctl, ,c,class,backlight leds, ,116,Specify device class
 brightnessctl, ,v,version, ,@f @r,117,Print version and exit
+
+brightnessctl, ,c,class, , ,118,Specify device class
+brightnessctl,= 1, , ,info, ,119,Get device info
+brightnessctl,= 1, , ,get, ,120,Get current brightness of device
+brightnessctl,= 1, , ,set, ,121,Get maximum brightness of device
+brightnessctl,= 1, , ,max, ,122,Set brightness of device

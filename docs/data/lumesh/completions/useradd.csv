@@ -13,3 +13,5 @@ useradd, ,e,expiredate, , ,111,The date on which the user account is disabled
 useradd, ,f,inactive, , ,112,Number of days to disable account after password expiration
 useradd, ,g,gid, ,@f @r,113,The group name or ID for a new user's initial group
 useradd, ,s,shell, ,@f @r,114,Name of the new user's login shell
+
+useradd, ,n, , , ,115,Create group with name of added user if -g is not specified

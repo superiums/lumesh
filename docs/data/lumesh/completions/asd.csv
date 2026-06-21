@@ -1,2 +1,4 @@
 cmd,conds,short,long,params,dirs,pri,desc
  , , , , ,@f,101, 
+
+asd,= 1, , , , ,102,

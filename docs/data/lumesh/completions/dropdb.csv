@@ -10,3 +10,5 @@ dropdb, ,U,username, ,@f @r,108,User name to connect as
 dropdb, ,w,no-password, , ,109,Never prompt for password
 dropdb, ,W,password, , ,110,Force password prompt
 dropdb, , ,maintenance-db, ,@f @r,111,Alternate maintenance database
+
+dropdb, , , , ,@E @f,112,__fish_complete_pg_database

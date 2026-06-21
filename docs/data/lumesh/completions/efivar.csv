@@ -13,3 +13,5 @@ efivar, ,L,list-guids, , ,111,Show internal guid list
 efivar, ,w,write, , ,112,Write to variable specified by --name
 efivar, ,\?,help, , ,113,Show help message
 efivar, , ,usage, , ,114,Display brief usage message
+
+efivar, , , , ,@f,115,

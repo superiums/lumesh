@@ -15,3 +15,7 @@ nl, ,v,starting-line-number, ,@f @r,113,first line number on each logical page
 nl, ,w,number-width, ,@f @r,114,use NUMBER columns for line numbers
 nl, , ,help, , ,115,display this help and exit
 nl, , ,version, , ,116,output version information and exit
+
+nl, ,b,body-numbering, , ,117,use STYLE for numbering body lines
+nl, ,f,footer-numbering, , ,118,use STYLE for numbering footer lines
+nl, ,h,header-numbering, , ,119,use STYLE for numbering header lines

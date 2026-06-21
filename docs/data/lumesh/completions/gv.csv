@@ -44,3 +44,5 @@ gv, , ,widgetless, , ,142,Shortcut for --style=gv_widgetless.dat
 gv, , ,fullscreen, , ,143,Start in fullscreen mode (needs support from WM)
 gv, , ,presentation, , ,144,Presentation mode 
 gv, , ,version, , ,145,Show gv version and exit
+
+gv, , ,orientation, , ,146,Sets the orientation of the page

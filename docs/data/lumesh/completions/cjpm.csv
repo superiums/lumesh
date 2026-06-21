@@ -75,3 +75,15 @@ cjpm, test, ,skip-script, ,@f,184,Disable script 'build.cj'
 cjpm, test, ,no-progress, ,@f,185,Disable progress report
 cjpm, test, ,progress-brief, ,@f,186,Display brief progress report
 cjpm, test, ,progress-entries-limit, ,@f,187,Limit number of entries shown in progress report
+
+cjpm, , , ,init,@f,188,Init a new cangjie module
+cjpm, , , ,check,@f,189,Check the dependencies
+cjpm, , , ,update,@f,190,Update cjpm.lock
+cjpm, , , ,tree,@f,191,Display the package dependencies in the source code
+cjpm, , , ,build,@f,192,Compile the current module
+cjpm, , , ,run,@f,193,Compile and run an executable product
+cjpm, , , ,test,@f,194,Unittest a local package or module
+cjpm, , , ,bench,@f,195,Run benchmarks in a local package or module
+cjpm, , , ,clean,@f,196,Clean up the target directory
+cjpm, , , ,install,@f,197,Install a cangjie binary
+cjpm, , , ,uninstall,@f,198,Uninstall a cangjie binary

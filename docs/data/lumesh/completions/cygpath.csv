@@ -20,3 +20,9 @@ cygpath, ,c,close, ,@f @r,123,Close HANDLE
 cygpath, ,i,ignore, , ,124,Ignore missing argument
 cygpath, ,h,help, , ,125,Output usage information
 cygpath, ,V,version, , ,126,Output version information
+
+cygpath,-w windows;,l,long-name, , ,127,Print Windows long form
+cygpath,-w windows;,s,short-name, , ,128,Print DOS/short form
+cygpath,-d dos;,C,codepage,ANSI OEM UTF8,@r,129,Print pathname in CODEPAGE
+cygpath,-D desktop;,A,allusers, , ,130,Use 'All Users' instead of current user
+cygpath,-f file,o,option, , ,131,Read options from FILE as well

@@ -22,3 +22,6 @@ godoc, , ,url, ,@r,120,Print HTML for named URL
 godoc, , ,write_index, ,@r,121,Write index to a file
 godoc, , ,zip, ,@r,122,Zip file providing the file system to serve
 godoc, ,h,help, , ,123,Show help
+
+godoc, ,q, , , ,124,Arguments are considered search queries
+godoc, ,v, , , ,125,Verbose mode

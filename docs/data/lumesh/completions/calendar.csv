@@ -1,3 +1,10 @@
 cmd,conds,short,long,params,dirs,pri,desc
 calendar, ,f, , ,@F,101,Path to default calendar file
 calendar, ,t, , ,@f @r,102,Today is [[[cc]yy]mm]dd]
+
+calendar, ,l, , , ,103,Today + N days forward
+calendar, ,a, , , ,104,Process all users' calendars and mail the results
+calendar, ,B, , , ,105,Today - N days backward
+calendar, ,b, , , ,106,Cyrillic date calculation mode
+calendar, ,e, , , ,107,Today + N days forward, if today is Friday
+calendar, ,w, , , ,108,Print day of the week name

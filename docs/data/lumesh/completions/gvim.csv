@@ -6,3 +6,5 @@ gvim, , ,display, ,@f @r,104,Run vim on <display>
 gvim, , ,role, ,@f @r,105,Set role for identifying the window in X11
 gvim, , ,socketid, ,@f @r,106,Open Vim inside another GTK widget
 gvim, , ,echo-wid, , ,107,Echo the Window ID on stdout
+
+gvim, ,g, , , ,108,Run using GUI

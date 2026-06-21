@@ -10,3 +10,6 @@ functions, ,D,details, , ,108,Display information about the function
 functions, ,v,verbose, , ,109,Print more output
 functions, ,H,handlers, , ,110,Show event handlers
 functions, ,t,handlers-type,signal variable exit job-id generic,@f @r,111,Show event handlers matching the given type
+
+functions, , , , , ,112,Function
+functions, , ,color,always never auto,@f @r,113,When to colorize output

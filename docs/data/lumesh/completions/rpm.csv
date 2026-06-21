@@ -7,3 +7,5 @@ rpm, , ,pipe, , ,105,Pipe output through specified command
 rpm, , ,dbpath,, ,106,Specify directory for rpm database
 rpm, , ,root,, ,107,Specify root directory for rpm operations
 rpm, , , , ,@k,197, 
+
+rpm, ,v, , , ,198,Verbose mode

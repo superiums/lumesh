@@ -9,3 +9,8 @@ zopflipng, , ,splitting, , ,107,Left for backwards compatibility
 zopflipng, , ,filters,0 1 2 3 4 m e p b,@f @r,108,Filter strategies
 zopflipng, , ,keepchunks, , ,109,Keep metadata chunks
 zopflipng, ,h,help, , ,110,Show help
+
+zopflipng, ,m, , , ,111,Compress more
+zopflipng, ,y, , , ,112,Do not ask about overwriting
+zopflipng, ,d, , , ,113,Dry run
+zopflipng, ,q, , , ,114,Use quick

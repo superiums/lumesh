@@ -65,3 +65,10 @@ ack, , ,thpppt, , ,163,Bill the Cat
 ack, , ,bar, , ,164,The warning admiral
 ack, , ,$type, , ,165,Allow $type file type
 ack, , ,no-$type, , ,166,Don't allow $type file type
+
+ack, ,o, , , ,167,Output the part of line matching pattern
+ack, ,1, , , ,168,Stop searching after first match
+ack, ,s, , , ,169,Suppress error messages about file errors
+ack, ,f, , , ,170,Only print the files selected
+ack, ,g, , , ,171,Only select files matching pattern
+ack, ,x, , , ,172,Read the list of files to search from STDIN

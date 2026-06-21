@@ -20,3 +20,5 @@ lz4c, ,H,help, , ,118,Display help/long help and exit
 lz4c, ,V,version, , ,119,Display Version number and exit 
 lz4c, ,k,keep, , ,120,Preserve source files (default behavior) 
 lz4c, , ,rm, , ,121,Delete source files on successful compression or decompression 
+
+lz4c, , , , , ,122,

@@ -7,3 +7,11 @@ userdbctl, , ,output,classic friendly table json, ,105,Select output mode
 userdbctl, ,s,service,$services, ,106,Query the specified service
 userdbctl, , ,with-nss,yes no, ,107,Control whether to include glibc NSS data
 userdbctl, , ,synthesize,yes no, ,108,Synthesize root/nobody user
+
+userdbctl, , , , ,@f,109,
+userdbctl, , ,output, , ,110,Select output mode
+userdbctl, ,j, , , ,111,Equivalent to --output=json
+userdbctl, ,s,service, , ,112,Query the specified service
+userdbctl, , ,with-nss, , ,113,Control whether to include glibc NSS data
+userdbctl, ,N, , , ,114,Do not synthesize or include glibc NSS data
+userdbctl, , ,synthesize, , ,115,Synthesize root/nobody user

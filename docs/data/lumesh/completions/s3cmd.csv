@@ -102,3 +102,47 @@ s3cmd, ls,l,long-listing, , ,242,Produce long listing
 s3cmd, , ,stop-on-error, , ,243,Stop on error in transfer
 s3cmd, , ,content-disposition, , ,244,Provide Content-Disposition for signed URLs
 s3cmd, , ,content-type, , ,245,Provide Content-Type for signed URLs
+
+s3cmd,__s3cmd_is_remote_path, , , ,@f,246,
+s3cmd, , , , ,@f,247,
+s3cmd, , , ,mb, ,248,Make bucket
+s3cmd, , , ,rb, ,249,Remove bucket
+s3cmd, , , ,ls, ,250,List objects or buckets
+s3cmd, , , ,la, ,251,List all object in all buckets
+s3cmd, , , ,put, ,252,Put file into bucket
+s3cmd, , , ,get, ,253,Get file from bucket
+s3cmd, , , ,del, ,254,Delete file from bucket
+s3cmd, , , ,restore, ,255,Restore file from Glacier storage
+s3cmd, , , ,sync, ,256,Synchronize a directory tree to S3
+s3cmd, , , ,du, ,257,Disk usage by buckets
+s3cmd, , , ,info, ,258,Get various information about Buckets or Files
+s3cmd, , , ,cp, ,259,Copy object
+s3cmd, , , ,modify, ,260,Modify object metadata
+s3cmd, , , ,mv, ,261,Move object
+s3cmd, , , ,setacl, ,262,Modify Access control list for Bucket or Files
+s3cmd, , , ,setpolicy, ,263,Modify Bucket Policy
+s3cmd, , , ,delpolicy, ,264,Delete Bucket Policy
+s3cmd, , , ,setcors, ,265,Modify Bucket CORS
+s3cmd, , , ,delcors, ,266,Delete Bucket CORS
+s3cmd, , , ,payer, ,267,Modify Bucket Requester Pays policy
+s3cmd, , , ,multipart, ,268,Show multipart uploads
+s3cmd, , , ,abortmp, ,269,Abort a multipart upload
+s3cmd, , , ,listmp, ,270,List parts of a multipart upload
+s3cmd, , , ,accesslog, ,271,Enable/disable bucket access logging
+s3cmd, , , ,sign, ,272,Sign arbitrary string using the secret key
+s3cmd, , , ,signurl, ,273,Sign an S3 URL to provide limited public access with expiry
+s3cmd, , , ,fixbucket, ,274,Fix invalid file names in a bucket
+s3cmd, , , ,ws-create, ,275,Create Website from bucket
+s3cmd, , , ,ws-delete, ,276,Delete Website
+s3cmd, , , ,ws-info, ,277,Info about Website
+s3cmd, , , ,expire, ,278,Set or delete expiration rule for the bucket
+s3cmd, , , ,setlifecycle, ,279,Upload a lifecycle policy for the bucket
+s3cmd, , , ,dellifecycle, ,280,Remove a lifecycle policy for the bucket
+s3cmd, , , ,cflist, ,281,List CloudFront distribution points
+s3cmd, , , ,cfinfo, ,282,Display CloudFront distribution point parameters
+s3cmd, , , ,cfcreate, ,283,Create CloudFront distribution point
+s3cmd, , , ,cfdelete, ,284,Delete CloudFront distribution point
+s3cmd, , , ,cfmodify, ,285,Change CloudFront distribution point parameters
+s3cmd,, , , ,@E @f,286,"s3cmd ls (commandline -ct) ~: r's3://.*'"
+s3cmd, , , ,rm, ,287,Delete file from bucket (alias for del)
+s3cmd, , , ,cfinvalinfo, ,288,Display CloudFront invalidation request(s) status

@@ -1,2 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 groupadd, ,h,help, , ,101,Display help message and exit
+
+groupadd, ,f, , , ,102,Exit with success status if the specified group already exists
+groupadd, ,g, , , ,103,The numerical value of the group
+groupadd, ,K, , , ,104,Overrides default key/value pairs from /etc/login
+groupadd, ,o, , , ,105,This option permits to add group with non-unique GID

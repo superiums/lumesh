@@ -202,3 +202,24 @@ firewall-cmd, , ,remove-destination,ipv4 ipv6, ,300,Disable destination for ipv 
 firewall-cmd, , ,query-destination,ipv4 ipv6, ,301,Return whether destination for ipv is enabled in permanent service|icmptype
 firewall-cmd, , ,get-destinations, , ,302,List destinations in permanent service|icmptype
 firewall-cmd, , ,family, ,@f @r,303,Inet family
+
+firewall-cmd, , , , ,@f,304,
+firewall-cmd, , ,set-log-denied, , ,305,Add logging rules right before reject and drop rules
+firewall-cmd, , ,set-target, , ,306,Set the target
+firewall-cmd, , ,add-destination, , ,307,Enable destination for ipv in permanent icmptype
+firewall-cmd, , ,get-chains, , ,308,Get all chains added to table
+firewall-cmd, , ,add-chain, , ,309,Add a new chain to table
+firewall-cmd, , ,remove-chain, , ,310,Remove chain from table
+firewall-cmd, , ,query-chain, , ,311,Return whether the chain with given name exists in table
+firewall-cmd, , ,get-rules, , ,312,Get all rules added to chain in table
+firewall-cmd, , ,add-rule, , ,313,Add a rule to chain in table
+firewall-cmd, , ,remove-rule, , ,314,Remove a rule from chain in table
+firewall-cmd, , ,remove-rules, , ,315,Remove all rules in the chain in table
+firewall-cmd, , ,query-rule, , ,316,Return whether the rule exists in chain in table
+firewall-cmd, , ,passthrough, , ,317,Pass a command through to the firewall
+firewall-cmd, , ,get-passthroughs, , ,318,Get all passthrough rules for the ipv value
+firewall-cmd, , ,add-passthrough, , ,319,Add a passthrough rule
+firewall-cmd, , ,remove-passthrough, , ,320,Remove a passthrough rule
+firewall-cmd, , ,query-passthrough, , ,321,Return whether the passthrough rule exists
+firewall-cmd, , ,remove-destination, , ,322,Disable destination for ipv in permanent service|icmptype
+firewall-cmd, , ,query-destination, , ,323,Return whether destination for ipv is enabled in permanent service|icmptype

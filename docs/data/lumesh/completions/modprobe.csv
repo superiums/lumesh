@@ -19,3 +19,5 @@ modprobe, , ,set-version, , ,117,Specify kernel version
 modprobe, , ,show-depends, , ,118,List dependencies of module
 modprobe, ,o,name, , ,119,Rename module
 modprobe, , ,first-time, , ,120,Fail if inserting already loaded module
+
+modprobe,-s r remove, , , ,@E @f,121,lsmod | cut -d' ' -f1

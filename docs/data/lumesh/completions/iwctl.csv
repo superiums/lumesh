@@ -1,7 +1,63 @@
 cmd,conds,short,long,params,dirs,pri,desc
- , , , , ,@f,101, 
-iwctl, ,h,help, , ,102, 
-iwctl, ,p,password, , ,103, 
-iwctl, ,u,username, , ,104, 
-iwctl, ,P,passphrase, , ,105, 
+ , , , , ,@f,101,
+iwctl, ,h,help, , ,102,
+iwctl, ,p,password, , ,103,
+iwctl, ,u,username, , ,104,
+iwctl, ,P,passphrase, , ,105,
 iwctl, ,v,dont-ask, , ,106,Don't ask for missing credentials
+
+iwctl,, , , , ,107,
+iwctl,ad-hoc, , ,list, ,108,List devices in Ad-Hoc mode
+iwctl,ad-hoc, , , ,@E,109,__iwctl_filter ad-hoc list
+iwctl,ad-hoc list, , ,start,@n,110,Start or join an Ad-Hoc network
+iwctl,ad-hoc list, , ,start_open,@n,111,Start of join an open Ad-Hoc network
+iwctl,ad-hoc list, , ,stop,@n,112,Leave an Ad-Hoc network
+iwctl,adapter, , ,list, ,113,List adapters
+iwctl,adapter, , , ,@E,114,__iwctl_filter adapter list
+iwctl,adapter list, , ,show,@n,115,Show adapter info
+iwctl,adapter list, , ,set-property,@n,116,Set property
+iwctl,ap, , ,list, ,117,List devices in AP mode
+iwctl,ap, , , ,@E,118,__iwctl_filter ap list
+iwctl,ap list, , ,start,@n,119,Start an access point
+iwctl,ap list, , ,start-profile,@n,120,Start an access point based on a disk profile
+iwctl,ap list, , ,stop,@n,121,Stop a started access point
+iwctl,ap list, , ,show,@n,122,Show AP info
+iwctl,ap list, , ,get-networks,@n,123,Get network list after scanning
+iwctl,'debug *', , ,connect, ,124,Connect to a specific BSS
+iwctl,'debug *', , ,roam, ,125,Roam to a BSS
+iwctl,'debug *', , ,get-networks, ,126,Get networks
+iwctl,'debug *', , ,autoconnect, ,127,Set autoconnect property
+iwctl,'debug * autoconnect', , ,on off, ,128,Set autoconnect property
+iwctl,device, , ,list, ,129,List devices
+iwctl,device, , , ,@E,130,__iwctl_filter device list
+iwctl,device list, , ,show,@n,131,Show device info
+iwctl,device list, , ,set-property,@n,132,Set property
+iwctl,dpp, , ,list, ,133,List DPP-capable devices
+iwctl,dpp, , , ,@E,134,__iwctl_filter dpp list
+iwctl,dpp list, , ,start-enrollee,@n,135,Starts a DPP Enrollee
+iwctl,dpp list, , ,start-configurator,@n,136,Starts a DPP Configurator
+iwctl,dpp list, , ,stop,@n,137,Aborts a DPP operations
+iwctl,dpp list, , ,show,@n,138,Show the DPP state
+iwctl,known-networks, , ,list, ,139,List known networks
+iwctl,known-networks, , , ,@E,140,__iwctl_filter known-networks list
+iwctl,known-networks list, , ,forget,@n,141,Forget a known network
+iwctl,known-networks list, , ,show,@n,142,Show known network
+iwctl,known-networks list, , ,set-property,@n,143,Set property
+iwctl,station, , ,list, ,144,List devices in Station mode
+iwctl,station, , , ,@E,145,__iwctl_filter station list
+iwctl,station list, , ,connect,@n,146,Connect to network
+iwctl,station connect, , , ,@E,147,__iwctl_connect
+iwctl,station list, , ,connect-hidden,@n,148,Connect to hidden network
+iwctl,station list, , ,disconnect,@n,149,Disconnect
+iwctl,station list, , ,get-networks,@n,150,Get networks
+iwctl,station get-networks, , ,rssi-dbms rssi-bars, ,151,
+iwctl,station list, , ,get-hidden-access-points,@n,152,Get hidden APs
+iwctl,station get-hidden-access-points, , ,rssi-dbms, ,153,
+iwctl,station list, , ,scan,@n,154,Scan for networks
+iwctl,station list, , ,show,@n,155,Show station info
+iwctl,wsc, , ,list, ,156,List WSC-capable devices
+iwctl,wsc, , , ,@E,157,__iwctl_filter wsc list
+iwctl,wsc list, , ,push-button,@n,158,PushButton Mode
+iwctl,wsc list, , ,start-user-pin,@n,159,PIN mode
+iwctl,wsc list, , ,start-pin,@n,160,PIN mode with generated PIN
+iwctl,wsc list, , ,cancel,@n,161,Aborts WSC operations

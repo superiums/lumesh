@@ -3,3 +3,5 @@ dconf, , , , ,@f,101,
 dconf, read write reset watch, , , ,@f,102, 
 dconf, list dump load, , , ,@f,103, 
 dconf, help, , ,$commands,@f,104, 
+
+dconf,help, , , ,@f,105,

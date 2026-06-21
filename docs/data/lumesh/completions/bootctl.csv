@@ -10,3 +10,5 @@ bootctl, ,x,print-boot-path, , ,108,Print path to the $BOOT partition
 bootctl, , ,no-variables, , ,109,Do not touch EFI variables
 bootctl, , ,no-pager, , ,110,Do not pipe output into a pager
 bootctl, , ,graceful, , ,111,Do not print fail
+
+bootctl, , , , ,@f,112,

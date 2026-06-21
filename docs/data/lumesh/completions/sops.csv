@@ -1,2 +1,105 @@
 cmd,conds,short,long,params,dirs,pri,desc
 sops, ,h,help, ,@F,150,Show help
+
+sops, , , ,exec-env,@F,151,Execute a command with decrypted values inserted into the environment
+sops, , , ,exec-file,@F,152,Execute a command with decrypted contents as a temporary file
+sops, , , ,publish,@F,153,Publish sops file or directory to a configured destination
+sops, , , ,keyservice,@F,154,Start a SOPS key kervice server
+sops, , , ,groups,@F,155,Modify the groups on a SOPS file
+sops, , , ,updatekeys,@F,156,Update the keys of a SOPS file using the config file
+sops, , , ,help,@F,157,Shows a list of commands or help for one command
+sops, , , ,h,@F,158,Shows a list of commands or help for one command
+sops, ,d,decrypt, ,@F,159,Decrypt a file and output the result to stdout
+sops, ,e,encrypt, ,@F,160,Encrypt a file and output the result to stdout
+sops, ,r,rotate, ,@F,161,Generate new encryption key & reencrypt with the new key
+sops, ,i,in-place, ,@F,162,Write output back to the same file instead of stdout
+sops, ,s,show-master-keys, ,@F,163,Display master encryption keys in the file during editing
+sops, , ,extract, ,@F,164,Extract a specific key or branch from decrypted input document
+sops, , ,ignore-mac, ,@F,165,Ignore Message Authentication Code during decryption
+sops, , ,verbose, ,@F,166,Enable verbose logging output
+sops, , ,enable-local-keyservice, ,@F,167,Use local key service
+sops, ,v,version, ,@F,168,Print the version
+sops, ,k,kms, ,@f @r,169,Comma separated list of KMS ARNs
+sops, ,p,pgp, ,@f @r,170,Comma separated list of PGP fingerprints
+sops, ,a,age, ,@f @r,171,Comma separated list of age recipients
+sops, , ,gcp-kms, ,@f @r,172,Comma separated list of GCP KMS resource IDs
+sops, , ,aws-profile, ,@f @r,173,The AWS profile to use for requests to AWS
+sops, , ,azure-kv, ,@f @r,174,Comma separated list of Azure Key Vault URLs
+sops, , ,hc-vault-transit, ,@f @r,175,Comma separated list of Vault's key URI
+sops, , ,input-type, ,@f @r,176,Currently json, yaml, dotenv and binary are supported.
+sops, , ,output-type, ,@f @r,177,Currently json, yaml, dotenv and binary are supported.
+sops, , ,add-gcp-kms, ,@f @r,178,Comma-separated list of GCP KMS key resource IDs
+sops, , ,rm-gcp-kms, ,@f @r,179,Remove comma-separated list of GCP KMS key resource IDs
+sops, , ,add-azure-kv, ,@f @r,180,Add comma-separated list of Azure Key Vault key URLs
+sops, , ,rm-azure-kv, ,@f @r,181,Remove comma-separated list of Azure Key Vault key URLs
+sops, , ,add-kms, ,@f @r,182,Add comma-separated list of KMS ARNs
+sops, , ,rm-kms, ,@f @r,183,Remove comma-separated list of KMS ARNs
+sops, , ,add-hc-vault-transit, ,@f @r,184,Add comma-separated list of Vault's URI key
+sops, , ,rm-hc-vault-transit, ,@f @r,185,Remove comma-separated list of Vault's URI key
+sops, , ,add-age, ,@f @r,186,Add comma-separated list of age recipients fingerprints
+sops, , ,rm-age, ,@f @r,187,Remove comma-separated list of age recipients fingerprints
+sops, , ,add-pgp, ,@f @r,188,Add comma-separated list of PGP fingerprints
+sops, , ,rm-pgp, ,@f @r,189,Remove comma-separated list of PGP fingerprints
+sops, , ,unencrypted-suffix, ,@f @r,190,Override the unencrypted key suffix
+sops, , ,encrypted-suffix, ,@f @r,191,Override the encrypted key suffix
+sops, , ,unencrypted-regex, ,@f @r,192,Set the unencrypted key suffix
+sops, , ,encrypted-regex, ,@f @r,193,Set the encrypted key suffix
+sops, , ,config, ,@r,194,Path to sops' config file
+sops, , ,encryption-context, ,@f @r,195,Comma separated list of KMS encryption context key:value pairs
+sops, , ,shamir-secret-sharing-threshold, ,@f @r,196,Number of master keys required to retrieve the data key with shamir
+sops, , ,output, ,@r,197,Save the output after encryption or decryption to file
+sops, , ,keyservice, ,@f @r,198,Specify key services to use in addition to the local one
+sops,exec-env, ,background, ,@F,199,Background the process and don\'t wait for it to complete
+sops,exec-env, ,user, ,@E @f @r,200,__fish_print_users
+sops,exec-env, ,enable-local-keyservice, ,@F,201,Use local key service
+sops,exec-env, ,keyservice, ,@f @r,202,Specify key services to use in addition to the local one
+sops,exec-file, ,background, ,@F,203,Background the process and don\'t wait for it to complete
+sops,exec-file, ,no-fifo, ,@F,204,Use a regular file instead of a fifo to temporarily hold the decrypted contents
+sops,exec-file, ,user, ,@E @f @r,205,__fish_print_users
+sops,exec-file, ,input-type,json yaml dotenv binary,@f @r,206,Currently json, yaml, dotenv and binary are supported
+sops,exec-file, ,output-type,json yaml dotenv binary,@f @r,207,Currently json, yaml, dotenv and binary are supported
+sops,exec-file, ,enable-local-keyservice, ,@F,208,Use local key service
+sops,exec-file, ,keyservice, ,@f @r,209,Specify key services to use in addition to the local one
+sops,publish,y,yes, ,@F,210,Pre-approve all changes and run non-interactively
+sops,publish, ,omit-extensions, ,@F,211,Omit file extensions in destination path when publishing sops file
+sops,publish, ,recursive, ,@F,212,If source path is a directory, publish all its content recursively
+sops,publish, ,verbose, ,@F,213,Enable verbose logging output
+sops,publish, ,enable-local-keyservice, ,@F,214,use local key service
+sops,publish, ,keyservice, ,@f @r,215,Specify key services to use in addition to the local one
+sops,keyservice, ,prompt, ,@F,216,Prompt user to confirm every incoming request
+sops,keyservice, ,verbose, ,@F,217,Enable verbose logging output
+sops,groups groups, , ,add,@f @r,218,Add a new group to a SOPS file
+sops,groups groups, , ,delete,@f @r,219,Delete a key group from a SOPS file
+sops,groups add, , , ,@E @f @r,220,__fish_print_users
+sops,groups delete, , , ,@E @f @r,221,__fish_print_users
+sops,groups add,f,file, ,@F,222,The file to add the group to
+sops,groups add,i,in-place, ,@F,223,Write output back to the same file instead of stdout
+sops,groups add, ,pgp, ,@f @r,224,The PGP fingerprints the new group should contain
+sops,groups add, ,kms, ,@f @r,225,The KMS ARNs the new group should contain
+sops,groups add, ,aws-profile, ,@f @r,226,The AWS profile to use for requests to AWS
+sops,groups add, ,gcp-kms, ,@f @r,227,The GCP KMS Resource ID the new group should contain
+sops,groups add, ,azure-kv, ,@f @r,228,The Azure Key Vault key URL the new group should contain
+sops,groups add, ,hc-vault-transit, ,@f @r,229,The full vault path to the key used to encrypt/decrypt
+sops,groups add, ,age, ,@f @r,230,The age recipient the new group should contain. Can be specified more than once
+sops,groups add, ,shamir-secret-sharing-threshold, ,@f @r,231,Number of master keys required to retrieve data key with shamir
+sops,groups add, ,encryption-context, ,@f @r,232,Comma separated list of KMS encryption context key:value pairs
+sops,groups add, ,enable-local-keyservice, ,@f @r,233,Use local key service
+sops,groups add, ,keyservice, ,@f @r,234,Specify key services to use in addition to the local one
+sops,groups delete,f,file, ,@F,235,The file to add the group to
+sops,groups delete,i,in-place, ,@F,236,Write output back to the same file instead of stdout
+sops,groups delete, ,shamir-secret-sharing-threshold, ,@f @r,237,Number of master keys required to retrieve data key with shamir
+sops,groups delete, ,enable-local-keyservice, ,@f @r,238,Use local key service
+sops,groups delete, ,keyservice, ,@f @r,239,Specify key services to use in addition to the local one
+sops,updatekeys,y,yes, ,@F,240,Pre-approve all changes and run non-interactively
+sops,updatekeys, ,enable-local-keyservice, ,@F,241,Use local key service
+sops,updatekeys, ,keyservice, ,@f @r,242,Specify key services to use in addition to the local one
+sops,help, , ,exec-env,@f @r,243,Execute a command with decrypted values inserted into the environment
+sops,help, , ,exec-file,@f @r,244,Execute a command with decrypted contents as a temporary file
+sops,help, , ,publish,@f @r,245,Publish sops file or directory to a configured destination
+sops,help, , ,keyservice,@f @r,246,Start a SOPS key kervice server
+sops,help, , ,groups,@f @r,247,Modify the groups on a SOPS file
+sops,help, , ,updatekeys,@f @r,248,Update the keys of a SOPS file using the config file
+sops, , ,set, ,@f @r,249,Set a specific key or branch in the input document (edit mode)
+sops,exec-file, ,filename, ,@F,250,Filename for the temporarily file (default: tmp-file)
+sops,keyservice, ,net,tcp;unix,@f @r,251,Network to listen on (default: 'tcp')
+sops,keyservice, ,addr,(__fish_print_addresses | cut -f1):,@E @f @r,252,Address to listen on (default: '127.0.0.1:5000')

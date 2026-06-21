@@ -12,3 +12,6 @@ timedatectl, , ,monitor, , ,110,Monitor status of systemd-timesyncd
 timedatectl, ,p,property, ,@r,111,Show only properties by this NAME
 timedatectl, ,a,all, , ,112,Show all properties
 timedatectl, , ,value, , ,113,Only show properties with values
+
+timedatectl, , , , ,@f,114,
+timedatectl,set-timezone, , , ,@E,115,timedatectl list-timezones

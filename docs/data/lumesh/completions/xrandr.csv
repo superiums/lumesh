@@ -52,3 +52,10 @@ xrandr, , ,off, , ,150,Disables the output
 xrandr, , ,crtc, , ,151,Set the crtc
 xrandr, , ,gamma, , ,152,Set gamma correction [red:green:blue]
 xrandr, , ,brightness, , ,153,Set brightness. Multiplies gamma values by brightness value
+
+xrandr, ,o,orientation, , ,154,Specify the orientation of the screen
+xrandr, ,x, , , ,155,Reflect across the X axis
+xrandr, ,y, , , ,156,Reflect across the Y axis
+xrandr, , ,filter, , ,157,Set scaling filter method
+xrandr, , ,reflect, , ,158,Set reflection
+xrandr, , ,rotate, , ,159,Set rotation

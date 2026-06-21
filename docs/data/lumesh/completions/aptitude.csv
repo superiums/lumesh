@@ -20,3 +20,33 @@ aptitude, ,t,target-release, ,@r,144,Set the release from which packages should 
 aptitude, ,O,sort, ,@r,145,Specify the order for the output from the search command
 aptitude, ,o, , ,@r,146,Set a configuration file option directly
 aptitude, ,w,width, ,@r,147,Specify the display width for the output from the search command
+
+aptitude, , , , ,@E @F,148,__fish_print_apt_packages
+aptitude, , , ,autoclean,@f,149,Remove any cached packages which can no longer be downloaded
+aptitude, , , ,clean,@f,150,Remove all downloaded .deb files from the package cache directory
+aptitude, , , ,forget-new,@f,151,Forget all internal information about what packages are
+aptitude, , , ,keep-all,@f,152,Cancel all scheduled actions on all packages
+aptitude, , , ,update,@f,153,Update the list of available packages from the apt sources
+aptitude, , , ,safe-upgrade,@f,154,Upgrade installed packages to their most recent version
+aptitude, , , ,changelog,@f,155,Download and displays the Debian changelog for the packages
+aptitude, , , ,full-upgrade,@f,156,Upgrade, removing or installing packages as necessary
+aptitude, , , ,download,@f,157,Download the packages to the current directory
+aptitude, , , ,forbid-version,@f,158,Forbid the upgrade to a particular version
+aptitude, , , ,hold,@f,159,Ignore the packages by future upgrade commands
+aptitude, , , ,install,@f,160,Install the packages
+aptitude, , , ,keep,@f,161,Cancel any scheduled actions on the packages
+aptitude, , , ,markauto,@f,162,Mark packages as automatically installed
+aptitude, , , ,purge,@f,163,Remove and delete all associated configuration and data files
+aptitude, , , ,reinstall,@f,164,Reinstall the packages
+aptitude, , , ,remove,@f,165,Remove the packages
+aptitude, , , ,show,@f,166,Display detailed information about the packages
+aptitude, , , ,unhold,@f,167,Consider the packages by future upgrade commands
+aptitude, , , ,unmarkauto,@f,168,Mark packages as manually installed
+aptitude, , , ,search,@f,169,Search for packages matching one of the patterns
+aptitude, , , ,help,@f,170,Display brief summary of the available commands and options
+aptitude, , , ,why,@f,171,Explain why a particular package should be installed
+aptitude, , , ,why-not,@f,172,Explain why a particular package cannot be installed
+aptitude, , , ,versions,@f,173,Displays the versions of specified packages
+aptitude, ,Z, , , ,174,Show how much disk space will be used or freed
+aptitude, , , ,showsrc,@f,175,Display detailed information about the source packages (apt wrapper)
+aptitude, ,u, , , ,176,Download new package lists on startup (terminal interface only)

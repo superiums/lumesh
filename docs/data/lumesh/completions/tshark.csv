@@ -4,3 +4,22 @@ tshark, , ,color, , ,104,Enable coloring of packets according to standard Wiresh
 tshark, , ,no-duplicate-keys, , ,105,Merge duplicate keys in json output
 tshark, , ,elastic-mapping-filter, ,@f @r,106,Only put specified protocols in an ElasticSearch mapping file
 tshark, , ,export-objects, ,@f @r,107,Export all objects within a protocol into directory given destination directory
+
+tshark, ,2, , , ,108,Perform a two-pass analysis
+tshark, ,e, , , ,109,Add a field to the list of fields to display
+tshark, ,E, , , ,110,Set an option controlling the printing of fields
+tshark, ,F, , , ,111,Set the output capture file format
+tshark, ,G, , , ,112,Print a glossary
+tshark, ,H, , ,@r,113,Read a list of entries from a 'hosts' file
+tshark, ,j, , ,@f @r,114,Protocol match filter used for ek|json|jsonraw|pdml output file types
+tshark, ,J, , ,@f @r,115,Protocol match filter used, includes all child protocols
+tshark, ,l, , , ,116,Flush the standard output after the information for each packet is printed
+tshark, ,O, , , ,117,Show a detailed view of the comma-separated list of protocols
+tshark, ,Q, , , ,118,When capturing packets, don't display, on the standard error, the initial message
+tshark, ,S, , ,@f @r,119,Set the line separator to be printed between packets
+tshark, ,T, , , ,120,Set the format of the output when viewing decoded packet data
+tshark, ,U, , , ,121,PDUs export according to given tap name
+tshark, ,V, , , ,122,Causes TShark to print a view of packet details
+tshark, ,W, , , ,123,Save extra information in the capture file if the format supports it
+tshark, ,x, , , ,124,Print hex and ASCII dumps of packet data
+tshark, ,M, , ,@f @r,125,Automatically reset internal session when reaching N packets

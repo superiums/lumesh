@@ -24,3 +24,7 @@ reflector, , ,completion-percent, , ,122,Set the minimum completion percent for 
 reflector, , ,isos, , ,123,Only return mirrors that host ISOs
 reflector, , ,ipv4, , ,124,Only return mirrors that support IPv4
 reflector, , ,ipv6, , ,125,Only return mirrors that support IPv6
+
+reflector, , , , ,@f,126,
+reflector, , ,sort, , ,127,Sort the mirrorlist
+reflector, ,p,protocol, , ,128,Match one of the given protocols

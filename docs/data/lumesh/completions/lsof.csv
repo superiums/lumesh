@@ -2,3 +2,16 @@ cmd,conds,short,long,params,dirs,pri,desc
 lsof, ,A, , ,@r,101,Use alternative name list file
 lsof, ,d, , ,@r,102,specifies a list of file descriptors to exclude or include in the output listing
 lsof, ,D, ,'\?, ,103,use of device cache file
+
+lsof, ,h, , , ,104,Print help and exit
+lsof, ,a, , , ,105,Causes list selections to be ANDed
+lsof, ,b, , , ,106,Avoid kernel functions that might block: lstat, readlink, stat
+lsof, ,C, , , ,107,Do not report any pathname component from kernel
+lsof, ,D, , , ,108,use of device cache file
+lsof, ,l, , , ,109,Convert UIDs to login names
+lsof, ,p, , , ,110,Select or exclude processes by pid
+lsof, ,R, , , ,111,Print PPID
+lsof, ,c, , , ,112,Select the listing for processes, whose command begins with string (^ - negate)
+lsof, ,g, , , ,113,select by group (^ - negates)
+lsof, ,t, , , ,114,Produce terse output (pids only, no header)
+lsof, ,u, , , ,115,select by user (^ - negates)

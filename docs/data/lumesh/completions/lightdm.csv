@@ -10,3 +10,5 @@ lightdm, , ,log-dir, ,@F @r,108,Directory to write logs to
 lightdm, , ,run-dir, ,@F @r,109,Directory to store running state
 lightdm, , ,cache-dir, ,@F @r,110,Directory to cache information
 lightdm, ,v,version, ,@f @r,111,Show release version
+
+lightdm, , , , ,@f,112,

@@ -17,3 +17,5 @@ who, , ,message, , ,115,"Print users message status as +, - or ?"
 who, ,u,users, , ,116,List users logged in
 who, , ,help, , ,117,Display help and exit
 who, , ,version, , ,118,Display version and exit
+
+who, ,m, , , ,119,Print hostname and user for stdin

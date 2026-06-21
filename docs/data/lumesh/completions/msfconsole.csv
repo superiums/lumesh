@@ -17,3 +17,6 @@ msfconsole, ,q,quiet, , ,115,Do not print the banner on startup
 msfconsole, ,r,resource, ,@F,116,Execute the specified resource file
 msfconsole, ,x,execute-command, ,@f @r,117,Execute the specified console commands
 msfconsole, ,h,help, , ,118,Show help message
+
+msfconsole, , , , ,@f,119,
+msfconsole, ,l,logger, , ,120,Specify a logger to use

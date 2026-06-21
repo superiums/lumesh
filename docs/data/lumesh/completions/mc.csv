@@ -19,3 +19,7 @@ mc, ,v,view, , ,117,Start the internal viewer with FILE
 mc, ,V,version, , ,118,Display the version of the program
 mc, ,x,xterm, , ,119,Force xterm mode
 mc, ,g,oldmouse, , ,120,Force a 'normal tracking' mouse mode
+
+mc, ,S, , , ,121,Specify a name of skin
+mc, ,K, , , ,122,Specify a keymap FILE
+mc, ,s, , , ,123,Set alternative mode drawing of frameworks

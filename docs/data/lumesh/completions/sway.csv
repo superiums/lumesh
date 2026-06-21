@@ -7,3 +7,11 @@ Enables full logging, including debug information., ,d,debug, , ,105,
 Show the version number and quit., ,v,version, , ,106, 
 Enables more verbose logging., ,V,verbose, , ,107, 
 Gets the IPC socket path and prints it, then exits., , ,get-socketpath, , ,108, 
+
+sway, ,h,help, , ,108,Show help message and quit.
+sway, ,c,config, ,@r,109,Specifies a config file.
+sway, ,C,validate, , ,110,Check the validity of the config file, then exit.
+sway, ,d,debug, , ,111,Enables full logging, including debug information.
+sway, ,v,version, , ,112,Show the version number and quit.
+sway, ,V,verbose, , ,113,Enables more verbose logging.
+sway, , ,get-socketpath, , ,114,Gets the IPC socket path and prints it, then exits.

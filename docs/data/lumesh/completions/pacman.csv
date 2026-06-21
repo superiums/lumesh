@@ -98,3 +98,5 @@ pacman,S U, ,ignore, , ,195,Ignore a package upgrade (can be used more than once
 pacman,S U, ,ignoregroup, , ,196,Ignore a group upgrade (can be used more than once)
 pacman,S U, ,overwrite, , ,197,Overwrite conflicting files (can be used more than once)
 pacman,Q,d,deps, ,@f,198,List only non-explicit packages (dependencies)
+
+pacman, ,d,deps, ,@f @n,199,List only non-explicit packages (dependencies)

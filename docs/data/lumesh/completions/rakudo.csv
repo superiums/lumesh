@@ -18,3 +18,10 @@ rakudo, , ,profile-kind,instrumented heap,@f @r,117,Choose the type of profile t
 rakudo, , ,profile-stage, ,@f,118,Write profile information for the given compilation stage to a file
 rakudo, , ,debug-port, ,@f @r,119,Listen for incoming debugger connections
 rakudo, , ,tracing, ,@f,120,"Output a line to stderr on every interpreter instr, if enabled in MoarVM"
+
+rakudo, , , ,-,@F,121,Read program source from STDIN or start REPL if a TTY
+rakudo, ,c, , , ,122,Check syntax only. Runs BEGIN and CHECK blocks
+rakudo, ,n, , , ,123,Run program once for each line of input
+rakudo, , ,repl-mode,interactive\t'Start the default interactive REPL' non-interactive\t'STDIN is read entirely and evaluated as if it were a program',@f @r,124,Specify the REPL mode
+rakudo, , ,profile-kind,instrumented\t'Performance measurements' heap\t'Record heap snapshots at every garbage collection run',@f @r,125,Choose the type of profile to generate
+rakudo, ,p, , , ,126,Same as -n, but also print $_ at the end of lines

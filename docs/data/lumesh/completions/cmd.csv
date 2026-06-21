@@ -8,3 +8,8 @@ cmd, , , ,/e,@f,106,Manage command extensions
 cmd, , , ,/f,@f,107,Manage file and directory name completion
 cmd, , , ,/v,@f,108,Manage delayed environment variable expansion
 cmd, , , ,/?,@f,109,Show help
+
+cmd, , , ,/c,@f,110,
+cmd, , , ,/k,@f,111,
+cmd, , , ,/a,@f,112,
+cmd, , , ,/u,@f,113,

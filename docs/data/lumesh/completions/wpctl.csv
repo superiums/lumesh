@@ -10,3 +10,13 @@ wpctl, set-mute,p,pid, , ,108,Selects all nodes associated to the given PID
 wpctl, settings,d,delete, , ,109,Deletes the saved setting value
 wpctl, settings,s,save, , ,110,Saves the setting value
 wpctl, settings,r,reset, , ,111,Resets the saved setting to its default value
+
+wpctl, , , , ,@f,112,
+wpctl,get-volume inspect set-volume set-mute set-profile, , ,@DEFAULT_AUDIO_SOURCE@, ,113,Default Microphone
+wpctl,get-volume inspect set-volume set-mute set-profile, , ,@DEFAULT_AUDIO_SINK@, ,114,Default Speakers
+wpctl,inspect set-profile, , ,@DEFAULT_VIDEO_SOURCE@, ,115,Default Camera
+wpctl,set-mute, , ,0 1 toggle, ,116,
+wpctl,settings, , , ,@E,117,__wpctl_get_settings
+wpctl,, , , , ,118,
+wpctl,get-volume inspect set-volume set-mute set-profile, , , ,@E,119,__wpctl_get_nodes Audio Sources) (__wpctl_get_nodes Audio Sinks
+wpctl,inspect set-profile, , , ,@E,120,__wpctl_get_nodes Audio Sources) (__wpctl_get_nodes Audio Sinks) (__wpctl_get_nodes Video Source

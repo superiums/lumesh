@@ -6,3 +6,105 @@ ouch, ,H,hidden, , ,105,Ignores hidden files
 ouch, ,g,gitignore, , ,106,Ignores files matched by git's ignore files
 ouch, ,h,help, , ,107,Print help information (use `--help` for more detail)
 ouch, ,V,version, , ,108,Print version information
+
+ouch, ,f,format, ,@r,109,Specify the format of the archive
+ouch, ,p,password, ,@r,110,Decompress or list with password
+ouch, ,c,threads, ,@r,111,Concurrent working threads
+ouch, ,q,quiet, , ,112,Silence output
+ouch, , , ,compress,@f,113,Compress one or more files into one output file
+ouch, , , ,c,@f,114,Compress one or more files into one output file
+ouch, , , ,decompress,@f,115,Decompresses one or more files, optionally into another folder
+ouch, , , ,d,@f,116,Decompresses one or more files, optionally into another folder
+ouch, , , ,list,@f,117,List contents of an archive
+ouch, , , ,l,@f,118,List contents of an archive
+ouch, , , ,ls,@f,119,List contents of an archive
+ouch,compress,l,level, ,@r,120,Compression level, applied to all formats
+ouch,compress,f,format, ,@r,121,Specify the format of the archive
+ouch,compress,p,password, ,@r,122,Decompress or list with password
+ouch,compress,c,threads, ,@r,123,Concurrent working threads
+ouch,compress, ,fast, , ,124,Fastest compression level possible, conflicts with --level and --slow
+ouch,compress,y,yes, , ,125,Skip [Y/n] questions, default to yes
+ouch,compress,n,no, , ,126,Skip [Y/n] questions, default to no
+ouch,compress,A,accessible, , ,127,Activate accessibility mode, reducing visual noise
+ouch,compress,H,hidden, , ,128,Ignore hidden files
+ouch,compress,q,quiet, , ,129,Silence output
+ouch,compress,g,gitignore, , ,130,Ignore files matched by git
+ouch,compress,h,help, , ,131,Print help
+ouch,c,l,level, ,@r,132,Compression level, applied to all formats
+ouch,c,f,format, ,@r,133,Specify the format of the archive
+ouch,c,p,password, ,@r,134,Decompress or list with password
+ouch,c,c,threads, ,@r,135,Concurrent working threads
+ouch,c, ,fast, , ,136,Fastest compression level possible, conflicts with --level and --slow
+ouch,c,y,yes, , ,137,Skip [Y/n] questions, default to yes
+ouch,c,n,no, , ,138,Skip [Y/n] questions, default to no
+ouch,c,A,accessible, , ,139,Activate accessibility mode, reducing visual noise
+ouch,c,H,hidden, , ,140,Ignore hidden files
+ouch,c,q,quiet, , ,141,Silence output
+ouch,c,g,gitignore, , ,142,Ignore files matched by git
+ouch,c,h,help, , ,143,Print help
+ouch,decompress,d,dir, ,@F @r,144,Place results in a directory other than the current one
+ouch,decompress,f,format, ,@r,145,Specify the format of the archive
+ouch,decompress,p,password, ,@r,146,Decompress or list with password
+ouch,decompress,c,threads, ,@r,147,Concurrent working threads
+ouch,decompress,r,remove, , ,148,Remove the source file after successful decompression
+ouch,decompress,y,yes, , ,149,Skip [Y/n] questions, default to yes
+ouch,decompress,n,no, , ,150,Skip [Y/n] questions, default to no
+ouch,decompress,A,accessible, , ,151,Activate accessibility mode, reducing visual noise
+ouch,decompress,H,hidden, , ,152,Ignore hidden files
+ouch,decompress,q,quiet, , ,153,Silence output
+ouch,decompress,g,gitignore, , ,154,Ignore files matched by git
+ouch,decompress,h,help, , ,155,Print help
+ouch,d,d,dir, ,@F @r,156,Place results in a directory other than the current one
+ouch,d,f,format, ,@r,157,Specify the format of the archive
+ouch,d,p,password, ,@r,158,Decompress or list with password
+ouch,d,c,threads, ,@r,159,Concurrent working threads
+ouch,d,r,remove, , ,160,Remove the source file after successful decompression
+ouch,d,y,yes, , ,161,Skip [Y/n] questions, default to yes
+ouch,d,n,no, , ,162,Skip [Y/n] questions, default to no
+ouch,d,A,accessible, , ,163,Activate accessibility mode, reducing visual noise
+ouch,d,H,hidden, , ,164,Ignore hidden files
+ouch,d,q,quiet, , ,165,Silence output
+ouch,d,g,gitignore, , ,166,Ignore files matched by git
+ouch,d,h,help, , ,167,Print help
+ouch,list,f,format, ,@r,168,Specify the format of the archive
+ouch,list,p,password, ,@r,169,Decompress or list with password
+ouch,list,c,threads, ,@r,170,Concurrent working threads
+ouch,list,t,tree, , ,171,Show archive contents as a tree
+ouch,list,y,yes, , ,172,Skip [Y/n] questions, default to yes
+ouch,list,n,no, , ,173,Skip [Y/n] questions, default to no
+ouch,list,A,accessible, , ,174,Activate accessibility mode, reducing visual noise
+ouch,list,H,hidden, , ,175,Ignore hidden files
+ouch,list,q,quiet, , ,176,Silence output
+ouch,list,g,gitignore, , ,177,Ignore files matched by git
+ouch,list,h,help, , ,178,Print help
+ouch,l,f,format, ,@r,179,Specify the format of the archive
+ouch,l,p,password, ,@r,180,Decompress or list with password
+ouch,l,c,threads, ,@r,181,Concurrent working threads
+ouch,l,t,tree, , ,182,Show archive contents as a tree
+ouch,l,y,yes, , ,183,Skip [Y/n] questions, default to yes
+ouch,l,n,no, , ,184,Skip [Y/n] questions, default to no
+ouch,l,A,accessible, , ,185,Activate accessibility mode, reducing visual noise
+ouch,l,H,hidden, , ,186,Ignore hidden files
+ouch,l,q,quiet, , ,187,Silence output
+ouch,l,g,gitignore, , ,188,Ignore files matched by git
+ouch,l,h,help, , ,189,Print help
+ouch,ls,f,format, ,@r,190,Specify the format of the archive
+ouch,ls,p,password, ,@r,191,Decompress or list with password
+ouch,ls,c,threads, ,@r,192,Concurrent working threads
+ouch,ls,t,tree, , ,193,Show archive contents as a tree
+ouch,ls,y,yes, , ,194,Skip [Y/n] questions, default to yes
+ouch,ls,n,no, , ,195,Skip [Y/n] questions, default to no
+ouch,ls,A,accessible, , ,196,Activate accessibility mode, reducing visual noise
+ouch,ls,H,hidden, , ,197,Ignore hidden files
+ouch,ls,q,quiet, , ,198,Silence output
+ouch,ls,g,gitignore, , ,199,Ignore files matched by git
+ouch,ls,h,help, , ,200,Print help
+ouch,help compress decompress list help, , ,compress,@f,201,Compress one or more files into one output file
+ouch,help compress decompress list help, , ,decompress,@f,202,Decompresses one or more files, optionally into another folder
+ouch,help compress decompress list help, , ,list,@f,203,List contents of an archive
+ouch, , , ,help,@f,204,Print this message or the help of the given subcommand(s)
+ouch,compress, ,slow, , ,205,Slowest (and best) compression level possible, conflicts with --level and --fast
+ouch,compress,S,follow-symlinks, , ,206,Archive target files instead of storing symlinks (supported by `tar` and `zip`)
+ouch,c, ,slow, , ,207,Slowest (and best) compression level possible, conflicts with --level and --fast
+ouch,c,S,follow-symlinks, , ,208,Archive target files instead of storing symlinks (supported by `tar` and `zip`)
+ouch,help compress decompress list help, , ,help,@f,209,Print this message or the help of the given subcommand(s)

@@ -56,3 +56,18 @@ checkinstall, , ,backup,$yn,@f @r,154,Toggle backup
 checkinstall, , ,help, ,@f,155,Show help
 checkinstall, , ,copyright, ,@f,156,Show Copyright information
 checkinstall, , ,version, ,@f,157,Show version information
+
+checkinstall, , ,install, ,@f @r,158,Toggle created package installation
+checkinstall, , ,fstrans, ,@f @r,159,Enable/disable the filesystem translation code
+checkinstall, , ,showinstall, ,@f @r,160,Toggle interactive install command
+checkinstall, , ,showslack, ,@f @r,161,Toggle interactive Slackware installation script
+checkinstall, , ,autodoinst, ,@f @r,162,Toggle the creation of a doinst.sh script
+checkinstall, , ,strip, ,@f @r,163,Strip any ELF binaries found inside the package
+checkinstall, , ,stripso, ,@f @r,164,Strop any ELF binary libraries (.so files)
+checkinstall, , ,addso, ,@f @r,165,Search for ant shared libs and add them to /etc/ld.so.conf
+checkinstall, , ,reset-uids, ,@f @r,166,Reset perms for all files
+checkinstall, , ,gzman, ,@f @r,167,Compress any man pages found inside the package
+checkinstall, , ,deldoc, ,@f @r,168,Delete doc-pak upon termination
+checkinstall, , ,deldesc, ,@f @r,169,Delete description-pak upon termination
+checkinstall, , ,delspec, ,@f @r,170,Delete spec file upon termination
+checkinstall, , ,backup, ,@f @r,171,Toggle backup

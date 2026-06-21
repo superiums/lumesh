@@ -20,3 +20,7 @@ lz4, ,h,help, , ,118,Show help
 lz4, ,V,version, , ,119,Show version
 lz4, ,k,keep, , ,120,Keep input file(s) (default)
 lz4, , ,rm, , ,121,Remove input file(s) after de/compression
+
+lz4, , , , , ,122,Set compression level
+lz4, ,r, , , ,123,Recurse directories
+lz4, ,H, , , ,124,Show long help

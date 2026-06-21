@@ -1,3 +1,15 @@
 cmd,conds,short,long,params,dirs,pri,desc
 patool, ,h,help, ,@f,101,Show help message
 patool, extract, ,outdir, , ,113,Specify output directory
+
+patool, ,v,verbose, ,@f,114,Be verbose
+patool, , ,non-interactive, ,@f,115,Run in batch mode
+patool, , , ,create,@f,116,Create archive
+patool, , , ,repack,@f,117,Repackage archive to different format
+patool, , , ,recompress,@f,118,Recompress archive to smaller
+patool, , , ,diff,@f,119,Differences between two archives
+patool, , , ,search,@f,120,Search contents of archive
+patool, , , ,formats,@f,121,Show supported formats
+patool, , , ,extract,@f,122,Extract archive(s)
+patool, , , ,list,@f,123,List files in archive(s)
+patool, , , ,test,@f,124,Test archive(s)

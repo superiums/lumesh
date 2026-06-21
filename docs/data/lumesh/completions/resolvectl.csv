@@ -21,3 +21,23 @@ resolvectl, , ,json,short pretty off, ,119,Output as JSON in specified mode
 resolvectl, ,h,help, , ,120,Show help
 resolvectl, , ,version, , ,121,Show version
 resolvectl, , ,no-pager, , ,122,Do not pipe output into a pager
+
+resolvectl, , , , ,@f,123,
+resolvectl, ,4, , , ,124,Resolve only IPv4
+resolvectl, ,6, , , ,125,Resolve only IPv6
+resolvectl, , ,service-address, , ,126,Resolve address for SRV record
+resolvectl, , ,service-txt, , ,127,Resolve TXT records for services
+resolvectl, , ,cname, , ,128,Follow CNAME redirects
+resolvectl, , ,validate, , ,129,Allow DNSSEC validation
+resolvectl, , ,synthesize, , ,130,Allow synthetic response
+resolvectl, , ,cache, , ,131,Allow response from cache
+resolvectl, , ,stale-data, , ,132,Allow response from cache with stale data
+resolvectl, , ,relax-single-label, , ,133,Allow single label lookups to go upstream
+resolvectl, , ,zone, , ,134,Allow response from locally registered mDNS/LLMNR records
+resolvectl, , ,trust-anchor, , ,135,Use local trust anchors
+resolvectl, , ,network, , ,136,Allow response from network
+resolvectl, , ,search, , ,137,Use search domains for single-label names
+resolvectl, , ,raw, , ,138,Dump answer as binary data
+resolvectl, , ,legend, , ,139,Print headers and meta info
+resolvectl, , ,json, , ,140,Output as JSON in specified mode
+resolvectl, ,j, , , ,141,Output as JSON

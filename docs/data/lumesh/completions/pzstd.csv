@@ -13,3 +13,7 @@ pzstd, ,V,version, , ,111,Show version
 pzstd, ,v,verbose, , ,112,Be verbose
 pzstd, ,q,quiet, , ,113,Suppress warnings
 pzstd, , ,no-check, , ,114,Disable integrity check
+
+pzstd, , , , , ,115,Set compression level
+pzstd, ,r, , , ,116,Recurse directories
+pzstd, ,H, , , ,117,Show long help

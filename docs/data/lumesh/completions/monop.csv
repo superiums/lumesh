@@ -5,3 +5,7 @@ monop, ,f,filter-obsolete, , ,103,Do not show obsolete types and members
 monop, ,d,declared-only, , ,104,Only show members declared in the type
 monop, ,p,private, , ,105,Show private members
 monop, , ,runtime-version, , ,106,Print runtime version
+
+monop, ,r, , , ,107,Specifies the assembly to use for looking up the type
+monop, ,a, , , ,108,Renders all of the types in the specified assembly
+monop, , , , , ,109,Set the lookup path to the Xamarin.Android directory

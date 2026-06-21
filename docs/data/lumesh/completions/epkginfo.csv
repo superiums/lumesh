@@ -9,3 +9,5 @@ epkginfo, ,S,stablreq, , ,107,STABLEREQ arches (cc's) for all matching pkg versi
 epkginfo, ,u,useflags, , ,108,per-pkg USE flag descriptions
 epkginfo, ,U,upstream, , ,109,pkg's upstream information
 epkginfo, ,x,xml, , ,110,plain metadata.xml file
+
+epkginfo, , , , , ,111,

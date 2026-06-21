@@ -22,3 +22,5 @@ apt-listbugs, ,y,force-yes, ,@f,120,Assume yes to all questions
 apt-listbugs, ,n,force-no, ,@f,121,Assume no to all questions
 apt-listbugs, , , ,list, ,122,List bugs from packages
 apt-listbugs, , , ,rss, ,123,List bugs in rss format
+
+apt-listbugs, ,S,stats,outstanding 'pending upload' resolved done open,@f,124,Bug-status you want to see

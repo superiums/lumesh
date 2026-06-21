@@ -88,3 +88,16 @@ nmap, , ,unprivileged, , ,187,Assume that the user lacks raw socket privileges
 nmap, , ,release-memory, , ,188,Release memory before quitting
 nmap, ,V,version, , ,189,Print version number
 nmap, ,h,help, , ,190,Print help summary page
+
+nmap, ,n, , , ,191,No DNS resolution
+nmap, ,R, , , ,192,DNS resolution for all targets
+nmap, ,b, , ,@f @r,193,FTP bounce scan
+nmap, ,p, , , ,194,Only scan specified ports
+nmap, ,r, , , ,195,Don't randomize ports
+nmap, ,O, , , ,196,Enable OS detection
+nmap,-s f,f, , ,@n,197,fragment packets
+nmap,-s f, ,mtu, , ,198,use specified mtu
+nmap, ,v, , , ,199,Increase/Set verbosity level
+nmap, ,6, , , ,200,Enable IPv6 scanning
+nmap, ,A, , , ,201,Aggressive scan options
+nmap, ,F, , , ,202,Fast (limited port) scan

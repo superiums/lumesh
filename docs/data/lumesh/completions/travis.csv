@@ -1,2 +1,45 @@
 cmd,conds,short,long,params,dirs,pri,desc
 travis, ,h,help, ,@f,137,Display help
+
+travis, , , ,accounts,@f,138,Displays accounts and their subscription status
+travis, , , ,branches,@f,139,Displays the most recent build for each branch
+travis, , , ,cache,@f,140,Lists or deletes repository caches
+travis, , , ,cancel,@f,141,Cancels a job or build
+travis, , , ,console,@f,142,Interactive shell
+travis, , , ,disable,@f,143,Disables a project
+travis, , , ,enable,@f,144,Enables a project
+travis, , , ,encrypt,@f,145,Encrypts values for the .travis.yml
+travis, , , ,encrypt-file,@f,146,Encrypts a file and adds decryption steps to .travis.yml
+travis, , , ,endpoint,@f,147,Displays or changes the API endpoint
+travis, , , ,env,@f,148,Show or modify build environment variables
+travis, , , ,help,@f,149,Helps you out when in dire need of information
+travis, , , ,history,@f,150,Displays a projects build history
+travis, , , ,init,@f,151,Generates a .travis.yml and enables the project
+travis, , , ,lint,@f,152,Display warnings for a .travis.yml
+travis, , , ,login,@f,153,Authenticates against the API and stores the token
+travis, , , ,logout,@f,154,Deletes the stored API token
+travis, , , ,logs,@f,155,Streams test logs
+travis, , , ,monitor,@f,156,Live monitor for what's going on
+travis, , , ,open,@f,157,Opens a build or job in the browser
+travis, , , ,pubkey,@f,158,Prints out a repository's public key
+travis, , , ,report,@f,159,Generates a report useful for filing issues
+travis, , , ,repos,@f,160,Lists repositories the user has certain permissions on
+travis, , , ,requests,@f,161,Lists recent requests
+travis, , , ,restart,@f,162,Restarts a build or job
+travis, , , ,settings,@f,163,Access repository settings
+travis, , , ,setup,@f,164,Sets up an addon or deploy target
+travis, , , ,show,@f,165,Displays a build or job
+travis, , , ,sshkey,@f,166,Checks, updates or deletes an SSH key
+travis, , , ,status,@f,167,Checks status of the latest build
+travis, , , ,sync,@f,168,Triggers a new sync with GitHub
+travis, , , ,token,@f,169,Outputs the secret API token
+travis, , , ,version,@f,170,Outputs the client version
+travis, , , ,whatsup,@f,171,Lists most recent builds
+travis, , , ,whoami,@f,172,Outputs the current user
+travis, ,i,interactive, ,@f @n,173,Be interactive and colorful
+travis, , ,no-interactive, ,@f @n,174,Don't be interactive and colorful
+travis, ,E,explode, ,@f @n,175,Don't rescue exceptions
+travis, , ,no-explode, ,@f @n,176,Rescue exceptions
+travis, , ,skip-version-check, ,@f @n,177,Don't check if travis client is up to date
+travis, , ,skip-completion-check, ,@f @n,178,Don't check if auto-completion is set up
+travis, , , ,raw,@f,179,Makes an (authenticated) API call and prints out the result

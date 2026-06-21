@@ -15,3 +15,5 @@ loginctl, , ,no-legend, , ,113,"Do not print the legend, i. e.  column headers a
 loginctl, ,h,help, , ,114,Print a short help text and exit
 loginctl, , ,version, , ,115,Print a short version string and exit
 loginctl, , ,firmware-setup, , ,116,"is given, indicate to the systems firmware to reboot into the firmware setup …"
+
+loginctl, , , , ,@f,117,

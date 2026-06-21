@@ -38,3 +38,7 @@ dust, ,F,only-file, , ,136,Only files will be displayed. (Finds your largest fil
 dust, ,j,output-json, , ,137,Output the directory tree as json to the current directory
 dust, ,h,help, , ,138,Print help (see more with '--help')
 dust, ,V,version, , ,139,Print version
+
+dust, ,m,filetime,a c m,@f @r,140,Directory
+dust, ,o,output-format,si b k m g t kb mb gb tb,@f @r,141,Changes output display size. si will print sizes in powers of 1000. b k m g t kb mb gb tb will print the whole tree in that size
+dust, , ,files-from, ,@F @r,142,Read newline-terminated paths from FILE (use `-` for stdin)

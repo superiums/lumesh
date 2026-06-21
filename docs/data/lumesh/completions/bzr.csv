@@ -57,3 +57,17 @@ bzr, check, ,tree, ,@f,168,Check the working tree related to the current directo
 bzr, check, ,repo, ,@f,169,Check the repository related to the current directory
 bzr, check, ,branch, ,@f,170,Check the branch related to the current directory
 bzr, add mv, ,dry-run, ,@f,175,Show what would be done
+
+bzr, , , ,help,@f,176,Show help
+bzr, , , ,init,@f,177,Makes this directory a versioned branch
+bzr, , , ,branch,@f,178,Make a copy of another branch
+bzr, , , ,add,@f,179,Make files or directories versioned
+bzr, , , ,ignore,@f,180,Ignore a file or pattern
+bzr, , , ,mv,@f,181,Move or rename a versioned file
+bzr, , , ,status,@f,182,Summarize changes in working copy
+bzr, , , ,diff,@f,183,Show detailed diffs
+bzr, , , ,merge,@f,184,Pull in changes from another branch
+bzr, , , ,commit,@f,185,Save some or all changes
+bzr, , , ,send,@f,186,Send changes via email
+bzr, , , ,log,@f,187,Show history of changes
+bzr, , , ,check,@f,188,Validate storage

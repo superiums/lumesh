@@ -34,3 +34,37 @@ prt-cache, , ,strict-diff, , ,198,Override prefer-higher
 prt-cache, , ,config, ,@r,199,Use alternative config file
 prt-cache, , ,install-root, ,@r,200,Use this alternative root for installation
 prt-cache, , ,log, , ,201,Write output to log file
+
+prt-get, , , , ,@E @F @f,202,__fish_prt_packages
+prt-get, , , ,install,@f,203,Install listed ports
+prt-get, , , ,depinst,@f,204,Install listed ports and their deps
+prt-get, , , ,grpinst,@f,205,Install listed ports, stop if one fails
+prt-get, , , ,update,@f,206,Update listed packages
+prt-get, , , ,remove,@f,207,Remove listed packages
+prt-get, , , ,sysup,@f,208,Update all outdated installed packages
+prt-get, , , ,lock,@f,209,Do not update this in sysup
+prt-get, , , ,unlock,@f,210,Remove this from lock
+prt-get, , , ,diff,@f,211,Print differences between installed packages and ports in the port tree
+prt-get, , , ,search,@f,212,Search for an expr in port names
+prt-get, , , ,dsearch,@f,213,Search for an expr in port names and descriptions
+prt-get, , , ,info,@f,214,Print info on a port
+prt-get, , , ,fsearch,@f,215,Search for a pattern in the footprints in the ports tree
+prt-get, , , ,path,@f,216,Print the path of a port
+prt-get, , , ,readme,@f,217,Print the eventual README of a port
+prt-get, , , ,depends,@f,218,Print a list of deps for the listed ports
+prt-get, , , ,quickdeo,@f,219,Print a simple list of deps for the listed ports
+prt-get, , , ,deptree,@f,220,Print a deptree for the port
+prt-get, , , ,dup,@f,221,List ports in multiple directories
+prt-get, , , ,list,@f,222,List all the ports
+prt-get, , , ,printf,@f,223,Print formatted list of ports
+prt-get, , , ,listinst,@f,224,List installed packages
+prt-get, , , ,listorphans,@f,225,List installed packages which have no dependent packages
+prt-get, , , ,isinst,@f,226,Check if a port is installed
+prt-get, , , ,current,@f,227,Print the version of an installed package
+prt-get, , , ,ls,@f,228,Print the listing of the directory of a port
+prt-get, , , ,cat,@f,229,Print a file in a port to stdout
+prt-get, , , ,edit,@f,230,Edit a file in a port
+prt-get, , , ,help,@f,231,Shows a help screen
+prt-get, , , ,dumpconfig,@f,232,Print the configuration of prt-get
+prt-get, , , ,version,@f,233,Show the current version of prt-get
+prt-get, , , ,cache,@f,234,Create a cache for prt-get

@@ -4,3 +4,6 @@ xxd, , , ,0 1 2 4, ,102,Octets per group
 xxd, , , , ,@f @r,103,Stop after NUM octets
 xxd, , , , ,@f @r,105,Add OFFSET to displayed file position
 xxd, , , ,never always auto, ,106,Output coloring mode
+
+xxd,i, , , , ,107,Capitalize variable names
+xxd,r, , , , ,108,Start at SEEK bytes offset in file

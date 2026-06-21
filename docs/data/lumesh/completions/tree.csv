@@ -26,3 +26,33 @@ tree, , ,nolinks, , ,124,Turn off hyperlinks in HTML output
 tree, , ,fromfile, ,@r,125,Reads paths from files (.=stdin)
 tree, , ,version, , ,126,Print version and exit
 tree, , ,help, , ,127,Print usage and this help message and exit
+
+tree, ,a, , , ,128,All files are listed
+tree, ,d, , , ,129,List directories only
+tree, ,l, , , ,130,Follow symbolic links like directories
+tree, ,f, , , ,131,Print the full path prefix for each file
+tree, ,x, , , ,132,Stay on current filesystem only
+tree, ,R, , , ,133,Rerun tree when max dir level reached
+tree, ,q, , , ,134,Print non-printable characters as
+tree, ,N, , , ,135,Print non-printable characters as is
+tree, ,Q, , , ,136,Quote filenames with double quotes
+tree, ,p, , , ,137,Print the protections for each file
+tree, ,u, , , ,138,Displays file owner or UID number
+tree, ,g, , , ,139,Displays file group owner or GID number
+tree, ,s, , , ,140,Print the size in bytes of each file
+tree, ,h, , , ,141,Print the size in a more human readable way
+tree, ,F, , , ,142,Appends
+tree, ,v, , , ,143,Sort files alphanumerically by version
+tree, ,t, , , ,144,Sort files by last modification time
+tree, ,c, , , ,145,Sort files by last status change time
+tree, ,U, , , ,146,Leave files unsorted
+tree, ,r, , , ,147,Reverse the order of the sort
+tree, , ,sort, , ,148,Select sort
+tree, ,i, , , ,149,Don
+tree, ,A, , , ,150,Print ANSI lines graphic indentation lines
+tree, ,C, , , ,151,Turn colorization on always
+tree, ,X, , , ,152,Prints out an XML representation of the tree
+tree, ,J, , , ,153,Prints out an JSON representation of the tree
+tree, ,D, , , ,154,Print the date of last modification or (-c) status change
+tree, ,S, , , ,155,Print with CP437 (console) graphics indentation lines
+tree, ,n, , , ,156,Turn colorization off always (-C overrides)

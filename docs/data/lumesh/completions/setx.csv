@@ -5,3 +5,10 @@ setx, , , ,/k,@f,106,
 setx, , , ,/f,@f,107,Specify the file that you want to use
 setx, , , ,/d,@f,108,Specify delimiters to be used
 setx, , , ,/?,@f,109,Show help
+
+setx, , , ,/u,@f,110,
+setx, , , ,/p,@f,111,
+setx, , , ,/a,@f,112,
+setx, , , ,/r,@f,113,
+setx, , , ,/x,@f,114,
+setx, , , ,/m,@f,115,

@@ -1,3 +1,6 @@
 cmd,conds,short,long,params,dirs,pri,desc
 iconutil, icns iconset,c,convert, ,@f @r,101,Convert to the specified type.
 Overrides the default output file name., ,o,output, ,@r,102, 
+
+iconutil, ,c,convert,icns iconset,@f @r,103,Convert to the specified type.
+iconutil, ,o,output, ,@r,104,Overrides the default output file name.

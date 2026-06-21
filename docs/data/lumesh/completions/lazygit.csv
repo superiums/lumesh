@@ -13,3 +13,5 @@ lazygit, ,w,work-tree, ,@D,111,Equivalent of the --work-tree git argument
 lazygit, ,d,debug, , ,112,Run in debug mode with logging
 lazygit, ,l,logs, , ,113,"Tail lazygit logs; used with --debug"
 lazygit, , ,profile, , ,114,Start the profiler and serve it on http port 6060
+
+lazygit, , , , , ,115,

@@ -40,3 +40,5 @@ pg_dumpall, ,U,username, ,@f @r,138,Connect as specified database user
 pg_dumpall, ,w,no-password, , ,139,Never prompt for password
 pg_dumpall, ,W,password, , ,140,Force password prompt (should happen automatically)
 pg_dumpall, , ,role, ,@f @r,141,Do SET ROLE before dump
+
+pg_dumpall, , , , ,@f,142,

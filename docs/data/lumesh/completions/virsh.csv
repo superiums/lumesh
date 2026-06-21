@@ -669,3 +669,19 @@ virsh, vol-upload, ,length, , ,767,Amount of data to upload
 virsh, vol-upload, ,sparse, , ,768,Preserve sparseness of volume
 virsh, vol-wipe, ,pool, , ,769,Pool name or UUID
 virsh, vol-wipe, ,algorithm, , ,770,Perform selected wiping algorithm
+
+virsh,autostart, , , ,@E @f @r,771,__fish_virsh_get_domains
+virsh,console, , , ,@E @f @r,772,__fish_virsh_get_domains running
+virsh,domrename, , , ,@E @f @r,773,__fish_virsh_get_domains
+virsh,dompmsuspend, , , ,@E @f @r,774,__fish_virsh_get_domains running
+virsh,dompmwakeup, , , ,@E @f @r,775,__fish_virsh_get_domains paused
+virsh,domuuid, , , ,@E @f @r,776,__fish_virsh_get_domains
+virsh,dumpxml, , , ,@E @f @r,777,__fish_virsh_get_domains
+virsh,edit, , , ,@E @f @r,778,__fish_virsh_get_domains
+virsh,reboot, , , ,@E @f @r,779,__fish_virsh_get_domains running
+virsh,resume, , , ,@E @f @r,780,__fish_virsh_get_domains paused
+virsh,save, , , ,@E @f @r,781,__fish_virsh_get_domains running
+virsh,shechinfo, , , ,@E @f @r,782,__fish_virsh_get_domains
+virsh,shutdown, , , ,@E @f @r,783,__fish_virsh_get_domains running
+virsh,start, , , ,@E @f @r,784,__fish_virsh_get_domains inactive
+virsh,suspend, , , ,@E @f @r,785,__fish_virsh_get_domains running

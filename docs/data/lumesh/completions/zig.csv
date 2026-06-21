@@ -56,3 +56,35 @@ zig, fmt, ,stdin, , ,254,Use stdin and stdout for I/O
 zig, fmt, ,check, , ,255,Check if the input is formatted
 zig, fmt, ,ast-check, , ,256,Run `zig ast-check` on every file
 zig, libc, , , ,@f @r,257,Specify the compilation target
+
+zig, , , ,build,@f @r,258,Build project from build.zig
+zig, , , ,fetch,@f @r,259,Copy a package into global cache and print its hash
+zig, , , ,init,@f @r,260,Initialize a Zig package in the current directory
+zig, , , ,build-exe,@f @r,261,Create executable from source or object files
+zig, , , ,build-lib,@f @r,262,Create library from source or object files
+zig, , , ,build-obj,@f @r,263,Create object from source or object files
+zig, , , ,test,@f @r,264,Perform unit testing
+zig, , , ,run,@f @r,265,Create executable and run immediately
+zig, , , ,ast-check,@f @r,266,Look for simple compile errors in any set of files
+zig, , , ,fmt,@f @r,267,Reformat Zig source into canonical form
+zig, , , ,reduce,@f @r,268,Minimize a bug report
+zig, , , ,translate-c,@f @r,269,Convert C code to Zig code
+zig, , , ,ar,@f @r,270,Use Zig as a drop-in archiver
+zig, , , ,cc,@f @r,271,Use Zig as a drop-in C compiler
+zig, , , ,c++,@f @r,272,Use Zig as a drop-in C++ compiler
+zig, , , ,dlltool,@f @r,273,Use Zig as a drop-in dlltool.exe
+zig, , , ,lib,@f @r,274,Use Zig as a drop-in lib.exe
+zig, , , ,ranlib,@f @r,275,Use Zig as a drop-in ranlib
+zig, , , ,objcopy,@f @r,276,Use Zig as a drop-in objcopy
+zig, , , ,rc,@f @r,277,Use Zig as a drop-in rc.exe
+zig, , , ,env,@f @r,278,Print lib path, std path, cache directory, and version
+zig, , , ,help,@f @r,279,Print help for `zig`
+zig, , , ,std,@f @r,280,View standard library documentation in a browser
+zig, , , ,libc,@f @r,281,Display native libc paths file or validate one
+zig, , , ,targets,@f @r,282,List available compilation targets
+zig, , , ,version,@f @r,283,Print version number
+zig, , , ,zen,@f @r,284,Print Zen of Zig
+zig,ast-check,t, , , ,285,Output ZIR in text form to stdout
+zig,cc c++, , , ,@E,286,__fish_complete_zig_cc_and_cpp
+zig,build && build, , ,install uninstall run test unzip,@f @r,287,
+zig,build, ,summary,failures all new none,@f @r,288,Control the printing of the build summary

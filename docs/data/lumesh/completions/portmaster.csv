@@ -22,3 +22,26 @@ portmaster, ,h,help, , ,120,display help message.
 portmaster, , ,version, , ,121,display the version number El ENVIRONMENT The d… [See Man Page]
 portmaster, , , ,,@f,122,Ports Directory
 portmaster, , , , ,@f,123,Installed package
+
+portmaster, ,C, , , ,124,prevents
+portmaster, ,G, , , ,125,prevents
+portmaster, ,H, , , ,126,hide details of the port build and install in a log file.
+portmaster, ,K, , , ,127,prevents
+portmaster, ,B, , , ,128,prevents creation of the backup package for the installed port.
+portmaster, ,b, , , ,129,create and keep a backup package of an installed port.
+portmaster, ,g, , , ,130,create a package of the new port.
+portmaster, ,n, , , ,131,run through all steps, but do not make or install any ports.
+portmaster, ,t, , , ,132,recurse dependencies thoroughly, using all-depends-list.
+portmaster, ,v, , , ,133,verbose output.
+portmaster, ,w, , , ,134,save old shared libraries before deinstall [-R]… [See Man Page]
+portmaster, ,i, , , ,135,interactive update mode -- ask whether to rebuild ports.
+portmaster, ,D, , , ,136,no cleaning of distfiles.
+portmaster, ,d, , , ,137,always clean distfiles.
+portmaster, ,m, , , ,138,any arguments to supply to make 1.
+portmaster, ,x, , , ,139,avoid building or updating ports that match this pattern.
+portmaster, ,a, , , ,140,check all ports, update as necessary.
+portmaster, ,o, , , ,141,replace the installed port with a port from a d… [See Man Page]
+portmaster, ,R, , , ,142,used with the r or f options to skip ports upda… [See Man Page]
+portmaster, ,l, , , ,143,list all installed ports by category.
+portmaster, ,L, , , ,144,list all installed ports by category, and search for updates.
+portmaster, ,y, , , ,145,answer yes to all user prompts for the features… [See Man Page]

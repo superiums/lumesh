@@ -11,3 +11,5 @@ md5sum, , ,strict, , ,109,"With --check, exit non-zero for any invalid input"
 md5sum, ,w,warn, , ,110,Warn about improperly formatted checksum lines
 md5sum, , ,help, , ,111,Display help text
 md5sum, , ,version, , ,112,Output version information and exit
+
+md5sum, , , , ,@r,113,Compute and check message digest

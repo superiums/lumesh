@@ -26,3 +26,10 @@ iptables, ,n,numeric, , ,127,Numeric output
 iptables, ,x,exact, , ,128,Expand numbers
 iptables, , ,line-numbers, , ,129,"When listing rules, add line numbers"
 iptables, , ,modprobe, , ,131,Use this command to load modules
+
+iptables,A C D append check delete,j,jump, ,@f,132,Specify the target of a rule
+iptables,A C D append check delete,m,match, ,@f,133,Specify a match to use
+iptables, , , ,ACCEPT DROP RETURN,@f,134,
+iptables, , , , ,@E @f,135,__fish_iptables_user_chains
+iptables, ,h, , ,@f,136,Help
+iptables, ,t,table, ,@f,137,The table to operate on

@@ -6,3 +6,5 @@ timeout, , , , ,@r,105,Specify which command to run
 timeout, , ,help, , ,106,Display this help and exit
 timeout, , ,version, , ,107,Output version and exit
 timeout, ,v,verbose, , ,108,Send diagnostic info to stderr
+
+timeout, ,s,signal, , ,109,Specify the signal to be sent

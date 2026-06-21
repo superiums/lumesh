@@ -78,3 +78,8 @@ fuzzel, , ,no-mouse, , ,176,disable mouse input
 fuzzel, ,v,version, , ,177,show the version number and quit
 fuzzel, , ,print-timing-info, , ,178,"print timing information, to help debug performance issues"
 fuzzel, ,h,help, , ,179,show help message and quit
+fuzzel, , ,only-match, ,@f @r,181,do not allow custom entries, only return a selected item
+fuzzel, , ,mesg, ,@f @r,182,string to use as informational message above the prompt
+fuzzel, , ,message-color, ,@f @r,183,color of the message text (657b83ff)
+fuzzel, , ,match-nth, ,@f @r,184,match against the N:th column (tab separated by default) of each input line (dmenu only)
+fuzzel, , ,mesg-mode,wrap expand,@f @r,185,how to deal with message lines longer than the ui (wrap)

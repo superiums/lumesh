@@ -14,3 +14,21 @@ telnet, ,b, , ,@f @r,112,Local address to bind to
 telnet, ,?,help, , ,113,Print help and exit
 telnet, , ,usage, , ,114,Print short usage and exit
 telnet, ,V,version, , ,115,Print program version
+
+telnet, ,4, , , ,116,Use IPv4 addresses only
+telnet, ,6, , , ,117,Use IPv6 addresses only
+telnet, ,8, , , ,118,Specifies an 8-bit data path
+telnet, ,E, , , ,119,Stops any character from being recognized as an escape character
+telnet, ,K, , , ,120,Specifies no automatic login to remote system
+telnet, ,a, , , ,121,Attempt automatic login
+telnet, ,c, , , ,122,Disables reading user's .telnetrc
+telnet, ,L, , , ,123,Specifies an 8-bit data path
+telnet, ,r, , , ,124,User interface similar to rlogin
+telnet, ,d, , , ,125,Sets debug mode
+telnet, ,f, , , ,126,Forward local credentials if using Kerberos V5 authentication
+telnet, ,x, , , ,127,Turn on encryption
+telnet, ,N, , , ,128,Prevent IP address to name lookup
+telnet, ,y, , , ,129,Turn off encryption
+telnet, ,u, , , ,130,Force AF_UNIX addresses only
+telnet, ,7, , , ,131,Do not try to negotiate TELNET BINARY option
+telnet, ,D, , , ,132,Disable rewriting of the DISPLAY var

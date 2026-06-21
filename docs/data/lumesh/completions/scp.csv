@@ -15,3 +15,6 @@ scp, ,T,,, ,112,Disable strict filename checking
 scp,"-ct", , , ,@E,113,complete -C'ssh ' | string replace -r '	.*' ':'
 scp,-ct, , , ,@n,114,Local Path
 scp,-ct, , , ,@E @f,115,__scp_remote_target
+
+scp,, , , ,@E,116,complete -C'ssh ' | string replace -r '	.*' ':'
+scp,, , , ,@n,117,Local Path

@@ -13,3 +13,12 @@ defaults, write, , , ,@f,113,Array as the value for the given key
 defaults, write, , , ,@f,114,Add new elements to the end of an array
 defaults, write, , , ,@f,115,Add a dictionary to domain
 defaults, write, , , ,@f,116,Add new key/value pairs to a dictionary
+
+defaults, , , ,read,@f,117,Shows defaults entire given domain
+defaults, , , ,write,@f,118,Writes domain or or a key in the domain
+defaults, , , ,read-type,@f,119,Shows the type for the given domain, key
+defaults, , , ,rename,@f,120,Renames old_key to new_key
+defaults, , , ,delete,@f,121,Deletes domain or a key in the domain
+defaults, , , ,domains,@f,122,Prints the names of all domains in the users defaults system
+defaults, , , ,find,@f,123,Searches for word in domain names, keys, and values
+defaults, , , ,help,@f,124,Prints a list of possible command formats

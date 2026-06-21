@@ -36,3 +36,5 @@ ssh, ,x,,, ,133,Disable X11 forwarding
 ssh, ,Y,,, ,134,Enables trusted X11 forwarding
 ssh, ,y,,, ,135,Send log information using syslog
 ssh, , , , , ,136,Command to run
+
+ssh,-ge 2, , , , ,137,Command to run

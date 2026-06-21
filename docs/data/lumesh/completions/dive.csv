@@ -10,3 +10,7 @@ dive, , ,source,docker podman docker-archive, ,110,The container engine to fetch
 dive, ,v,version, , ,111,Display version number
 dive, , , ,build help version, ,112, 
 dive, help, , ,build help version, ,116, 
+
+dive,ci, ,highestUserWastedPercent, ,@r,117,Highest allowable percentage of bytes wasted
+dive,ci, ,highestWastedBytes, ,@r,118,Highest allowable bytes wasted
+dive, , , , , ,119,Build and analyze a Docker image from a Dockerfile

@@ -8,3 +8,6 @@ mpc, , ,host, , ,106,The MPD server to connect to
 mpc, ,p,port, , ,107,The TCP port of the MPD server to connect to
 mpc, consume random repeat single, , ,on off, ,108, 
 mpc, replaygain, , ,off track album, ,109, 
+
+mpc,add insert, , , ,@E,110,mpc listall
+mpc,playlist load, , , ,@E,111,mpc lsplaylists

@@ -20,3 +20,6 @@ passwd, ,u, , ,@f @r,120,User name to use on chosen directory system
 passwd, ,l, , ,@f,121,"Update locally, not in Kerberos"
 passwd, , , , ,@f,122,Account to be altered
 passwd, , , , ,@f,123,Account to be altered
+
+passwd,-s S status,a,all, ,@f,124,Display password state for all users
+passwd,-A all, , , ,@E @f @n,125,__fish_complete_users

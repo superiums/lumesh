@@ -22,3 +22,5 @@ nm, , ,target, , ,120,Specify the target object format as BFDNAME
 nm, ,u,undefined-only, , ,121,Display only undefined symbols
 nm, ,h,help, , ,122,Display this information
 nm, ,V,version, , ,123,Display this program's version number
+
+nm, ,o, , , ,124,Print name of the input file before every symbol

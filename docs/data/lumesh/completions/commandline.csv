@@ -24,3 +24,5 @@ commandline, , ,paging-full-mode, , ,122,Return true if pager is showing all con
 commandline, , ,search-field, , ,123,Operate on the pager search field
 commandline, , ,is-valid, , ,124,Return true if the command line is syntactically valid and complete
 commandline, , ,showing-suggestion, , ,125,Return true if the command line has an autosuggestion
+
+commandline,-s f function, , , ,@E @f @r,126,bind --function-names

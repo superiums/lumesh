@@ -7,3 +7,24 @@ mkdocs, build gh-deploy new serve, , ,build,@f,103,Build the MkDocs documentatio
 mkdocs, build gh-deploy new serve, , ,gh-deploy,@f,109,Deploy your documentation to GitHub Pages
 mkdocs, build gh-deploy new serve, , ,new,@f @r,115,Create a new MkDocs project
 mkdocs, build gh-deploy new serve, , ,serve,@f,115,Run the builtin development server
+
+mkdocs,build,c,clean, ,@f,116,Remove old site_dir before building (the default)
+mkdocs,build,f,config-file, ,@r,117,Provide a specific MkDocs config
+mkdocs,build,s,strict, ,@f,118,Enable strict mode. This will cause MkDocs to abort the build on any warnings
+mkdocs,build,t,theme, , ,119,The theme to use when building your documentation
+mkdocs,build,e,theme-dir, ,@r,120,The theme directory to use when building your documentation
+mkdocs,build,d,site-dir, ,@r,121,The directory to output the result of the documentation build
+mkdocs,gh-deploy,c,clean, ,@f,122,Remove old site_dir before building (the default)
+mkdocs,gh-deploy,f,config-file, ,@r,123,Provide a specific MkDocs config
+mkdocs,gh-deploy,m,message, ,@f @r,124,A commit message to use when committing to the GitHub Pages remote branch
+mkdocs,gh-deploy,b,remote-branch, ,@f @r,125,The remote branch to commit to for GitHub Pages
+mkdocs,gh-deploy,r,remote-name, ,@f @r,126,The remote name to commit to for GitHub Pages
+mkdocs,gh-deploy, ,force, ,@f,127,Force the push to the repository
+mkdocs,serve,f,config-file, ,@r,128,Provide a specific MkDocs config
+mkdocs,serve,a,dev-addr, ,@r,129,IP address and port to serve documentation locally (default: localhost:8000)
+mkdocs,serve,s,strict, ,@f,130,Enable strict mode. This will cause MkDocs to abort the build on any warnings
+mkdocs,serve,t,theme, , ,131,The theme to use when building your documentation
+mkdocs,serve,e,theme-dir, ,@r,132,The theme directory to use when building your documentation
+mkdocs,serve, ,livereload, ,@f,133,Enable the live reloading in the development server (this is the default)
+mkdocs,serve, ,no-livereload, ,@f,134,Disable the live reloading in the development server
+mkdocs,serve, ,dirtyreload, ,@f,135,Enable the live reloading in the development server, but only re-build files that have changed

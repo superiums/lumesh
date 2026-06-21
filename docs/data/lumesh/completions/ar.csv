@@ -7,3 +7,5 @@ ar, , ,output, , ,105,X Item '--output dirname' The --output option can be used 
 ar, , ,record-libdeps, , ,106,X Item '--record-libdeps libdeps' The --record-libdeps option is identical to…
 ar, , ,thin, , ,107,X Item '--thin' Make the specified archive a thin archive
 ar, , ,enable-deterministic-archives, , ,108,"It can be disabled with the U modifier, below.  f 4"
+
+ar, , , , ,@f,109,$argv[2]

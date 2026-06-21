@@ -4,3 +4,11 @@ zabbix_server, ,f,foreground, ,@f,102,Run Zabbix server in foreground.
 zabbix_server, ,h,help, ,@f,103,Display this help message.
 zabbix_server, ,V,version, ,@f,104,Display version number.
 zabbix_server, ,R,runtime-control,$runtime,@f,105,Perform administrative functions.
+
+zabbix_server,log_level_increase,R,runtime-control, ,@E @f @r,106,__fish_prepend log_level_increase
+zabbix_server,log_level_decrease,R,runtime-control, ,@E @f @r,107,__fish_prepend log_level_decrease
+zabbix_server,prof_enable,R,runtime-control, ,@E @f @r,108,__fish_prepend prof_enable
+zabbix_server,prof_disable,R,runtime-control, ,@E @f @r,109,__fish_prepend prof_disable
+zabbix_server,ha_remove_node,R,runtime-control, ,@E @f @r,110,__fish_list_nodes
+zabbix_server,diaginfo,R,runtime-control, ,@E @f @r,111,__fish_prepend diaginfo
+zabbix_server, ,R,runtime-control, ,@f,112,Perform administrative functions.

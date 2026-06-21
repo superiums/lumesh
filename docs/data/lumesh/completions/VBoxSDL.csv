@@ -32,3 +32,5 @@ VBoxSDL, , ,norowr3, , ,130,Disable raw ring 0
 VBoxSDL, , ,nopatm, , ,131,Disable PATM
 VBoxSDL, , ,nocsam, , ,132,Disable CSAM
 VBoxSDL, , ,nohwvirtex, , ,133,Deny usage of VT-x/AMD-V
+
+VBoxSDL, , ,boot,a,@f @r,134,Set temporary boot device

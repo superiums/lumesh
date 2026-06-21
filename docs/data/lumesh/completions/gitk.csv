@@ -11,13 +11,30 @@ gitk, , ,simplify-merges, , ,109,Additional option to --full-history to remove s
 gitk, , ,ancestry-path, , ,110,When given a range of commits to display (e. g.  commit1
 gitk, , ,argscmd, , ,111,Command to be run each time gitk has to determine the revision range to show
 gitk, , ,select-commit, , ,112,Select the specified commit after loading the graph
-gitk, , ,patch, , ,113, 
-gitk, , ,no-patch, , ,114, 
-gitk, , ,raw, , ,115, 
-gitk, , ,numstat, , ,116, 
-gitk, , ,shortstat, , ,117, 
-gitk, , ,dirstat, , ,118, 
-gitk, , ,summary, , ,119, 
-gitk, , ,name-only, , ,120, 
-gitk, , ,name-status, , ,121, 
-gitk, , ,check, , ,122, 
+gitk, , ,patch, , ,113,
+gitk, , ,no-patch, , ,114,
+gitk, , ,raw, , ,115,
+gitk, , ,numstat, , ,116,
+gitk, , ,shortstat, , ,117,
+gitk, , ,dirstat, , ,118,
+gitk, , ,summary, , ,119,
+gitk, , ,name-only, , ,120,
+gitk, , ,name-status, , ,121,
+gitk, , ,check, , ,122,
+
+gitk,, ,all, ,@n,123,Show all refs (branches, tags, etc.)
+gitk,, ,since=YYYY-MM-DD, ,@f @n @r,124,Show commits more recent that a specific date
+gitk,, ,until=YYYY-MM-DD, ,@f @n @r,125,Show commits older than a specific date
+gitk,, ,date-order, ,@n,126,Sort commits by date when possible
+gitk,, ,merge, ,@n,127,On a merge conflict, show commits that modify conflicting files
+gitk,, ,left-right, ,@n,128,Mark which side of a symmetric difference a commit is reachable from
+gitk,, ,full-history, ,@n,129,When filtering history with -- path..., do not prune some history
+gitk,, ,simplify-merges, ,@n,130,Hide needless merges from history
+gitk,, ,ancestry-path, ,@n,131,Only display commits that exist directly on the ancestry chain between the range
+gitk,, ,argscmd=, ,@n,132,Command to be run to determine th revision range to show
+gitk,, ,select-commit=, ,@n,133,Select the specified commit after loading the graph, instead of HEAD
+gitk,, ,select-commit=HEAD, ,@n,134,Select the specified commit after loading the graph, instead of HEAD
+gitk, select-commit, , , ,@n,135,
+gitk,,n,max-count, ,@f @n @r,136,Limit the number of commits to output
+gitk,, , , ,@n,137,-L<start>,<end>:<file> trace the evolution of a line range
+gitk,, , , ,@n,138,

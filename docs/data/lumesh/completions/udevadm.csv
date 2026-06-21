@@ -41,3 +41,9 @@ udevadm, monitor,s,subsystem-match, , ,140,Filter events by subsystem
 udevadm, monitor,t,tag-match, , ,141,Filter events by tag
 udevadm, test,a,action, , ,142,Set action string
 udevadm, test,N,resolve-names,early late never, ,143,When to resolve names
+
+udevadm, , , , , ,144,
+udevadm,info,q,query, , ,145,Query device information
+udevadm,trigger,t,type, , ,146,Type of events to trigger
+udevadm,test,N,resolve-names, , ,147,When to resolve names
+udevadm,test-builtin 2, , , , ,148,

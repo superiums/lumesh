@@ -3,3 +3,14 @@ ffmpeg, ,?,help, ,@f @r,102,Show help
 ffmpeg, ,v, , ,@f @r,103, 
 ffmpeg, , , ,1 2 3,@f @r,105,Select the pass number
 ffmpeg, , , , ,@f @r,106, 
+
+ffmpeg, ,i, , , ,107,Specify input file
+ffmpeg, ,L, , , ,108,Show license
+ffmpeg, ,y, , , ,109,Overwrite output files
+ffmpeg, ,n, , , ,110,Never overwrite output files
+ffmpeg, ,f, , , ,111,Force format
+ffmpeg, ,c, , , ,112,Codec name
+ffmpeg, ,t, , , ,113,Record or transcode 'duration' seconds of audio/video
+ffmpeg, ,r, , , ,114,Set frame rate
+ffmpeg, ,s, , , ,115,Set frame size
+ffmpeg, ,b, , , ,116,Video bitrate

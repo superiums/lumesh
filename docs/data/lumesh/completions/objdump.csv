@@ -47,3 +47,5 @@ objdump, , ,prefix-strip, ,@f @r,145,Strip initial directory names for -S
 objdump, , ,dwarf-depth, ,@f @r,146,Do not display DIEs at given depth or greater
 objdump, , ,dwarf-start, ,@f @r,147,Display DIEs starting with given number
 objdump, , ,dwarf-check, , ,148,Make additional dwarf internal consistency checks
+
+objdump, , , , , ,149,Assume big endian format when disassembling

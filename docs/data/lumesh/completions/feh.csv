@@ -78,3 +78,5 @@ feh, , ,bg-max, , ,176,Set as background by zooming with black borders on one si
 feh, , ,bg-scale, , ,177,"Set as background without tiling, trimming or borders"
 feh, , ,bg-tile, , ,178,Tile image if too small for screen
 feh, , ,no-fehbg, , ,179,Do not write a ~/.fehbg file
+
+feh, ,S,sort,name,@f @r,180,Sort file list with given parameter

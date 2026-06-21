@@ -9,3 +9,5 @@ xxh32sum, ,q,quiet, , ,107,Don't print OK for each successfully verified file
 xxh32sum, , ,strict, , ,108,"Return an error code if any line in the file is invalid, not just if some che…"
 xxh32sum, , ,status, , ,109,Don't output anything.  Status code shows success
 xxh32sum, ,w,warn, , ,110,Emit a warning message about each improperly formatted checksum line
+
+xxh32sum, , , , , ,111,

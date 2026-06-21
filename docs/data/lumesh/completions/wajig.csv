@@ -4,3 +4,119 @@ wajig, ,n,noauth, , ,102,Allow packages from unauthenticated archives.
 wajig, ,s,simulate, , ,103,Trace but don't execute the sequence of underlying commands.
 wajig, ,t,teaching, , ,104,Trace the sequence of commands performed.
 wajig, ,y,yes, , ,105,Assume yes for any questions asked.
+
+wajig, , , , ,@E @F,106,__fish_print_apt_packages
+wajig, , , ,addcdrom,@f,107,Add a CD-ROM to the list of available sources of packages
+wajig, , , ,auto-clean,@f,108,Remove superseded deb files from the download cache
+wajig, , , ,auto-download,@f,109,Do an update followed by a download of all updated packages
+wajig, , , ,available,@f,110,List versions of packages available for installation
+wajig, , , ,bug,@f,111,Check reported bugs in package using the Debian Bug Tracker
+wajig, , , ,build,@f,112,Retrieve/unpack sources and build .deb for the named packages
+wajig, , , ,build-depend,@f,113,Retrieve packages required to build listed packages
+wajig, , , ,changelog,@f,114,Retrieve latest changelog for the package
+wajig, , , ,clean,@f,115,Remove all deb files from the download cache
+wajig, , , ,commands,@f,116,List all the JIG commands and one line descriptions for each
+wajig, , , ,daily-upgrade,@f,117,Perform an update then a dist-upgrade
+wajig, , , ,dependents,@f,118,List of packages which depend/recommend/suggest the package
+wajig, , , ,describe-new,@f,119,One line description of new packages
+wajig, , , ,docs,@f,120,Equivalent to help with -verbose=2
+wajig, , , ,download,@f,121,Download package files ready for an install
+wajig, , , ,file-download,@f,122,Download packages listed in file ready for an install
+wajig, , , ,file-install,@f,123,Install packages listed in a file
+wajig, , , ,file-remove,@f,124,Remove packages listed in a file
+wajig, , , ,find-file,@f,125,Search for a file within installed packages
+wajig, , , ,find-pkg,@f,126,Search for an unofficial Debian package at apt-get.org
+wajig, , , ,fix-missing,@f,127,Perform apt-get --fix-missing upgrade
+wajig, , , ,force,@f,128,Install packages and ignore file overwrites and depends
+wajig, , , ,hold,@f,129,Place listed packages on hold so they are not upgraded
+wajig, , , ,init,@f,130,Initialise or reset the JIG archive files
+wajig, , , ,installr,@f,131,Install package and associated recommended packages
+wajig, , , ,installrs,@f,132,Install package and recommended and suggested packages
+wajig, , , ,installs,@f,133,Install package and associated suggested packages
+wajig, , , ,last-update,@f,134,Identify when an update was last performed
+wajig, , , ,list,@f,135,List the status and description of installed packages
+wajig, , , ,list-all,@f,136,List a one line description of given or all packages
+wajig, , , ,list-alts,@f,137,List the objects that can have alternatives configured
+wajig, , , ,list-cache,@f,138,List the contents of the download cache
+wajig, , , ,list-commands,@f,139,List all the JIG commands and one line descriptions for each
+wajig, , , ,list-daemons,@f,140,List the daemons that JIG can start/stop/restart
+wajig, , , ,list-files,@f,141,List the files that are supplied by the named package
+wajig, , , ,list-hold,@f,142,List those packages on hold
+wajig, , , ,list-names,@f,143,List all known packages or those containing supplied string
+wajig, , , ,list-orphans,@f,144,List libraries not required by any installed package
+wajig, , , ,list-scripts,@f,145,List the control scripts of the package of deb file
+wajig, , , ,list-section,@f,146,List packages that belong to a specific section
+wajig, , , ,list-status,@f,147,Same as list but only prints first two columns, not truncated
+wajig, , , ,list-wide,@f,148,Same as list but avoids truncating package names
+wajig, , , ,local-dist-upgrade,@f,149,Dist-upgrade using packages already downloaded
+wajig, , , ,local-upgrade,@f,150,Upgrade using packages already downloaded, but not any others
+wajig, , , ,madison,@f,151,Runs the madison command of apt-cache.
+wajig, , , ,move,@f,152,Move packages in the download cache to a local Debian mirror
+wajig, , , ,new,@f,153,List packages that became available since last update
+wajig, , , ,news,@f,154,Obtain the latest news about the package
+wajig, , , ,new-upgrades,@f,155,List packages newly available for upgrading
+wajig, , , ,non-free,@f,156,List installed packages that do not meet the DFSG
+wajig, , , ,orphans,@f,157,List libraries not required by any installed package
+wajig, , , ,package,@f,158,Generate a .deb file for an installed package
+wajig, , , ,purge,@f,159,Remove one or more packages and configuration files
+wajig, , , ,purge-depend,@f,160,Purge package and those it depend on and not required by others
+wajig, , , ,readme,@f,161,Display the package
+wajig, , , ,recursive,@f,162,Download package and any packages it depends on
+wajig, , , ,recommended,@f,163,Install package and associated recommended packages
+wajig, , , ,reconfigure,@f,164,Reconfigure the named installed packages or run gkdebconf
+wajig, , , ,reinstall,@f,165,Reinstall each of the named packages
+wajig, , , ,remove-depend,@f,166,Remove package and its dependees not required by others
+wajig, , , ,repackage,@f,167,Generate a .deb file for an installed package
+wajig, , , ,reset,@f,168,Initialise or reset the JIG archive files
+wajig, , , ,rpminstall,@f,169,Install a RedHat .rpm package
+wajig, , , ,rpmtodeb,@f,170,Convert a RedHat .rpm file to a Debian .deb file
+wajig, , , ,search,@f,171,Search for packages containing listed words
+wajig, , , ,search-apt,@f,172,Find local Debian archives suitable for sources.list
+wajig, , , ,setup,@f,173,Configure the sources.list file which locates Debian archives
+wajig, , , ,show,@f,174,Provide a detailed description of package [same as detail]
+wajig, , , ,showdistupgrade,@f,175,Trace the steps that a dist-upgrade would perform
+wajig, , , ,showinstall,@f,176,Trace the steps that an install would perform
+wajig, , , ,showremove,@f,177,Trace the steps that a remove would perform
+wajig, , , ,showupgrade,@f,178,Trace the steps that an upgrade would perform
+wajig, , , ,snapshot,@f,179,Generates list of package=version for all installed packages
+wajig, , , ,source,@f,180,Retrieve and unpack sources for the named packages
+wajig, , , ,status,@f,181,Show the version and available version of packages
+wajig, , , ,status-match,@f,182,Show the version and available version of matching packages
+wajig, , , ,status-search,@f,183,Show the version and available version of matching packages
+wajig, , , ,suggested,@f,184,Install package and associated suggested packages
+wajig, , , ,tasksel,@f,185,Run the Gnome task selector to install groups of packages
+wajig, , , ,toupgrade,@f,186,List packages with newer versions available for upgrading
+wajig, , , ,unhold,@f,187,Remove listed packages from hold so they are again upgraded
+wajig, , , ,unofficial,@f,188,Search for an unofficial Debian package at apt-get.org
+wajig, , , ,update,@f,189,Update the list of down-loadable packages
+wajig, , , ,update-alts,@f,190,Update default alternative for things like x-window-manager
+wajig, , , ,update-pci-ids,@f,191,Updates the local list of PCI ids from the internet master list
+wajig, , , ,update-usb-ids,@f,192,Updates the local list of USB ids from the internet master list
+wajig, , , ,upgrade,@f,193,Upgrade all of the installed packages or just those listed
+wajig, , , ,whatis,@f,194,A synonym for describe
+wajig, , , ,whichpkg,@f,195,Find the package that supplies the given command or file
+wajig, , , ,auto-alts,@f,196,Mark the alternative to be auto set (using set priorities)
+wajig, , , ,auto-install,@f,197,Perform an install without asking questions (non-interactive)
+wajig, , , ,describe,@f,198,One line description of packages (-v and -vv for more detail)
+wajig, , , ,detail,@f,199,Provide a detailed description of package (describe -vv)
+wajig, , , ,detail-new,@f,200,Provide a detailed description of new packages (describe -vv)
+wajig, , , ,dist-upgrade,@f,201,Upgrade to new distribution (installed and new rqd packages)
+wajig, , , ,fix-configure,@f,202,Perform dpkg --configure -a (to fix interrupted configure)
+wajig, , , ,fix-install,@f,203,Perform apt-get -f install (to fix broken dependencies)
+wajig, , , ,help,@f,204,Print documentation (detail depends on --verbose)
+wajig, , , ,install,@f,205,Install (or upgrade) one or more packages or .deb files
+wajig, , , ,integrity,@f,206,Check the integrity of installed packages (through checksums)
+wajig, , , ,large,@f,207,List size of all large (>10MB) installed packages
+wajig, , , ,list-installed,@f,208,List packages (with optional argument substring) installed
+wajig, , , ,list-log,@f,209,List the contents of the install/remove log file (filtered)
+wajig, , , ,policy,@f,210,From preferences file show priorities/policy (available)
+wajig, , , ,purge-orphans,@f,211,Purge orphaned libraries (not required by installed packages)
+wajig, , , ,reload,@f,212,Reload daemon configs, e.g., gdm, apache (see list-daemons)
+wajig, , , ,remove,@f,213,Remove one or more packages (see also purge)
+wajig, , , ,remove-orphans,@f,214,Remove orphaned libraries (not required by installed packages)
+wajig, , , ,restart,@f,215,Stop then start a daemon, e.g., gdm, apache (see list-daemons)
+wajig, , , ,size,@f,216,Print out the size (in K) of all, or listed, installed packages
+wajig, , , ,sizes,@f,217,Print out the size (in K) of all, or listed, installed packages
+wajig, , , ,start,@f,218,Start a daemon, e.g., gdm, apache (see list-daemons)
+wajig, , , ,stop,@f,219,Stop a daemon, e.g., gdm, apache (see list-daemons)
+wajig, , , ,versions,@f,220,List version and distribution of (all) packages.

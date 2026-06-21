@@ -11,3 +11,5 @@ sha256sum, , ,strict, , ,109,exit non-zero for improperly formatted checksum lin
 sha256sum, ,w,warn, , ,110,warn about improperly formatted checksum lines
 sha256sum, , ,help, , ,111,display this help and exit
 sha256sum, , ,version, , ,112,output version information and exit
+
+sha256sum, , , , , ,113,

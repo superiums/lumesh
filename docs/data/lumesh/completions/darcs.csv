@@ -17,3 +17,233 @@ darcs, , ,standard-verbosity, , ,166,Neither verbose nor quiet output [DEFAULT]
 darcs, ,v,verbose, , ,167,Give verbose output
 darcs, , ,timings, , ,168,Provide debugging timings information
 darcs, , ,no-cache, , ,169,Don't use patch caches
+
+darcs, , , , ,@E,170,test -f _darcs/prefs/repos; and cat _darcs/prefs/repos
+darcs, , , ,help,@f @r,171,Display help about darcs and darcs commands
+darcs, , , ,add,@f @r,172,Add new files to version control
+darcs, , , ,remove,@f @r,173,Remove files from version control
+darcs, , , ,move,@f @r,174,Move or rename files
+darcs, , , ,replace,@f @r,175,Substitute one word for another
+darcs, , , ,revert,@f @r,176,Discard unrecorded changes
+darcs, , , ,unrevert,@f @r,177,Undo the last revert
+darcs, , , ,whatsnew,@f @r,178,List unrecorded changes in the working tree
+darcs, , , ,record,@f @r,179,Create a patch from unrecorded changes
+darcs, , , ,unrecord,@f @r,180,Remove recorded patches without changing the working tree
+darcs, , , ,amend,@f @r,181,Improve a patch before it leaves your repository
+darcs, , , ,mark-conflicts,@f @r,182,Mark unresolved conflicts in working tree, for manual resolution
+darcs, , , ,tag,@f @r,183,Name the current repository state for future reference
+darcs, , , ,diff,@f @r,184,Create a diff between two versions of the repository
+darcs, , , ,log,@f @r,185,List patches in the repository
+darcs, , , ,annotate,@f @r,186,Annotate lines of a file with the last patch that modified it
+darcs, , , ,dist,@f @r,187,Create a distribution archive
+darcs, , , ,show,@f @r,188,Show information about the given repository
+darcs, , , ,pull,@f @r,189,Copy and apply patches from another repository to this one
+darcs, , , ,obliterate,@f @r,190,Delete selected patches from the repository
+darcs, , , ,rollback,@f @r,191,Apply the inverse of recorded changes to the working tree
+darcs, , , ,push,@f @r,192,Copy and apply patches from this repository to another one
+darcs, , , ,send,@f @r,193,Prepare a bundle of patches to be applied to some target repository
+darcs, , , ,apply,@f @r,194,Apply a patch bundle created by `darcs send
+darcs, , , ,clone,@f @r,195,Make a copy of an existing repository
+darcs, , , ,initialize,@f @r,196,Create an empty repository
+darcs, , , ,optimize,@f @r,197,Optimize the repository
+darcs, , , ,repair,@f @r,198,Repair a corrupted repository
+darcs, , , ,convert,@f @r,199,Convert repositories between various formats
+darcs, , , ,contents,@f @r,200,Outputs a specific version of a file
+darcs, , , ,dependencies,@f @r,201,Generate the graph of dependencies
+darcs, , , ,files,@f @r,202,Show version-controlled files in the working tree
+darcs, , , ,index,@f @r,203,Dump contents of working tree index
+darcs, , , ,pristine,@f @r,204,Dump contents of pristine cache
+darcs, , , ,repo,@f @r,205,Show repository summary information
+darcs, , , ,authors,@f @r,206,List authors by patch count
+darcs, , , ,tags,@f @r,207,Show all tags in the repository
+darcs, , , ,patch-index,@f @r,208,Check integrity of patch index
+darcs, , , ,clean,@f @r,209,Garbage collect pristine, inventories and patches
+darcs, , , ,http,@f @r,210,Optimize repository for getting over network
+darcs, , , ,reorder,@f @r,211,Reorder the patches in the repository
+darcs, , , ,enable-patch-index,@f @r,212,Enable patch index
+darcs, , , ,disable-patch-index,@f @r,213,Disable patch index
+darcs, , , ,compress,@f @r,214,Compress patches and inventories
+darcs, , , ,uncompress,@f @r,215,Uncompress patches and inventories
+darcs, , , ,relink,@f @r,216,Relink random internal data to a sibling
+darcs, , , ,upgrade,@f @r,217,Upgrade repository to latest compatible format
+darcs, , , ,cache,@f @r,218,Garbage collect global cache
+darcs,, ,boring, , ,219,Don
+darcs,, ,no-boring, , ,220,Skip boring files [DEFAULT]
+darcs,, ,case-ok, , ,221,Don
+darcs,, ,no-case-ok, , ,222,Refuse to add files whose name differ only in case [DEFAULT]
+darcs,, ,reserved-ok, , ,223,Don
+darcs,, ,no-reserved-ok, , ,224,Refuse to add files with Windows-reserved names [DEFAULT]
+darcs,,r,recursive, , ,225,Recurse into subdirectories
+darcs,, ,not-recursive, , ,226,Don
+darcs,, ,no-recursive, , ,227,Don
+darcs,, ,dry-run, , ,228,Don
+darcs,, ,umask, , ,229,Specify umask to use when writing
+darcs,, ,token-chars, , ,230,Define token to contain these characters
+darcs,,f,force, , ,231,Proceed with replace even if
+darcs,, ,no-force, , ,232,Don
+darcs,, ,ignore-times, , ,233,Don
+darcs,, ,no-ignore-times, , ,234,Trust modification times to find modified files [DEFAULT]
+darcs,,a,all, , ,235,Answer yes to all patches
+darcs,, ,no-interactive, , ,236,Answer yes to all patches
+darcs,,i,interactive, , ,237,Prompt user interactively
+darcs,,u,unified, , ,238,Output changes in a darcs-specific format similar to diff -u
+darcs,, ,no-unified, , ,239,Output changes in darcs
+darcs,, ,myers, , ,240,Use myers diff algorithm
+darcs,, ,patience, , ,241,Use patience diff algorithm [DEFAULT]
+darcs,,s,summary, , ,242,Summarize changes
+darcs,, ,no-summary, , ,243,Don
+darcs,, ,human-readable, , ,244,Give human-readable output [DEFAULT]
+darcs,, ,machine-readable, , ,245,Give machine-readable output
+darcs,, ,dont-look-for-adds, , ,246,Don
+darcs,, ,no-look-for-adds, , ,247,Don
+darcs,, ,look-for-replaces, , ,248,Look for replaces that could be marked
+darcs,, ,dont-look-for-replaces, , ,249,Don
+darcs,, ,no-look-for-replaces, , ,250,Don
+darcs,, ,look-for-moves, , ,251,Look for files that may be moved/renamed
+darcs,, ,dont-look-for-moves, , ,252,Don
+darcs,, ,no-look-for-moves, , ,253,Don
+darcs,,m,name, , ,254,Name of patch
+darcs,,A,author, , ,255,Specify author id
+darcs,, ,test, , ,256,Run the test script
+darcs,, ,no-test, , ,257,Don
+darcs,, ,leave-test-directory, , ,258,Don
+darcs,, ,remove-test-directory, , ,259,Remove the test directory
+darcs,, ,pipe, , ,260,Ask user interactively for the patch metadata
+darcs,, ,ask-deps, , ,261,Manually select dependencies
+darcs,, ,no-ask-deps, , ,262,Automatically select dependencies [DEFAULT]
+darcs,, ,edit-long-comment, , ,263,Edit the long comment by default
+darcs,, ,skip-long-comment, , ,264,Don
+darcs,, ,prompt-long-comment, , ,265,Prompt for whether to edit the long comment
+darcs,, ,logfile, , ,266,Give patch name and comment in file
+darcs,, ,delete-logfile, , ,267,Delete the logfile when done
+darcs,, ,no-delete-logfile, , ,268,Keep the logfile when done [DEFAULT]
+darcs,, ,compress, , ,269,Compress patch data [DEFAULT]
+darcs,, ,dont-compress, , ,270,Don
+darcs,, ,no-compress, , ,271,Don
+darcs,, ,set-scripts-executable, , ,272,Make scripts executable
+darcs,, ,dont-set-scripts-executable, , ,273,Don
+darcs,, ,no-set-scripts-executable, , ,274,Don
+darcs,, ,not-in-remote, , ,275,Select all patches not in the default push/pull repository or at location URL/PATH
+darcs,, ,from-match, , ,276,Select changes starting with a patch matching PATTERN
+darcs,, ,from-patch, , ,277,Select changes starting with a patch matching REGEXP
+darcs,, ,from-hash, , ,278,Select changes starting with a patch with HASH
+darcs,, ,from-tag, , ,279,Select changes starting with a tag matching REGEXP
+darcs,, ,last, , ,280,Select the last NUMBER patches
+darcs,, ,matches, , ,281,Select patches matching PATTERN
+darcs,,p,patches, , ,282,Select patches matching REGEXP
+darcs,,t,tags, , ,283,Select tags matching REGEXP
+darcs,,h,hash, , ,284,Select a single patch with HASH
+darcs,, ,no-deps, , ,285,Don
+darcs,, ,auto-deps, , ,286,Don
+darcs,, ,dont-prompt-for-dependencies, , ,287,Don
+darcs,, ,prompt-deps, , ,288,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs,, ,prompt-for-dependencies, , ,289,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs,, ,reverse, , ,290,Show/consider changes in reverse order
+darcs,, ,no-reverse, , ,291,Show/consider changes in the usual order [DEFAULT]
+darcs,, ,unrecord, , ,292,Remove changes from the patch
+darcs,, ,record, , ,293,Add more changes to the patch [DEFAULT]
+darcs,, ,match, , ,294,Select a single patch matching PATTERN
+darcs,,p,patch, , ,295,Select a single patch matching REGEXP
+darcs,, ,select-author, , ,296,Select author id from a menu
+darcs,, ,keep-date, , ,297,Keep the date of the original patch
+darcs,, ,no-keep-date, , ,298,Use the current date for the amended patch [DEFAULT]
+darcs,, ,xml-output, , ,299,Generate XML formatted output
+darcs,, ,to-match, , ,300,Select changes up to a patch matching PATTERN
+darcs,, ,to-patch, , ,301,Select changes up to a patch matching REGEXP
+darcs,, ,to-hash, , ,302,Select changes up to a patch with HASH
+darcs,, ,to-tag, , ,303,Select changes up to a tag matching REGEXP
+darcs,,n,index, , ,304,Select a range of patches
+darcs,, ,diff-opts, , ,305,Options to pass to diff
+darcs,, ,store-in-memory, , ,306,Do patch application in memory rather than on disk
+darcs,, ,no-store-in-memory, , ,307,Do patch application on disk [DEFAULT]
+darcs,, ,pause-for-gui, , ,308,Pause for an external diff or merge command to finish [DEFAULT]
+darcs,, ,no-pause-for-gui, , ,309,Return immediately after external diff or merge command finishes
+darcs,, ,max-count, , ,310,Return only NUMBER results
+darcs,, ,only-to-files, , ,311,Show only changes to specified files
+darcs,, ,no-only-to-files, , ,312,Show changes to all files [DEFAULT]
+darcs,, ,context, , ,313,Give output suitable for clone --context
+darcs,, ,number, , ,314,Number the changes
+darcs,, ,count, , ,315,Output count of changes
+darcs,, ,repo, , ,316,Specify the repository URL
+darcs,, ,no-http-pipelining, , ,317,Disable HTTP pipelining
+darcs,, ,remote-darcs, , ,318,Name of the darcs executable on the remote server
+darcs,, ,with-patch-index, , ,319,Build patch index [DEFAULT]
+darcs,, ,no-patch-index, , ,320,Don
+darcs,,t,tag, , ,321,Select tag matching REGEXP
+darcs,,d,dist-name, , ,322,Name of version
+darcs,, ,zip, , ,323,Generate zip archive instead of gzip
+darcs,, ,files, , ,324,Include files in output [DEFAULT]
+darcs,, ,no-files, , ,325,Don
+darcs,, ,directories, , ,326,Include directories in output [DEFAULT]
+darcs,, ,no-directories, , ,327,Don
+darcs,, ,pending, , ,328,Reflect pending patches in output [DEFAULT]
+darcs,, ,no-pending, , ,329,Only include recorded patches in output
+darcs,,0,null, , ,330,Separate file names by NUL characters
+darcs,, ,enum-patches, , ,331,Include statistics requiring enumeration of patches [DEFAULT]
+darcs,, ,no-enum-patches, , ,332,Don
+darcs,, ,reorder-patches, , ,333,Reorder the patches in the repository
+darcs,, ,no-reorder-patches, , ,334,Don
+darcs,, ,mark-conflicts, , ,335,Mark conflicts [DEFAULT]
+darcs,, ,allow-conflicts, , ,336,Allow conflicts, but don
+darcs,, ,dont-allow-conflicts, , ,337,Fail if there are patches that would create conflicts
+darcs,, ,no-allow-conflicts, , ,338,Fail if there are patches that would create conflicts
+darcs,, ,no-resolve-conflicts, , ,339,Fail if there are patches that would create conflicts
+darcs,, ,skip-conflicts, , ,340,Filter out any patches that would create conflicts
+darcs,, ,external-merge, , ,341,Use external tool to merge conflicts
+darcs,, ,set-default, , ,342,Set default repository
+darcs,, ,no-set-default, , ,343,Don
+darcs,, ,ignore-unrelated-repos, , ,344,Do not check if repositories are unrelated
+darcs,, ,intersection, , ,345,Take intersection of all repositories
+darcs,, ,union, , ,346,Take union of all repositories [DEFAULT]
+darcs,, ,remote-repo, , ,347,Specify the remote repository URL to work with
+darcs,, ,restrict-paths, , ,348,Don
+darcs,,o,output, , ,349,Specify output filename
+darcs,,O,output-auto-name, , ,350,Output to automatically named file in DIRECTORY, default: current directory
+darcs,, ,minimize, , ,351,Minimize context of patch bundle [DEFAULT]
+darcs,, ,no-minimize, , ,352,Don
+darcs,, ,sign, , ,353,Sign the patch with your gpg key
+darcs,, ,sign-as, , ,354,Sign the patch with a given keyid
+darcs,, ,sign-ssl, , ,355,Sign the patch using openssl with a given private key
+darcs,, ,dont-sign, , ,356,Don
+darcs,, ,no-sign, , ,357,Don
+darcs,, ,apply-as, , ,358,Apply patch as another user using sudo
+darcs,, ,no-apply-as, , ,359,Don
+darcs,, ,to, , ,360,Specify destination email
+darcs,, ,from, , ,361,Specify email address
+darcs,, ,subject, , ,362,Specify mail subject
+darcs,, ,in-reply-to, , ,363,Specify in-reply-to header
+darcs,, ,charset, , ,364,Specify mail charset
+darcs,, ,mail, , ,365,Send patch using sendmail
+darcs,, ,sendmail-command, , ,366,Specify sendmail command
+darcs,, ,edit-description, , ,367,Edit the patch bundle description [DEFAULT]
+darcs,, ,dont-edit-description, , ,368,Don
+darcs,, ,no-edit-description, , ,369,Don
+darcs,, ,verify, , ,370,Verify that the patch was signed by a key in PUBRING
+darcs,, ,verify-ssl, , ,371,Verify using openSSL with authorized keys from file KEYS
+darcs,, ,no-verify, , ,372,Don
+darcs,, ,repodir, , ,373,Specify the repository directory in which to run
+darcs,, ,reply, , ,374,Reply to email-based patch using FROM address
+darcs,, ,happy-forwarding, , ,375,Forward unsigned messages without extra header
+darcs,, ,no-happy-forwarding, , ,376,Don
+darcs,, ,repo-name, , ,377,Path of output directory
+darcs,, ,lazy, , ,378,Get patch files only as needed
+darcs,, ,complete, , ,379,Get a complete copy of the repository
+darcs,, ,packs, , ,380,Use repository packs [DEFAULT]
+darcs,, ,no-packs, , ,381,Don
+darcs,, ,darcs-2, , ,382,Standard darcs patch format [DEFAULT]
+darcs,, ,hashed, , ,383,Deprecated, use --darcs-1 instead
+darcs,, ,sibling, , ,384,Specify a sibling directory
+darcs,, ,read-marks, , ,385,Continue conversion, previously checkpointed by --write-marks
+darcs,, ,write-marks, , ,386,Checkpoint conversion to continue it later
+darcs,contains setpref (commandline -pxc), , ,test predist boringfile binariesfile,@f @r,387,Set the specified option
+darcs, , , ,setpref,@f @r,388,Set a preference (test, predist, boringfile or binariesfile)
+darcs,,-l,look-for-adds, , ,389,Look for (non-boring) files that could be added
+darcs,,l,look-for-adds, , ,390,Look for (non-boring) files that could be added
+darcs,, ,diff-command, , ,391,Specify diff command (ignores --diff-opts)
+darcs,, ,complement, , ,392,Take complement of repositories (in order listed)
+darcs,, ,dont-restrict-paths, , ,393,Allow darcs to modify any file or directory (unsafe)
+darcs,, ,no-restrict-paths, , ,394,Allow darcs to modify any file or directory (unsafe)
+darcs,, ,cc, , ,395,Mail results to additional EMAIL(s)
+darcs,, ,with-working-dir, , ,396,Create a working tree (normal repository) [DEFAULT]
+darcs,, ,no-working-dir, , ,397,Do not create a working tree (bare repository)
+darcs,, ,darcs-1, , ,398,Older patch format (for compatibility)

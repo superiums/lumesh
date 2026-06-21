@@ -19,3 +19,5 @@ apt-move, ,a, , ,@f,117,Process all packages
 apt-move, ,f, , ,@f,118,Force deletion
 apt-move, ,q, , ,@f,119,Suppresses normal output
 apt-move, ,t, , ,@f,120,Test run
+
+apt-move, ,c, , , ,121,Use specific conffile

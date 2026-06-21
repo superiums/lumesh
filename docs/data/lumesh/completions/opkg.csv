@@ -24,3 +24,32 @@ opkg, , ,force-removal-of-dependent-packages, , ,148,Remove package and all depe
 opkg, , ,autoremove, , ,149,Remove automatically installed packages
 opkg, ,t,tmp-dir, , ,150,Specify tmp-dir.
 opkg, ,l,lists-dir, , ,151,Specify lists-dir.
+
+opkg, , , , ,@E @F,152,__fish_print_opkg_packages
+opkg, , , ,update,@f,153,Update list of available packages
+opkg, , , ,upgrade,@f,154,Upgrade packages
+opkg, , , ,list,@f,155,List available packages
+opkg, , , ,list-installed,@f,156,List installed packages
+opkg, , , ,list-upgradable,@f,157,List installed and upgradable packages
+opkg, , , ,list-changed-conffiles,@f,158,List user modified configuration files
+opkg, , , ,files,@f,159,List files belonging to <pkg>
+opkg, , , ,search,@f,160,List package providing <file>
+opkg, , , ,find,@f,161,List packages whose name or description matches <regexp>
+opkg, , , ,info,@f,162,Display all info for <pkg>
+opkg, , , ,status,@f,163,Display all status for <pkg>
+opkg, , , ,download,@f,164,Download <pkg> to current directory
+opkg, , , ,compare-versions,@f,165,compare versions using <= < > >= = << >>
+opkg, , , ,print-architecture,@f,166,List installable package architectures
+opkg, , , ,depends,@f,167,list depends
+opkg, , , ,whatdepends,@f,168,list whatdepends
+opkg, , , ,whatdependsrec,@f,169,list whatdepends recursively
+opkg, , , ,whatrecommends,@f,170,list whatrecommends
+opkg, , , ,whatsuggests,@f,171,list whatsuggests
+opkg, , , ,whatprovides,@f,172,list whatprovides
+opkg, , , ,whatconflicts,@f,173,list whatconflicts
+opkg, , , ,whatreplaces,@f,174,list whatreplaces
+opkg, ,A, , , ,175,Query all packages not just those installed
+opkg, , , ,install,@f,176,Install package(s)
+opkg, , , ,configure,@f,177,Configure unpacked package(s)
+opkg, , , ,remove,@f,178,Remove package(s)
+opkg, , , ,flag,@f,179,Flag package(s)

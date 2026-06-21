@@ -14,3 +14,6 @@ zstdcat, ,V,version, , ,112,Show version
 zstdcat, ,v,verbose, , ,113,Be verbose
 zstdcat, ,q,quiet, , ,114,Suppress warnings
 zstdcat, , ,no-progress, , ,115,Do not show the progress bar
+
+zstdcat, ,r, , , ,116,Recurse directories
+zstdcat, ,H, , , ,117,Show long help

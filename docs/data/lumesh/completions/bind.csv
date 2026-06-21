@@ -11,3 +11,6 @@ bind, ,s,silent, , ,109,Operate silently
 bind, , ,preset, , ,110,Operate on preset bindings
 bind, , ,user, , ,111,Operate on user bindings
 bind, , , , ,@k,112, 
+
+bind, , ,color, , ,113,When to colorize output
+bind,commandline -pcx, , , ,@E @f @r,114,bind --function-names

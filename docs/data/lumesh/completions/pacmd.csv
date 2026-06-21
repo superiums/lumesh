@@ -5,3 +5,6 @@ pacmd, describe-module, , , ,@f,103,
 pacmd, kill-client, , , ,@f,104, 
 pactl, suspend, , ,0 false off,@f,106,Resume
 pactl, suspend, , ,1 true on,@f,107,Suspend
+
+pacmd,suspend, , ,0 false off,@f,108,Resume
+pacmd,suspend, , ,1 true on,@f,109,Suspend

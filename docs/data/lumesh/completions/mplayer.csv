@@ -12,3 +12,5 @@ mplayer, , , ,,@f @r,110,Audio output
 mplayer, , , ,,@f @r,111,Video output
 mplayer, , ,help, , ,112,Display help and exit
 mplayer, , ,version, , ,113,Display version and exit
+
+mplayer, ,h, , , ,114,Display help and exit

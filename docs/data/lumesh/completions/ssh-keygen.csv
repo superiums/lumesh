@@ -43,3 +43,5 @@ ssh-keygen, ,u,,, ,140,update a KRL
 ssh-keygen, ,y,,, ,141,print an OpenSSH public key from a private OpenSSH format file
 ssh-keygen, ,i, , , ,142,print an OpenSSH compatible private (or public) key
 ssh-keygen, ,Y, ,find-principals match-principals check-novalidate sign verify,@f @r,143,
+
+ssh-keygen, ,Y, ,\ find-principals match-principals check-novalidate sign verify,@f @r,144,

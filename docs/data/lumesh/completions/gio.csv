@@ -49,3 +49,24 @@ gio, save,e,etag, ,@f @r,165,The etag of the file being overwritten
 gio, set,t,type, ,@f @r,166,Type of the attribute
 gio, trash, ,empty, ,@f,167,Empty the trash
 gio, tree,l,follow-symlinks, ,@f,168,Follow symbolic links
+
+gio, , , ,help,@f,169,Print help
+gio, , , ,version,@f,170,Print version
+gio, , , ,cat,@f,171,Concatenate files to stdout
+gio, , , ,copy,@f,172,Copy files
+gio, , , ,info,@f,173,Show information about locations
+gio, , , ,list,@f,174,List the contents of locations
+gio, , , ,mime,@f,175,Get or set the handler
+gio, , , ,mkdir,@f,176,Create directories
+gio, , , ,monitor,@f,177,Monitor files
+gio, , , ,mount,@f,178,Mount or unmount the locations
+gio, , , ,move,@f,179,Move files
+gio, , , ,open,@f,180,Open files
+gio, , , ,rename,@f,181,Rename a file
+gio, , , ,remove,@f,182,Delete files
+gio, , , ,save,@f,183,Read from stdin and save
+gio, , , ,set,@f,184,Set a file attribute
+gio, , , ,trash,@f,185,Move files to the trash
+gio, , , ,tree,@f,186,Lists the contents of locations in a tree
+gio,cat copy info list mkdir monitor mount move open rename remove save set trash tree, , , , ,187,Scheme
+gio,mount,s,unmount-scheme, ,@f @r,188,Unmount all mounts with the given scheme

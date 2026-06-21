@@ -15,3 +15,11 @@ coredumpctl, ,o,output, ,@r,113,Write output to FILE
 coredumpctl, , ,file, ,@r,114,Use journal FILE
 coredumpctl, ,D,directory, ,@r,115,Use journal files from DIRECTORY
 coredumpctl, ,q,quiet, , ,116,Do not show info messages and privilege warning
+
+coredumpctl, , , , ,@f,117,
+coredumpctl, , ,json, , ,118,JSON output format
+coredumpctl, ,1, , , ,119,Show information about most recent entry only
+coredumpctl, , ,all, , ,120,Look at all journal files instead of local ones
+coredumpctl, , ,root, , ,121,Operate on an alternate filesystem root
+coredumpctl, , ,image, ,@f @r,122,Operate on disk image as filesystem root
+coredumpctl, , ,image-policy, , ,123,Specify disk image dissection policy

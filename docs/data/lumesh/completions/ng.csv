@@ -1,2 +1,21 @@
 cmd,conds,short,long,params,dirs,pri,desc
 ng, , , , ,@f,101,The Angular CLI
+
+ng, , , ,add, ,102,Add dependency
+ng, , , ,analytics, ,103,Configure analytics
+ng, , , ,build, ,104,Compile Angular app
+ng, , , ,config, ,105,get/set config vars
+ng, , , ,deploy, ,106,Deploy builder
+ng, , , ,doc, ,107,Search documentation
+ng, , , ,e2e, ,108,Run e2e tests
+ng, , , ,extract-i18n, ,109,Extracts i18n
+ng, , , ,make-this-awesome, ,110,
+ng, , , ,generate, ,111,Create <schematic>
+ng, , , ,help, ,112,Display help
+ng, , , ,lint, ,113,Run linter
+ng, , , ,new, ,114,New workspace
+ng, , , ,run, ,115,Run Architect
+ng, , , ,serve, ,116,Start dev server
+ng, , , ,test, ,117,Run unit tests
+ng, , , ,update, ,118,Update deps
+ng, , , ,version, ,119,Display version

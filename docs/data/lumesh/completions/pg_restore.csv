@@ -41,3 +41,5 @@ pg_restore, ,U,username, ,@f @r,139,Connect as specified database user
 pg_restore, ,w,no-password, , ,140,Never prompt for password
 pg_restore, ,W,password, , ,141,Force password prompt (should happen automatically)
 pg_restore, , ,role, ,@f @r,142,Do SET ROLE before restore
+
+pg_restore, ,F,format,c,@f @r,143,Backup file format (should be automatic)

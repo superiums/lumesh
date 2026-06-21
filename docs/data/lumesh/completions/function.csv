@@ -9,3 +9,5 @@ function, ,a,argument-names, , ,107,Specify named arguments
 function, ,S,no-scope-shadowing, , ,108,Do not shadow variable scope of calling function
 function, ,w,wraps, , ,109,Inherit completions from the given command
 function, ,V,inherit-variable, , ,110,Snapshot and define local variable
+
+function, , , , , ,111,Function

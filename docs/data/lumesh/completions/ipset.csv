@@ -6,3 +6,19 @@ ipset, --condition, , ,test, ,104,Test whether an entry is in a set
 ipset, --condition, , ,destroy, ,105,Destroy the specified set or all sets
 ipset, --condition, , ,list, ,106,a
 ipset, -s, , ,plain save xml, ,107,Output format to the list command
+
+ipset, , , ,create,@f,108,Create a set identified with SETNAME
+ipset, , , ,add,@f,109,Add a given entry to a SET
+ipset, , , ,del,@f,110,Delete an entry from a SET
+ipset, , , ,test,@f,111,Test whether an entry is in a set
+ipset, , , ,x,@f,112,Destroy the specified set or all sets
+ipset, , , ,destroy,@f,113,Destroy the specified set or all sets
+ipset, , , ,list,@f,114,a
+ipset, , , , ,@E @f,115,__fish_ipset_list_sets
+ipset, ,!, , ,@f,116,Ignore errors
+ipset, ,o, ,plain save xml,@f,117,Output format to the list command
+ipset, ,q, , ,@f,118,Suppress any output
+ipset, ,r, , ,@f,119,Enforce name lookup
+ipset, ,n, , ,@f,120,List just the names of the sets
+ipset, ,t, , ,@f,121,List the set names and headers
+ipset, ,f, , ,@f,122,Filename instead of stdout

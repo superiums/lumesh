@@ -99,3 +99,26 @@ terraform, untaint, , , ,@r,235,Path to write state
 terraform, validate, , , ,@f,237,Produce output in JSON format
 terraform, validate, , , ,@f,238,"If specified, output won't contain any color"
 terraform, workspace && select delete, , , ,@f,241, 
+
+terraform, , , ,apply,@f,242,Build or change infrastructure
+terraform, , , ,destroy,@f,243,Destroy infrastructure
+terraform, , , ,console,@f,244,Interactive console for Terraform interpolations
+terraform, , , ,fmt,@f,245,Rewrite config files to canonical format
+terraform, , , ,get,@f,246,Download and install modules for the configuration
+terraform, , , ,graph,@f,247,Create a visual graph of Terraform resources
+terraform, , , ,import,@f,248,Import existing infrastructure into Terraform
+terraform, , , ,init,@f,249,Initialize a new or existing Terraform configuration
+terraform, , , ,login,@f,250,Retrieves auth token for the given hostname
+terraform, , , ,logout,@f,251,Removes auth token for the given hostname
+terraform, , , ,output,@f,252,Read an output from a state file
+terraform, , , ,plan,@f,253,Generate and show an execution plan
+terraform, , , ,providers,@f,254,Print tree of modules with their provider requirements
+terraform, , , ,refresh,@f,255,Update local state file against real resources
+terraform, , , ,show,@f,256,Inspect Terraform state or plan
+terraform, , , ,state,@r,257,Advanced state management
+terraform, , , ,taint,@f,258,Manually mark a resource for recreation
+terraform, , , ,test,@f,259,Runs automated test of shared modules
+terraform, , , ,untaint,@f,260,Manually unmark a resource as tainted
+terraform, , , ,validate,@f,261,Validate the Terraform files
+terraform, , , ,version,@f,262,Print the Terraform version
+terraform, , , ,workspace,@f,263,Workspace management

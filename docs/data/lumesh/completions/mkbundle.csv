@@ -26,3 +26,8 @@ mkbundle, , ,static, , ,124,Statically link to mono and glib
 mkbundle, , ,aot-runtime, ,@r,125, 
 mkbundle, , ,aot-dedup, , ,126, 
 mkbundle, , ,aot-mode, ,@f @r,127, 
+
+mkbundle,sdk, ,cross, ,@E @f @r,128,__fish_mkbundle_cross_args
+mkbundle,sdk, ,sdk, ,@r,129,
+mkbundle, ,c, , , ,130,Produce the stub file, do not compile the resulting stub
+mkbundle, ,z, , , ,131,Compress the assemblies before embedding

@@ -23,3 +23,36 @@ toot, post,l,language, ,@f @r,154,language code of the toot
 toot, post,e,editor, ,@f @r,155,editor to compose toot
 toot, post, ,scheduled-at, ,@f @r,156,datetime at which to schedule
 toot, post,t,content-type, ,@f @r,157,MIME type
+
+toot, , , , ,@f,158,
+toot, , , ,activate, ,159,Switch between accounts.
+toot, , , ,auth, ,160,Show logged in accounts and instances
+toot, , , ,instance, ,161,Display instance details
+toot, , , ,login, ,162,Log in using your browser
+toot, , , ,login_cli, ,163,Log in from the console
+toot, , , ,logout, ,164,Log out
+toot, , , ,notifications, ,165,Show notifications
+toot, , , ,post, ,166,Post a status text
+toot, , , ,search, ,167,Search for users or hashtags
+toot, , , ,thread, ,168,Show toot thread items
+toot, , , ,timeline, ,169,Show recent items
+toot, , , ,tui, ,170,Toot terminal user interface
+toot, , , ,upload, ,171,Upload a file
+toot, , , ,whoami, ,172,Display user details
+toot, , , ,whois, ,173,Display account details
+toot, , , ,delete, ,174,Delete a status
+toot, , , ,favourite, ,175,Favourite a status
+toot, , , ,pin, ,176,Pin a status
+toot, , , ,reblog, ,177,Reblog a status
+toot, , , ,reblogged_by, ,178,Show rebloggers of status
+toot, , , ,unfavourite, ,179,Unfavourite a status
+toot, , , ,unpin, ,180,Unpin a status
+toot, , , ,unreblog, ,181,Unreblog a status
+toot, , , ,follow, ,182,Follow an account
+toot, , , ,unfollow, ,183,Unfollow an account
+toot, , , ,mute, ,184,Mute an account
+toot, , , ,unmute, ,185,Unmute an account
+toot, , , ,block, ,186,Block an account
+toot, , , ,unblock, ,187,Unblock an account
+toot,activate logout, , , ,@E,188,__fish_complete_toot_accounts
+toot,upload, , , ,@F,189,

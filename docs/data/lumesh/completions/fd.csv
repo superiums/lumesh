@@ -63,3 +63,5 @@ fd, ,,gen-completions,bash elvish fish powershell zsh,@f @r,160,
 fd, ,1,,, ,161,Limit search to a single result
 fd, ,t,type,file directory symlink block-device char-device executable empty socket pipe,@f @r,162,"Filter by type: file (f)
 fd, ,c,color,auto always never,@f @r,163,When to use colors
+
+fd, ,t,type,file directory symlink block-device char-device executable empty socket pipe,@f @r,164,Filter by type: file (f), directory (d/dir), symlink (l), executable (x), empty (e), socket (s), pipe (p), char-device (c), block-device (b)

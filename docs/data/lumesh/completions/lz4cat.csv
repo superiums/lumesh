@@ -9,3 +9,5 @@ lz4cat, ,v,verbose, , ,107,Be verbose
 lz4cat, ,q,quiet, , ,108,Suppress warnings
 lz4cat, ,h,help, , ,109,Show help
 lz4cat, ,V,version, , ,110,Show version
+
+lz4cat, ,H, , , ,111,Show long help

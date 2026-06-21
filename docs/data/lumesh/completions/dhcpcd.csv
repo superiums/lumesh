@@ -59,3 +59,8 @@ dhcpcd, , ,inactive, , ,157,Don't start any interfaces other than those specifie
 dhcpcd, , ,configure, , ,158,Allows dhcpcd to configure the system
 dhcpcd, , ,noconfigure, , ,159,dhcpcd will not configure the system at all
 dhcpcd, , ,nodev, , ,160,Don't load any /dev management modules
+
+dhcpcd, ,F,fqdn, , ,161,Request DHCP server to update DNS using FQDN instead of hostname
+dhcpcd, ,t,timeout,0\tForever 30\tDefault,@f @r,162,Timeout after seconds
+dhcpcd, ,w, , , ,163,Wait for address to be assigned before forking to background
+dhcpcd, , ,waitip,4\tIPv4 6\tIPv6,@f @r,164,Wait for address to be assigned before forking to background

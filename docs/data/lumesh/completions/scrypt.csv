@@ -7,3 +7,11 @@ scrypt, enc dec, ,passphrase,,@f @r,108,
 scrypt, enc dec,r, , ,@f @r,109,Set the work parameter r
 scrypt, enc dec,t, , ,@f @r,110,Use at most the specified seconds of CPU time
 scrypt, enc dec info, ,version, ,@f @r,110,Print version
+
+scrypt, , , ,enc,@f @r,111,Encrypt file
+scrypt, , , ,dec,@f @r,112,Decrypt file
+scrypt, , , ,info,@f @r,113,Print information about the encryption parameters
+scrypt,enc dec,f, , , ,114,Force the operation to proceed
+scrypt,enc dec,P, , , ,115,Deprecated synonym for `--passphrase dev:stdin-once`
+scrypt,enc dec,v, , , ,116,Print encryption parameters and memory/CPU limits
+scrypt,enc dec, ,passphrase,dev:tty-stdin dev:stdin-once dev:tty-once env:(set -xn) file:(__fish_complete_path),@E @f @r,117,Read the passphrase using the specified method

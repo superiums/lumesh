@@ -83,3 +83,5 @@ mysql, ,V,version, , ,181,Display version information
 mysql, ,E,vertical, , ,182,Print query output rows vertically
 mysql, ,w,wait, , ,183,"If the connection cannot be established, wait and retry"
 mysql, ,X,xml, , ,184,Produce XML output
+
+mysql, , , , ,@f,185,

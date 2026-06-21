@@ -1,2 +1,8 @@
 cmd,conds,short,long,params,dirs,pri,desc
 w, , , , ,@f @r,101,Username
+
+w, ,h, , , ,102,Dont print header
+w, ,u, , , ,103,Ignore username for time calculations
+w, ,s, , , ,104,Short format
+w, ,f, , , ,105,Toggle printing of remote hostname
+w, ,V, , , ,106,Display version and exit

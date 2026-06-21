@@ -1,2 +1,14 @@
 cmd,conds,short,long,params,dirs,pri,desc
 argparse,n name, , ,--no-files, ,101, 
+
+argparse, , , , ,@f,102,
+argparse, ,h,help, , ,103,Show help
+argparse, ,n,name, ,@f @r,104,
+argparse, ,x,exclusive, ,@f @r,105,
+argparse, ,N,min-args, ,@f @r,106,
+argparse, ,X,max-args, ,@f @r,107,
+argparse, ,i,ignore-unknown, , ,108,
+argparse, ,u,move-unknown, , ,109,
+argparse, ,S,strict-longopts, , ,110,
+argparse, ,U,unknown-arguments, ,@f @r,111,
+argparse, ,s,stop-nonopt, , ,112,

@@ -15,3 +15,7 @@ alternatives, , ,list, ,@f,116,Display information about all link groups
 alternatives, , ,remove-all, , ,117,Remove the whole link group name
 alternatives, , ,add-slave, , ,118,Add a slave link to an existing alternative
 alternatives, , ,remove-slave, , ,119,Remove slave from an existing alternative
+
+alternatives,install, ,slave, ,@r,120,Add a slave link to the new group
+alternatives,install, ,initscript, ,@F,121,Add an initscript for the new group
+alternatives,install, ,family, ,@f @r,122,Set a family for the new group

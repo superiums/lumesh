@@ -4,3 +4,52 @@ alacritty, , ,config-file, , ,102,PP
 alacritty, ,o,option, , ,103,PP
 alacritty, , ,socket, , ,104,PP
 alacritty, ,T,title, , ,105,PP
+
+alacritty, , ,working-directory, ,@F @r,106,Start the shell in the specified working directory
+alacritty, , ,class, ,@r,107,Defines window class/app_id on X11/Wayland [default: Alacritty]
+alacritty, , ,print-events, , ,108,Print all events to STDOUT
+alacritty, , ,ref-test, , ,109,Generates ref test
+alacritty, , ,daemon, , ,110,Do not spawn an initial window
+alacritty, , ,hold, , ,111,Remain open after child process exit
+alacritty, ,h,help, , ,112,Print help
+alacritty, ,V,version, , ,113,Print version
+alacritty, , , ,msg,@f,114,Send a message to the Alacritty socket
+alacritty, , , ,migrate,@f,115,Migrate the configuration file
+alacritty,msg create-window config get-config help,s,socket, ,@F @r,116,IPC socket connection path override
+alacritty,msg create-window config get-config help,h,help, , ,117,Print help
+alacritty,msg create-window config get-config help, , ,create-window,@f,118,Create a new window in the same Alacritty process
+alacritty,msg create-window config get-config help, , ,config,@f,119,Update the Alacritty configuration
+alacritty,msg create-window config get-config help, , ,get-config,@f,120,Read runtime Alacritty configuration
+alacritty,msg create-window, ,working-directory, ,@F @r,121,Start the shell in the specified working directory
+alacritty,msg create-window,T,title, ,@r,122,Defines the window title [default: Alacritty]
+alacritty,msg create-window, ,class, ,@r,123,Defines window class/app_id on X11/Wayland [default: Alacritty]
+alacritty,msg create-window,o,option, ,@r,124,Override configuration file options [example:
+alacritty,msg create-window, ,hold, , ,125,Remain open after child process exit
+alacritty,msg create-window,h,help, , ,126,Print help
+alacritty,msg config,w,window-id, ,@r,127,Window ID for the new config
+alacritty,msg config,r,reset, , ,128,Clear all runtime configuration changes
+alacritty,msg get-config,w,window-id, ,@r,129,Window ID for the config request
+alacritty,msg help, , ,create-window,@f,130,Create a new window in the same Alacritty process
+alacritty,msg help, , ,config,@f,131,Update the Alacritty configuration
+alacritty,msg help, , ,get-config,@f,132,Read runtime Alacritty configuration
+alacritty,migrate,c,config-file, ,@F @r,133,Path to the configuration file
+alacritty,migrate,d,dry-run, , ,134,Only output TOML config to STDOUT
+alacritty,migrate,i,skip-imports, , ,135,Do not recurse over imports
+alacritty,migrate, ,skip-renames, , ,136,Do not move renamed fields to their new location
+alacritty,migrate,s,silent, , ,137,Do not output to STDOUT
+alacritty,migrate,h,help, , ,138,Print help
+alacritty,help msg migrate help, , ,msg,@f,139,Send a message to the Alacritty socket
+alacritty,help msg migrate help, , ,migrate,@f,140,Migrate the configuration file
+alacritty,help msg, , ,create-window,@f,141,Create a new window in the same Alacritty process
+alacritty,help msg, , ,config,@f,142,Update the Alacritty configuration
+alacritty,help msg, , ,get-config,@f,143,Read runtime Alacritty configuration
+alacritty, , ,embed, ,@r,144,X11 window ID to embed Alacritty within (decimal or hexadecimal with '0x' prefix)
+alacritty, ,q, , , ,145,Reduces the level of verbosity (the min level is -qq)
+alacritty, ,v, , , ,146,Increases the level of verbosity (the max level is -vvv)
+alacritty, , , ,help,@f,147,Print this message or the help of the given subcommand(s)
+alacritty,msg create-window config get-config help, , ,help,@f,148,Print this message or the help of the given subcommand(s)
+alacritty,msg create-window,e,command, ,@r,149,Command and args to execute (must be last argument)
+alacritty,msg config,h,help, , ,150,Print help (see more with
+alacritty,msg get-config,h,help, , ,151,Print help (see more with
+alacritty,msg help, , ,help,@f,152,Print this message or the help of the given subcommand(s)
+alacritty,help msg migrate help, , ,help,@f,153,Print this message or the help of the given subcommand(s)

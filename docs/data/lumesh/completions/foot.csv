@@ -22,3 +22,5 @@ foot, ,S,log-no-syslog, , ,120,disable syslog logging (server mode only)
 foot, , ,pty, ,@r,121,display an existing pty instead of creating one
 foot, ,v,version, , ,122,show the version number and quit
 foot, ,h,help, , ,123,show help message and quit
+
+foot, , ,toplevel-tag, ,@f @r,124,value to set the toplevel-tag property on the Wayland window to

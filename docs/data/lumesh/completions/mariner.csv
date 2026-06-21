@@ -8,3 +8,19 @@ mariner, search,L,legal, ,@f,121,Search trackers with legal content only
 mariner, search,l,limit, ,@f @r,122,Limit the number of results shown. Default is 50
 mariner, search,n,newest, ,@f,123,Sort results by newest
 mariner, search,t,trackers, ,@f @r,124,Trackers that should be searched
+
+mariner, , , ,complete,@f,125,Print bash completion command
+mariner, , , ,config,@f,126,Show or update configuration
+mariner, , , ,details,@f,127,Show details about torrent with given ID
+mariner, , , ,download,@f,128,Download torrent with given ID
+mariner, , , ,help,@f,129,Print detailed help for another command
+mariner, , , ,magnet,@f,130,Copy magnet link with given ID to clipboard
+mariner, , , ,open,@f,131,Open torrent in the default torrent application
+mariner, , , ,search,@f,132,Search for torrents
+mariner, , ,version, ,@f,133,Show program's version number and exit
+mariner, ,v,verbose, ,@f,134,Increase verbosity of output. Can be repeated
+mariner, ,q,quiet, ,@f,135,Suppress output except warnings and errors
+mariner, ,h,help, ,@f,136,Show help message and exit
+mariner, , ,debug, ,@f,137,Show tracebacks on errors
+mariner, , ,log-file, ,@r,138,Specify a file to log output. Default ~/.local/share/mariner/mariner.log
+mariner, , ,config-file, ,@r,139,Path to config file. Default ~/.config/mariner/config.yaml

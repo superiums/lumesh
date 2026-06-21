@@ -13,3 +13,6 @@ networkctl, , ,no-reload, , ,113,Do not reload systemd-networkd or systemd-udevd
 networkctl, , ,drop-in, , ,114,Edit specified drop-in instead of main file
 networkctl, , ,runtime, , ,115,Edit runtime config file
 networkctl, , ,stdin, , ,116,Read new contents of edited file from stdin
+
+networkctl, , , , ,@f,117,
+networkctl, , ,json, , ,118,Generate JSON output

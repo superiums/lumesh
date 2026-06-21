@@ -1,5 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
-mtr, , , , ,@f @r,101, 
+mtr, , , , ,@f @r,101,
 mtr, ,h,help, , ,102,Display help and exit
 mtr, ,v,version, , ,103,Output version information and exit
 mtr, ,F,filename, , ,104,Read hostname(s) from a file
@@ -37,3 +37,7 @@ mtr, ,P,port, , ,135,Target port number for TCP SCTP or UDP
 mtr, ,L,localport, , ,136,Source port number for UDP
 mtr, ,Z,timeout, , ,137,Seconds to keep probe sockets open
 mtr, ,M,mark, , ,138,Mark each sent packet
+
+mtr, ,4, , , ,139,Use IPv4 only
+mtr, ,6, , , ,140,Use IPv6 only
+mtr, ,y,ipinfo,0 1 2 3 4,@f @r,141,Select IP information in output

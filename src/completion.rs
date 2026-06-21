@@ -1,5 +1,6 @@
 use std::fs::read_to_string;
 use std::path::PathBuf;
+use std::process::Command;
 use std::sync::LazyLock;
 use std::sync::RwLock;
 use std::{collections::HashMap, sync::Arc};
@@ -10,6 +11,7 @@ pub struct CompletionPair {
     pub replacement: String,
 }
 
+use crate::utils::get_std_cwd;
 use crate::{Expression, RuntimeError};
 
 pub struct CompletionDatabase {
@@ -54,6 +56,7 @@ enum MatchType {
     // CondAndShort,
     // CondAndLong,
     // All,
+    ExternalCMD,
     File,
     Require,
     Space,
@@ -324,6 +327,12 @@ impl ParamCompleter {
         } else if !current_token.is_empty() {
             // 有参数且不以-开始，则优先匹配action，其次长短选项
             if self.check_condition(entry, args, current_token) {
+                if entry.directives.iter().any(|d| d == "@E") {
+                    return MatchType::ExternalCMD;
+                }
+                if entry.directives.iter().any(|d| d == "@F" || d == "@D") {
+                    return MatchType::File;
+                }
                 // 如果满足长短选项，则只匹配argument；如未满足，则匹配argument后携带长短选项
                 if self.check_opt(entry, args, current_token) {
                     if entry.args.iter().any(|x| x.starts_with(current_token)) {
@@ -364,6 +373,9 @@ impl ParamCompleter {
             if self.check_condition(entry, args, current_token) {
                 // 满足长短选项
                 if self.check_opt(entry, args, current_token) {
+                    if entry.directives.iter().any(|d| d == "@E") {
+                        return MatchType::ExternalCMD;
+                    }
                     if entry.directives.iter().any(|d| d == "@F" || d == "@D") {
                         return MatchType::File;
                     }
@@ -685,8 +697,28 @@ impl ParamCompleter {
                                 }
                             }
                         }
-
-                        // v.push()
+                    }
+                    MatchType::ExternalCMD => {
+                        let cmd_template = entry.description.replace("{}", current_token);
+                        let parts: Vec<&str> =
+                            cmd_template.trim().split_ascii_whitespace().collect();
+                        if let Ok(output) = Command::new(parts[0])
+                            .current_dir(get_std_cwd())
+                            .args(&parts[1..])
+                            .output()
+                        {
+                            if output.status.success() {
+                                for line in String::from_utf8_lossy(&output.stdout).lines() {
+                                    let trimmed = line.trim();
+                                    if !trimmed.is_empty() {
+                                        v.push(CompletionPair {
+                                            display: trimmed.to_string(),
+                                            replacement: trimmed.to_string(),
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     }
                     MatchType::File => return (v, true),
                     MatchType::Require => {

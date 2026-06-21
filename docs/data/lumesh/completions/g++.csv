@@ -1,0 +1,2 @@
+cmd,conds,short,long,argument,dirs,pri,desc
+g++, , , , , ,100,

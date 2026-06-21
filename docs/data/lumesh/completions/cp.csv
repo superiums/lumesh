@@ -27,3 +27,29 @@ cp, ,s,symbolic-link, , ,125,Make symbolic links instead of copying
 cp, ,T,no-target-directory, , ,126,Treat DEST as a normal file
 cp, ,x,one-file-system, , ,127,Stay on this file system
 cp, ,X,context, ,@r,128,Set SELinux context of copy to CONTEXT
+
+cp, ,d,,, ,129,Same as --no-dereference --preserve=link
+cp, ,H,,, ,130,Follow command-line symbolic links
+cp, ,p,,, ,131,"Same as --preserve=mode,ownership,timestamps"
+cp, ,,preserve,,@f,132,Preserve ATTRIBUTES if possible
+cp, ,,no-preserve,,@f @r,133,Don't preserve ATTRIBUTES
+cp, ,,sparse,,@f @r,134,Control creation of sparse files
+cp, ,Z,,, ,135,Set SELinux context of copy to default type
+cp, ,r,,, ,136,Copy directories recursively
+cp, ,R,,, ,137,"Like -r, but replicating pipes instead of reading pipes"
+cp, ,R,,, ,138,Copy directories recursively
+cp, ,H,,, ,139,-R: Follow symlink arguments
+cp, ,L,,, ,140,-R: Follow all symlinks
+cp, ,f,,, ,141,Don't confirm to overwrite
+cp, ,i,,, ,142,Prompt before overwrite
+cp, ,n,,, ,143,Don't overwrite existing
+cp, ,p,,, ,144,Preserve attributes of source
+cp, ,v,,, ,145,Print filenames as they're copied
+cp, ,X,,, ,146,"Omit xattrs, resource forks"
+cp, ,l,,, ,147,Hard link instead of copying
+cp, ,N,,, ,148,Don't copy file flags
+cp, ,x,,, ,149,Don't traverse mount points
+cp, ,s,,, ,150,Symlink instead of copying
+cp, ,P, , , ,151,-R: Don't follow symlinks (default)
+cp, ,a, , , ,152,Archive mode (-pPR)
+cp, ,c, , , ,153,Clone using clonefile(2)

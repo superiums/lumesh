@@ -1,0 +1,9 @@
+cmd,conds,short,long,argument,dirs,pri,desc
+time, ,f,format, ,@f @r,102,Specify output format
+time, ,p,portable, , ,103,Use the portable output format
+time, ,o,output, ,@r,104,"Do not send the results to stderr"
+time, ,v,verbose, , ,105,Verbose mode
+time, , ,help, , ,106,Display help and exit
+time, ,V,version, , ,107,Display version and exit
+
+time, ,a,append, , ,108,(Used together with -o) Do not overwrite but append

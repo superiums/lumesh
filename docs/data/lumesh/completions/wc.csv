@@ -7,3 +7,10 @@ wc, ,w,words, , ,105,Print number of words
 wc, , ,files0-from, , ,106,Read input from NUL-terminated filenames in the given file
 wc, , ,help, , ,107,Display help and exit
 wc, , ,version, , ,108,Display version and exit
+
+wc, ,c,,, ,109,Print byte count
+wc, ,m,,, ,110,Print character count
+wc, ,l,,, ,111,Print number of lines
+wc, ,w,,, ,112,Print number of words
+wc, ,L,,, ,113,Print length of longest line
+wc, ,h,,, ,114,"Use B, KB, MB, GB, TB, PB, EB unit suffixes"

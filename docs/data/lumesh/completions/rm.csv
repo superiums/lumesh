@@ -6,3 +6,15 @@ rm, ,r,recursive, , ,104,Recursively remove subdirs
 rm, ,v,verbose, , ,105,Explain what is done
 rm, ,h,help, , ,106,Display help
 rm, , ,version, , ,107,Display rm version
+
+rm, ,I,,, ,108,Prompt to remove >3 files
+rm, ,R,,, ,109,Recursively remove subdirs
+rm, ,f,,, ,110,Never prompt for removal
+rm, ,i,,, ,111,Prompt for removal
+rm, ,d,,, ,112,Remove directories as well
+rm, ,P,,, ,113,Overwrite before removal
+rm, ,r,,, ,114,Recursively remove subdirs
+rm, ,v,,, ,115,Explain what is done
+rm, ,W,,, ,116,Undelete given filenames
+rm, ,x,,, ,117,Don't traverse mount points
+rm, ,I,,, ,118,Prompt to remove >=3 files

@@ -3,3 +3,15 @@ scp, commandline -ct | string match -e ':', , ,',@f,101,Remote Path
 scp, ,D, , ,@f @r,102,Connect directly to a local SFTP server
 scp, ,l, , ,@f @r,103,Bandwidth limit
 scp, ,P, , ,@f @r,104,Port
+
+scp, ,3,,, ,105,Copies between two remote hosts are transferred through the local host
+scp, ,B,,, ,106,Batch mode
+scp, ,O,,, ,107,Use original SCP protocol instead of SFTP
+scp, ,p,,, ,108,"Preserves modification times, access times, and modes from the original file"
+scp, ,R,,, ,109,Copies between two remote hosts are performed by executing scp on the origin host
+scp, ,r,,, ,110,Recursively copy
+scp, ,S,,, ,111,Encryption program
+scp, ,T,,, ,112,Disable strict filename checking
+scp,"-ct", , , ,@E,113,complete -C'ssh ' | string replace -r '	.*' ':'
+scp,-ct, , , ,@n,114,Local Path
+scp,-ct, , , ,@E @f,115,__scp_remote_target

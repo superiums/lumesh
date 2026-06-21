@@ -7,3 +7,7 @@ sed, ,s,separate, , ,105,Consider files as separate
 sed, ,u,unbuffered, , ,106,Use minimal IO buffers
 sed, , ,help, , ,107,Display help and exit
 sed, ,V,version, , ,108,Display version and exit
+
+sed, ,E,,, ,109,Use extended regexp
+sed, ,a,,, ,110,Delay opening files until a command containing the related 'w' function is applied
+sed, ,l,,, ,111,Use line buffering

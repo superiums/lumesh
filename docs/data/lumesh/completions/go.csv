@@ -38,7 +38,7 @@ go, list,f, , ,@r,163,pass in template for formatting
 go, list, , , ,@r,164,list of build tags
 go, test,c, , ,@r,167,compile the test binary to pkg.test but do not run it
 go, tool, , ,addr2line api asm cgo compile dist fix link nm objdump pack pprof prof vet yacc, ,169,target tool
-go, version, , , ,@f,171, 
+go, version, , , ,@f,171,
 go, mod, , ,download,@f,174,download modules to local cache
 go, mod, , ,edit,@f,175,edit go.mod from tools or scripts
 go, mod, , ,graph,@f,176,print module requirement graph
@@ -47,3 +47,87 @@ go, mod, , ,tidy,@f,178,add missing and remove unused modules
 go, mod, , ,vendor,@f,179,make vendored copy of dependencies
 go, mod, , ,verify,@f,180,verify dependencies have expected content
 go, mod, , ,why,@f,181,explain why packages or modules are needed
+
+go,build compile fix fmt install test vet,,,,@E @f @k @r,182,","
+go, ,,,build, ,183,compile packages and dependencies
+go, ,,,clean, ,184,remove object files
+go,clean,i,,, ,185,remove the corresponding installed archive or binary
+go,clean,n,,, ,186,print the command that would be executed without running
+go,clean,r,,, ,187,recursively clean all the dependencies of package named by the import paths
+go,clean,x,,, ,188,clean to print remove commands as it executes them
+go,clean,,,, ,189,remove the entire go build cache
+go,clean,,,, ,190,expire all test results in the go build cache
+go,clean,,,, ,191,remove the entire module download cache
+go, ,,,doc, ,192,run godoc on package sources
+go,doc,,,, ,193,show all the documentation for the package
+go,doc,c,,, ,194,respect case when matching symbols
+go,doc,,,, ,195,one-line representation for each symbol
+go,doc,,,, ,196,show the full source code for the symbol
+go,doc,u,,, ,197,show documentation for unexported as well as exported symbols
+go, ,,,env, ,198,print Go environment information
+go,env,,,, ,199,print the environment in JSON format
+go, ,,,fix, ,200,run go tool fix on packages
+go, ,,,fmt, ,201,run gofmt on package sources
+go,fmt,n,,, ,202,prints commands that would be executed
+go,fmt,x,,, ,203,prints commands as they are executed
+go, ,,,get, ,204,download and install packages and dependencies
+go,get,d,,, ,205,stop after downloading the packages; don't install
+go,get,,,, ,206,run fix tool on packages before resolving dependencies or building
+go,get,u,,, ,207,update remote packages
+go,get,v,,, ,208,verbose progress and debug output
+go,get,t,,, ,209,also download the packages required to build the tests
+go,get,,,, ,210,flag permits fetching & resolving domains using insecure schemes
+go, ,,,generate, ,211,Generate runs commands described by directives within existing files.
+go,get,n,,, ,212,prints commands that would be executed
+go,get,x,,, ,213,prints commands as they are executed
+go,get,v,,, ,214,prints the names of packages and files as they are processed
+go,get,,,, ,215,prints the names of packages and files as they are processed
+go, ,,,help, ,216,get help on topic
+go,help,,,, ,217,start a bug report
+go,help,,,, ,218,compile packages and dependencies
+go,help,,,, ,219,remove object files and cached files
+go,help,,,, ,220,show documentation for package or symbol
+go,help,,,, ,221,print Go environment information
+go,help,,,, ,222,update packages to use new APIs
+go,help,,,, ,223,generate Go files by processing source
+go,help,,,, ,224,download and install packages and dependencies
+go,help,,,, ,225,compile and install packages and dependencies
+go,help,,,, ,226,list packages or modules
+go,help,,,, ,227,module maintenance
+go,help,,,, ,228,compile and run Go program
+go,help,,,, ,229,test packages
+go,help,,,, ,230,run specified go tool
+go,help,,,, ,231,print Go version
+go,help,,,, ,232,report likely mistakes in packages
+go,help,,,, ,233,build modes
+go,help,,,, ,234,calling between Go and C
+go,help,,,, ,235,build and test caching
+go,help,,,, ,236,environment variables
+go,help,,,, ,237,file types
+go,help,,,, ,238,the go.mod file
+go,help,,,, ,239,GOPATH environment variable
+go,help,,,, ,240,legacy GOPATH go get
+go,help,,,, ,241,module proxy protocol
+go,help,,,, ,242,import path syntax
+go,help,,,, ,243,"modules, module versions, and more"
+go,help,,,, ,244,module-aware go get
+go,help,,,, ,245,module authentication using go.sum
+go,help,,,, ,246,module configuration for non-public modules
+go,help,,,, ,247,package lists and patterns
+go,help,,,, ,248,testing flags
+go,help,,,, ,249,testing functions
+go, ,,,install, ,250,compile and install packages and dependencies
+go, ,,,list, ,251,list packages
+go,list,e,,, ,252,tolerate erroneous packages
+go,list,m,,, ,253,list modules instead of packages
+go, ,,,run, ,254,compile and run Go program
+go, ,,,test, ,255,test packages
+go,test,i,,, ,256,"install dependent packages, but don't run tests"
+go, ,,,tool, ,257,run specified go tool
+go,tool,n,,, ,258,print the command that would be executed but not execute it
+go, ,,,version,@f,259,print Go version
+go, ,,,vet, ,260,vet packages
+go,vet,n,,, ,261,print the command that would be executed
+go,vet,x,,, ,262,prints commands as they are executed
+go, ,,,mod, ,263,module maintenance
+go,build doc fix fmt install test vet, , , ,@E @f @r,264,"

@@ -11,3 +11,11 @@ mv, ,u,update, , ,109,Don't overwrite newer
 mv, ,v,verbose, , ,110,Print filenames as it goes
 mv, , ,help, , ,111,Print help and exit
 mv, , ,version, , ,112,Print version and exit
+
+mv, ,b,,, ,113,Backup each existing destination file
+mv, ,Z,context,, ,114,Set SELinux context to default
+mv, ,f,,, ,115,Don't prompt to overwrite
+mv, ,i,,, ,116,Prompt to overwrite existing
+mv, ,v,,, ,117,Print filenames as it goes
+mv, ,n,,, ,118,Don't overwrite existing
+mv, ,h,,, ,119,Don't follow target if it links to a dir

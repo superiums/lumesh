@@ -8,3 +8,5 @@ lscpu, ,s,sysroot, ,@r,106,Use specified directory as system root
 lscpu, ,x,hex, , ,107,Print hexadecimal masks rather thans lists of CPUs
 lscpu, ,h,help, , ,108,Display help
 lscpu, ,V,version, , ,109,Display version
+
+lscpu, ,,,,@f,110,

@@ -21,7 +21,7 @@ git, , ,noglob-pathspecs, ,@f,119,don't treat pathspecs as globs
 git, , ,icase-pathspecs, ,@f,120,match pathspecs case-insensitively
 git, , ,no-optional-locks, ,@f,121,skip optional operations requiring locks
 git, , ,list-cmds,builtins,@f @k @r,122,list commands by group
-git, log show diff-tree rev-list, ,pretty, ,@f,123, 
+git, log show diff-tree rev-list, ,pretty, ,@f,123,
 git, diff show range-diff, ,abbrev, , ,124,Show only a partial prefix instead of the full 40-byte hexadecimal object name
 git, diff show range-diff, ,binary, , ,125,Output a binary diff that can be applied with 'git-apply'
 git, diff show range-diff, ,check, , ,126,Warn if changes introduce conflict markers or whitespace errors
@@ -132,7 +132,7 @@ git, , , ,remote,@f,232,Manage tracked repositories
 git,remote add ,f, , ,@f,234,Once the remote information is set up git fetch <name> is run
 git,remote add , ,tags, ,@f,235,Import every tag from a remote with git fetch <name>
 git,remote add , ,no-tags, ,@f,236,Don't import tags from a remote with git fetch <name>
-git,remote remove, , , ,@f,237, 
+git,remote remove, , , ,@f,237,
 git,remote set-branches, ,add, ,@f,238,Add to the list of currently tracked branches instead of replacing it
 git,remote set-url, ,push, ,@f,239,Manipulate push URLs instead of fetch URLs
 git,remote set-url, ,add, ,@f,240,Add new URL instead of changing the existing URLs
@@ -179,7 +179,7 @@ git, add,u,update, , ,283,Only match tracked files
 git, add,A,all, , ,284,Match files both in working tree and index
 git, add,N,intent-to-add, , ,285,Record only the fact that the path will be added later
 git, add, ,refresh, , ,286,"Don't add the file(s), but only refresh their stat"
-git, add, ,chmod,-x +x, ,287, 
+git, add, ,chmod,-x +x, ,287,
 git, add, ,ignore-errors, , ,288,Ignore errors
 git, add, ,ignore-missing, , ,289,Check if any of the given files would be ignored
 git, , , ,am, ,292,Apply patches from a mailbox
@@ -213,7 +213,7 @@ git, am, ,abort, ,@f,319,Abort patch operation and restore branch
 git, am, ,quit, ,@f,320,Abort without restoring branch
 git, am, ,show-current-patch,diff raw, ,321,Show message at which patch failures occurred
 git, , , ,checkout,@f,323,Checkout and switch to a branch
-git, checkout, , , ,@F @f,324, 
+git, checkout, , , ,@F @f,324,
 git, checkout,b, , ,@f,325,Create a new branch
 git, checkout,B, , ,@f,326,Create a new branch or reset existing to start point
 git, checkout,t,track, ,@f,327,Track a new branch
@@ -265,14 +265,14 @@ git,bisect start, ,term-bad, ,@f @r,373,Use another term instead of new/bad
 git,bisect start, ,term-good, ,@f @r,374,Use another term instead of old/good
 git,bisect start, ,no-checkout, ,@f,375,"Do not checkout tree, only update BISECT_HEAD"
 git,bisect start, ,first-parent, ,@f,376,"On merge commits, follow only the first parent commit"
-git,bisect bad new good old, , , ,@f,378, 
+git,bisect bad new good old, , , ,@f,378,
 git,bisect terms, ,--term-good, ,@f,379,Print the term for the old state
 git,bisect terms, ,--term-bad, ,@f,380,Print the term for the new state
-git,bisect skip, , , ,@f,381, 
-git,bisect reset, , , ,@f,382, 
-git,bisect run, , , ,@f,383, 
+git,bisect skip, , , ,@f,381,
+git,bisect reset, , , ,@f,382,
+git,bisect run, , , ,@f,383,
 git, , , ,branch,@f,384,"List, create, or delete branches"
-git, branch, , , ,@f,385, 
+git, branch, , , ,@f,385,
 git, branch,d,delete, ,@f,386,Delete branch
 git, branch,D, , ,@f,387,Force deletion of branch
 git, branch,f,force, ,@f,388,Reset branch even if it already exists
@@ -297,12 +297,12 @@ git,bundle create unbundle, ,progress, ,@f,406,Show progress meter
 git,bundle create, ,all-progress, ,@f,407,Show progress meter during object writing phase
 git,bundle create, ,all-progress-implied, ,@f,408,Similar to --all-progress when progress meter is shown
 git,bundle create, ,version, ,@f @r,409,Specify bundle format version
-git,bundle create, , ,--all, ,410, 
+git,bundle create, , ,--all, ,410,
 git, , , ,cherry,@f,411,Find commits yet to be applied to upstream
 git, cherry,v, , ,@f,412,Show the commit subjects next to the SHA1s
 git, cherry, , , ,@f,413,Upstream
 git, , , ,cherry-pick,@f,414,Reapply a commit on another branch
-git, cherry-pick, , , ,@f,415, 
+git, cherry-pick, , , ,@f,415,
 git, cherry-pick,e,edit, ,@f,417,Edit the commit message prior to committing
 git, cherry-pick,x, , ,@f,418,Append info in generated commit on the origin of the cherry-picked change
 git, cherry-pick,n,no-commit, ,@f,419,Apply changes without making any commit
@@ -360,7 +360,7 @@ git, commit, ,fixup, ,@f,471,Fixup commit to be used with rebase --autosquash
 git, commit, ,squash, ,@f,472,Squash commit to be used with rebase --autosquash
 git, commit, ,reset-author, , ,473,"When amending, reset author of commit to the committer"
 git, commit, ,author, ,@f @r,474,Override the commit author
-git, commit, ,cleanup,strip,@f @r,475, 
+git, commit, ,cleanup,strip,@f @r,475,
 git, commit, ,date, ,@f @r,476,Override the author date
 git, commit,m,message, ,@f @r,477,Use the given message as the commit message
 git, commit, ,no-edit, ,@f,478,Use the selected commit message without launching an editor
@@ -428,7 +428,7 @@ git, diff, ,quiet, , ,540,"Disable all output of the program, implies --exit-cod
 git, diff,1,base, , ,541,Compare the working tree with the 'base' version
 git, diff,2,ours, , ,542,Compare the working tree with the 'our branch'
 git, diff,3,theirs, , ,543,Compare the working tree with the 'their branch'
-git,diff cached staged, , , ,@F,545, 
+git,diff cached staged, , , ,@F,545,
 git, , , ,difftool, ,546,Open diffs in a visual tool
 git, difftool, ,cached, , ,547,Visually show diff of changes in the index
 git, difftool,g,gui, ,@f,549,Use `diff.guitool` instead of `diff.tool`
@@ -493,14 +493,14 @@ git, init,q,quiet, ,@f,607,Only print error and warning messages
 git, init, ,bare, ,@f,608,Create a bare repository
 git, , , ,shortlog, ,609,Show commit shortlog
 git, , , ,log, ,610,Show commit logs
-git, log, , , ,@F,611, 
+git, log, , , ,@F,611,
 git, log, ,follow, , ,612,Continue listing file history beyond renames
 git, log, ,no-decorate, , ,613,Don't print ref names
 git, log, ,decorate,short full auto no,@f,614,Print out ref names
 git, log, ,source, , ,615,Print ref name by which each commit was reached
-git, log, ,use-mailmap, , ,616, 
-git, log, ,full-diff, , ,617, 
-git, log, ,log-size, , ,618, 
+git, log, ,use-mailmap, , ,616,
+git, log, ,full-diff, , ,617,
+git, log, ,log-size, , ,618,
 git, log,L, , ,@F @r,619,"Trace the evolution of the line range given by <start>,<end>, or regex <funcname>, within the <file>"
 git, log rev-list,n,max-count, ,@f @r,620,Limit the number of commits before starting to show the commit output
 git, log rev-list, ,skip, ,@f @r,621,Skip given number of commits
@@ -536,80 +536,80 @@ git, log rev-list, ,glob, ,@f @r,650,"Show log for all matching branches, tags, 
 git, log rev-list, ,exclude, ,@f @r,651,Do not include refs matching given glob pattern
 git, log rev-list, ,reflog, , ,652,Show log for all reflogs entries
 git, log rev-list, ,ignore-missing, , ,653,Ignore invalid object names
-git, log rev-list, ,bisect, , ,654, 
+git, log rev-list, ,bisect, , ,654,
 git, log rev-list, ,stdin, , ,655,Read commits from stdin
 git, log rev-list, ,cherry-mark, , ,656,Mark equivalent commits with = and inequivalent with +
 git, log rev-list, ,cherry-pick, , ,657,Omit equivalent commits
 git, rev-list, ,filter, ,@f,658,Omits objects from the list of printed objects
-git, log, ,left-only, , ,659, 
-git, log, ,right-only, , ,660, 
-git, log, ,cherry, , ,661, 
-git, log,g,walk-reflogs, , ,662, 
-git, log, ,merge, , ,663, 
-git, log, ,boundary, , ,664, 
-git, log, ,simplify-by-decoration, , ,665, 
-git, log, ,full-history, , ,666, 
-git, log, ,dense, , ,667, 
-git, log, ,sparse, , ,668, 
-git, log, ,simplify-merges, , ,669, 
-git, log, ,ancestry-path, , ,670, 
-git, log, ,date-order, , ,671, 
-git, log, ,author-date-order, , ,672, 
-git, log, ,topo-order, , ,673, 
-git, log, ,reverse, , ,674, 
-git, log, ,no-walk,sorted unsorted,@f,675, 
-git, log, ,do-walk, , ,676, 
-git, log, ,format, , ,677, 
-git, log, ,abbrev-commit, , ,678, 
-git, log, ,no-abbrev-commit, , ,679, 
-git, log, ,oneline, , ,680, 
-git, log, ,encoding, ,@f @r,681, 
-git, log, ,expand-tabs, ,@f,682, 
-git, log, ,no-expand-tabs, , ,683, 
-git, log, ,notes, ,@f,684, 
-git, log, ,no-notes, , ,685, 
-git, log, ,show-notes, ,@f,686, 
-git, log, ,standard-notes, , ,687, 
-git, log, ,no-standard-notes, , ,688, 
-git, log, ,show-signature, , ,689, 
-git, log, ,relative-date, , ,690, 
-git, log, ,date,',@f @r,691, 
-git, log, ,parents, , ,692, 
-git, log, ,children, , ,693, 
-git, log, ,left-right, , ,694, 
-git, log, ,graph, , ,695, 
-git, log, ,show-linear-break, ,@f,696, 
-git, log, ,cc, , ,697, 
-git, log,p,patch, , ,698, 
-git, log,s,no-patch, , ,699, 
-git, log,U,unified, ,@f @r,700, 
-git, log, ,raw, , ,701, 
-git, log, ,patch-with-raw, , ,702, 
-git, log, ,indent-heuristic, , ,703, 
-git, log, ,no-indent-heuristic, , ,704, 
-git, log, ,compaction-heuristic, , ,705, 
-git, log, ,no-compaction-heuristic, , ,706, 
-git, log, ,minimal, , ,707, 
-git, log, ,patience, , ,708, 
-git, log, ,histogram, , ,709, 
-git, log, ,stat, ,@f @r,710, 
-git, log, ,numstat, , ,711, 
-git, log, ,shortstat, , ,712, 
-git, log, ,summary, , ,713, 
-git, log, ,patch-with-stat, , ,714, 
-git, log, ,name-only, , ,715, 
-git, log, ,name-status, , ,716, 
-git, log, ,color,always never auto,@f,717, 
-git, log, ,no-color, , ,718, 
-git, log, ,word-diff,',@f,719, 
-git, log, ,color-words, ,@f,720, 
-git, log, ,no-renames, , ,721, 
-git, log, ,check, , ,722, 
-git, log, ,full-index, , ,723, 
-git, log, ,binary, , ,724, 
-git, log, ,abbrev, ,@f,725, 
-git, log,l, , ,@f,726, 
-git, log, ,diff-filter, ,@f @r,727, 
+git, log, ,left-only, , ,659,
+git, log, ,right-only, , ,660,
+git, log, ,cherry, , ,661,
+git, log,g,walk-reflogs, , ,662,
+git, log, ,merge, , ,663,
+git, log, ,boundary, , ,664,
+git, log, ,simplify-by-decoration, , ,665,
+git, log, ,full-history, , ,666,
+git, log, ,dense, , ,667,
+git, log, ,sparse, , ,668,
+git, log, ,simplify-merges, , ,669,
+git, log, ,ancestry-path, , ,670,
+git, log, ,date-order, , ,671,
+git, log, ,author-date-order, , ,672,
+git, log, ,topo-order, , ,673,
+git, log, ,reverse, , ,674,
+git, log, ,no-walk,sorted unsorted,@f,675,
+git, log, ,do-walk, , ,676,
+git, log, ,format, , ,677,
+git, log, ,abbrev-commit, , ,678,
+git, log, ,no-abbrev-commit, , ,679,
+git, log, ,oneline, , ,680,
+git, log, ,encoding, ,@f @r,681,
+git, log, ,expand-tabs, ,@f,682,
+git, log, ,no-expand-tabs, , ,683,
+git, log, ,notes, ,@f,684,
+git, log, ,no-notes, , ,685,
+git, log, ,show-notes, ,@f,686,
+git, log, ,standard-notes, , ,687,
+git, log, ,no-standard-notes, , ,688,
+git, log, ,show-signature, , ,689,
+git, log, ,relative-date, , ,690,
+git, log, ,date,',@f @r,691,
+git, log, ,parents, , ,692,
+git, log, ,children, , ,693,
+git, log, ,left-right, , ,694,
+git, log, ,graph, , ,695,
+git, log, ,show-linear-break, ,@f,696,
+git, log, ,cc, , ,697,
+git, log,p,patch, , ,698,
+git, log,s,no-patch, , ,699,
+git, log,U,unified, ,@f @r,700,
+git, log, ,raw, , ,701,
+git, log, ,patch-with-raw, , ,702,
+git, log, ,indent-heuristic, , ,703,
+git, log, ,no-indent-heuristic, , ,704,
+git, log, ,compaction-heuristic, , ,705,
+git, log, ,no-compaction-heuristic, , ,706,
+git, log, ,minimal, , ,707,
+git, log, ,patience, , ,708,
+git, log, ,histogram, , ,709,
+git, log, ,stat, ,@f @r,710,
+git, log, ,numstat, , ,711,
+git, log, ,shortstat, , ,712,
+git, log, ,summary, , ,713,
+git, log, ,patch-with-stat, , ,714,
+git, log, ,name-only, , ,715,
+git, log, ,name-status, , ,716,
+git, log, ,color,always never auto,@f,717,
+git, log, ,no-color, , ,718,
+git, log, ,word-diff,',@f,719,
+git, log, ,color-words, ,@f,720,
+git, log, ,no-renames, , ,721,
+git, log, ,check, , ,722,
+git, log, ,full-index, , ,723,
+git, log, ,binary, , ,724,
+git, log, ,abbrev, ,@f,725,
+git, log,l, , ,@f,726,
+git, log, ,diff-filter, ,@f @r,727,
 git, , , ,ls-files, ,728,Show information about files
 git, ls-files,c,cached, , ,729,Show cached files in the output
 git, ls-files,d,deleted, , ,730,Show deleted files in the output
@@ -626,7 +626,7 @@ git, ls-files,X,exclude-from, , ,740,"Read exclude patterns from <file>; 1 per l
 git, ls-files, ,exclude-per-directory, , ,741,Read extra exclude patterns that apply only to the dir and its subdirs in <file>
 git, ls-files, ,exclude-standard, , ,742,Add the standard Git exclusions
 git, ls-files, ,error-unmatch, , ,743,"If any <file> does not appear in the index, treat this as an error"
-git, ls-files, ,with-tree, , ,744, 
+git, ls-files, ,with-tree, , ,744,
 git, ls-files, ,full-name, , ,745,Force paths to be output relative to the project top directory
 git, ls-files, ,recurse-submodules, , ,746,Recursively calls ls-files on each submodule in the repository
 git, ls-files, ,abbrev, , ,747,Show only a partial prefix
@@ -701,11 +701,11 @@ git, merge-base, ,fork-point, ,@f,815,Find the point at which a branch forked fr
 git, , , ,mergetool,@f,816,Run merge conflict resolution tool
 git, mergetool,t,tool, ,@f,817,Use specific merge resolution program
 git, mergetool, ,tool-help, ,@f,818,Print a list of merge tools that may be used with `--tool`
-git, mergetool, , , ,@F @f,819, 
+git, mergetool, , , ,@F @f,819,
 git, mergetool,y,no-prompt, ,@f,820,Do not prompt before launching a diff tool
 git, mergetool, ,prompt, ,@f,821,Prompt before each invocation of the merge resolution program
 git, , , ,mv, ,822,Move or rename a file
-git, mv, , , ,@F @f,823, 
+git, mv, , , ,@F @f,823,
 git, mv,f,force, ,@f,824,Force rename/moving even if target exists
 git, mv,k, , ,@f,825,Skip rename/move which can lead to error
 git, mv,n,dry-run, ,@f,826,Only show what would happen
@@ -764,7 +764,7 @@ git, pull, ,no-rebase, ,@f,881,Do not rebase the current branch on top of the up
 git, pull, ,autostash, ,@f,882,"Before starting rebase, stash local changes, and apply stash when done"
 git, pull, ,no-autostash, ,@f,883,Do not stash local changes before starting rebase
 git, , , ,range-diff,@f,884,Compare two commit ranges
-git, range-diff, , , ,@f,885, 
+git, range-diff, , , ,@f,885,
 git, range-diff, ,creation-factor, ,@f,886,Percentage by which creation is weighted
 git, range-diff, ,no-dual-color, ,@f,887,Use simple diff colors
 git, , , ,push,@f,888,Push changes elsewhere
@@ -809,7 +809,7 @@ git, rebase, ,update-refs, ,@f,935,Update any branches that point to commits bei
 git, rebase, ,no-update-refs, ,@f,936,Don't update any branches that point to commits being rebased
 git, rebase, ,exec, ,@r,937,Execute shellscript
 git, , , ,reflog,@f,938,Manage reflog information
-git, reflog, , , ,@f,939, 
+git, reflog, , , ,@f,939,
 git, reflog, , , ,@f,940,Head
 git, , , ,reset, ,941,Reset current HEAD to the specified state
 git, reset, ,hard, ,@f,942,Reset the index and the working tree
@@ -827,12 +827,12 @@ git, restore, ,ignore-unmerged, ,@f,956,"When restoring files, do not abort the 
 git, restore, ,ignore-skip-worktree-bits, ,@f,957,Ignore the sparse-checkout file and unconditionally restore any files in <pathspec>
 git, restore, ,overlay, ,@f,958,Never remove files when restoring
 git, restore, ,no-overlay, ,@f,959,Remove files when restoring (default)
-git,restore -s S staged, , , ,@F @f,960, 
-git,restore -s S staged, , , ,@F @f,961, 
-git,restore -s s source, , , ,@F,962, 
+git,restore -s S staged, , , ,@F @f,960,
+git,restore -s S staged, , , ,@F @f,961,
+git,restore -s s source, , , ,@F,962,
 git, , , ,switch,@f,963,Switch to a branch
 git, switch, , , ,@f,964,Unique Remote Branch
-git, switch, , , ,@f,965, 
+git, switch, , , ,@f,965,
 git, switch,c,create, ,@f,966,Create a new branch
 git, switch,C,force-create, ,@f,967,Force create a new branch
 git, switch,d,detach, ,@f,968,Switch to a commit for inspection and discardable experiment
@@ -855,7 +855,7 @@ git, , , ,rev-list,@f,984,List commits in chronological order
 git, , , ,rev-parse,@f,985,Parse revision names or give repo information
 git, rev-parse, ,abbrev-ref, , ,986,Output non-ambiguous short object names
 git, , , ,revert,@f,987,Revert an existing commit
-git, revert, , , ,@f,988, 
+git, revert, , , ,@f,988,
 git, revert, ,continue, ,@f,989,Continue the operation in progress
 git, revert, ,abort, ,@f,990,Cancel the operation
 git, revert, ,skip, ,@f,991,Skip the current commit and continue with the rest of the sequence
@@ -867,7 +867,7 @@ git, revert, ,rerere-autoupdate, ,@f,996,Allow the rerere mechanism to update th
 git, revert, ,no-rerere-autoupdate, ,@f,997,Prevent the rerere mechanism from updating the index with auto-conflict resolution
 git, , , ,rm, ,998,Remove files from the working tree and/or staging area
 git, rm, ,cached, , ,999,Unstage files from the index
-git,rm cached, , , ,@F @f,1000, 
+git,rm cached, , , ,@F @f,1000,
 git, rm, ,ignore-unmatch, , ,1001,Exit with a zero status even if no files matched
 git, rm,q,quiet, , ,1002,Be quiet
 git, rm,f,force, , ,1003,Override the up-to-date check
@@ -937,8 +937,8 @@ git,worktree add,B, , ,@f @r,1066,Create a new branch even if it already exists
 git,worktree add, ,detach, ,@f,1067,Detach HEAD in the new working tree
 git,worktree add, ,checkout, ,@f,1068,Checkout <commit-ish> after creating working tree
 git,worktree add, ,no-checkout, ,@f,1069,Suppress checkout
-git,worktree add, ,guess-remote, ,@f,1070, 
-git,worktree add, ,no-guess-remote, ,@f,1071, 
+git,worktree add, ,guess-remote, ,@f,1070,
+git,worktree add, ,no-guess-remote, ,@f,1071,
 git,worktree add, ,track, ,@f,1072,Mark <commit-ish> as 'upstream' from the new branch
 git,worktree add, ,no-track, ,@f,1073,Don't mark <commit-ish> as 'upstream' from the new branch
 git,worktree add, ,lock, ,@f,1074,Lock working tree after creation
@@ -954,7 +954,7 @@ git,worktree unlock, , , ,@D @f,1085,Worktree
 git, , , ,stash, ,1086,Stash away changes
 git, , , ,config,@f,1106,Set and read git configuration variables
 git, , , ,format-patch,@f,1107,Generate patch series to send upstream
-git, format-patch,o,output-directory, ,@D,1108, 
+git, format-patch,o,output-directory, ,@D,1108,
 git, format-patch,p,no-stat, ,@f,1109,Generate plain patches without diffstat
 git, format-patch,s,no-patch, ,@f,1110,Suppress diff output
 git, format-patch, ,minimal, ,@f,1111,Spend more time to create smaller diffs
@@ -998,7 +998,7 @@ git,submodule set-branch,d,default, ,@f,1149,Use default branch of the submodule
 git,submodule status summary, ,cached, ,@f,1150,Use the commit stored in the index
 git,submodule summary, ,files, ,@f,1152,Compare the commit in the index with submodule HEAD
 git,submodule foreach update status, ,recursive, ,@f,1153,Traverse submodules recursively
-git,submodule foreach, , , ,@f,1154, 
+git,submodule foreach, , , ,@f,1154,
 git, , , ,whatchanged,@f,1155,Show logs with difference each commit introduces
 git, , , ,clean,@f,1156,Remove untracked files from the working tree
 git, clean,f,force, ,@f,1157,Force run
@@ -1032,7 +1032,7 @@ git, blame,s, , ,@f,1184,Suppress the author name and timestamp from the output
 git, blame,e,show-email, ,@f,1185,Show the author email instead of author name
 git, blame,w, , ,@f,1186,Ignore whitespace changes
 git, , , ,help,@f,1187,Display help information about Git
-git, help, , , ,@f,1188, 
+git, help, , , ,@f,1188,
 git, help, , ,add,@f,1189,Add file contents to the index
 git, help, , ,am,@f,1190,Apply a series of patches from a mailbox
 git, help, , ,apply,@f,1191,Apply a patch on a git index file and a working tree
@@ -1117,7 +1117,7 @@ git, config, ,includes, ,@f,1269,Respect include directives
 git, config, ,show-origin, ,@f,1270,Show origin of configuration
 git, , , ,for-each-ref,@f,1272,Format and output info on each ref
 git, for-each-ref, ,count, ,@f,1273,Limit to n results
-git, for-each-ref, , , ,@f,1274, 
+git, for-each-ref, , , ,@f,1274,
 git, for-each-ref, ,format, ,@f @r,1275,Format string with %(fieldname) placeholders
 git, for-each-ref, ,color,always never auto,@f,1276,When to color
 git, for-each-ref, ,points-at, ,@f,1277,Only list refs pointing at object
@@ -1141,25 +1141,25 @@ git, send-email, ,compose-encoding,UTF-8,@f,1294,Encoding for the compose messag
 git, send-email, ,transfer-encoding,7bit 8bit quoted-printable base64 auto,@f,1295,Encoding for transferring over SMTP
 git, send-email, ,xmailer, ,@f,1296,Add X-Mailer: header
 git, send-email, ,no-xmailer, ,@f,1297,Suppress X-Mailer: header
-git, send-email, ,envelope-sender, ,@f,1298, 
+git, send-email, ,envelope-sender, ,@f,1298,
 git, send-email, ,sendmail-cmd, ,@f,1299,Command to send email
-git, send-email, ,smtp-encryption,ssl tls,@f,1300, 
-git, send-email, ,smtp-domain, ,@f,1301, 
+git, send-email, ,smtp-encryption,ssl tls,@f,1300,
+git, send-email, ,smtp-domain, ,@f,1301,
 git, send-email, ,smtp-auth, ,@f @r,1302,Restrict auth mechanisms
-git, send-email, ,smtp-pass, ,@f,1303, 
-git, send-email, ,no-smtp-auth, ,@f,1304, 
-git, send-email, ,smtp-server, ,@f,1305, 
-git, send-email, ,smtp-server-port, ,@f,1306, 
-git, send-email, ,smtp-server-option, ,@f,1307, 
-git, send-email, ,smtp-ssl-cert-path, , ,1308, 
-git, send-email, ,smtp-user, ,@f,1309, 
+git, send-email, ,smtp-pass, ,@f,1303,
+git, send-email, ,no-smtp-auth, ,@f,1304,
+git, send-email, ,smtp-server, ,@f,1305,
+git, send-email, ,smtp-server-port, ,@f,1306,
+git, send-email, ,smtp-server-option, ,@f,1307,
+git, send-email, ,smtp-ssl-cert-path, , ,1308,
+git, send-email, ,smtp-user, ,@f,1309,
 git, send-email, ,smt-debug,0 1,@f,1310,SMTP debug output
 git, send-email, ,batch-size, ,@f @r,1311,Reconnect after sending this many messages
 git, send-email, ,relogin-dleay, ,@f @r,1312,Seconds to wait before reconnecting
 git, send-email, ,no-to, ,@f,1313,Clear To:
 git, send-email, ,no-cc, ,@f,1314,Clear Cc:
 git, send-email, ,no-bcc, ,@f,1315,Clear Bcc:
-git, send-email, ,no-identity, ,@f,1316, 
+git, send-email, ,no-identity, ,@f,1316,
 git, send-email, ,to-cmd, ,@f,1317,Command to generate To: lines
 git, send-email, ,cc-cmd, ,@f,1318,Command to generate Cc: lines
 git, send-email, ,header-cmd, ,@f,1319,Command to generate header lines
@@ -1173,12 +1173,12 @@ git, send-email, ,cc-cover, ,@f,1326,Copy Cc: list from first message to the oth
 git, send-email, ,no-cc-cover, ,@f,1327,Do not copy Cc: list from first message
 git, send-email, ,to-cover, ,@f,1328,Copy To: list from first message to the others
 git, send-email, ,no-to-cover, ,@f,1329,Do not copy To: list from first message
-git, send-email, ,suppress-cc,',@f,1330, 
+git, send-email, ,suppress-cc,',@f,1330,
 git, send-email, ,suppress-from, ,@f,1331,Do not cc the From: address
 git, send-email, ,no-suppress-from, ,@f,1332,Do cc the From: address
 git, send-email, ,thread, ,@f,1333,Create an email thread
 git, send-email, ,no-thread, ,@f,1334,Do not create an email thread
-git, send-email, ,confirm,',@f,1335, 
+git, send-email, ,confirm,',@f,1335,
 git, send-email, ,dry-run, ,@f,1336,Do everything except actually send the emails
 git, send-email, ,format-patch, ,@f,1337,"Ambiguous arguments are for format-patch, not filenames"
 git, send-email, ,no-format-patch, ,@f,1338,"Interpret ambiguous arguments as filenames, not format-patch arguments"
@@ -1187,3 +1187,497 @@ git, send-email, ,validate, ,@f,1340,Perform sanity checks
 git, send-email, ,no-validate, ,@f,1341,Skip sanity checks
 git, send-email, ,force, ,@f,1342,Ignore safety checks
 git, send-email, ,dump-aliases, ,@f,1343,Dump shorthand alias names
+
+git,diff log show range-diff,G,,, ,1344,Look for differences where <regex> matches the patch's added/removed lines
+git,diff log show range-diff,R,,, ,1345,Swap inputs to create a reverse diff
+git,diff log show range-diff,S,,, ,1346,Look for differences that change the number of occurrences of the string
+git,diff show range-diff,z,,, ,1347,Use NULs as output field/commit terminators
+git, ,,,,@E @f @n,1348,__fish_git_remotes
+git, ,,,,@f,1349,
+git,fetch,4,ipv4,,@f,1350,Use IPv4 addresses only
+git,fetch,6,ipv6,,@f,1351,Use IPv6 addresses only
+git,fetch,,refmap,,@f @r,1352,Specify refspec to map the refs to remote-tracking branches
+git,fetch,,no-write-fetch-head,,@f,1353,Do not write FETCH_HEAD file
+git,add,f,,,@f,1354,Once the remote information is set up git fetch <name> is run
+git,add,,tags,,@f,1355,Import every tag from a remote with git fetch <name>
+git,add,,no-tags,,@f,1356,Don't import tags from a remote with git fetch <name>
+git,remove,,,,@f,1357,
+git,set-branches,,add,,@f,1358,Add to the list of currently tracked branches instead of replacing it
+git,set-url,,push,,@f,1359,Manipulate push URLs instead of fetch URLs
+git,set-url,,add,,@f,1360,Add new URL instead of changing the existing URLs
+git,set-url,,delete,,@f,1361,Remove URLs that match specified URL
+git,get-url,,push,,@f,1362,Query push URLs rather than fetch URLs
+git,get-url,,all,,@f,1363,All URLs for the remote will be listed
+git,show,n,,,@f,1364,"Remote heads are not queried, cached information is used instead"
+git,prune,,dry-run,,@f,1365,Report what will be pruned but do not actually prune it
+git,update,,prune,,@f,1366,Prune all remotes that are updated
+git,show-branch,,all,,@f,1367,Show all refs under refs/heads and refs/remotes
+git,show-branch,,more,,@f @r,1368,Go N more commits beyond common ancestor
+git,show-branch,,list,,@f,1369,Show branches and their commits
+git,show-branch,,color,always never auto,@f @r,1370,Color the status sign
+git,add,,chmod,, ,1371,
+git,am,n,no-verify,,@f,1372,Do not run pre-applypatch and applypatch-msg hooks
+git,checkout,q,quiet,,@f,1373,Suppress feedback messages
+git,checkout,,detach,,@f,1374,Detach HEAD at named commit
+git,checkout,,no-guess,,@f,1375,Do not guess remote tracking branch
+git,checkout,,overlay,,@f,1376,Never remove files from working tree in checkout
+git,checkout,,no-overlay,,@f,1377,Remove files from working tree not in tree-ish
+git,checkout,,pathspec-from-file,,@F,1378,Read pathspec from file
+git,checkout,,pathspec-file-nul,,@f,1379,NUL separator for pathspec-from-file
+git,checkout,,ignore-skip-worktree-bits,,@f,1380,Check out all files including sparse entries
+git,add set,,stdin,,@f,1381,read patterns from stdin as a newline-delimited list
+git,reapply set,,no-cone,,@f,1382,input list is considered a list of patterns instead of directory paths
+git,reapply set,,sparse-index,,@f,1383,use a sparse index to be more closely aligned with your sparse-checkout definition
+git,reapply set,,no-sparse-index,,@f,1384,not --sparse-index
+git,numstat,z,,,@f,1385,Do not munge pathnames
+git,archive,,format,tar zip tar.gz tgz,@f @r,1386,Format of the resulting archive
+git,archive,o,output,,@F,1387,Write the archive to file instead of stdout
+git,archive,,prefix,,@f @r,1388,Prepend prefix to each pathname in the archive
+git,archive,,add-file,,@F,1389,Add non-tracked file to the archive
+git,archive,,remote,,@f @r,1390,Retrieve a tar archive from a remote repository
+git,archive,,exec,,@f @r,1391,Path to git-upload-archive on the remote side
+git,bisect,,,,@f,1392,
+git,,,,,@F,1393,
+git,start,,term-bad,,@f @r,1394,Use another term instead of new/bad
+git,start,,term-good,,@f @r,1395,Use another term instead of old/good
+git,start,,no-checkout,,@f,1396,"Do not checkout tree, only update BISECT_HEAD"
+git,start,,first-parent,,@f,1397,"On merge commits, follow only the first parent commit"
+git,bad new good old,,,,@E @f,1398,__fish_git_refs
+git,terms,,--term-good,,@f,1399,Print the term for the old state
+git,terms,,--term-bad,,@f,1400,Print the term for the new state
+git,skip,,,,@E @f,1401,__fish_git_ranges
+git,reset,,,,@E @f,1402,__fish_git_refs
+git,replay,,,,@F,1403,
+git,run,,,,@f,1404,
+git,create verify,q,quiet,,@f,1405,Do not show progress meter
+git,create unbundle,,progress,,@f,1406,Show progress meter
+git,create,,all-progress,,@f,1407,Show progress meter during object writing phase
+git,create,,all-progress-implied,,@f,1408,Similar to --all-progress when progress meter is shown
+git,create,,version,,@f @r,1409,Specify bundle format version
+git,create,,,, ,1410,
+git,create,,,, ,1411,
+git, ,,,,@f,1412,
+git,commit,,cleanup,strip whitespace verbatim scissors default,@f @r,1413,How to clean up the commit message
+git,commit,q,quiet,,@f,1414,Suppress commit summary message
+git,commit,,dry-run,,@f,1415,Show what would be committed without committing
+git,commit,,short,,@f,1416,Show short format output for dry-run
+git,commit,,porcelain,,@f,1417,Show porcelain format output for dry-run
+git,commit,z,null,,@f,1418,Terminate entries with NUL in dry-run
+git,commit,,status,,@f,1419,Include git status output in commit message template
+git,commit,,no-status,,@f,1420,Do not include git status output in commit message template
+git,commit,i,include,,@f,1421,Stage contents of given paths before committing
+git,commit,o,only,,@f,1422,Commit only from paths specified on command line
+git,commit,,trailer,,@f,1423,Add trailer to commit message
+git,commit,t,template,,@F,1424,Use file as commit message template
+git,commit,,pathspec-from-file,,@F,1425,Read pathspec from file
+git,commit,,pathspec-file-nul,,@f,1426,NUL separator for pathspec-from-file
+git,diff,0,,, ,1427,Omit diff output for unmerged entries and just show 'Unmerged'
+git,cached staged,,,, ,1428,
+git,difftool,,no-symlinks,,@f,1429,Do not use symlinks in dir-diff mode
+git,difftool,,no-trust-exit-code,,@f,1430,Do not exit when diff tool returns non-zero
+git,grep,,max-depth,,@f @r,1431,Maximum depth of directory traversal
+git,grep,h,,,@f,1432,Do not output the filename for each match
+git,grep,O,open-files-in-pager,,@f @r,1433,Open matching files in pager
+git,grep,C,context,,@f @r,1434,Show context lines before and after matches
+git,grep,A,after-context,,@f @r,1435,Show context lines after matches
+git,grep,B,before-context,,@f @r,1436,Show context lines before matches
+git,grep,,threads,,@f @r,1437,Number of grep worker threads to use
+git,init,,template,,@F,1438,Directory from which templates will be used
+git,init,,separate-git-dir,,@F,1439,Create git dir at specified path
+git,init,,object-format,sha1 sha256,@f @r,1440,Specify hash algorithm for objects
+git,init,b,initial-branch,,@f @r,1441,Use specified name for initial branch
+git,init,,shared,false true umask group all world everybody,@f @r,1442,Specify that the repository is shared
+git, ,,,interpret-trailers,@n,1443,Add or parse structured information in commit messages
+git,interpret-trailers,,in-place,,@f,1444,Edit the files in place
+git,interpret-trailers,,trim-empty,,@f,1445,Remove trailers with whitespace values
+git,interpret-trailers,,trailer,,@f @r,1446,Key-value pair to apply as a trailer
+git,interpret-trailers,,where,,@f,1447,Where new trailers will be added
+git,interpret-trailers,,no-where,,@f,1448,Clear the effect of previous use of --where
+git,interpret-trailers,,if-exists,,@f,1449,What to do when there is already a trailer with the same key
+git,interpret-trailers,,no-if-exists,,@f,1450,Clear the effect of previous use of --if-exists
+git,interpret-trailers,,if-missing,,@f,1451,What to do when there is no other trailer with the same key
+git,interpret-trailers,,no-if-missing,,@f,1452,Clear the effect of previous use of --if-missing
+git,interpret-trailers,,only-trailers,,@f,1453,Output only trailers
+git,interpret-trailers,,only-input,,@f,1454,Output only trailers from the input
+git,interpret-trailers,,unfold,,@f,1455,Unfold multiline trailer values
+git,interpret-trailers,,parse,,@f,1456,Alias for --only-trailers --only-input --unfold
+git,interpret-trailers,,no-divider,,@f,1457,Do not treat --- as the end of the commit message
+git,shortlog,n,numbered,, ,1458,Sort output by number of commits per group
+git,shortlog,,no-numbered,, ,1459,Sort output alphabetically by author
+git,shortlog,s,summary,, ,1460,Only show commit counts per group
+git,shortlog,,no-summary,, ,1461,Show commit subjects for each entry
+git,shortlog,e,email,, ,1462,Display email address alongside each name
+git,shortlog,,no-email,, ,1463,Hide email addresses in the output
+git,shortlog,c,committer,, ,1464,Group commits by committer instead of author
+git,shortlog,,group,author\tGroup\ by\ author committer\tGroup\ by\ committer trailer:\tGroup\ by\ trailer format:\tGroup\ by\ pretty\ format,@f @r,1465,"Group commits by author, committer, trailer, or format"
+git,shortlog,,no-group,, ,1466,Disable custom groupings
+git,shortlog,w,,, ,1467,"Linewrap entries as width[,indent1[,indent2]]"
+git,log,,decorate,short\tHide\ prefixes full\tShow\ full\ ref\ names auto\tHide\ prefixes\ if\ printed\ to\ terminal no\tDon\\\,@f,1468,Print out ref names
+git,log shortlog rev-list,n,max-count,,@f @r,1469,Limit the number of commits before starting to show the commit output
+git,log shortlog rev-list,,skip,,@f @r,1470,Skip given number of commits
+git,log shortlog rev-list,,since,,@f @r,1471,Show commits more recent than specified date
+git,log shortlog rev-list,,since-as-filter,,@f @r,1472,Show commits more recent than date without stopping traversal early
+git,log shortlog rev-list,,after,,@f @r,1473,Show commits more recent than specified date
+git,log shortlog rev-list,,until,,@f @r,1474,Show commits older than specified date
+git,log shortlog rev-list,,before,,@f @r,1475,Show commits older than specified date
+git,log shortlog rev-list,,author,,@f @r,1476,Limit commits from given author
+git,log shortlog rev-list,,grep-reflog,,@f @r,1477,Limit commits to ones with reflog entries matching given pattern
+git,log shortlog rev-list,,grep,,@f @r,1478,Limit commits with message that match given pattern
+git,log shortlog rev-list,,all-match,, ,1479,Limit commits to ones that match all given --grep
+git,log shortlog rev-list,,invert-grep,, ,1480,Limit commits to ones with message that don
+git,log shortlog rev-list,i,regexp-ignore-case,, ,1481,Case insensitive match
+git,log shortlog rev-list,E,extended-regexp,, ,1482,Patterns are extended regular expressions
+git,log shortlog rev-list,F,fixed-strings,, ,1483,Patterns are fixed strings
+git,log shortlog rev-list,,perl-regexp,, ,1484,Patterns are Perl-compatible regular expressions
+git,log shortlog rev-list,,remove-empty,, ,1485,Stop when given path disappears from tree
+git,log shortlog rev-list,,merges,, ,1486,Print only merge commits
+git,log shortlog rev-list,,no-merges,, ,1487,Don
+git,log shortlog rev-list,,min-parents,,@f @r,1488,Show only commit with at least the given number of parents
+git,log shortlog rev-list,,max-parents,,@f @r,1489,Show only commit with at most the given number of parents
+git,log shortlog rev-list,,no-min-parents,, ,1490,Show only commit without a minimum number of parents
+git,log shortlog rev-list,,no-max-parents,, ,1491,Show only commit without a maximum number of parents
+git,log shortlog rev-list,,first-parent,, ,1492,Follow only the first parent commit upon seeing a merge commit
+git,log shortlog rev-list,,not,, ,1493,Reverse meaning of ^ prefix
+git,log shortlog rev-list,,all,, ,1494,"Show log for all branches, tags, and remotes"
+git,log shortlog rev-list,,branches,,@f,1495,Show log for all matching branches
+git,log shortlog rev-list,,tags,,@f,1496,Show log for all matching tags
+git,log shortlog rev-list,,remotes,,@f,1497,Show log for all matching remotes
+git,log shortlog rev-list,,glob,,@f @r,1498,"Show log for all matching branches, tags, and remotes"
+git,log shortlog rev-list,,exclude,,@f @r,1499,Do not include refs matching given glob pattern
+git,log shortlog rev-list,,reflog,, ,1500,Show log for all reflogs entries
+git,log shortlog rev-list,,ignore-missing,, ,1501,Ignore invalid object names
+git,log shortlog rev-list,,bisect,, ,1502,
+git,log shortlog rev-list,,stdin,, ,1503,Read commits from stdin
+git,log shortlog rev-list,,cherry-mark,, ,1504,Mark equivalent commits with = and inequivalent with +
+git,log shortlog rev-list,,cherry-pick,, ,1505,Omit equivalent commits
+git,log shortlog,,left-only,, ,1506,
+git,log shortlog,,right-only,, ,1507,
+git,log shortlog,,cherry,, ,1508,
+git,log shortlog,g,walk-reflogs,, ,1509,
+git,log shortlog,,merge,, ,1510,
+git,log shortlog,,boundary,, ,1511,
+git,log shortlog,,simplify-by-decoration,, ,1512,
+git,log shortlog,,full-history,, ,1513,
+git,log shortlog,,dense,, ,1514,
+git,log shortlog,,sparse,, ,1515,
+git,log shortlog,,simplify-merges,, ,1516,
+git,log shortlog,,ancestry-path,, ,1517,
+git,log shortlog,,date-order,, ,1518,
+git,log shortlog,,author-date-order,, ,1519,
+git,log shortlog,,topo-order,, ,1520,
+git,log shortlog,,reverse,, ,1521,
+git,log shortlog,,no-walk,sorted unsorted,@f,1522,
+git,log shortlog,,do-walk,, ,1523,
+git,log shortlog,,format,,@E @f @r,1524,__fish_git_show_opt format
+git,log shortlog,,date,relative local iso iso-local iso8601 iso8601-local iso-strict iso-strict-local iso8601-strict iso8601-strict-local rfc-local rfc2822-local short short-local raw human unix format: default default-local,@f @r,1525,
+git,log,c,,, ,1526,
+git,log,m,,, ,1527,
+git,log,r,,, ,1528,
+git,log,t,,, ,1529,
+git,log,u,,, ,1530,
+git,log,z,,, ,1531,
+git,log,,word-diff,color plain porcelain none,@f,1532,
+git,ls-files,,,, ,1533,
+git,ls-files,z,,, ,1534,Use \0 delimiter
+git,ls-files,t,,, ,1535,Identifies the file status
+git,ls-files,v,,, ,1536,"Show file status, use lowercase letters for files assumed unchanged"
+git,ls-files,f,,, ,1537,"Show file status, use lowercase letters for files marked as fsmonitor valid"
+git,mergetool,O,,, ,1538,Process files in the order specified in the file passed as argument
+git,add copy,f,force,,@f,1539,Overwrite existing notes
+git,add append edit,,allow-empty,,@f,1540,Allow empty note
+git,add append,F,file,,@r,1541,Read note message from file
+git,add append,m,message,,@f @r,1542,Use this note message
+git,add append,C,reuse-message,,@E @f,1543,__fish_git_commits
+git,add append,c,reedit-message,,@E @f,1544,__fish_git_commits
+git,copy remove,,stdin,,@f,1545,Read object names from stdin
+git,merge remove prune,v,verbose,,@f,1546,Be more verbose
+git,merge remove prune,q,quiet,,@f,1547,Operate quietly
+git,merge,s,strategy,manual ours theirs union cat_sort_uniq,@f @r,1548,Merge strategy to use to resolve conflicts
+git,remove,,ignore-missing,,@f,1549,Do not throw error on deleting non-existing object note
+git,prune,,expire,,@f @r,1550,Only expire loose objects older than date
+git, ,,,,@E @f @n,1551,__fish_git_remotes
+git, ,,,,@f,1552,
+git,pull,,no-verify,,@f,1553,Do not run pre-merge and commit-msg hooks
+git,pull,,upload-pack,,@f @r,1554,Path to git-upload-pack on remote
+git,pull,,depth,,@f @r,1555,Limit fetching to specified number of commits
+git,pull,,deepen,,@f @r,1556,Deepen history of shallow repository by specified commits
+git,pull,,shallow-since,,@f @r,1557,Deepen history after specified date
+git,pull,,shallow-exclude,,@f @r,1558,Deepen history excluding commits reachable from branch
+git,pull,,unshallow,,@f,1559,Convert shallow repository to complete one
+git,pull,,update-shallow,,@f,1560,Accept refs that update .git/shallow
+git,pull,j,jobs,,@f @r,1561,Number of parallel children for fetching
+git,pull,4,ipv4,,@f,1562,Use IPv4 addresses only
+git,pull,6,ipv6,,@f,1563,Use IPv6 addresses only
+git, ,,,,@E @f @n,1564,__fish_git_remotes
+git,push,,no-verify,,@f,1565,Do not run the pre-push hook
+git,push,,recurse-submodules,check on-demand only no,@f @r,1566,Control recursive pushing of submodules
+git,push,,signed,,@f,1567,GPG-sign the push
+git,push,,no-signed,,@f,1568,Do not GPG-sign the push
+git,push,,atomic,,@f,1569,Request atomic transaction on remote side
+git,push,,no-atomic,,@f,1570,Do not request atomic transaction
+git,push,,thin,,@f,1571,Spend extra cycles to minimize number of objects
+git,push,,no-thin,,@f,1572,Do not use thin pack
+git,push,4,ipv4,,@f,1573,Use IPv4 addresses only
+git,push,6,ipv6,,@f,1574,Use IPv6 addresses only
+git,push,o,push-option,,@f @r,1575,Transmit string to server
+git,push,,repo,,@f @r,1576,Override configured repository
+git,push,,receive-pack,,@f @r,1577,Path to git-receive-pack on remote
+git,push,,exec,,@f @r,1578,Same as --receive-pack
+git, ,,continue,,@f,1579,Restart the rebasing process
+git, ,,abort,,@f,1580,Abort the rebase operation
+git, ,,edit-todo,,@f,1581,Edit the todo list
+git, ,,skip,,@f,1582,Restart the rebasing process by skipping the current patch
+git,reset,q,quiet,,@f,1583,"Be quiet, only report errors"
+git,reset,p,patch,,@f,1584,Interactively select hunks to reset
+git,reset,,merge,,@f,1585,Reset index and update files in working tree that differ
+git,reset,,keep,,@f,1586,Reset index but keep changes in working tree
+git,reset,,pathspec-from-file,,@F,1587,Read pathspec from file
+git,reset,,pathspec-file-nul,,@f,1588,NUL separator for pathspec-from-file
+git,-s s source,,,,@F,1589,
+git,rev-parse,,is-inside-git-dir,, ,1590,Print whether the current working directory is in the .git directory
+git,rev-parse,,is-inside-work-tree,, ,1591,Print whether the current working directory is in the work tree of the repository
+git,revert,e,edit,,@f,1592,Edit the commit message before committing
+git,revert,m,mainline,,@f @r,1593,Select parent number for reverting merge commits
+git,revert,S,gpg-sign,,@E @f @r,1594,type -q gpg && __fish_complete_gpg_key_id gpg
+git,revert,,no-gpg-sign,,@f,1595,Do not GPG-sign commits
+git,revert,s,strategy,,@f @r,1596,Use the given merge strategy
+git,revert,X,strategy-option,,@f @r,1597,Pass option to the merge strategy
+git,rm,r,,, ,1598,Allow recursive removal
+git,rm,,pathspec-from-file,,@F,1599,Read pathspec from file
+git,rm,,pathspec-file-nul,,@f,1600,NUL separator for pathspec-from-file
+git,status,,ahead-behind,,@f,1601,Display detailed ahead/behind upstream-branch counts
+git,status,,show-stash,,@f,1602,Show the number of entries currently stashed
+git,status,,column,,@f @r,1603,Display untracked files in columns
+git,status,,no-column,,@f,1604,Do not display untracked files in columns
+git,status,,pathspec-from-file,,@F,1605,Read pathspec from file
+git,status,,pathspec-file-nul,,@f,1606,NUL separator for pathspec-from-file
+git,-s d delete -s v verify -s f force,,,,@f,1607,Tag
+git,tag,m,message,,@f @r,1608,Use the given tag message
+git,tag,F,file,,@F,1609,Read tag message from file
+git,tag,u,local-user,,@f @r,1610,Use this key to sign tag
+git,tag,,cleanup,strip whitespace verbatim,@f @r,1611,How to clean up the tag message
+git,tag,,create-reflog,,@f,1612,Create reflog for the tag
+git,tag,,no-create-reflog,,@f,1613,Do not create reflog for the tag
+git,tag,,color,always never auto,@f @r,1614,Respect any colors in format
+git,tag,,column,,@f,1615,Display tag listing in columns
+git,tag,,no-column,,@f,1616,Do not display tag listing in columns
+git,tag,,sort,,@f @r,1617,Sort tags based on the given key
+git,tag,,merged,,@f,1618,List tags whose commits are reachable from specified commit
+git,tag,,no-merged,,@f,1619,List tags whose commits are not reachable from specified commit
+git,tag,,points-at,,@f @r,1620,List tags of the given object
+git,update-index,,chmod,+x\tAdd\ execute\ permissions -x\tRemove\ execute\ permissions,@f @r,1621,Set execute permissions
+git,add move remove,f,force,,@f,1622,Override safeguards
+git,add,,,, ,1623,
+git,add,b,,,@f @r,1624,Create a new branch
+git,add,B,,,@f @r,1625,Create a new branch even if it already exists
+git,add,,detach,,@f,1626,Detach HEAD in the new working tree
+git,add,,checkout,,@f,1627,Checkout <commit-ish> after creating working tree
+git,add,,no-checkout,,@f,1628,Suppress checkout
+git,add,,guess-remote,,@f,1629,
+git,add,,no-guess-remote,,@f,1630,
+git,add,,track,,@f,1631,Mark <commit-ish> as 'upstream' from the new branch
+git,add,,no-track,,@f,1632,Don
+git,add,,lock,,@f,1633,Lock working tree after creation
+git,add,q,quiet,,@f,1634,Suppress feedback messages
+git,list,,porcelain,,@f,1635,Output in an easy-to-parse format for scripts
+git,lock,,reason,,@f @r,1636,An explanation why the working tree is locked
+git,prune,,expire,,@f @r,1637,Only expire unused working trees older than <time>
+git, ,,,list,@f,1638,List stashes
+git, ,,,pop,@f,1639,Apply and remove a single stashed state
+git, ,,,clear,@f,1640,Remove all stashed states
+git, ,,,drop,@f,1641,Remove a single stashed state from the stash list
+git, ,,,create,@f,1642,Create a stash
+git, ,,,save,@f,1643,Save a new stash
+git, ,a,all,,@f,1644,Stash ignored and untracked files
+git, ,k,keep-index,,@f,1645,Keep changes in index intact
+git, ,p,patch,,@f,1646,Interactively select hunks
+git, ,m,message,,@f,1647,Add a description
+git, ,,no-keep-index,,@f,1648,Don
+git, ,S,staged,,@f,1649,Stash only staged changes
+git, ,u,include-untracked,,@f,1650,Stash untracked files
+git,apply branch drop pop show,,,,@f,1651,
+git,config,,worktree,,@f,1652,Write to .git/config.worktree
+git,config,,get-regexp,,@f,1653,Get values for keys matching regex
+git,config,,remove-section,,@f,1654,Remove given section
+git,config,,type,bool int bool-or-int path expiry-date color,@f @r,1655,Ensure value is of given type
+git,config,,show-scope,,@f,1656,Show scope of config
+git,config,,no-includes,,@f,1657,Do not respect include directives
+git,config,,default,,@f @r,1658,Use default value when variable is missing
+git,config,,,,@E @f,1659,__fish_git_config_keys
+git,update,,init,,@f,1660,Initialize all submodules
+git,update,,checkout,,@f,1661,Checkout the superproject's commit on a detached HEAD in the submodule
+git,update,,merge,,@f,1662,Merge the superproject's commit into the current branch of the submodule
+git,update,,rebase,,@f,1663,Rebase current branch onto the superproject's commit
+git,update,N,no-fetch,,@f,1664,Don't fetch new objects from the remote
+git,update,,remote,,@f,1665,"Instead of using superproject's SHA-1, use the state of the submodule's remote-tracking branch"
+git,update,,force,,@f,1666,Discard local changes when switching to a different commit & always run checkout
+git,update,,filter,,@f,1667,Request a subset of objects from server
+git,add,,force,,@f,1668,Also add ignored submodule path
+git,deinit,,force,,@f,1669,Remove even with local changes
+git,deinit,,all,,@f,1670,Remove all submodules
+git,set-branch,b,branch,,@f,1671,Specify the branch to use
+git,set-branch,d,default,,@f,1672,Use default branch of the submodule
+git,status summary,,cached,,@f,1673,Use the commit stored in the index
+git,summary,,files,,@f,1674,Compare the commit in the index with submodule HEAD
+git,foreach update status,,recursive,,@f,1675,Traverse submodules recursively
+git,foreach,,,,@E @f,1676,__fish_complete_subcommand --fcs-skip=3
+git, ,,,,@E @n,1677,__fish_git_aliases
+git,clean,e,exclude,,@f @r,1678,Add pattern to exclude from removal
+git, ,,,, ,1679,
+git, ,,,, ,1680,
+git,,,default,,@f,1681,Use default value when missing entry
+git,send-email,,8bit-encoding,,@f,1682,Encoding for non-ASCII messages
+git,send-email,,compose-encoding,,@f,1683,Encoding for the compose message
+git,send-email,,transfer-encoding,,@f,1684,Encoding for transferring over SMTP
+git,send-email,,smtp-encryption,,@f,1685,
+git,send-email,,smt-debug,,@f,1686,SMTP debug output
+git,send-email,,suppress-cc,,@f,1687,Suppress auto-cc of recipient categories
+git,send-email,,confirm,,@f,1688,Confirm just before sending
+git, ,,,cat-file,@f @n,1689,Provide content or type info for repository objects
+git,cat-file,t,,,@f,1690,Show object type
+git,cat-file,s,,,@f,1691,Show object size
+git,cat-file,e,,,@f,1692,Exit with zero if object exists and is valid
+git,cat-file,p,,,@f,1693,Pretty-print object content
+git,cat-file,,textconv,,@f,1694,Show content as transformed by a textconv filter
+git,cat-file,,filters,,@f,1695,Show content as transformed by filters
+git,cat-file,,batch,,@f,1696,Read objects from stdin and print info
+git,cat-file,,batch-check,,@f,1697,Read objects from stdin and print type/size info
+git,cat-file,,batch-all-objects,,@f,1698,Print info for all objects
+git,cat-file,,follow-symlinks,,@f,1699,Follow symlinks when using --batch
+git, ,,,ls-remote,@f @n,1700,List references in a remote repository
+git,ls-remote,h,heads,,@f,1701,Limit to refs/heads
+git,ls-remote,t,tags,,@f,1702,Limit to refs/tags
+git,ls-remote,,refs,,@f,1703,Do not show peeled tags or pseudorefs
+git,ls-remote,q,quiet,,@f,1704,Do not print remote URL
+git,ls-remote,,upload-pack,,@f @r,1705,Path to git-upload-pack on remote
+git,ls-remote,,exit-code,,@f,1706,Exit with status 2 if no matching refs are found
+git,ls-remote,,get-url,,@f,1707,Print URL of remote
+git,ls-remote,,symref,,@f,1708,Show underlying ref for symbolic refs
+git,ls-remote,,sort,,@f @r,1709,Sort based on the given key
+git,ls-remote,,,,@E @f,1710,__fish_git_remotes
+git, ,,,ls-tree,@f @n,1711,List contents of a tree object
+git,ls-tree,d,,,@f,1712,Only show trees
+git,ls-tree,r,,,@f,1713,Recurse into subtrees
+git,ls-tree,t,,,@f,1714,Show tree entries even when recursing
+git,ls-tree,,name-only,,@f,1715,Show only names
+git,ls-tree,,full-name,,@f,1716,Show full path names
+git,ls-tree,,full-tree,,@f,1717,Do not limit listing to current directory
+git,ls-tree,z,,,@f,1718,NUL line termination on output
+git,ls-tree,,long,,@f,1719,Show object size
+git,ls-tree,,abbrev,,@f,1720,Show abbreviated object names
+git,ls-tree,,,,@E @f,1721,__fish_git_refs
+git, ,,,show-ref,@f @n,1722,List references in a local repository
+git,show-ref,,head,,@f,1723,Show HEAD reference
+git,show-ref,,heads,,@f,1724,Limit to refs/heads
+git,show-ref,,tags,,@f,1725,Limit to refs/tags
+git,show-ref,d,dereference,,@f,1726,Dereference tags
+git,show-ref,s,hash,,@f,1727,Only show SHA-1 hash
+git,show-ref,,verify,,@f,1728,Enable stricter reference checking
+git,show-ref,,abbrev,,@f,1729,Show abbreviated object names
+git,show-ref,q,quiet,,@f,1730,Do not print any results
+git,show-ref,,exclude-existing,,@f,1731,Check refs from stdin that do not exist
+git, ,,,symbolic-ref,@f @n,1732,"Read, modify, delete symbolic refs"
+git,symbolic-ref,d,delete,,@f,1733,Delete the symbolic ref
+git,symbolic-ref,q,quiet,,@f,1734,Do not issue error if ref is not a symbolic ref
+git,symbolic-ref,,short,,@f,1735,Shorten the ref name
+git,symbolic-ref,m,,,@f @r,1736,Update reflog with given reason
+git, ,,,check-ignore,@f @n,1737,Debug gitignore / exclude files
+git,check-ignore,q,quiet,,@f,1738,"Do not output anything, just set exit status"
+git,check-ignore,v,verbose,,@f,1739,Show matching pattern for each file
+git,check-ignore,,stdin,,@f,1740,Read pathnames from stdin
+git,check-ignore,z,,,@f,1741,NUL line termination
+git,check-ignore,n,non-matching,,@f,1742,Show given paths which do not match any pattern
+git,check-ignore,,no-index,,@f,1743,Do not look in the index when undertaking checks
+git, ,,,checkout-index,@n,1744,Copy files from index to working tree
+git,checkout-index,a,all,,@f,1745,Check out all files in the index
+git,checkout-index,f,force,,@f,1746,Force overwrite existing files
+git,checkout-index,n,no-create,,@f,1747,Do not create files that do not exist
+git,checkout-index,q,quiet,,@f,1748,Be quiet if files exist or are not in the index
+git,checkout-index,u,index,,@f,1749,Update stat information in the index
+git,checkout-index,z,,,@f,1750,NUL line termination
+git,checkout-index,,prefix,,@f @r,1751,Prefix to use when creating files
+git,checkout-index,,stage,all 1 2 3,@f @r,1752,Which stage to check out
+git,checkout-index,,temp,,@f,1753,Write files to temporary files
+git, ,,,commit-tree,@f @n,1754,Create a new commit object
+git,commit-tree,p,,,@f @r,1755,Parent commit object
+git,commit-tree,m,,,@f @r,1756,Commit message
+git,commit-tree,F,,,@F,1757,Read commit message from file
+git,commit-tree,S,gpg-sign,,@f @r,1758,GPG-sign commit
+git,commit-tree,,no-gpg-sign,,@f,1759,Do not GPG-sign commit
+git, ,,,diff-index,@f @n,1760,Compare tree to working tree or index
+git,diff-index,,cached,,@f,1761,Compare tree to index
+git,diff-index,m,,,@f,1762,Ignore changes in submodules
+git,diff-index,,raw,,@f,1763,Generate raw diff output
+git,diff-index,p,patch,,@f,1764,Generate patch
+git,diff-index,q,quiet,,@f,1765,"Disable diff output, only set exit status"
+git,diff-index,,,,@E @f,1766,__fish_git_refs
+git, ,,,hash-object,@f @n,1767,Compute object ID and optionally create an object
+git,hash-object,t,,blob tree commit tag,@f @r,1768,Specify object type
+git,hash-object,w,,,@f,1769,Actually write object into object database
+git,hash-object,,stdin,,@f,1770,Read object from stdin
+git,hash-object,,stdin-paths,,@f,1771,Read file paths from stdin
+git,hash-object,,path,,@F,1772,Hash object as if it were at the given path
+git,hash-object,,no-filters,,@f,1773,"Hash contents as-is, without any input filters"
+git,hash-object,,literally,,@f,1774,Allow hashing any garbage
+git, ,,,read-tree,@f @n,1775,Read tree info into the index
+git,read-tree,m,,,@f,1776,Perform a merge
+git,read-tree,,reset,,@f,1777,"Same as -m, but discard unmerged entries"
+git,read-tree,u,,,@f,1778,Update working tree with merge result
+git,read-tree,i,,,@f,1779,"Update only the index, leave working tree alone"
+git,read-tree,n,dry-run,,@f,1780,Do not update index or working tree
+git,read-tree,v,,,@f,1781,Show progress
+git,read-tree,,trivial,,@f,1782,Restrict three-way merge to trivial cases
+git,read-tree,,aggressive,,@f,1783,Try harder to resolve trivial cases
+git,read-tree,,prefix,,@f @r,1784,Read tree into subdirectory
+git,read-tree,,index-output,,@f,1785,Write index to specified file
+git,read-tree,,empty,,@f,1786,"Instead of reading tree object, empty the index"
+git,read-tree,,no-sparse-checkout,,@f,1787,Disable sparse checkout support
+git,read-tree,,,,@E @f,1788,__fish_git_refs
+git, ,,,update-ref,@f @n,1789,Update object name stored in a ref safely
+git,update-ref,d,,,@f,1790,Delete the reference
+git,update-ref,,no-deref,,@f,1791,Do not dereference symbolic refs
+git,update-ref,m,,,@f @r,1792,Update reflog with given reason
+git,update-ref,,create-reflog,,@f,1793,Create a reflog
+git,update-ref,,stdin,,@f,1794,Read instructions from stdin
+git,update-ref,z,,,@f,1795,NUL-terminated format for stdin
+git, ,,,verify-commit,@f @n,1796,Check the GPG signature of commits
+git,verify-commit,,,,@f,1797,
+git,verify-commit,v,verbose,,@f,1798,Print commit contents
+git,verify-commit,,raw,,@f,1799,Print raw gpg status output
+git, ,,,verify-pack,@f @n,1800,Validate packed Git archive files
+git,verify-pack,v,verbose,,@f,1801,Show objects contained in pack
+git,verify-pack,s,stat-only,,@f,1802,Only show histogram of delta chain length
+git, ,,,verify-tag,@f @n,1803,Check the GPG signature of tags
+git,verify-tag,,,,@f,1804,
+git,verify-tag,v,verbose,,@f,1805,Print tag contents
+git,verify-tag,,raw,,@f,1806,Print raw gpg status output
+git,verify-tag,,format,,@f @r,1807,Format to use for the output
+git, ,,,write-tree,@f @n,1808,Create a tree object from the current index
+git,write-tree,,missing-ok,,@f,1809,Allow missing objects
+git,write-tree,,prefix,,@f @r,1810,Write a tree object for a subdirectory
+git, ,,,,@E @n,1811,__fish_git_custom_commands
+git,fetch, ,write-fetch-head, ,@f,1812,Write FETCH_HEAD file (default)
+git,contains -- -- (commandline -xpc), , , ,@f @n,1813,
+git,checkout, ,guess, ,@f,1814,Guess remote tracking branch (default)
+git,commit && not string match -rq -- '^(--fixup\b|--squash\b|-C|-c)' (commandline -xpc)[-1], , , ,@F @f,1815,
+git,string match -rq -- '^(--fixup\b|--squash\b|-C|-c|--reuse-message\b|--reedit-message\b)' (commandline -xpc)[-1], , , ,@f,1816,
+git,commit, ,long, ,@f,1817,Show long format output for dry-run (default)
+git,difftool, , , ,@F @f,1818,
+git,grep,H, , ,@f,1819,Show filename for each match (default)
+git,shortlog, , , ,@F,1820,
+git,shortlog, ,no-committer, , ,1821,Group commits by author (default)
+git,log shortlog rev-list, ,basic-regexp, , ,1822,Patterns are basic regular expressions (default)
+git,pull, ,verify, ,@f,1823,Allow the pre-merge and commit-msg hooks to run (default)
+git,string match -q '+*' -- (commandline -ct), , , ,@f,1824,Force-push branch
+git,string match -q ':*' -- (commandline -ct), , , ,@f,1825,Delete remote branch
+git,string match -q '+*:*' -- (commandline -ct), , , ,@f,1826,Force-push local branch to remote branch
+git,string match -q '*:*' -- (commandline -ct), , , ,@f,1827,Push local branch to remote branch
+git,push, ,verify, ,@f,1828,Allow the pre-push hook to run (default)
+git,string match -rq -- '^-i|^--interactive' (commandline -xpc), , , ,@f,1829,
+git,S staged, , , ,@F @f @n,1830,
+git,cached, , , ,@F @f,1831,
+git,status, ,long, ,@f,1832,Give the output in the long-format (default)
+git,lock, , , ,@D @f,1833,Worktree
+git, , , , ,@D @f @n @r,1834,Worktree
+git,unlock, , , ,@D @f,1835,Worktree
+git,ls-tree, ,name-status, ,@f,1836,Show only names (same as name-only)

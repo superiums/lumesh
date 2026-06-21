@@ -10,3 +10,11 @@ uname, ,i,hardware-platform, , ,108,Print hardware platform
 uname, ,o,operating-system, , ,109,Print operating system
 uname, , ,help, , ,110,Display help and exit
 uname, , ,version, , ,111,Display version and exit
+
+uname, ,a,,, ,112,Behave as though all of the options mnrsv were specified.
+uname, ,m,,, ,113,print the machine hardware name.
+uname, ,n,,, ,114,print the nodename
+uname, ,p,,, ,115,print the machine processor architecture name.
+uname, ,r,,, ,116,print the operating system release.
+uname, ,s,,, ,117,print the operating system name.
+uname, ,v,,, ,118,print the operating system version.

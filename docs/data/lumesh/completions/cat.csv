@@ -7,3 +7,14 @@ cat, ,s,squeeze-blank, , ,105,Never >1 blank line
 cat, ,T,show-tabs, , ,106,Escape tab
 cat, , ,help, , ,107,Display help and exit
 cat, , ,version, , ,108,Display version and exit
+
+cat, ,e,,, ,109,Escape unprintables except \t
+cat, ,t,,, ,110,Escape unprintables except \n
+cat, ,v,,, ,111,Escape unprintables except '\n' and \t
+cat, ,b,,, ,112,Specify # of non-blank lines
+cat, ,n,,, ,113,Enumerate lines
+cat, ,s,,, ,114,Squeeze away >1 blank lines
+cat, ,t,,, ,115,Show unprintables; tab as ^I
+cat, ,u,,, ,116,Disable output buffering
+cat, ,v,,, ,117,Escape non-printing chars
+cat, ,l,,, ,118,Set/block on F_SETLKW stdout lock

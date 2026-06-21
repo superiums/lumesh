@@ -1,5 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
-cargo, r run t test b build debug c check clippy,p,package, , ,108, 
+cargo, r run t test b build debug c check clippy,p,package, , ,108,
 cargo, bench, ,bin, , ,154,Benchmark only the specified binary
 cargo, bench, ,example, , ,155,Benchmark only the specified example
 cargo, bench, ,test, , ,156,Benchmark only the specified test target
@@ -572,16 +572,16 @@ cargo, tree, ,color, , ,722,"Coloring: auto, always, never"
 cargo, tree, ,config, , ,723,Override a configuration value (unstable)
 cargo, tree,q,quiet, , ,724,Suppress status messages
 cargo, tree, ,workspace, , ,725,Display the tree for all packages in the workspace
-cargo, tree,a,all, , ,726, 
-cargo, tree, ,all-targets, , ,727, 
+cargo, tree,a,all, , ,726,
+cargo, tree, ,all-targets, , ,727,
 cargo, tree, ,all-features, , ,728,Activate all available features
 cargo, tree, ,no-default-features, , ,729,Do not activate the `default` feature
-cargo, tree, ,no-dev-dependencies, , ,730, 
-cargo, tree, ,no-indent, , ,731, 
-cargo, tree, ,prefix-depth, , ,732, 
+cargo, tree, ,no-dev-dependencies, , ,730,
+cargo, tree, ,no-indent, , ,731,
+cargo, tree, ,prefix-depth, , ,732,
 cargo, tree, ,no-dedupe, , ,733,Do not de-duplicate (repeats all shared dependencies)
 cargo, tree,d,duplicates, , ,734,Show only dependencies which come in multiple versions (implies -i)
-cargo, tree,V,version, , ,735, 
+cargo, tree,V,version, , ,735,
 cargo, tree,h,help, , ,736,Prints help information
 cargo, tree,v,verbose, , ,737,Use verbose output (-vv very verbose/build.rs output)
 cargo, tree, ,frozen, , ,738,Require Cargo.lock and cache are up to date
@@ -623,10 +623,10 @@ cargo, vendor,q,quiet, , ,773,No output printed to stdout
 cargo, vendor, ,no-delete, , ,774,Don't delete older crates in the vendor directory
 cargo, vendor, ,respect-source-config, , ,775,Respect `[source]` config in `.cargo/config`
 cargo, vendor, ,versioned-dirs, , ,776,Always include version in subdir name
-cargo, vendor, ,no-merge-sources, , ,777, 
-cargo, vendor, ,relative-path, , ,778, 
-cargo, vendor, ,only-git-deps, , ,779, 
-cargo, vendor, ,disallow-duplicates, , ,780, 
+cargo, vendor, ,no-merge-sources, , ,777,
+cargo, vendor, ,relative-path, , ,778,
+cargo, vendor, ,only-git-deps, , ,779,
+cargo, vendor, ,disallow-duplicates, , ,780,
 cargo, vendor,h,help, , ,781,Prints help information
 cargo, vendor,V,version, , ,782,Prints version information
 cargo, vendor,v,verbose, , ,783,Use verbose output (-vv very verbose/build.rs output)
@@ -690,3 +690,94 @@ cargo, asm, ,asm-style,intel att, ,840,ASM style (default: intel)
 cargo, asm, ,build-type,debug release, ,841,Build type (default: release)
 cargo, asm, ,features, , ,842,Cargo features to enable
 cargo, asm, ,manifest-path, , ,843,Run cargo-asm in a different directory
+
+cargo, ,,explain,, ,844,Run `rustc --explain CODE`
+cargo, ,,color,, ,845,"Coloring: auto, always, never"
+cargo, ,V,version,, ,846,Print version info and exit
+cargo, ,,list,, ,847,List installed commands
+cargo, ,q,quiet,, ,848,No output printed to stdout
+cargo, ,,frozen,, ,849,Require Cargo.lock and cache are up to date
+cargo, ,,locked,, ,850,Require Cargo.lock is up to date
+cargo, ,,offline,, ,851,Run without accessing the network
+cargo, ,h,help,, ,852,Prints help information
+cargo, ,,,bench,@f,853,Execute all benchmarks of a local package
+cargo, ,,,build,@f,854,Compile a local package and all of its dependencies
+cargo, ,,,check,@f,855,Check a local package and all of its dependencies for errors
+cargo, ,,,clean,@f,856,Remove artifacts that cargo has generated in the past
+cargo, ,,,complete,@f,857,Generate completion file for a shell
+cargo, ,,,doc,@f,858,Build a package
+cargo, ,,,fetch,@f,859,Fetch dependencies of a package from the network
+cargo, ,,,fix,@f,860,Automatically fix lint warnings reported by rustc
+cargo, ,,,generate-lockfile,@f,861,Generate the lockfile for a package
+cargo, ,,,git-checkout,@f,862,This subcommand has been removed
+cargo, ,,,init,@f,863,Create a new cargo package in an existing directory
+cargo, ,,,locate-project,@f,864,Print a JSON representation of a Cargo.toml file
+cargo, ,,,login,@f,865,Save an API token from argument or stdin for authentication
+cargo, ,,,logout,@f,866,Remove an API token from the registry locally
+cargo, ,,,metadata,@f,867,Output the resolved dependencies of a package in machine-readable format
+cargo, ,,,new,@f,868,Create a new cargo package at <path>
+cargo, ,,,owner,@f,869,Manage the owners of a crate on the registry
+cargo, ,,,package,@f,870,Assemble the local package into a distributable tarball
+cargo, ,,,pkgid,@f,871,Print a fully qualified package specification
+cargo, ,,,publish,@f,872,Upload a package to the registry
+cargo, ,,,run,@f,873,Run a binary or example of the local package
+cargo, ,,,rustc,@f,874,"Compile a package, and pass extra options to the compiler"
+cargo, ,,,rustdoc,@f,875,Build a package
+cargo, ,,,search,@f,876,Search packages in crates.io
+cargo, ,,,test,@f,877,Execute all unit and integration tests and build examples of a local package
+cargo, ,,,tree,@f,878,Display a tree visualization of a dependency graph
+cargo, ,,,uninstall,@f,879,Remove a Rust binary
+cargo, ,,,update,@f,880,Update dependencies as recorded in the local lock file
+cargo, ,,,vendor,@f,881,Vendor all dependencies for a project locally
+cargo, ,,,verify-project,@f,882,Check correctness of crate manifest
+cargo, ,,,version,@f,883,Show version information
+cargo, ,,,yank,@f,884,Remove a pushed crate from the index
+cargo,tree,e,edges,, ,885,The kinds of dependencies to display
+cargo,uninstall,,,, ,886,
+cargo,asm,,,, ,887,Build for target
+cargo,asm,,,, ,888,Cargo features to enable
+cargo,asm,,,, ,889,Run cargo-asm in a different directory
+cargo,asm,,,,@n,890,
+cargo,asm,,,,@n,891,
+cargo, , , , ,@f,892,
+cargo,help, , , ,@f @r,893,
+cargo, , ,config, , ,894,Override a configuration value (unstable)
+cargo, ,Z, , , ,895,"Unstable (nightly-only) flags to Cargo
+cargo, ,v,verbose, , ,896,Use verbose output (-vv very verbose/build.rs output)
+cargo, , , ,install,@f,897,
+cargo, , , ,help,@f,898,Prints this message or the help of the given subcommand(s)
+cargo,bench,Z, , , ,899,"Unstable (nightly-only) flags to Cargo
+cargo,b build,Z, , , ,900,"Unstable (nightly-only) flags to Cargo
+cargo,c check,Z, , , ,901,"Unstable (nightly-only) flags to Cargo
+cargo,clean,Z, , , ,902,"Unstable (nightly-only) flags to Cargo
+cargo,complete,Z, , , ,903,"Unstable (nightly-only) flags to Cargo
+cargo,d doc,Z, , , ,904,"Unstable (nightly-only) flags to Cargo
+cargo,fetch,Z, , , ,905,"Unstable (nightly-only) flags to Cargo
+cargo,fix,Z, , , ,906,"Unstable (nightly-only) flags to Cargo
+cargo,generate-lockfile,Z, , , ,907,"Unstable (nightly-only) flags to Cargo
+cargo,git-checkout,Z, , , ,908,"Unstable (nightly-only) flags to Cargo
+cargo,init,Z, , , ,909,"Unstable (nightly-only) flags to Cargo
+cargo,install,Z, , , ,910,"Unstable (nightly-only) flags to Cargo
+cargo,locate-project,Z, , , ,911,"Unstable (nightly-only) flags to Cargo
+cargo,login,Z, , , ,912,"Unstable (nightly-only) flags to Cargo
+cargo,logout,Z, , , ,913,"Unstable (nightly-only) flags to Cargo
+cargo,metadata,Z, , , ,914,"Unstable (nightly-only) flags to Cargo
+cargo,new,Z, , , ,915,"Unstable (nightly-only) flags to Cargo
+cargo,owner,Z, , , ,916,"Unstable (nightly-only) flags to Cargo
+cargo,package,Z, , , ,917,"Unstable (nightly-only) flags to Cargo
+cargo,pkgid,Z, , , ,918,"Unstable (nightly-only) flags to Cargo
+cargo,publish,Z, , , ,919,"Unstable (nightly-only) flags to Cargo
+cargo,read-manifest,Z, , , ,920,"Unstable (nightly-only) flags to Cargo
+cargo,r run,Z, , , ,921,"Unstable (nightly-only) flags to Cargo
+cargo,rustc,Z, , , ,922,"Unstable (nightly-only) flags to Cargo
+cargo,rustdoc,Z, , , ,923,"Unstable (nightly-only) flags to Cargo
+cargo,search,Z, , , ,924,"Unstable (nightly-only) flags to Cargo
+cargo,t test,Z, , , ,925,"Unstable (nightly-only) flags to Cargo
+cargo,tree,Z, , , ,926,"Unstable (nightly-only) flags to Cargo
+cargo,uninstall,Z, , , ,927,"Unstable (nightly-only) flags to Cargo
+cargo,update,Z, , , ,928,"Unstable (nightly-only) flags to Cargo
+cargo,vendor,Z, , , ,929,"Unstable (nightly-only) flags to Cargo
+cargo,verify-project,Z, , , ,930,"Unstable (nightly-only) flags to Cargo
+cargo,version,Z, , , ,931,"Unstable (nightly-only) flags to Cargo
+cargo,yank,Z, , , ,932,"Unstable (nightly-only) flags to Cargo
+cargo,help,Z, , , ,933,"Unstable (nightly-only) flags to Cargo

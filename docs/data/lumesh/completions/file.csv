@@ -18,3 +18,5 @@ file, , ,help, , ,116,Print a help message and exit
 file, ,f,files-from, ,@r,117,Read  the  names of the files to be examined from a file
 file, ,F,separator, ,@r,118,Use other string as result field separator instead of :
 file, ,m,magic-file, ,@r,119,Alternate list of files containing magic numbers
+
+file, ,i,,, ,120,Do not classify regular file contents

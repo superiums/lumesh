@@ -13,3 +13,9 @@ tail, , ,version, ,@f @r,111,output version information and exit
 tail, ,b, , ,@f @r,112,output last K 512 byte blocks
 tail, ,c, , ,@f @r,113,output the last K bytes or only K bytes with -r
 tail, ,n, , ,@f @r,114,"output the last K lines, instead of the last 10 - or only K lines with -r"
+
+tail, ,F,,, ,115,same as --follow=name --retry
+tail, ,f,,, ,116,output appended data as the file grows
+tail, ,F,,, ,117,"Like -f, but also follow renamed or rotated files"
+tail, ,q,,, ,118,never output headers giving file names
+tail, ,r,,, ,119,Display input in reverse order

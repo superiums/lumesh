@@ -94,3 +94,19 @@ wget, ,L,relative, , ,193,Follow relative links only
 wget, ,I,include-directories, , ,194,Specify a comma-separated list of directories you wish to follow
 wget, ,X,exclude-directories, , ,195,Specify a comma-separated list of directories you wish to exclude
 wget, , ,no-parent, , ,196,Do not ever ascend to the parent directory
+
+wget, ,,no-verbose,, ,197,Turn off verbose without being completely quiet
+wget, ,,,, ,198,Turn off verbose without being completely quiet
+wget, ,t,tries,, ,199,Set number of retries to number
+wget, ,,,, ,200,Never overwrite files with same name
+wget, ,,progress,dot dot:default dot:binary dot:mega bar, ,201,Select progress meter type
+wget, ,Y,proxy,, ,202,Toggle proxy support
+wget, ,,dns-cache,, ,203,Turn off caching of DNS lookups
+wget, ,,restrict-file-names,unix windows, ,204,Change which characters found in remote URLs may show up in local file names
+wget, ,,,, ,205,Do not create a hierarchy of directories
+wget, ,,,, ,206,Disable generation of host-prefixed directories
+wget, ,,cut-dirs,, ,207,Ignore specified number of directory components
+wget, ,,certificate-type,PEM DER,@f @r,208,Client certificate type
+wget, ,,private-key-type,PEM DER,@f @r,209,Private key type
+wget,-s r recursive,l,level,,@f @r,210,Specify recursion maximum depth
+wget, ,,,, ,211,Do not ever ascend to the parent directory

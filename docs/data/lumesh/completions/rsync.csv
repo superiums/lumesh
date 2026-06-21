@@ -139,3 +139,13 @@ rsync, , ,dparam, ,@f @r,237,Override global daemon config parameter
 rsync, , ,no-detach, ,@f @r,238,Do not detach from the parent
 rsync, ,V,version, , ,239,Display version and feature info
 rsync, ,h,help, , ,240,Display help and exit
+
+rsync, ,,stderr,, ,241,"change stderr output mode, default: errors"
+rsync, ,D,,, ,242,Same as --devices --specials
+rsync, ,,checksum-choice,, ,243,Choose the checksum algorithm
+rsync, ,,compress-choice,, ,244,Choose the compression algorithm
+rsync, ,F,,, ,245,Same as --filter=’dir-merge /.rsync-filter’ repeated: --filter='- .rsync-filter'
+rsync, ,,outbuf,, ,246,"Set out buffering to None, Line, or Block"
+rsync, ,P,,, ,247,Same as --partial --progress
+rsync,commandline -ct | string match -q '*:*',,,, ,248,Remote path
+rsync, , , ,(__fish_print_hostnames): (, ,249,Hostname

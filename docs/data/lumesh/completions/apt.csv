@@ -11,9 +11,11 @@ apt, install,y,assume-yes, , ,113,Automatic yes to prompts
 apt, install, ,assume-no, , ,114,Automatic no to prompts
 apt, install, ,install-recommends, , ,115,Install recommended packages
 apt, install, ,install-suggests, , ,116,Install suggested packages
-apt, upgrade, ,with-new-pkgs, , ,117, 
+apt, upgrade, ,with-new-pkgs, , ,117,
 apt, ,h,help, ,@f,118,Display help
 apt, ,v,version, ,@f,119,Display version and exit
 apt, ,o,option, ,@f @r,120,Set a configuration option
 apt, ,c,config-file, ,@r,121,Configuration file
 apt, ,t, , ,@f @r,122,Install from specific repository
+
+apt, ,,,,@f,123,

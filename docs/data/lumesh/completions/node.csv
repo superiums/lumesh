@@ -187,3 +187,8 @@ node, , ,log_regexp, , ,289,Log regular expression execution
 node, , ,sliding_state_window, , ,290,Update sliding state window counters
 node, , ,logfile, , ,291,Specify the name of the log file
 node, , ,ll_prof, , ,292,Enable low-level linux profiler
+
+node,-p -i -e eval print interactive,v,version,,@f @n @r,293,Print node's version
+node,-v -p -i version print interactive,e,eval,,@n @r,294,Evaluate script
+node,-v -e -i version eval interactive,p,print,,@n @r,295,Print result of --eval
+node,-v -p -e version print eval,i,interactive,,@n,296,Always enter the REPL even if stdin does not appear to be a terminal

@@ -8,3 +8,8 @@ df, ,T,print-type, , ,106,Print file system type
 df, ,x,exclude-type, ,@F @f @r,107,Excluded file system type
 df, , ,help, , ,108,Display help and exit
 df, , ,version, , ,109,Display version and exit
+
+df, ,a,,, ,110,Show all file systems
+df, ,g,,, ,111,Show sizes in gigabytes
+df, ,m,,, ,112,Show sizes in megabytes
+df, ,n,,, ,113,Use cached statistics

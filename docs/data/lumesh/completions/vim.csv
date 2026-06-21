@@ -29,3 +29,36 @@ vim, , ,version, , ,127,Print version information and exit
 vim, , ,socketid, ,@r,128,Run gvim in another window (GTK GUI only)
 vim, , ,clean, , ,129,"Factory defaults: skip vimrc, plugins, viminfo"
 vim, , ,startuptime, ,@r,130,Write startup timing messages to <file>
+
+vim, ,o,,, ,131,Open horizontally split windows for each file
+vim, ,,,, ,132,Open two horizontally split windows
+vim, ,O,,, ,133,Open vertically split windows for each file
+vim, ,,,, ,134,Open two vertically split windows
+vim, ,p,,, ,135,Open tab pages for each file
+vim, ,,,, ,136,Open two tab pages
+vim, ,t,,, ,137,Set the cursor to tag
+vim, ,A,,, ,138,Start in Arabic mode
+vim, ,b,,, ,139,Start in binary mode
+vim, ,C,,, ,140,Behave mostly like vi
+vim, ,D,,, ,141,Debugging mode
+vim, ,e,,, ,142,Start in Ex mode
+vim, ,E,,, ,143,Start in improved Ex mode
+vim, ,f,,, ,144,Start in foreground mode
+vim, ,F,,, ,145,Start in Farsi mode
+vim, ,g,,, ,146,Start in GUI mode
+vim, ,h,,, ,147,Print help message and exit
+vim, ,H,,, ,148,Start in Hebrew mode
+vim, ,L,,, ,149,List swap files
+vim, ,l,,, ,150,Start in lisp mode
+vim, ,m,,, ,151,Disable file modification
+vim, ,M,,, ,152,Disallow file modification
+vim, ,N,,, ,153,Reset compatibility mode
+vim, ,n,,, ,154,Don
+vim, ,R,,, ,155,Read only mode
+vim, ,V,,, ,156,Start in verbose mode
+vim, ,v,,, ,157,Start in vi mode
+vim, ,x,,, ,158,Use encryption when writing files
+vim, ,X,,, ,159,Don
+vim, ,y,,, ,160,Start in easy mode
+vim, ,Z,,, ,161,Start in restricted mode
+vim, ,,,, ,162,Become an editor server for NetBeans

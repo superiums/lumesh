@@ -24,7 +24,7 @@ fd, , ,base-directory, ,@r,122,Change current working directory
 fd, , ,path-separator, , ,123,Set path separator when printing file paths
 fd, , ,search-path, ,@r,124,Provides paths to search as an alternative to the positional <path> argument
 fd, , ,strip-cwd-prefix,auto,@f @r,125,"By default, relative paths are prefixed with './' when -x/--exec, -X/--exec-batch, or -0/--print0 are given, to reduce the risk of a path starting with '-' being treated as a command line option. Use this flag to change this behavior. If this flag is used without a value, it is equivalent to passing 'always'"
-fd, , ,gen-completions,bash,@f @r,126, 
+fd, , ,gen-completions,bash,@f @r,126,
 fd, ,H,hidden, , ,127,Search hidden files and directories
 fd, , ,no-hidden, , ,128,Overrides --hidden
 fd, ,I,no-ignore, , ,129,Do not respect .(git|fd)ignore files
@@ -54,3 +54,12 @@ fd, , ,show-errors, , ,152,Show filesystem errors
 fd, , ,one-file-system, , ,153,"By default, fd will traverse the file system tree as far as other options dictate. With this flag, fd ensures that it does not descend into a different file system than the one it started in. Comparable to the -mount or -xdev filters of find(1)"
 fd, ,h,help, , ,154,Print help (see more with '--help')
 fd, ,V,version, , ,155,Print version
+
+fd, ,,hyperlink,auto always never,@f @r,156,Add hyperlinks to output paths
+fd, ,,ignore-contain,,@r,157,Ignore directories containing the named entry
+fd, ,C,base-directory,,@F @r,158,Change current working directory
+fd, ,,strip-cwd-prefix,, ,159,"By default, relative paths are prefixed with \"
+fd, ,,gen-completions,bash elvish fish powershell zsh,@f @r,160,
+fd, ,1,,, ,161,Limit search to a single result
+fd, ,t,type,file directory symlink block-device char-device executable empty socket pipe,@f @r,162,"Filter by type: file (f)
+fd, ,c,color,auto always never,@f @r,163,When to use colors

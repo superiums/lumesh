@@ -5,3 +5,5 @@ lsusb, ,D,device, , ,103,Selects which device lsusb will examine
 lsusb, ,t,tree, , ,104,Dump the physical USB device hierarchy as a tree
 lsusb, ,V,version, , ,105,Show version of program
 lsusb, ,h,help, , ,106,Show usage and help
+
+lsusb, ,d, , , ,107,Show only devices with the given vendor and product ID numbers (in hexadecimal)

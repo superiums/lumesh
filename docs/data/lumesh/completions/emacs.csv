@@ -31,7 +31,7 @@ emacs, , ,background-color, , ,129,window background color
 emacs, ,D,basic-display, , ,130,"disable many display features; used for debugging Emacs"
 emacs, , ,border-color, , ,131,main border color
 emacs, , ,border-width, , ,132,width of main border
--d, , ,cursor-color, , ,133, 
+-d, , ,cursor-color, , ,133,
 emacs, , ,font, , ,134,"default font; must be fixed-width"
 emacs, , ,foreground-color, , ,135,window foreground color
 emacs, , ,fullheight, , ,136,make the first frame high as the screen
@@ -53,3 +53,6 @@ emacs, , ,xrm, , ,151,set additional X resources
 emacs, , ,parent-id, , ,152,set parent window
 emacs, , ,help, , ,153,display help and exit
 emacs, , ,version, , ,154,output version information and exit
+
+emacs, ,,color,, ,155,override color mode for character terminals
+emacs, ,,cursor-color,, ,156,color of the Emacs cursor indicating point

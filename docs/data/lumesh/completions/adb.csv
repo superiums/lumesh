@@ -2,15 +2,15 @@ cmd,conds,short,long,params,dirs,pri,desc
 adb, install, ,algo, , ,137,Algorithm name
 adb, install, ,key, , ,138,Hex-encoded key
 adb, install, ,iv, , ,139,Hex-encoded iv
-adb, uninstall, , , ,@f,140, 
+adb, uninstall, , , ,@f,140,
 adb, disconnect, , , ,@f @r,141,Device to disconnect
 adb, backup, , , ,@f,142,Package(s) to backup
-adb, reboot, , ,bootloader recovery fastboot,@f @r,143, 
+adb, reboot, , ,bootloader recovery fastboot,@f @r,143,
 adb, forward, ,list, , ,144,List all forward socket connections
 adb, forward, ,no-rebind, , ,145,Fails the forward if local is already forwarded
 adb, forward, ,remove, , ,146,Remove a specific forward socket connection
 adb, forward, ,remove-all, , ,147,Remove all forward socket connections
-adb, sideload, , , ,@k,148, 
+adb, sideload, , , ,@k,148,
 adb, reconnect, , ,device,@f @r,149,Kick current connection from device side and make it reconnect.
 adb, shell, , , ,@E,151,adb shell ls /bin/
 adb, pull, , , ,@E,152,let dir = fs.dir_name $T; $dir | adb shell ls _ |> $dir + '/' + _
@@ -40,3 +40,59 @@ adb, exec-out, , , ,@f,176,Command on device
 adb, shell, , , ,@f,177,Command on device
 adb, setprop, , , ,@f,178,Property to set
 adb, getprop, , , ,@f,179,Property to get
+
+adb, ,,,, ,180,Listen on all network interfaces
+adb, ,,,, ,181,Use first USB device
+adb, ,,,, ,182,Use first TCP/IP device
+adb, ,,,,@E @f @r,183,__fish_adb_get_devices
+adb, ,,,, ,184,Use device with given transport id
+adb, ,,,, ,185,Name of adb server host
+adb, ,,,, ,186,Port of adb server
+adb, ,,,, ,187,Listen on given socket for adb server
+adb, ,,,connect,@f,188,Connect to device
+adb, ,,,disconnect,@f,189,Disconnect from device
+adb, ,,,devices,@f,190,List all connected devices
+adb, ,,,push,@f,191,Copy file to device
+adb, ,,,pull,@f,192,Copy file from device
+adb, ,,,sync,@f,193,Copy host->device only if changed
+adb, ,,,shell,@f,194,Run remote shell [command]
+adb, ,,,emu,@f,195,Run emulator console command
+adb, ,,,logcat,@f,196,View device log
+adb, ,,,install,@f,197,Install package
+adb, ,,,uninstall,@f,198,Uninstall package
+adb, ,,,jdwp,@f,199,List PIDs of processes hosting a JDWP transport
+adb, ,,,forward,@f,200,Port forwarding
+adb, ,,,bugreport,@f,201,Return bugreport information
+adb, ,,,backup,@f,202,Perform device backup
+adb, ,,,restore,@f,203,Restore device from backup
+adb, ,,,version,@f,204,Show adb version
+adb, ,,,help,@f,205,Show adb help
+adb, ,,,wait-for-device,@f,206,Block until device is online
+adb, ,,,start-server,@f,207,Ensure that there is a server running
+adb, ,,,kill-server,@f,208,Kill the server if it is running
+adb, ,,,remount,@f,209,Remounts the /system partition on the device read-write
+adb, ,,,reboot,@f,210,"Reboots the device, optionally into the bootloader or recovery program"
+adb, ,,,get-state,@f,211,Prints state of the device
+adb, ,,,get-serialno,@f,212,Prints serial number of the device
+adb, ,,,get-devpath,@f,213,Prints device path
+adb, ,,,status-window,@f,214,Continuously print the device status
+adb, ,,,root,@f,215,Restart the adbd daemon with root permissions
+adb, ,,,unroot,@f,216,Restart the adbd daemon without root permissions
+adb, ,,,usb,@f,217,Restart the adbd daemon listening on USB
+adb, ,,,tcpip,@f,218,Restart the adbd daemon listening on TCP
+adb, ,,,ppp,@f,219,Run PPP over USB
+adb, ,,,sideload,@f,220,Sideloads the given package
+adb, ,,,reconnect,@f,221,Kick current connection from host side and make it reconnect.
+adb, ,,,exec-out,@f,222,Execute a command on the device and send its stdout back
+adb,install,l,,, ,223,Forward-lock the app
+adb,install,r,,, ,224,Reinstall the app keeping its data
+adb,install,s,,, ,225,Install on SD card instead of internal storage
+adb,install,,,, ,226,
+adb,uninstall,k,,, ,227,Keep the data and cache directories
+adb,devices,,,,@f,228,
+adb,devices,l,,, ,229,Also list device qualifiers
+adb,backup,f,,, ,230,File to write backup data to
+adb,logcat,,,,@f,231,
+adb,logcat,v,format,, ,232,Sets log print format verb and adverbs
+adb,logcat,s,,, ,233,Set default filter to silent
+adb,logcat,d, , , ,234,Dump the log and then exit (don

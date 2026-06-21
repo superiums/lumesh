@@ -103,3 +103,47 @@ rg, ,w,word-regexp, , ,240,Show matches surrounded by word boundaries.
 rg, , ,auto-hybrid-regex, , ,241,(DEPRECATED) Use PCRE2 if appropriate.
 rg, , ,no-pcre2-unicode, , ,243,(DEPRECATED) Disable Unicode mode for PCRE2.
 rg, , ,sort-files, , ,245,(DEPRECATED) Sort results by file path.
+
+rg,binary,,no-binary,, ,246,Search binary files.
+rg,block-buffered,,no-block-buffered,, ,247,Force block buffering.
+rg,byte-offset b,,no-byte-offset,, ,248,Print the byte offset for each matching line.
+rg,column,,no-column,, ,249,Show column numbers.
+rg,context-separator,,no-context-separator,, ,250,Set the separator for contextual chunks.
+rg, ,E,encoding,# This is impossible to read, but these encodings rarely if ever change,251,@f @r,124,Specify the text encoding of files to search.
+rg,encoding E,,no-encoding,, ,252,Specify the text encoding of files to search.
+rg,fixed-strings F,,no-fixed-strings,, ,253,Treat all patterns as literals.
+rg,follow L,,no-follow,, ,254,Follow symbolic links.
+rg,glob-case-insensitive,,no-glob-case-insensitive,, ,255,Process all glob patterns case insensitively.
+rg,heading,,no-heading,, ,256,Print matches grouped by each file.
+rg,hidden .,,no-hidden,, ,257,Search hidden files and directories.
+rg,ignore-file-case-insensitive,,no-ignore-file-case-insensitive,, ,258,Process ignore files case insensitively.
+rg,include-zero,,no-include-zero,, ,259,Include zero matches in summary output.
+rg,invert-match v,,no-invert-match,, ,260,Invert matching.
+rg,json,,no-json,, ,261,Show search results in a JSON Lines format.
+rg,line-buffered,,no-line-buffered,, ,262,Force line buffering.
+rg,max-columns-preview,,no-max-columns-preview,, ,263,Show preview for lines exceeding the limit.
+rg,mmap,,no-mmap,, ,264,Search with memory maps when possible.
+rg,multiline U,,no-multiline,, ,265,Enable searching across multiple lines.
+rg,multiline-dotall,,no-multiline-dotall,, ,266,Make
+rg,no-ignore,,ignore,, ,267,Don
+rg,no-ignore-dot,,ignore-dot,, ,268,Don
+rg,no-ignore-exclude,,ignore-exclude,, ,269,Don
+rg,no-ignore-files,,ignore-files,, ,270,Don
+rg,no-ignore-global,,ignore-global,, ,271,Don
+rg,no-ignore-messages,,ignore-messages,, ,272,Suppress gitignore parse error messages.
+rg,no-ignore-parent,,ignore-parent,, ,273,Don
+rg,no-ignore-vcs,,ignore-vcs,, ,274,Don
+rg,no-messages,,messages,, ,275,Suppress some error messages.
+rg,no-require-git,,require-git,, ,276,Use .gitignore outside of git repositories.
+rg,no-unicode,,unicode,, ,277,Disable Unicode mode.
+rg,one-file-system,,no-one-file-system,, ,278,Skip directories on other file systems.
+rg,pcre2 P,,no-pcre2,, ,279,Enable PCRE2 matching.
+rg,pre,,no-pre,, ,280,Search output of COMMAND for each PATH.
+rg,search-zip z,,no-search-zip,, ,281,Search in compressed files.
+rg,stats,,no-stats,, ,282,Print statistics about the search.
+rg,text a,,no-text,, ,283,Search binary files as if they were text.
+rg,trim,,no-trim,, ,284,Trim prefix whitespace from matches.
+rg,crlf, ,no-crlf, , ,285,Use CRLF line terminators (nice for Windows).
+rg,auto-hybrid-regex, ,no-auto-hybrid-regex, , ,286,(DEPRECATED) Use PCRE2 if appropriate.
+rg,no-pcre2-unicode, ,pcre2-unicode, , ,287,(DEPRECATED) Disable Unicode mode for PCRE2.
+rg,sort-files, ,no-sort-files, , ,288,(DEPRECATED) Sort results by file path.

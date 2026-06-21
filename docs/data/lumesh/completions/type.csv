@@ -7,3 +7,6 @@ type, ,p,path, , ,105,"Print path to command, or nothing if name is not a comman
 type, ,P,force-path, , ,106,Print path to command
 type, ,q,quiet, , ,107,Check if something exists without output
 type, ,s,short, , ,108,Don't print function definition
+
+type, ,,color,, ,109,When to colorize output
+type, ,,,,@E @f @r,112,'ls /bin'

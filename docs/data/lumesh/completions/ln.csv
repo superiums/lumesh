@@ -14,3 +14,5 @@ ln, ,T,no-target-directory, , ,112,Treat LINK_NAME as a normal file
 ln, ,v,verbose, , ,113,Print name of each linked file
 ln, , ,help, ,@f,114,Display help and exit
 ln, , ,version, ,@f,115,Output version information and exit
+
+ln, ,b,,, ,116,Make a backup of each existing destination file

@@ -1,7 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 systemctl, ,t,type, ,@f,101,List of unit types
 systemctl, , ,state, ,@f,102,List of unit states
-systemctl, ,p,property, ,@f,103, 
+systemctl, ,p,property, ,@f,103,
 systemctl, ,a,all, ,@f,104,Show all units or properties
 systemctl, ,r,recursive, ,@f,105,Show also units of local containers
 systemctl, , ,reverse, ,@f,106,Show reverse dependencies between units
@@ -36,3 +36,12 @@ systemctl, enable, ,now, ,@f,137,Also start unit
 systemctl, disable mask, ,now, ,@f,138,Also stop unit
 systemctl, halt poweroff reboot, ,boot-loader-entry, ,@f @r,139,Boot into a specific boot loader entry on next boot
 systemctl, halt poweroff reboot, ,boot-loader-menu, ,@f @r,140,Boot into boot loader menu on next boot
+
+systemctl, ,,,,@E @f,141,__fish_systemctl
+systemctl, ,,job-mode,,@f,142,How to deal with queued jobs
+systemctl,system,,user,,@f @n,143,Talk to the service manager of the calling user
+systemctl,system global,,system,,@f @n,144,Talk to the service manager of the system.
+systemctl,system,,global,,@f @n,145,Enable or disable for all users
+systemctl, ,,kill-who,,@f,146,Send signal to which process
+systemctl, ,s,signal,,@f,147,Which signal to send
+systemctl, ,o,output,,@f,148,Control journal formatting

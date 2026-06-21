@@ -48,3 +48,6 @@ grep, ,z,null-data, , ,146,Treat input as a set of zero-terminated lines
 grep, ,Z,null, , ,147,Output a zero byte after filename
 grep, , ,group-separator, ,@f @r,148,Set a group separator
 grep, , ,no-group-separator, , ,149,Use empty string as a group separator
+
+grep, ,,binary-files,binary,@f @r,150,Assume data type for binary files
+grep, ,I,,, ,151,Skip binary files

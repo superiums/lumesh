@@ -1,0 +1,223 @@
+cmd,conds,short,long,argument,dirs,pri,desc
+npm, , , ,run-script run,@f,100,Run arbitrary package scripts
+npm, , , ,access,@f,101,Set access level on published packages
+npm,list, , ,packages collaborators,@f @r,102,
+npm,get, , ,status,@f @r,103,
+npm,grant, , ,read-only read-write,@f @r,104,
+npm,set, , ,status=public status=private,@f @r,105,Set package status
+npm,set, , ,mfa=none mfa=publish mfa=automation,@f @r,106,Set package MFA
+npm,set, , ,2fa=none 2fa=publish 2fa=automation,@f @r,107,Set package MFA
+npm, , ,json, ,@f,108,Output JSON
+npm, , ,otp, ,@f @r,109,2FA one-time password
+npm, , ,registry, ,@f @r,110,Registry base URL
+npm, ,h,help, ,@f,111,Display help
+npm, , , ,adduser,@f,112,Add a registry user account
+npm, , , ,login,@f,113,Login to a registry user account
+npm, , , ,audit,@f,114,Run a security audit
+npm, , , ,signatures,@f,115,Verify registry signatures
+npm, , , ,fix,@f,116,Install compatible updates to vulnerable deps
+npm, , ,audit-level,info low moderate high critical none,@f @r,117,Audit level
+npm, , ,dry-run, ,@f,118,Do not make any changes
+npm, ,f,force, ,@f,119,Removes various protections
+npm, , ,json, ,@f,120,Output JSON
+npm, , ,package-lock-only, ,@f,121,"'Only use package-lock.json"
+npm, , ,omit,dev optional peer,@f @r,122,Omit dependency type
+npm, , ,foreground-scripts, ,@f,123,Run all build scripts in the foreground
+npm, , ,ignore-scripts, ,@f,124,"'Don't run pre-"
+npm, , ,install-links, ,@f,125,Install file: protocol deps as regular deps
+npm, ,h,help, ,@f,126,Display help
+npm, , , ,cache,@f,127,Manipulates package's cache
+npm, , , ,add,@f,128,Add the specified package to the local cache
+npm, , , ,clean,@f,129,Delete data out of the cache folder
+npm, , , ,ls,@f,130,Show the data in the cache
+npm, , , ,verify,@f,131,Verify the contents of the cache folder
+npm, ,h,help, ,@f,132,Display help
+npm, , , ,ci clean-install,@f,133,Clean install a project
+npm, , , ,install-ci-test cit,@f,134,Install a project with a clean slate and run tests
+npm, , , ,completion,@f,135,Tab Completion for npm
+npm, ,h,help, ,@f,136,Display help
+npm, , , ,config,@f,137,Manage the npm configuration files
+npm, , , ,get,@f,138,Get a value from the npm configuration
+npm, ,l,long, ,@f,139,Show extended information
+npm, ,h,help, ,@f,140,Display help
+npm, , , ,set,@f,141,Set a value in the npm configuration
+npm, ,L,location,global user project,@f @r,142,Which config file
+npm, ,g,global, ,@f,143,Edit global config
+npm, ,h,help, ,@f,144,Display help
+npm, , , ,dedupe,@f,145,Reduce duplication
+npm, , , ,find-dupes,@f,146,Find duplication
+npm, , , ,deprecate,@f,147,Deprecate a version of a package
+npm, , ,registry, ,@f @r,148,Registry base URL
+npm, , ,otp, ,@f @r,149,2FA one-time password
+npm, ,h,help, ,@f,150,Display help
+npm, , , ,diff,@f,151,The registry diff command
+npm, , ,diff, ,@f @r,152,Arguments to compare
+npm, , ,diff-name-only, ,@f,153,Prints only filenames
+npm, , ,diff-unified, ,@f @r,154,The number of lines to print
+npm, , ,diff-ignore-all-space, ,@f,155,Ignore whitespace
+npm, , ,diff-no-prefix, ,@f,156,Do not show any prefix
+npm, , ,diff-src-prefix, ,@f @r,157,Source prefix
+npm, , ,diff-dst-prefix, ,@f @r,158,Destination prefix
+npm, , ,diff-text, ,@f,159,Treat all files as text
+npm, ,g,global, ,@f,160,Operates in 'global' mode
+npm, , ,tag, ,@f @r,161,The tag used to fetch the tarball
+npm, ,h,help, ,@f,162,Display help
+npm, , , ,dist-tag,@f,163,Modify package distribution tags
+npm, , , ,docs,@f,164,Open docs for a package in a web browser
+npm, , , ,doctor,@f,165,Check your npm environment
+npm, , , ,ping,@f,166,Check npm ping
+npm, , , ,registry,@f,167,Check registry
+npm, , , ,versions,@f,168,Check installed versions
+npm, , , ,environment,@f,169,Check PATH
+npm, , , ,permissions,@f,170,Check file permissions
+npm, , , ,cache,@f,171,Verify cache
+npm, ,h,help, ,@f,172,Display help
+npm, , , ,edit,@f,173,Edit an installed package
+npm, , ,editor, ,@f,174,Specify the editor
+npm, ,h,help, ,@f,175,Display help
+npm, , , ,exec,@f,176,Run a command from a local or remote npm package
+npm, , , ,explore,@f,177,Browse an installed package
+npm, , , ,shell,@f,178,The shell to open
+npm, ,h,help, ,@f,179,Display help
+npm, , , ,fund,@f,180,Retrieve funding information
+npm, , ,json, ,@f,181,Output JSON
+npm, , ,browser, ,@f @r,182,Set browser
+npm, , ,no-browser, ,@f,183,Print to stdout
+npm, , ,unicode, ,@f,184,Use unicode characters in the output
+npm, , ,no-unicode, ,@f,185,Use ascii characters over unicode glyphs
+npm, ,h,help, ,@f,186,Display help
+npm, , , ,help,@f,187,Get help on npm
+npm, , , ,help-search,@f,188,Search npm help documentation
+npm, ,l,long, ,@f,189,Show extended information
+npm, ,h,help, ,@f,190,Display help
+npm, , , ,hook,@f,191,Manage registry hooks
+npm,add, ,type, ,@f,192,Hook type
+npm, , ,registry, ,@f @r,193,Registry base URL
+npm, , ,otp, ,@f @r,194,2FA one-time password
+npm, ,h,help, ,@f,195,Display help
+npm, , , ,init create, ,196,Create a package.json file
+npm, , , ,install add i, ,197,Install a package
+npm, , , ,link ln,@f,198,Symlink a package folder
+npm, , , ,logout,@f,199,Log out of the registry
+npm, , ,registry, ,@f @r,200,Registry base URL
+npm, , ,scope, ,@f @r,201,Log out of private repository
+npm, ,h,help, ,@f,202,Display help
+npm, , , ,ls list ll,@f,203,List installed packages
+npm, , , ,outdated,@f,204,Check for outdated packages
+npm, ,a,all, ,@f,205,Also show indirect dependencies
+npm, , ,json, ,@f,206,Output JSON
+npm, ,l,long, ,@f,207,Show extended information
+npm, , ,parseable, ,@f,208,Output parseable results
+npm, ,g,global, ,@f,209,Check global packages
+npm, ,h,help, ,@f,210,Display help
+npm, , , ,org,@f,211,Manage orgs
+npm, , , ,set,@f,212,Add a new user
+npm, , , ,rm,@f,213,Remove a user
+npm, , , ,ls,@f,214,List all users
+npm,set, , ,admin,@f,215,Add admin
+npm,set, , ,developer,@f,216,Add developer
+npm,set, , ,owner,@f,217,Add owner
+npm, , , ,pack,@f,218,Create a tarball from a package
+npm, , ,dry-run, ,@f,219,Do not make any changes
+npm, , ,json, ,@f,220,Output JSON
+npm, ,h,help, ,@f,221,Display help
+npm, , , ,ping,@f,222,Ping npm registry
+npm, , ,registry, ,@f @r,223,Registry base URL
+npm, ,h,help, ,@f,224,Display help
+npm, , , ,pkg,@f,225,Manages your package.json
+npm, , , ,set,@f @r,226,Sets a value
+npm, , , ,get,@f @r,227,Retrieves a value
+npm, , , ,delete,@f @r,228,Deletes a key
+npm, ,f,force, ,@f,229,Removes various protections
+npm, ,h,help, ,@f,230,Display help
+npm, , , ,prefix,@f,231,Display npm prefix
+npm, ,g,global, ,@f,232,Display global prefix
+npm, ,h,help, ,@f,233,Display help
+npm, , , ,profile,@f,234,Change settings on your registry profile
+npm,enable-2fa, , ,auth-only,@f @r,235,Require an OTP on profile changes
+npm,enable-2fa, , ,auth-and-writes,@f @r,236,Also require an OTP on package changes
+npm, ,h,help, ,@f,237,Display help
+npm, , , ,prune,@f,238,Remove extraneous packages
+npm, , ,omit,dev optional peer,@f @r,239,Omit dependency type
+npm, , ,dry-run, ,@f,240,Do not make any changes
+npm, , ,json, ,@f,241,Output JSON
+npm, , ,foreground-scripts, ,@f,242,Run all build scripts in the foreground
+npm, , ,ignore-scripts, ,@f,243,"'Don't run pre-"
+npm, , ,install-links, ,@f,244,Install file: protocol deps as regular deps
+npm, ,h,help, ,@f,245,Display help
+npm, , , ,publish,@f,246,Publish a package
+npm, , ,tag, ,@f @r,247,Upload to tag
+npm, , ,dry-run, ,@f,248,Do not make any changes
+npm, , ,otp, ,@f @r,249,2FA one-time password
+npm, , ,provenance, ,@f,250,Link to build location when publishing from CI/CD
+npm, ,h,help, ,@f,251,Display help
+npm, , , ,query,@f,252,Dependency selector query
+npm, ,g,global, ,@f,253,Query global packages
+npm, ,h,help, ,@f,254,Display help
+npm, , , ,rebuild,@f,255,Rebuild a package
+npm, , , ,repo,@f,256,Open package repository page in the browser
+npm, ,g,global, ,@f,257,Display global root
+npm, , ,browser, ,@f @r,258,Set browser
+npm, , ,no-browser, ,@f @r,259,Print to stdout
+npm, , ,registry, ,@f @r,260,Registry base URL
+npm, ,h,help, ,@f,261,Display help
+npm, , , ,restart,@f,262,Restart a package
+npm, , , ,start,@f,263,Start a package
+npm, , , ,stop,@f,264,Stop a package
+npm, , , ,test,@f,265,Test a package
+npm, , , ,root,@f,266,Display npm root
+npm, ,g,global, ,@f,267,Display global root
+npm, ,h,help, ,@f,268,Display help
+npm, , , ,search find,@f,269,Search for packages
+npm, , , ,shrinkwrap,@f,270,Lock down dependency versions
+npm, ,h,help, ,@f,271,Display help
+npm, , , ,star,@f,272,Mark your favorite packages
+npm, , ,registry, ,@f @r,273,Registry base URL
+npm, , ,unicode, ,@f,274,Use unicode characters in the output
+npm, , ,no-unicode, ,@f,275,Use ascii characters over unicode glyphs
+npm, , ,otp, ,@f @r,276,2FA one-time password
+npm, ,h,help, ,@f,277,Display help
+npm, , , ,stars,@f,278,View packages marked as favorites
+npm, , ,registry, ,@f @r,279,Registry base URL
+npm, ,h,help, ,@f,280,Display help
+npm, , , ,team,@f,281,Manage organization teams and team memberships
+npm,ls, ,otp, ,@f @n @r,282,2FA one-time password
+npm, , ,registry, ,@f @r,283,Registry base URL
+npm, ,p,parseable, ,@f,284,Output parseable results
+npm, , ,json, ,@f,285,Output JSON
+npm, ,h,help, ,@f,286,Display help
+npm, , , ,token,@f,287,Manage your authentication tokens
+npm,create, ,read-only, ,@f,288,Mark a token as unable to publish
+npm,create, ,cidr, ,@f @r,289,List of CIDR address
+npm, , ,registry, ,@f @r,290,Registry base URL
+npm, , ,otp, ,@f @r,291,2FA one-time password
+npm, ,h,help, ,@f,292,Display help
+npm, , , ,uninstall remove un,@f,293,Remove a package
+npm, , , ,unpublish,@f,294,Remove a package from the registry
+npm, , ,dry-run, ,@f @r,295,Do not make any changes
+npm, ,f,force, ,@f @r,296,Removes various protections
+npm, ,h,help, ,@f,297,Display help
+npm, , , ,unstar,@f,298,Remove star from a package
+npm, , ,registry, ,@f @r,299,Registry base URL
+npm, , ,unicode, ,@f,300,Use unicode characters in the output
+npm, , ,no-unicode, ,@f,301,Use ascii characters over unicode glyphs
+npm, , ,otp, ,@f @r,302,2FA one-time password
+npm, ,h,help, ,@f,303,Display help
+npm, , , ,version,@f,304,Bump a package version
+npm, , , ,view info,@f,305,View registry info
+npm, , , , ,@f,306,
+npm, , , ,author bin bugs description engines exports homepage keywords license main name repository scripts type types,@f,307,
+npm, , , ,dependencies devDependencies optionalDependencies peerDependencies,@f,308,
+npm, , , ,directories dist dist-tags gitHead maintainers readme time users version versions,@f,309,
+npm, , , ,whoami,@f,310,Display npm username
+npm, , , ,registry,@f,311,Check registry
+npm, ,h,help, ,@f,312,Display help
+
+npm,cache, ,cache, ,@D @f @r,313,Cache location
+npm,fund, ,which, ,@f @r,314,Which source URL to open (1-indexed)
+npm, , , ,install-test it,@f,315,Install package(s) and run tests
+npm,pack, ,pack-destination, ,@D @f @r,316,Tarball destination directory
+npm,pkg, ,json, ,@f,317,Parse values with JSON.parse()
+npm,publish, ,access,public,@f @r,318,Restrict access
+npm, , , ,update up upgrade,@f,319,Update package(s)
+npm,"add i in ins inst insta instal isnt isnta isntal isntall;, , , ,@E @f,320,

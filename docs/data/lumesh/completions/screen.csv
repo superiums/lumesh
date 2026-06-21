@@ -7,3 +7,16 @@ screen, , , , ,@f @r,105,Session name
 screen, , , , ,@f @r,106,Session title
 screen, , , , ,@f @r,107,Value to use for $TERM (default 'screen')
 screen, , , , ,@r,108,Send command
+
+screen, ,a,,, ,109,Include all capabilitys
+screen, ,A,,, ,110,Adapt window size
+screen, ,f,,, ,111,Flow control on
+screen, ,i,,, ,112,Interrupt display on C-c
+screen, ,l,,, ,113,Login on
+screen, ,L,,, ,114,Log on
+screen, ,O,,, ,115,Optimal output
+screen, ,p,,, ,116,Preselect window
+screen, ,q,,, ,117,Quiet mode
+screen, ,U,,, ,118,UTF-8 mode
+screen, ,v,,, ,119,Display version and exit
+screen, ,m, , , ,120,

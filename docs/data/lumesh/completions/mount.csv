@@ -6,3 +6,37 @@ mount, , ,bind, ,@f,104,Remount a subtree to a second position
 mount, , ,move, ,@f,105,Move a subtree to a new position
 mount, ,t, , ,@F @f @r,106,File system
 mount, ,o, , ,@f @r,107,Mount option
+
+mount, ,,,,@E,108,__fish_complete_blockdevice
+mount, ,a,all,, ,109,Mount file systems in fstab
+mount, ,B,bind,,@f,110,Remount a subtree to a second position
+mount, ,c,no-canonicalize,, ,111,Do not canonicalize any paths or tags during the mount process
+mount, ,F,fork,, ,112,Fork process for each mount
+mount, ,f,fake,, ,113,Fake mounting
+mount, ,i,internal-only,, ,114,Don’t call the /sbin/mount.filesystem helper even if it exists
+mount, ,L,label,,@f @r,115,Mount partition with specified label
+mount, ,l,show-labels,, ,116,Add label to output
+mount, ,M,move,,@f,117,Move a subtree to a new position
+mount, ,,map-users,, ,118,Add the specified user/group mapping to an X-mount.idmap map
+mount, ,n,no-mtab,, ,119,Do not write mtab
+mount, ,N,namespace,,@r,120,Perform the mount operation in the mount namespace specified by ns
+mount, ,O,test-opts,,@f @r,121,Exclude file systems
+mount, ,o,options,,@E @f @r,122,__fish_complete_mount_opts
+mount, ,,onlyonce,, ,123,Check if already mounted
+mount, ,,options-mode,ignore append prepend replace, ,124,how to combine with options from fstab/mtab
+mount, ,,options-source,, ,125,Source of default options
+mount, ,,options-source-force,, ,126,Use options from fstab/mtab even if both device and dir are specified
+mount, ,R,rbind,, ,127,Remount a subtree and all possible submounts somewhere else
+mount, ,r,read-only,, ,128,Read only
+mount, ,s,,, ,129,Tolerate sloppy mount options
+mount, ,,source,,@r,130,explicitly define the argument as the mount source
+mount, ,,target,,@r,131,explicitly define the argument as the mount target
+mount, ,,target-prefix,,@r,132,Prepend the specified directory to all mount targets
+mount, ,T,fstab,,@r,133,Specifies an alternative fstab file
+mount, ,U,uuid,,@f @r,134,Mount partition with specified UID
+mount, ,v,verbose,, ,135,Verbose mode
+mount, ,w,read-write,, ,136,Read/Write mode
+mount, ,h,help,, ,137,Display help and exit
+mount, ,V,version,, ,138,Display version and exit
+mount, ,m,mkdir, , ,139,Allow to make a target directory (mountpoint) if it does not exist yet
+mount, ,t,types, ,@F @f @r,140,File system

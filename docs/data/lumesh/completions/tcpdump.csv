@@ -9,7 +9,7 @@ tcpdump, ,F, , ,@F,107,Use file as input for the filter expression
 tcpdump, ,G, , ,@f @r,108,Rotate the dump file every rotate_seconds seconds
 tcpdump, ,h,help, , ,109,Print version strings and a usage message
 tcpdump, , ,version, , ,110,Print the tcpdump and libpcap version strings
-tcpdump, ,i,interface, ,@f @r,111, 
+tcpdump, ,i,interface, ,@f @r,111,
 tcpdump, ,I,monitor-mode, , ,112,Put the interface in monitor mode
 tcpdump, , ,immediate-mode, , ,113,Capture in immediate mode
 tcpdump, ,j,time-stamp-type,host host_lowprec host_hiprec adapter adapter_unsynced,@f @r,114,Set the time stamp type for the capture
@@ -36,3 +36,30 @@ tcpdump, ,w, , ,@F,134,Write the raw packets to file
 tcpdump, ,y,linktype, ,@f @r,135,Set the data link type to use while capturing packets
 tcpdump, ,z, , ,@f @r,136,Make tcpdump run 'postrotate-command file'
 tcpdump, ,Z,relinquish-privileges, ,@f @r,137,Change user ID before opening any savefiles for output
+
+tcpdump, ,,,,@f,138,
+tcpdump, ,A,,, ,139,Print each packet in ASCII
+tcpdump, ,b,,, ,140,Print the AS number in BGP packets in ASDOT notation
+tcpdump, ,d,,, ,141,Dump the compiled packet-matching code in a human readable form
+tcpdump, ,,,, ,142,Dump packet-matching code as a C program fragment
+tcpdump, ,,,, ,143,Dump packet-matching code as decimal numbers
+tcpdump, ,e,,, ,144,Print the link-level header on each dump line
+tcpdump, ,f,,, ,145,Print foreign IPv4 addresses numerically
+tcpdump, ,H,,, ,146,Attempt to detect 802.11s draft mesh headers
+tcpdump, ,l,,, ,147,Make stdout line buffered
+tcpdump, ,n,,, ,148,Don
+tcpdump, ,,,, ,149,Don
+tcpdump, ,N,,, ,150,Don
+tcpdump, ,q,,, ,151,Print less protocol information
+tcpdump, ,t,,, ,152,Don
+tcpdump, ,,,, ,153,Print timestamp as seconds and fractions of a second since epoch
+tcpdump, ,,,, ,154,Print a delta between current and previous line
+tcpdump, ,,,, ,155,"Print timestamp as hours, minutes, seconds, and fractions of a second since midnight"
+tcpdump, ,,,, ,156,Print a delta between current and first line
+tcpdump, ,u,,, ,157,Print undecoded NFS handles
+tcpdump, ,,,, ,158,Even more verbose output
+tcpdump, ,,,, ,159,Even more verbose output
+tcpdump, ,W,,, ,160,Limit the number of files created
+tcpdump, ,v, , , ,161,Produce (slightly more) verbose output
+tcpdump, ,x, , , ,162,Print the data of each packet in hex (minus link level header)
+tcpdump, ,X, , , ,163,Print the data of each packet in hex and ASCII (minus link level header)

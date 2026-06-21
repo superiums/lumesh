@@ -6,3 +6,25 @@ python3, , ,help-xoptions, , ,104,Prints help about implementation-specific -X o
 python3, , ,help-all, , ,105,Prints complete usage information and exits
 python3, ,V,version, , ,106,Prints the Python version number of the executable and exits
 python3, , ,with-pydebug, , ,107,"PYTHONDUMPREFS If this environment variable is set, Python will dump objects …"
+
+python3, ,B,,, ,108,Don
+python3, ,c,,,@f @r,109,Execute argument as command
+python3, ,d,,, ,110,Debug on
+python3, ,E,,, ,111,Ignore environment variables
+python3, ,i,,, ,112,Interactive mode after executing commands
+python3, ,O,,, ,113,Enable optimizations
+python3, ,,,, ,114,Remove doc-strings in addition to the -O optimizations
+python3, ,s,,, ,115,Don
+python3, ,S,,, ,116,Disable import of site module
+python3, ,u,,, ,117,Unbuffered input and output
+python3, ,v,,, ,118,Verbose mode
+python3, ,W,,ignore default all module once error,@f @r,119,Warning control
+python3, ,x,,, ,120,"Skip first line of source, allowing use of non-Unix forms of #!cmd"
+python3, ,,,,@k,121,
+python3, ,,,, ,122,Read program from stdin
+python3, ,q,,, ,123,Don
+python3, ,X,,faulthandler showrefcount tracemalloc showalloccount importtime dev utf8 pycache_prefix=PATH:,@f @r,124,Set implementation-specific option
+python3, ,b,,, ,125,Issue warnings for possible misuse of `bytes` with `str`
+python3, ,,,, ,126,Issue errors for possible misuse of `bytes` with `str`
+python3, ,I,,, ,127,Run in isolated mode
+python3, ,m, , , ,128,Run library module as a script (terminates option list)

@@ -1,3 +1,8 @@
 cmd,conds,short,long,params,dirs,pri,desc
 echo, , ,help, , ,101,display this help and exit
-echo, , ,version, , ,102,output version information and exit 
+echo, , ,version, , ,102,output version information and exit
+
+echo, ,n,,, ,103,Do not output a newline
+echo, ,s,,, ,104,Do not separate arguments with spaces
+echo, ,E,,, ,105,Disable backslash escapes
+echo, ,e,,, ,106,Enable backslash escapes

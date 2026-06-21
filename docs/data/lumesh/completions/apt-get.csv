@@ -33,3 +33,20 @@ apt-get, , ,allow-unauthenticated, , ,146,Ignore non-authenticated packages
 apt-get, ,v,version, , ,147,Display version and exit
 apt-get, ,c,config-file, ,@r,148,Specify a config file
 apt-get, ,o,option, ,@r,149,Set a config option
+
+apt-get, ,,,,@E,150,__fish_print_apt_packages
+apt-get, ,,,update,@f,151,Update sources
+apt-get, ,,,upgrade,@f,152,Upgrade or install newest packages
+apt-get, ,,,dselect-upgrade,@f,153,Use with dselect front-end
+apt-get, ,,,dist-upgrade,@f,154,Distro upgrade
+apt-get, ,,,install,@f,155,Install one or more packages
+apt-get, ,,,changelog,@f,156,Display changelog of one or more packages
+apt-get, ,,,purge,@f,157,Remove and purge one or more packages
+apt-get, ,,,remove,@f,158,Remove one or more packages
+apt-get, ,,,source,@f,159,Fetch source packages
+apt-get, ,,,build-dep,@f,160,Install/remove packages for dependencies
+apt-get, ,,,check,@f,161,Update cache and check dependencies
+apt-get, ,,,clean,@f,162,Clean local caches and packages
+apt-get, ,,,autoclean,@f,163,Clean packages no longer be downloaded
+apt-get, ,,,autoremove,@f,164,Remove packages no longer needed as dependencies
+apt-get, ,,,autopurge,@f,165,Remove packages no longer needed as dependencies and delete their config files

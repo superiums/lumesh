@@ -20,6 +20,26 @@ ssh-keygen, ,r, , ,@f @r,118,print the SSHFP fingerprint resource record named h
 ssh-keygen, ,s, , ,@r,119,sign a public key using the specified CA key
 ssh-keygen, ,V, , ,@f @r,120,specify a validity interval when signing a certificate
 ssh-keygen, ,w, , ,@r,121,path to a needed library when creating FIDO authenticator-hosted keys
-ssh-keygen, ,Y, ,\,@f @r,122, 
+ssh-keygen, ,Y, ,\,@f @r,122,
 ssh-keygen, ,Z, , ,@f @r,123,cipher kind used for encryption an OpenSSH-format private key file
 ssh-keygen, ,z, , ,@f @r,124,serial number embedded in the certificate
+
+ssh-keygen, ,c,,, ,125,change the comment in the private and public key files
+ssh-keygen, ,p,,, ,126,request changing the passphrase of a private key file
+ssh-keygen, ,L,,, ,127,print the contents of one or more certificates
+ssh-keygen, ,l,,, ,128,show fingerprint of public key file
+ssh-keygen, ,v,,, ,129,verbose mode: print debugging messages about its progress
+ssh-keygen, ,e,,, ,130,print public key of a OpenSSH key file in a format specified by the -m option
+ssh-keygen, ,g,,, ,131,use generic DNS format when printing fingerprint resource records using -r command
+ssh-keygen, ,H,,, ,132,hash a known_hosts file
+ssh-keygen, ,h,,, ,133,create a host certificate when signing a key
+ssh-keygen, ,K,,, ,134,download resident keys from a FIDO authenticator
+ssh-keygen, ,k,,, ,135,generate a KRL file
+ssh-keygen, ,O,,, ,136,specify a key/value option
+ssh-keygen, ,Q,,, ,137,whether keys have been revoked in a KRL
+ssh-keygen, ,q,,, ,138,silence ssh-keygen
+ssh-keygen, ,U,,, ,139,indicates that a CA key resides in a ssh-agent
+ssh-keygen, ,u,,, ,140,update a KRL
+ssh-keygen, ,y,,, ,141,print an OpenSSH public key from a private OpenSSH format file
+ssh-keygen, ,i, , , ,142,print an OpenSSH compatible private (or public) key
+ssh-keygen, ,Y, ,find-principals match-principals check-novalidate sign verify,@f @r,143,

@@ -1,3 +1,64 @@
 cmd,conds,short,long,params,dirs,pri,desc
 bat, , ,highlight-line, , ,101,highlights line 40
 bat, , ,line-range, , ,102,prints lines 30 to 40
+
+bat, ,,acknowledgements,, ,103,Print acknowledgements
+bat, ,,binary,no-printing as-text,@f @r,104,How to treat binary content
+bat, ,,cache-dir,,@f,105,Show bat's cache directory
+bat, ,c,chop-long-lines,, ,106,Truncate all lines longer than screen width
+bat, ,,completion,bash fish zsh ps1,@f @r,107,Show shell completion for a certain shell
+bat, ,,config-dir,,@f,108,Display location of configuration directory
+bat, ,,config-file,,@f,109,Display location of configuration file
+bat, ,,diagnostic,, ,110,Print diagnostic info for bug reports
+bat, ,d,diff,, ,111,Only show lines with Git changes
+bat,-d diff,,diff-context,,@f @r,112,Show N context lines around Git changes
+bat, ,,generate-config-file,,@f,113,Generates a default configuration file
+bat, ,,file-name,,@f @r,114,Specify the display name
+bat, ,f,force-colorization,, ,115,Force color and decorations
+bat, ,h,,, ,116,Print a concise overview
+bat, ,,help,,@f,117,Print all help information
+bat, ,,ignored-suffix,,@f @r,118,Ignore extension
+bat, ,l,language,,@E @f @k @r,119,__bat_complete_list_languages
+bat, ,,list-languages,,@f,120,List syntax highlighting languages
+bat, ,,list-themes,,@f,121,List syntax highlighting themes
+bat, ,m,map-syntax,,@E @f @r,122,__bat_complete_map_syntax
+bat, ,,no-config,, ,123,Do not use the configuration file
+bat, ,,no-custom-assets,, ,124,Do not load custom assets
+bat, ,,nonprintable-notation,unicode caret,@f @r,125,Set notation for non-printable characters
+bat, ,n,number,, ,126,"Only show line numbers, no other decorations"
+bat, ,,no-paging,, ,127,Alias for --paging=never
+bat, ,p,plain,, ,128,Show plain style
+bat, ,,set-terminal-title,, ,129,Sets terminal title to filenames when using a pager
+bat, ,A,show-all,, ,130,Show non-printable characters
+bat, ,s,squeeze-blank,, ,131,Squeeze consecutive empty lines into a single empty line
+bat, ,,squeeze-limit,,@f @r,132,Set the maximum number of consecutive empty lines to be printed
+bat, ,,strip-ansi,auto never always,@f @r,133,Specify when to strip ANSI escape sequences from the input
+bat, ,p,plain,, ,134,Disable decorations
+bat, ,,,, ,135,Disable decorations and paging
+bat, ,P,,, ,136,Disable paging
+bat, ,,style,,@E @f @k @r,137,"__fish_complete_list , __bat_style_opts"
+bat, ,,terminal-width,,@f @r,138,"Set terminal <width>, +<offset>, or -<offset>"
+bat, ,u,unbuffered,, ,139,This option exists for POSIX-compliance reasons
+bat, ,V,version,,@f,140,Show version information
+bat, ,,build,,@f,141,Parse new definitions into cache
+bat, ,,clear,,@f,142,Reset definitions to defaults
+bat,cache clear,,blank,,@f @n,143,Create new data instead of appending
+bat, ,,acknowledgements,, ,144,Build acknowledgements.bin
+bat,-s -l, ,color, ,@n @f @r,145,When to use colored output
+bat,-s -l, ,decorations, ,@n @f @r,146,When to use --style decorations
+bat,-s -l,H,highlight-line, ,@n @f @r,147,Highlight line(s) N[:M]
+bat,-s -l, ,italic-text, ,@n @f @r,148,When to use italic text in the output
+bat, , ,lessopen, , ,149,
+bat,-s -l,r,line-range, ,@n @f @r,150,Only print lines [M]:[N] (either optional)
+bat, , ,no-lessopen, , ,151,
+bat,-s -l, ,pager, ,@n @f @r,152,Which pager to use
+bat,-s -l, ,paging, ,@n @f @r,153,When to use the pager
+bat,-s -l, ,tabs, ,@n @f @r,154,Set tab width
+bat,-s -l, ,theme, ,@n @f @r,155,Set the syntax highlighting theme
+bat,-s -l, ,theme-dark, ,@n @E @f @r,156,
+bat,-s -l, ,theme-light, ,@n @E @f @r,157,
+bat,-s -l, ,wrap, ,@n @f @r,158,Text-wrapping mode
+bat,cache, ,source, ,@D @f @r,159,Load syntaxes and themes from DIR
+bat,cache, ,target, ,@D @f @r,160,Store cache in DIR
+bat,-s -l,h, , ,@n,161,
+bat,-s -l, ,help, ,@n @f,162,

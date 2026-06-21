@@ -24,3 +24,5 @@ jq, , ,argfile, ,@f @r,122,Read JSON in file and bind to given variable [see man
 jq, , ,args, , ,123,Remaining args are positional string args
 jq, , ,jsonargs, , ,124,Remaining args are positional JSON text args
 jq, , ,run-tests, , ,125,Run tests in given file
+
+jq, ,L,,, ,126,Prepend dir to module search list

@@ -13,3 +13,10 @@ find, , , ,$type_comp,@f @r,111,File is of specified type
 find, , , , ,@f @r,112,File's owner has specified numeric user ID
 find, , , , ,@f @r,113,File's owner
 find, , , ,$type_comp,@f @r,114,"Check type of file - in case of symlink, check the file that is not checked by -type"
+
+find, ,P,,, ,115,Never follow symlinks
+find, ,L,,, ,116,Follow symlinks
+find, ,d,,, ,117,Process subdirectories before the directory itself
+find, ,a,,, ,118,Result is only true if both previous and next action are true
+find, ,o,,, ,119,Result is true if either previous or next action are true
+find, ,H, , , ,120,Don't follow symlinks (except for command line arguments)

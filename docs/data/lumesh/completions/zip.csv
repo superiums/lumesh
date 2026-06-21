@@ -2,3 +2,30 @@ cmd,conds,short,long,params,dirs,pri,desc
 zip, ,x, , ,@r,101,Exclude the following names
 zip, ,i, , ,@r,102,Include only the following names
 zip, ,n, , ,@r,103,Don't compress files with these suffixes
+
+zip, ,f,,, ,104,Freshen: only changed files
+zip, ,d,,, ,105,Delete entries in zipfile
+zip, ,u,,, ,106,Update: only changed or newer files
+zip, ,r,,, ,107,Operate recursively
+zip, ,j,,, ,108,Do not store directory names
+zip, ,0,,, ,109,Do not compress at all
+zip, ,l,,, ,110,Convert LF to CR LF
+zip, ,,,, ,111,Convert CR LF to LF
+zip, ,1,,, ,112,Compress faster
+zip, ,9,,, ,113,Compress better
+zip, ,q,,, ,114,Quiet mode
+zip, ,v,,, ,115,Verbose mode
+zip, ,c,,, ,116,Add one-line comments
+zip, ,z,,, ,117,Add zipfile comments
+zip, ,@,,, ,118,Read names from stdin
+zip, ,o,,, ,119,Make zipfile as old as the latest entry
+zip, ,F,,, ,120,Fix zipfile
+zip, ,A,,, ,121,Adjust offsets to suit self-extracting exe
+zip, ,J,,, ,122,Strip prepended data
+zip, ,T,,, ,123,Test zipfile integrity
+zip, ,X,,, ,124,Exclude extra file attributes
+zip, ,y,,, ,125,Store symbolic links as links
+zip, ,R,,, ,126,PKZIP recursion
+zip, ,e,,, ,127,Encrypt
+zip, ,h,,, ,128,Display help and exit
+zip, ,m, , , ,129,Move into zipfile (delete files)

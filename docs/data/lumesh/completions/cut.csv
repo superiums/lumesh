@@ -13,3 +13,8 @@ cut, ,b, , ,@f @r,111,Select byte positions
 cut, ,c, , ,@f @r,112,Output character range
 cut, ,d, , ,@f @r,113,Delimiter instead of \t to use
 cut, ,f, , ,@f @r,114,Select fields
+
+cut, ,n,,, ,115,Don't split multi-byte characters
+cut, ,n,,, ,116,Don't split multi-byte characters
+cut, ,s,,, ,117,Suppress lines without delimiter
+cut, ,w,,, ,118,Use whitespace as delimiter

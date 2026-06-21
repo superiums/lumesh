@@ -1,5 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
-ncat, , , , ,@f,101, 
+ncat, , , , ,@f,101,
 ncat, ,U,unixsock, , ,102,Use Unix domain sockets
 ncat, ,u,udp, , ,103,Use UDP
 ncat, , ,sctp, , ,104,Use SCTP
@@ -47,3 +47,7 @@ ncat, , ,no-shutdown, , ,145,Do not shutdown into half-duplex mode
 ncat, ,n,nodns, , ,146,Do not resolve hostnames
 ncat, ,t,telnet, , ,147,Answer Telnet negotiations
 ncat, , ,version, , ,148,Display version
+
+ncat, ,4,,, ,149,IPv4 only
+ncat, ,6,,, ,150,IPv6 only
+ncat, ,z,,, ,151,Report connection status only

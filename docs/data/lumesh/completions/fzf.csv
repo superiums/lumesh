@@ -54,3 +54,10 @@ fzf, , ,print0, , ,156,Print output delimited by ASCII NUL characters
 fzf, , ,no-clear, , ,157,Do not clear finder interface on exit
 fzf, , ,sync, , ,158,Synchronous search for multi-staged filtering
 fzf, , ,version, , ,159,Display version information and exit
+
+fzf, ,,,,@f,160,
+fzf, ,i,,, ,161,Case-insensitive match
+fzf,string match '+*' -- (commandline -ct), , ,+x, ,162,no-extended
+fzf,string match '+*' -- (commandline -ct), , ,+i, ,163,case-sensitive match
+fzf,string match '+*' -- (commandline -ct), , ,+s, ,164,Do not sort the result
+fzf,string match '+*' -- (commandline -ct), , ,+m, ,165,Disable multi-select

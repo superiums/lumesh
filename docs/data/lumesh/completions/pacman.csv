@@ -15,50 +15,86 @@ pacman, , ,confirm, , ,113,Cancels the effects of a previous --noconfirm
 pacman, , ,disable-download-timeout, , ,114,Disable defaults for low speed limit and timeout on downloads
 pacman, , ,sysroot, , ,115,Specify an alternative system root
 pacman, , ,disable-sandbox, , ,116,Disable the default sandbox applied to the process downloading files on Linux…
-pacman, ,D,database, , ,117, 
-pacman, ,Q,query, , ,118, 
-pacman, ,R,remove, , ,119, 
+pacman, ,D,database, , ,117,
+pacman, ,Q,query, , ,118,
+pacman, ,R,remove, , ,119,
 pacman, , ,nosave, , ,120,option is used.  See Remove Options below
-pacman, ,S,sync, , ,121, 
-pacman, ,T,deptest, , ,122, 
-pacman, ,U,upgrade, , ,123, 
-pacman, ,F,files, , ,124, 
-pacman, ,V,version, , ,125, 
-pacman, ,h,help, , ,126, 
-pacman, ,d,nodeps, , ,127, 
-pacman, , ,assume-installed, , ,128, 
-pacman, , ,dbonly, , ,129, 
-pacman, , ,noprogressbar, , ,130, 
-pacman, , ,noscriptlet, , ,131, 
-pacman, ,p,print, , ,132, 
+pacman, ,S,sync, , ,121,
+pacman, ,T,deptest, , ,122,
+pacman, ,U,upgrade, , ,123,
+pacman, ,F,files, , ,124,
+pacman, ,V,version, , ,125,
+pacman, ,h,help, , ,126,
+pacman, ,d,nodeps, , ,127,
+pacman, , ,assume-installed, , ,128,
+pacman, , ,dbonly, , ,129,
+pacman, , ,noprogressbar, , ,130,
+pacman, , ,noscriptlet, , ,131,
+pacman, ,p,print, , ,132,
 pacman, , ,print-format, , ,133,to specify how targets are displayed
-pacman, ,w,downloadonly, , ,134, 
-pacman, , ,asdeps, , ,135, 
-pacman, , ,asexplicit, , ,136, 
+pacman, ,w,downloadonly, , ,134,
+pacman, , ,asdeps, , ,135,
+pacman, , ,asexplicit, , ,136,
 pacman, , ,recursive, , ,137,remove operation
-pacman, , ,ignore, , ,138, 
-pacman, , ,ignoregroup, , ,139, 
-pacman, , ,needed, , ,140, 
-pacman, , ,overwrite, , ,141, 
-pacman, ,c,changelog, , ,142, 
-pacman, , ,deps, , ,143, 
-pacman, ,e,explicit, , ,144, 
-pacman, ,g,groups, , ,145, 
-pacman, ,i,info, , ,146, 
-pacman, ,k,check, , ,147, 
-pacman, ,l,list, , ,148, 
-pacman, ,m,foreign, , ,149, 
-pacman, ,n,native, , ,150, 
-pacman, ,o,owns, , ,151, 
-pacman, , ,file, , ,152, 
-pacman, ,q,quiet, , ,153, 
-pacman, ,s,search, , ,154, 
-pacman, , ,unrequired, , ,155, 
-pacman, ,u,upgrades, , ,156, 
-pacman, , ,cascade, , ,157, 
-pacman, , ,unneeded, , ,158, 
-pacman, , ,clean, , ,159, 
-pacman, , ,sysupgrade, , ,160, 
-pacman, ,y,refresh, , ,161, 
-pacman, ,x,regex, , ,162, 
+pacman, , ,ignore, , ,138,
+pacman, , ,ignoregroup, , ,139,
+pacman, , ,needed, , ,140,
+pacman, , ,overwrite, , ,141,
+pacman, ,c,changelog, , ,142,
+pacman, , ,deps, , ,143,
+pacman, ,e,explicit, , ,144,
+pacman, ,g,groups, , ,145,
+pacman, ,i,info, , ,146,
+pacman, ,k,check, , ,147,
+pacman, ,l,list, , ,148,
+pacman, ,m,foreign, , ,149,
+pacman, ,n,native, , ,150,
+pacman, ,o,owns, , ,151,
+pacman, , ,file, , ,152,
+pacman, ,q,quiet, , ,153,
+pacman, ,s,search, , ,154,
+pacman, , ,unrequired, , ,155,
+pacman, ,u,upgrades, , ,156,
+pacman, , ,cascade, , ,157,
+pacman, , ,unneeded, , ,158,
+pacman, , ,clean, , ,159,
+pacman, , ,sysupgrade, , ,160,
+pacman, ,y,refresh, , ,161,
+pacman, ,x,regex, , ,162,
 pacman, , ,machinereadable, , ,163,instead
+
+pacman, ,,,,@f,164,
+pacman, ,,,-D,@f @n,165,Modify the package database
+pacman, ,,,-Q,@f @n,166,Query the package database
+pacman, ,,,-R,@f @n,167,Remove packages from the system
+pacman, ,,,-S,@f @n,168,Synchronize packages
+pacman, ,,,-T,@f @n,169,Check dependencies
+pacman, ,,,-U,@f @n,170,Add a package from a file or URL
+pacman, ,,,-F,@f @n,171,Query the files database
+pacman, ,,disable-sandbox-filesystem,,@f @n,172,Disable the filesystem restrictions
+pacman, ,,disable-sandbox-syscalls,,@f @n,173,Disable the syscall filtering
+pacman, ,p,file,,@f @n,174,Query a package file instead of the database
+pacman, ,t,unrequired,,@f @n,175,List only unrequired packages [and optdepends]
+pacman,-s g groups -s o owns -s p file,,,,@n,176,Package
+pacman,-s g groups,,,, ,177,Package Group
+pacman,-s o owns,,,, ,178,File
+pacman,-s p file,,,, ,179,Package File
+pacman, ,c,cascade,,@f @n,180,Also remove packages depending on PACKAGE
+pacman, ,n,nosave,,@f @n,181,Ignore file backup designations
+pacman, ,s,recursive,,@f @n,182,Also remove dependencies of PACKAGE
+pacman, ,u,unneeded,,@f @n,183,Remove targets not required by any package
+pacman, ,,,,@n,184,Package
+pacman, ,,,,@n,185,Package Group
+pacman, ,c,clean,,@f @n,186,Remove [all] packages from cache
+pacman, ,u,sysupgrade,,@f @n,187,Upgrade all packages that are out of date
+pacman,-s g groups -s l list,,,,@n,188,Package
+pacman,-s g groups,,,, ,189,Package Group
+pacman,-s l list,,,, ,190,Repository
+pacman,asdeps asexplicit,,,, ,191,Package
+pacman,-s l list,,,, ,192,Package
+pacman,-s l list,,,,@n,193,File
+pacman, ,,,,@n,194,Package File
+pacman,S U, ,ignore, , ,195,Ignore a package upgrade (can be used more than once)
+pacman,S U, ,ignoregroup, , ,196,Ignore a group upgrade (can be used more than once)
+pacman,S U, ,overwrite, , ,197,Overwrite conflicting files (can be used more than once)
+pacman,Q,d,deps, ,@f,198,List only non-explicit packages (dependencies)

@@ -33,3 +33,11 @@ tr, , , ,[:space:], ,131,space characters
 tr, , , ,[:special:], ,132,special characters
 tr, , , ,[:upper:], ,133,upper-case characters
 tr, , , ,[:xdigit:], ,134,hexadecimal characters
+
+tr, ,,,,@f @r,135,
+tr, ,,,,@f @r,136,
+tr, ,C,,, ,137,Complement the set of characters in string1
+tr, ,c,,, ,138,Same as -C but complement the set of values in string1
+tr, ,d,,, ,139,Delete characters in string1 from the input
+tr, ,s,,, ,140,Squeeze runs of characters listed in the last operand into one
+tr, ,,u,, ,141,Guarantee that any output is unbuffered.

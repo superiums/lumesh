@@ -1,0 +1,54 @@
+cmd,conds,short,long,argument,dirs,pri,desc
+7z, , , ,a,@f,100,Add
+7z, , , ,b,@f,101,Benchmark
+7z, , , ,d,@f,102,Delete
+7z, , , ,e,@f,103,Extract
+7z, , , ,h,@f,104,Hash
+7z, , , ,i,@f,105,Show information about supported formats
+7z, , , ,l,@f,106,List
+7z, , , ,rn,@f,107,Rename
+7z, , , ,t,@f,108,Test
+7z, , , ,u,@f,109,Update
+7z, , , ,x,@f,110,Extract with full paths
+7z,e l t x, , , , ,111,Include archives
+7z,e l t x, , , , ,112,Disable archive_name field
+7z,e x, , , , ,113,Overwrite mode
+7z,e l t x, , , , ,114,Exclude archives
+7z,a d e u x, , , , ,115,Set output log level
+7z, , , , , ,116,Disable progress indicator
+7z,a d e h l u x, , , , ,117,Set output stream
+7z, , , , , ,118,Show execution time statistics
+7z,a d e h l rn t u x, , , , ,119,Include filenames
+7z,a d h rn u, , , , ,120,Set compression method
+7z,e x, , , , ,121,Set output directory
+7z,a d e rn t u x, , , , ,122,Set password
+7z,a d e h l rn t u x, , , , ,123,Recurse subdirectories
+7z,a, , , , ,124,Set archive name mode
+7z, , , , , ,125,Set charset for console I/O
+7z,e h x, , , , ,126,Set hash function
+7z,a u, , , , ,127,Set charset for list files
+7z,a, , , , ,128,Delete files after compression
+7z,a u, , , , ,129,Send archive by email
+7z,a d u, , , , ,130,Create SFX archive
+7z,a e h u x, , , , ,131,Read data from stdin
+7z, , , , , ,132,Set large pages mode
+7z,l, , , , ,133,Show technical information
+7z,a e u x, , , , ,134,Store NT security information
+7z,a d e h l t u x, , , , ,135,Store NTFS alternate streams
+7z, , , , , ,136,Store hard links
+7z, , , , , ,137,Store symbolic links
+7z,a e u x, , , , ,138,Write data to stdout
+7z, , , , , ,139,Disable wildcard matching
+7z, , , , , ,140,Eliminate duplication of root folder
+7z,a d e u x, , , , ,141,Use fully qualified file paths
+7z,a d e l t u x, , , , ,142,Set sensitive case mode
+7z,a h u, , , , ,143,Compress shared files
+7z,a d rn u, , , , ,144,Set archive timestamp
+7z, , , , , ,145,Set CPU thread affinity mask
+7z,a d e l t u x, , , , ,146,Exclude archive type
+7z,a d e l t u x, , , , ,147,Type of archive
+7z,a d rn u, , , , ,148,Update options
+7z,a, , , , ,149,Create volumes
+7z,a d rn u, , , , ,150,Assign work directory
+7z,a d e h l rn t u x, , , , ,151,Exclude filenames
+7z,e x, , , , ,152,Assume yes on all queries

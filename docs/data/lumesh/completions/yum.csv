@@ -8,3 +8,29 @@ yum, , ,disablerepo, , ,116,Disable repository
 yum, , ,obsoletes, , ,117,Enables obsolets processing logic
 yum, , ,rss-filename, , ,118,Output rss-data to file
 yum, , ,exclude, , ,119,Exclude specified package from updates
+
+yum, ,,,, ,120,Install the latest version of a package
+yum, ,,,, ,121,Print list of available updates
+yum, ,,,, ,122,Remove the specified packages and packages that depend on them
+yum, ,,,, ,123,List available packages
+yum, ,,,, ,124,Describe available packages
+yum, ,,,, ,125,Find package providing a feature or file
+yum, ,,,, ,126,find packages matching description regexp
+yum, ,,,, ,127,Clean up cache directory
+yum, ,,,, ,128,Generate rss changelog
+yum, ,,,,@E,129,__fish_print_rpm_packages
+yum, ,y,,, ,130,Assume yes to all questions
+yum, ,c,,,@r,131,Configuration file
+yum, ,d,,,@f @r,132,Set debug level
+yum, ,e,,,@f @r,133,Set error level
+yum, ,R,,,@f @r,134,Set maximum delay between commands
+yum, ,c,,, ,135,Run commands from cache
+yum,list, , ,all, ,136,List all packages
+yum,list, , ,available, ,137,List packages available for installation
+yum,list, , ,updates, ,138,List packages with updates available
+yum,list, , ,installed, ,139,List installed packages
+yum,list, , ,extras, ,140,List packages not available in repositories
+yum,list, , ,obsoletes, ,141,List packages that are obsoleted by packages in repositories
+yum,clean, , ,packages,@f @r,142,Delete cached package files
+yum,clean, , ,headers,@f @r,143,Delete cached header files
+yum,clean, , ,all,@f @r,144,Delete all cache contents

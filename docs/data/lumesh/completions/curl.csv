@@ -223,3 +223,10 @@ curl, , ,no-epsv, , ,322,for --disable-epsv
 curl, , ,max-redir, , ,323,Set maximum number of redirects
 curl, , ,xattr, , ,324,Store metadata in xattrs (like origin URL)
 curl, , ,url-query, , ,325,(HTTP) Add a URL query part
+
+curl, ,,,, ,326,specifies the last 500 bytes
+curl,string match -qr '@' -- (commandline -ct), , , , ,327,
+curl, , ,cert-type,"PEM,DER ENG P12",328,108
+curl, , ,delegation, , ,329,(GSS/kerberos) Tell the server how much it can delegate for user creds
+curl, , ,key-type, , ,330,(TLS) Private key file type
+curl, ,1, , , ,331,specifies the first and last byte only(*)(HTTP)

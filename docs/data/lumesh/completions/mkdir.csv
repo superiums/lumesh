@@ -5,3 +5,7 @@ mkdir, ,p,parents, , ,103,Make parent directories as needed
 mkdir, ,v,verbose, , ,104,Print a message for each created directory
 mkdir, , ,help, , ,105,Display help
 mkdir, ,Z,context, , ,106,Set SELinux security context of each created directory to the default type
+
+mkdir, ,p,,, ,107,Make parent directories as needed
+mkdir, ,v,,, ,108,Print a message for each created directory
+mkdir, ,m, , ,@f @r,109,Set file mode (as in chmod)

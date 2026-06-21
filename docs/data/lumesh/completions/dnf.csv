@@ -6,7 +6,7 @@ dnf, check, ,dependencies, , ,107,Checks dependencies
 dnf, check, ,duplicates, , ,108,Checks duplicates
 dnf, check, ,obsoleted, , ,109,Checks obsoleted
 dnf, check, ,provides, , ,110,Checks provides
-dnf, check-update, ,changelogs, , ,112, 
+dnf, check-update, ,changelogs, , ,112,
 dnf, clean, , ,dbcache, ,114,Removes the database cache
 dnf, clean, , ,expire-cache, ,115,Marks the repository metadata expired
 dnf, clean, , ,metadata, ,116,Removes repository metadata
@@ -32,8 +32,8 @@ dnf, history, , ,redo, ,133,Redoes the specified transaction
 dnf, history, , ,rollback, ,134,Undo all transactions performed after the specified transaction
 dnf, history, , ,undo, ,135,Undoes the specified transaction
 dnf, history, , ,userinstalled, ,136,Lists all user installed packages
-dnf," info; and history", , , ,@k,137, 
-dnf, install, , , ,@k,139, 
+dnf," info; and history", , , ,@k,137,
+dnf, install, , , ,@k,139,
 dnf, list, ,all, , ,141,Lists all packages
 dnf, list, ,installed, , ,142,Lists installed packages
 dnf, list, ,available, , ,143,Lists available packages
@@ -53,10 +53,10 @@ dnf, module, , ,enable, ,159,Enable a module
 dnf, module, , ,disable, ,160,Disable a module
 dnf, module, , ,reset, ,161,Reset module state
 dnf, module, , ,list, ,162,List modules
-dnf," module; and list", ,all, , ,163,Lists all module 
-dnf," module; and list", ,enabled, , ,164,Lists enabled module
-dnf," module; and list", ,disabled, , ,165,Lists disabled module
-dnf," module; and list", ,installed, , ,166,List  installed modules
+dnf,"module list, ,all, , ,163,Lists all module
+dnf,"module list, ,enabled, , ,164,Lists enabled module
+dnf,"module list, ,disabled, , ,165,Lists disabled module
+dnf,"module list, ,installed, , ,166,List  installed modules
 dnf, module, , ,info, ,167,Print module information
 dnf," module; and info", ,profile, , ,168,Print module profiles information
 dnf, offline-distrosync, , ,download, ,170,Download updates for offline upgrade
@@ -71,34 +71,34 @@ dnf, offline-upgrade, , ,log, ,179,Show logs of upgrade attempts
 dnf, remove, ,duplicates, , ,183,Removes older version of duplicated packages
 dnf, remove, ,oldinstallonly, , ,184,Removes old installonly packages
 dnf, repoquery, ,querytags, , ,191,Provides the list of tags
-dnf, repoquery,a,all, , ,192, 
-dnf, repoquery, ,enabled, , ,193, 
-dnf, repoquery, ,archlist, , ,194, 
-dnf, repoquery, ,duplicates, , ,195, 
-dnf, repoquery, ,unneeded, , ,196, 
-dnf, repoquery, ,available, , ,197, 
-dnf, repoquery, ,extras, , ,198, 
-dnf, repoquery,f,file, , ,199, 
-dnf, repoquery, ,installed, , ,200, 
-dnf, repoquery, ,installonly, , ,201, 
-dnf, repoquery, ,latest-limit, , ,202, 
-dnf, repoquery, ,recent, , ,203, 
-dnf, repoquery, ,repo, , ,204, 
-dnf, repoquery, ,unsatisfied, , ,205, 
-dnf, repoquery, ,upgrades, , ,206, 
-dnf, repoquery, ,userinstalled, , ,207, 
-dnf, repoquery, ,whatdepends, , ,208, 
-dnf, repoquery, ,whatconflicts, , ,209, 
-dnf, repoquery, ,whatenhances, , ,210, 
-dnf, repoquery, ,whatobsoletes, , ,211, 
-dnf, repoquery, ,whatprovides, , ,212, 
-dnf, repoquery, ,whatrecommends, , ,213, 
-dnf, repoquery, ,whatrequires, , ,214, 
-dnf, repoquery, ,whatsuggests, , ,215, 
-dnf, repoquery, ,whatsupplements, , ,216, 
-dnf, repoquery, ,alldeps, , ,217, 
-dnf, repoquery, ,exactdeps, , ,218, 
-dnf, repoquery, ,srpm, , ,219, 
+dnf, repoquery,a,all, , ,192,
+dnf, repoquery, ,enabled, , ,193,
+dnf, repoquery, ,archlist, , ,194,
+dnf, repoquery, ,duplicates, , ,195,
+dnf, repoquery, ,unneeded, , ,196,
+dnf, repoquery, ,available, , ,197,
+dnf, repoquery, ,extras, , ,198,
+dnf, repoquery,f,file, , ,199,
+dnf, repoquery, ,installed, , ,200,
+dnf, repoquery, ,installonly, , ,201,
+dnf, repoquery, ,latest-limit, , ,202,
+dnf, repoquery, ,recent, , ,203,
+dnf, repoquery, ,repo, , ,204,
+dnf, repoquery, ,unsatisfied, , ,205,
+dnf, repoquery, ,upgrades, , ,206,
+dnf, repoquery, ,userinstalled, , ,207,
+dnf, repoquery, ,whatdepends, , ,208,
+dnf, repoquery, ,whatconflicts, , ,209,
+dnf, repoquery, ,whatenhances, , ,210,
+dnf, repoquery, ,whatobsoletes, , ,211,
+dnf, repoquery, ,whatprovides, , ,212,
+dnf, repoquery, ,whatrecommends, , ,213,
+dnf, repoquery, ,whatrequires, , ,214,
+dnf, repoquery, ,whatsuggests, , ,215,
+dnf, repoquery, ,whatsupplements, , ,216,
+dnf, repoquery, ,alldeps, , ,217,
+dnf, repoquery, ,exactdeps, , ,218,
+dnf, repoquery, ,srpm, , ,219,
 dnf, system-upgrade, , ,download, ,221,Download updates for offline upgrade
 dnf, system-upgrade, , ,clean, ,222,Remove cached packages
 dnf, system-upgrade, , ,reboot, ,223,Reboot and install packages
@@ -131,12 +131,168 @@ dnf, search, ,all, , ,251,Lists packages that match at least one of the keys
 dnf, updateinfo, ,summary, , ,255,Displays the summary
 dnf, updateinfo, ,list, , ,256,List of advisories
 dnf, updateinfo, ,info, , ,257,Detailed information
-dnf, updateinfo, ,all, , ,258, 
-dnf, updateinfo, ,available, , ,259, 
-dnf, updateinfo, ,installed, , ,260, 
-dnf, updateinfo, ,updates, , ,261, 
+dnf, updateinfo, ,all, , ,258,
+dnf, updateinfo, ,available, , ,259,
+dnf, updateinfo, ,installed, , ,260,
+dnf, updateinfo, ,updates, , ,261,
 dnf, versionlock, , ,add, ,265,Add  a versionlock for all available packages matching the spec
 dnf, versionlock, , ,exclude, ,266,Add an exclude (within  versionlock) for the available packages matching the spec
 dnf, versionlock, , ,delete, ,267,Remove any matching versionlock entries
 dnf, versionlock, , ,list, ,268,List the current versionlock entries
 dnf, versionlock, , ,clear, ,269,Remove all versionlock entries
+
+dnf, ,,,, ,270,Manage aliases
+dnf,alias,,,, ,271,Add a new alias
+dnf,alias,,,, ,272,Lists all defined aliases
+dnf,alias,,,, ,273,Delete an alias
+dnf, ,,,, ,274,Removes unneeded packages
+dnf,autoremove,,,, ,275,
+dnf, ,,,, ,276,Check for problems in packagedb
+dnf, ,,,, ,277,Checks for updates
+dnf, ,,,, ,278,Clean up cache directory
+dnf,clean,,,, ,279,Removes the database cache
+dnf,clean,,,, ,280,Marks the repository metadata expired
+dnf,clean,,,, ,281,Removes repository metadata
+dnf,clean,,,, ,282,Removes any cached packages
+dnf,clean,,,, ,283,Removes all cache
+dnf, ,,,, ,284,Manage Copr repositories
+dnf, ,,,, ,285,Synchronizes packages to match the latest
+dnf, ,,,, ,286,Downgrades the specified package
+dnf,downgrade,,,, ,287,
+dnf, ,,,, ,288,Manage groups
+dnf,group mark mark,,,,@n,289,Display overview of installed and available groups
+dnf,group mark mark,,,,@n,290,Display package list of a group
+dnf,group mark mark,,,,@n,291,Install group
+dnf,group install install,,with-optional,, ,292,Include optional packages
+dnf,group mark mark,,,,@n,293,List groups
+dnf,group list list,,installed,, ,294,List installed groups
+dnf,group list list,,available,, ,295,List available groups
+dnf,group list list,,hidden,, ,296,List hidden groups
+dnf,group mark mark,,,,@n,297,Remove group
+dnf,group remove remove,,with-optional,, ,298,Include optional packages
+dnf,group mark mark,,,,@n,299,Upgrade group
+dnf,group mark mark,,,,@n,300,Marks group without manipulating packages
+dnf,group mark mark,,,, ,301,Mark group installed without installing packages
+dnf,group mark mark,,,, ,302,Mark group removed without removing packages
+dnf, ,,,, ,303,Display help and exit
+dnf, ,,,, ,304,View and manage past transactions
+dnf,history,,,, ,305,Lists all transactions
+dnf,history,,,, ,306,Describe the given transactions
+dnf,history,,,, ,307,Redoes the specified transaction
+dnf,history,,,, ,308,Undo all transactions performed after the specified transaction
+dnf,history,,,, ,309,Undoes the specified transaction
+dnf,history,,,, ,310,Lists all user installed packages
+dnf, ,,,, ,311,Describes the given package
+dnf, ,,,, ,312,Install package
+dnf, ,,,, ,313,Lists all packages
+dnf, ,,,, ,314,Downloads and caches metadata for all known repos
+dnf, ,,,, ,315,Mark packages
+dnf,mark,,,, ,316,Mark package installed
+dnf,mark,,,, ,317,Unmarks installed package
+dnf,mark,,,, ,318,Mark installed by group
+dnf, ,,,, ,319,Manage modules
+dnf,module,,,, ,320,Install module
+dnf,module,,,, ,321,Update modules
+dnf,module,,,, ,322,Remove module
+dnf,module,,,, ,323,Enable a module
+dnf,module,,,, ,324,Disable a module
+dnf,module,,,, ,325,Reset module state
+dnf,module,,,, ,326,List modules
+dnf,module list list,,all,, ,327,Lists all module
+dnf,module list list,,enabled,, ,328,Lists enabled module
+dnf,module list list,,disabled,, ,329,Lists disabled module
+dnf,module list list,,installed,, ,330,List  installed modules
+dnf,module,,,, ,331,Print module information
+dnf,module info info,,profile,, ,332,Print module profiles information
+dnf, ,,,, ,333,Synchronizes packages to match the latest
+dnf,offline-distrosync,,,, ,334,Download updates for offline upgrade
+dnf,offline-distrosync,,,, ,335,Remove cached packages
+dnf,offline-distrosync,,,, ,336,Reboot and install packages
+dnf,offline-distrosync,,,, ,337,Install cached packages without reboot
+dnf,offline-distrosync,,,, ,338,Show logs of upgrade attempts
+dnf, ,,,, ,339,Prepare offline upgrade of the system
+dnf,offline-upgrade,,,, ,340,Download updates for offline upgrade
+dnf,offline-upgrade,,,, ,341,Remove cached packages
+dnf,offline-upgrade,,,, ,342,Reboot and install packages
+dnf,offline-upgrade,,,, ,343,Show logs of upgrade attempts
+dnf, ,,,, ,344,Finds packages providing the given command
+dnf, ,,,, ,345,Reinstalls a package
+dnf, ,,,, ,346,Remove packages
+dnf, ,,,, ,347,Verbose repolist
+dnf, ,,,, ,348,Lists all enabled repositories
+dnf, ,,,, ,349,Queries DNF repositories
+dnf, ,,,, ,350,Prepare major version upgrade of the system
+dnf,system-upgrade,,,, ,351,Download updates for offline upgrade
+dnf,system-upgrade,,,, ,352,Remove cached packages
+dnf,system-upgrade,,,, ,353,Reboot and install packages
+dnf,system-upgrade,,,, ,354,Install cached packages without reboot
+dnf,system-upgrade,,,, ,355,Show logs of upgrade attempts
+dnf, ,,,, ,356,Run commands on all packages in the repository
+dnf, ,,,, ,357,Search package metadata for keywords
+dnf, ,,,, ,358,Opens an interactive shell
+dnf, ,,,, ,359,Remove spec and install spec in one transaction
+dnf, ,,,, ,360,Display information about update advisories
+dnf, ,,,, ,361,Updates packages
+dnf,upgrade,,,, ,362,
+dnf, ,,,, ,363,Updates packages
+dnf,upgrade-minimal,,,, ,364,
+dnf, ,,,, ,365,DNF versionlock plugin
+dnf,versionlock,,,, ,366,Add  a versionlock for all available packages matching the spec
+dnf,versionlock add add,,,, ,367,
+dnf,versionlock exclude exclude,,,, ,368,
+dnf,versionlock,,,, ,369,Remove any matching versionlock entries
+dnf,versionlock delete delete,,,, ,370,
+dnf,versionlock,,,, ,371,List the current versionlock entries
+dnf,versionlock list list,,,, ,372,
+dnf,versionlock,,,, ,373,Remove all versionlock entries
+dnf,versionlock clear clear,,,, ,374,
+dnf, ,4,,, ,375,Use IPv4 only
+dnf, ,6,,, ,376,Use IPv6 only
+dnf, ,,advisories,, ,377,Include packages corresponding to the advisory ID
+dnf, ,,allowerasing,, ,378,Allow erasing of installed packages to resolve dependencies
+dnf, ,,assumeno,, ,379,Answer no for all questions
+dnf, ,b,best,, ,380,Try the best available package versions in transactions
+dnf, ,,bugfix,, ,381,Include packages that fix a bugfix issue
+dnf, ,,bzs,, ,382,Include packages that fix a Bugzilla ID
+dnf, ,C,cacheonly,, ,383,Run entirely from system cache
+dnf, ,,color,, ,384,Control whether color is used
+dnf, ,c,config,, ,385,Configuration file location
+dnf, ,,cves,, ,386,Include packages that fix a CVE
+dnf, ,d,debuglevel,, ,387,Debugging output level
+dnf, ,,debugsolver,, ,388,Dump dependency solver debugging info
+dnf, ,,disableexcludepkgs,, ,389,Disable excludes
+dnf, ,,set-disabled,, ,390,Disable specified repositories
+dnf, ,,disableplugin,, ,391,Disable the listed plugins specified
+dnf, ,,disablerepo,, ,392,Disable specified repositories
+dnf, ,,destdir,, ,393,Change downloaded packages to provided directory
+dnf, ,,downloadonly,, ,394,Download packages without performing any transaction
+dnf, ,,set-enabled,, ,395,Enable specified repositories
+dnf, ,,enableplugin,, ,396,Enable the listed plugins
+dnf, ,,enablerepo,, ,397,Enable additional repositories
+dnf, ,,enhancement,, ,398,Include enhancement relevant packages
+dnf, ,x,exclude,, ,399,Exclude packages specified
+dnf, ,,forcearch,, ,400,Force the use of the specified architecture
+dnf, ,h,help-i,, ,401,Show the help
+dnf, ,,installroot,, ,402,Specifies an alternative installroot
+dnf, ,,newpackage,, ,403,Include newpackage relevant packages
+dnf, ,,noautoremove,, ,404,Disable autoremove
+dnf, ,,nobest,, ,405,Set best option to False
+dnf, ,,nodocs,, ,406,Do not install documentation
+dnf, ,,nogpgcheck,, ,407,Skip checking GPG signatures on packages
+dnf, ,,noplugins,, ,408,Disable all plugins
+dnf, ,,obsoletes,, ,409,Enables obsoletes processing logic
+dnf, ,q,quiet,, ,410,Quiet mode
+dnf, ,R,randomwait,, ,411,Maximum command wait time
+dnf, ,,refresh,, ,412,Set metadata as expired before running the command
+dnf, ,,releasever,, ,413,Configure the distribution release
+dnf, ,,repofrompath,, ,414,Specify repository to add to the repositories for this query
+dnf, ,,repoid,, ,415,Enable just specific repositories by an id or a glob
+dnf, ,,rpmverbosity,, ,416,RPM debug scriptlet output level
+dnf, ,,secseverity,, ,417,Includes packages that provide a fix for an issue of the specified severity
+dnf, ,,security,, ,418,Includes packages that provide a fix for a security issue
+dnf, ,,setopt,, ,419,Override a configuration option
+dnf, ,,skip-broken,, ,420,Skips broken packages
+dnf, ,,showduplicates,, ,421,Shows duplicate packages
+dnf, ,v,verbose,, ,422,Verbose mode
+dnf, ,,version,, ,423,Shows DNF version and exit
+dnf, ,y,assumeyes,, ,424,Answer yes for all questions

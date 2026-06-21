@@ -104,3 +104,24 @@ apk, audit,r,recursive, ,@f,220,Descend into directories and audit them as well
 apk, audit, ,packages, ,@f,221,List only the changed packages
 apk, dot, ,errors, ,@f,222,Consider only packages with errors
 apk, dot, ,installed, ,@f,223,Consider only installed packages
+
+apk,add,,,,@E,224,apk search -q &?
+apk,manifest,,,,@E,225,apk info &?
+apk, ,,,add,@f,226,Add packages
+apk, ,,,del,@f,227,Remove packages
+apk, ,,,fix,@f,228,Repair package
+apk, ,,,update,@f,229,Update repository indexes
+apk, ,,,info,@f,230,Give detailed information about packages
+apk, ,,,list,@f,231,List packages
+apk, ,,,search,@f,232,Search package
+apk, ,,,upgrade,@f,233,Upgrade installed packages
+apk, ,,,cache,@f,234,Manage local package cache
+apk, ,,,version,@f,235,Compare package versions
+apk, ,,,index,@f,236,Create repository index file
+apk, ,,,fetch,@f,237,Download packages
+apk, ,,,audit,@f,238,Audit the directories for changes
+apk, ,,,verify,@f,239,Verify package integrity and signature
+apk, ,,,dot,@f,240,Generate graphviz graphs
+apk, ,,,policy,@f,241,Show repository policy for packages
+apk, ,,,stats,@f,242,Show statistics about repositories and installations
+apk, ,,,manifest,@f,243,Show checksums of package contents

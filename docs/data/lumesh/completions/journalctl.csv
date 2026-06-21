@@ -59,3 +59,11 @@ journalctl, , ,vacuum-time, ,@f,158,Remove journal files older than TIME
 journalctl, , ,vacuum-files, ,@f,159,Leave only INT number of journal files
 journalctl, , ,list-catalog, ,@f,160,Show message catalog entries as a table
 journalctl, , ,dump-catalog, ,@f,161,Show message catalog entries
+
+journalctl, ,,,,@E @f @n,162,__fish_journalctl_fields
+journalctl, ,,,,@E @n,163,command journalctl -F _EXE &?
+journalctl, ,,,+,@n,164,OR
+journalctl, ,,,,@E @f @r,165,__fish_journalctl_field_values
+journalctl, ,p,priority,,@f,166,Filter by priority
+journalctl, ,,since,,@f,167,Entries on or newer than DATE
+journalctl, ,,until,,@f,168,Entries on or older than DATE

@@ -18,3 +18,8 @@ xargs, ,x,exit, , ,116,Exit if the size (see the  -s option) is exceeded
 xargs, , ,help, , ,117,Print a summary of the options to  xargs and exit
 xargs, , ,mycommand, , ,118,instead of rejecting this as unrecognized option
 xargs, , ,version, , ,119,Print the version number of xargs and exit
+
+xargs, ,E,,,@f @r,120,Set the end of file string to eof-str
+xargs, ,I,,,@f @r,121,Replace replace-str in the initial arguments with names from standard input
+xargs, ,L,,,@f @r,122,Use at most max-lines nonblank input lines per command line
+xargs, ,,,, ,123,

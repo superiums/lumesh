@@ -1,2 +1,32 @@
 cmd,conds,short,long,params,dirs,pri,desc
 python, python -V 2>&1 | string match -rq '^.*\s2',Q, ,old new warn warnall,@f @r,108,Division control
+
+python, ,B,,, ,109,Don
+python, ,c,,,@f @r,110,Execute argument as command
+python, ,,check-hash-based-pycs,default always never, ,111,Control validation behaviour of pyc files
+python, ,d,,, ,112,Debug on
+python, ,E,,, ,113,Ignore all PYTHON* env vars
+python, ,?,help,, ,114,Display help and exit
+python, ,i,,, ,115,Interactive mode after executing commands
+python, ,O,,, ,116,Enable optimizations
+python, ,,,, ,117,Remove doc-strings in addition to the -O optimizations
+python, ,s,,, ,118,Don
+python, ,S,,, ,119,Disable import of site module
+python, ,u,,, ,120,Unbuffered input and output
+python, ,v,,, ,121,Verbose mode
+python, ,,,, ,122,Even more verbose mode
+python, ,V,version,, ,123,Display version and exit
+python, ,W,,ignore default all module once error,@f @r,124,Warning control
+python, ,x,,, ,125,"Skip first line of source, allowing use of non-Unix forms of #!cmd"
+python, ,,,,@E @f @k,126,__fish_complete_suffix .py
+python, ,,,-,@f,127,Read program from stdin
+python,python -V 2>&1 | string match -rq '^.*\s2',3,,, ,128,Warn about Python 3.x incompatibilities that 2to3 cannot trivially fix
+python,python -V 2>&1 | string match -rq '^.*\s2',t,,, ,129,Warn on mixed tabs and spaces
+python, ,q,,, ,130,Don
+python, ,X,,,@f @r,131,Set implementation-specific option
+python, ,b,,, ,132,Warn when comparing bytes with str or int
+python, ,,,, ,133,Error when comparing bytes with str or int
+python, ,R,,, ,134,Turn on hash randomization
+python, ,I,,, ,135,Run in isolated mode
+python, ,,,, ,136,Print further version info
+python, ,m, , , ,137,Run library module as a script (terminates option list)

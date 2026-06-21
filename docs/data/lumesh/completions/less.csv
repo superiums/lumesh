@@ -66,3 +66,5 @@ less, , ,use-backslash, , ,164,Escape characters with backslashes in the options
 less, , ,use-color, , ,165,Enables colored text
 less, , ,wheel-lines, , ,166,Number of lines scrolled by mouse wheel
 less, , ,quotes, , ,167,Changes the filename quoting character
+
+less, ,\',quotes,,@r,168,Set quote char

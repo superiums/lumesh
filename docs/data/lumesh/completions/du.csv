@@ -17,3 +17,5 @@ du, , ,exclude, ,@r,115,Exclude files that match pattern
 du, , ,max-depth, ,@r,116,Recursion limit
 du, , ,help, , ,117,Display help and exit
 du, , ,version, , ,118,Display version and exit
+
+du, ,k,,, ,119,Use 1kB block size

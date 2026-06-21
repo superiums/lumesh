@@ -6,3 +6,14 @@ stat, , ,printf, ,@f @r,104,"use specified FORMAT, with backslash escapes and no
 stat, ,t,terse, , ,105,print the information in terse form
 stat, , ,help, , ,106,display this help and exit
 stat, , ,version, , ,107,output version information and exit
+
+stat, ,f,,,@r,108,Display information using specified FORMAT
+stat, ,l,,, ,109,Display output in ls -lT format
+stat, ,n,,, ,110,Don't force a newline to appear at end of each piece of output
+stat, ,q,,, ,111,Suppress failure messages
+stat, ,r,,, ,112,Display raw information
+stat, ,s,,, ,113,Display informationin ``shell output'' suitable for initialising variables
+stat, ,t,,,@r,114,Display timestamps using specified FORMAT
+stat, ,x,,, ,115,"Verbose information, similar to some Linux distributions"
+stat, ,F, , , ,116,Display content type symbols similar to ls(1)
+stat, ,L, , , ,117,Use stat(2) instead of lsstat(2)

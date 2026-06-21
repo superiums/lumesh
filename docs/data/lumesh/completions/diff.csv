@@ -24,3 +24,5 @@ diff, ,l,paginate, , ,122,Pass the output through 'pr'
 diff, ,v,version, , ,123,Display version and exit
 diff, , ,help, , ,124,Display help and exit
 diff, , ,color, , ,125,Colorize the output
+
+diff, ,c,,, ,126,Output 3 lines of copied context

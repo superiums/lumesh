@@ -34,3 +34,8 @@ patch, ,x,debug, ,@f @r,132,Set internal debugging flags
 patch, ,Y,basename-prefix, ,@f @r,133,Prepend PREFIX to backup file basenames
 patch, ,z,suffix, ,@f @r,134,Append SUFFIX to backup file name
 patch, ,Z,set-utc, , ,135,Set times of patched files assuming diff uses UTC
+
+patch, ,,binary,, ,136,Read & write data in binary mode
+patch, ,F,fuzz,(seq 0 9){,@f @r,137,Number of LINES for inexact 'fuzzy' matching
+patch, ,g,get,(seq -1 1){\t\n},@f @r,138,"Get files from RCS etc. if positive; ask if negative"
+patch, ,p,strip,(seq 0 9){ },@f @r,139,Strip NUM path components from filenames

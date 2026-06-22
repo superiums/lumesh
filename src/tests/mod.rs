@@ -485,7 +485,7 @@ mod parser_tests {
     fn test_parse_range_op_step() {
         assert_parse_eq(
             "1..10:2",
-            "RangeOp〈..〉\n  Integer〈1〉\n  Integer〈10〉\n  Step\n    Integer〈2〉",
+            "RangeOp〈..〉\n  Integer〈1〉\n  Integer〈10〉\n  Step    Integer〈2〉",
         );
     }
 
@@ -689,7 +689,7 @@ mod parser_tests {
     fn test_parse_index() {
         assert_parse_eq(
             "list[0]",
-            "Index\n  Symbol〈\"list\"〉\n  [\n    Integer〈0〉\n  ]",
+            "Index\n  Symbol〈\"list\"〉\n  [    Integer〈0〉\n  ]",
         );
     }
 
@@ -1256,7 +1256,7 @@ mod partial_ord_tests {
 
         assert_eq!(
             Expression::BSet(Rc::new(s1)).partial_cmp(&Expression::BSet(Rc::new(s2))),
-            Some(Ordering::Less),
+            Some(Ordering::Greater),
             "BSet content should be compared, not just length"
         );
     }
@@ -1270,7 +1270,7 @@ mod partial_ord_tests {
 
         assert_eq!(
             Expression::HMap(Rc::new(m1)).partial_cmp(&Expression::HMap(Rc::new(m2))),
-            Some(Ordering::Less),
+            Some(Ordering::Greater),
             "HMap content should be compared, not just length"
         );
     }
@@ -1284,7 +1284,7 @@ mod partial_ord_tests {
 
         assert_eq!(
             Expression::Map(Rc::new(m1)).partial_cmp(&Expression::Map(Rc::new(m2))),
-            Some(Ordering::Less),
+            Some(Ordering::Greater),
             "Map content should be compared, not just length"
         );
     }

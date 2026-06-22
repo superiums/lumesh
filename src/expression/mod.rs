@@ -240,12 +240,95 @@ pub enum CatchType {
 }
 
 impl PartialOrd for Expression {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        match (self, other) {
+            // ===== 数值类型互比 =====
+            (Self::Integer(a), Self::Integer(b)) => a.partial_cmp(b),
+            (Self::Float(a), Self::Float(b)) => a.partial_cmp(b),
+            (Self::Float(a), Self::Integer(b)) => a.partial_cmp(&(*b as f64)),
+            (Self::Integer(a), Self::Float(b)) => (&(*a as f64)).partial_cmp(b),
+
+            // ===== 字符串与数字互比 =====
+            (Self::String(a), Self::Integer(b)) => a.parse::<i64>().ok()?.partial_cmp(b),
+            (Self::Integer(a), Self::String(b)) => b.parse::<i64>().ok()?.partial_cmp(a),
+            (Self::String(a), Self::Float(b)) => a.parse::<f64>().ok()?.partial_cmp(b),
+            (Self::Float(a), Self::String(b)) => b.parse::<f64>().ok()?.partial_cmp(a),
+
+            // ===== 同类型简单比较 =====
+            (Self::String(a), Self::String(b)) => a.partial_cmp(b),
+            (Self::StringTemplate(a), Self::StringTemplate(b)) => a.partial_cmp(b),
+            (Self::Symbol(a), Self::Symbol(b)) => a.partial_cmp(b),
+            (Self::Variable(a), Self::Variable(b)) => a.partial_cmp(b),
+            (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
+            (Self::Boolean(a), Self::Boolean(b)) => a.partial_cmp(b),
+            (Self::None, Self::None) => Some(Ordering::Equal),
+            (Self::Blank, Self::Blank) => Some(Ordering::Equal),
+            (Self::RegexDef(a), Self::RegexDef(b)) => a.partial_cmp(b),
+            (Self::TimeDef(a), Self::TimeDef(b)) => a.partial_cmp(b),
+            (Self::DateTime(a), Self::DateTime(b)) => a.partial_cmp(b),
+            (Self::FileSize(a), Self::FileSize(b)) => a.partial_cmp(b),
+
+            // ===== 集合类型按长度比较 =====
+            (Self::List(a), Self::List(b)) => match a.len().cmp(&b.len()) {
+                Ordering::Equal => {
+                    for (i, item) in a.iter().enumerate() {
+                        let v = item.partial_cmp(&b[i]);
+                        if Some(Ordering::Equal) != v {
+                            return v;
+                        }
+                    }
+                    return Some(Ordering::Equal);
+                }
+                o => Some(o),
+            },
+            (Self::BSet(a), Self::BSet(b)) => match a.len().cmp(&b.len()) {
+                Ordering::Equal => {
+                    for item in a.iter() {
+                        if !b.contains(item) {
+                            return Some(Ordering::Greater);
+                        }
+                    }
+                    return Some(Ordering::Equal);
+                }
+                o => Some(o),
+            },
+            (Self::HMap(a), Self::HMap(b)) => match a.len().cmp(&b.len()) {
+                Ordering::Equal => {
+                    for k in a.keys() {
+                        let v_b = b.get(k);
+
+                        let result = a.get(k).partial_cmp(&v_b);
+                        if Some(Ordering::Equal) != result {
+                            return result;
+                        }
+                    }
+                    return Some(Ordering::Equal);
+                }
+                o => Some(o),
+            },
+            (Self::Map(a), Self::Map(b)) => match a.len().cmp(&b.len()) {
+                Ordering::Equal => {
+                    for k in a.keys() {
+                        let v_b = b.get(k);
+
+                        let result = a.get(k).partial_cmp(&v_b);
+                        if Some(Ordering::Equal) != result {
+                            return result;
+                        }
+                    }
+                    return Some(Ordering::Equal);
+                }
+                o => Some(o),
+            },
+
+            // ===== 不同种类不比较 =====
+            _ => None,
+        }
+    }
 }
 
 impl Ord for Expression {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        // 先尝试 PartialOrd，若为 None 则按类型名字典序
+    fn cmp(&self, other: &Self) -> Ordering {
         self.partial_cmp(other)
             .unwrap_or_else(|| self.type_name().cmp(&other.type_name()))
     }

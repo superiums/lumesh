@@ -4,11 +4,10 @@ use std::{borrow::Cow, path::PathBuf};
 // Helper functions
 
 pub fn expand_home(path: &'_ str) -> Cow<'_, str> {
-    if path.starts_with("~") {
-        if let Some(home_dir) = dirs::home_dir() {
+    if path.starts_with("~")
+        && let Some(home_dir) = dirs::home_dir() {
             return Cow::Owned(path.replace("~", home_dir.to_string_lossy().as_ref()));
         }
-    }
     Cow::Borrowed(path)
 }
 

@@ -17,10 +17,10 @@ static PATH_COMMANDS: OnceLock<HashSet<String>> = OnceLock::new();
 static LM_CMDS: OnceLock<HashSet<&'static str>> = OnceLock::new();
 
 fn get_path_commands() -> &'static HashSet<String> {
-    PATH_COMMANDS.get_or_init(|| init_path_cmds())
+    PATH_COMMANDS.get_or_init(init_path_cmds)
 }
 fn get_lm_commands() -> &'static HashSet<&'static str> {
-    LM_CMDS.get_or_init(|| init_lm_cmds())
+    LM_CMDS.get_or_init(init_lm_cmds)
 }
 
 fn init_lm_cmds() -> HashSet<&'static str> {
@@ -61,8 +61,7 @@ pub fn collect_command_with_prefix(prefix: &str) -> Vec<&str> {
 
     let c1 = get_lm_commands()
         .iter()
-        .filter(|x| x.starts_with(prefix))
-        .map(|x| *x)
+        .filter(|x| x.starts_with(prefix)).copied()
         .collect::<Vec<_>>();
     if c1.is_empty() {
         match get_lib_completions(prefix) {
@@ -119,11 +118,10 @@ fn scan_path_cmds(dir: &Path) -> Vec<String> {
             let path = entry.path();
             if path.is_dir() {
                 commands.extend(scan_path_cmds(&path));
-            } else if is_executable(&path) {
-                if let Some(stem) = path.file_stem().and_then(OsStr::to_str) {
+            } else if is_executable(&path)
+                && let Some(stem) = path.file_stem().and_then(OsStr::to_str) {
                     commands.push(stem.to_string());
                 }
-            }
         }
     }
     commands
@@ -230,7 +228,7 @@ fn check_privileged_command(
 pub fn find_command_pos(prefix: &str) -> usize {
     // Find the last command separator position
     let pos = prefix
-        .rfind(|c: char| matches!(c, ':' | '>' | '|' | '&' | '(' | ';' | '\n' | '+'))
+        .rfind([':', '>', '|', '&', '(', ';', '\n', '+'])
         .map(|i| i + 1)
         .unwrap_or(0);
     // After pipe, allow leading spaces before command

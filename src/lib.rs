@@ -1,3 +1,13 @@
+// `RuntimeError` carries an `Expression` context, intentionally making the Err
+// variant large in exchange for richer runtime error info. The `result_large_err`
+// lint is not actionable at function-signature levels here.
+#![allow(clippy::result_large_err)]
+// `Expression` intentionally contains interior-mutability types (Rc, Mutex),
+// and BTreeSet/BTreeMap are used for ordered set/map semantics around them.
+// The keys are accessed through dedupe + equality, not via Ord, so the keyed
+// collection choice is already carefully bounded by those operations.
+#![allow(clippy::mutable_key_type)]
+
 #[cfg(test)]
 mod tests;
 
@@ -63,12 +73,12 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 use std::cell::RefCell;
 
 thread_local! {
-    static PRINT_DIRECT: RefCell<bool> = RefCell::new(true);
-    static CFM_ENABLED: RefCell<bool> = RefCell::new(false);
-    static STRICT_ENABLED: RefCell<bool> = RefCell::new(false);
-    static MAX_RUNTIME_RECURSION: RefCell<usize> = RefCell::new(800);
-    static MAX_SYNTAX_RECURSION: RefCell<usize> = RefCell::new(100);
-    static MAX_USEMODE_RECURSION: RefCell<usize> = RefCell::new(100);
+    static PRINT_DIRECT: RefCell<bool> = const {RefCell::new(true)};
+    static CFM_ENABLED: RefCell<bool> = const {RefCell::new(false)};
+    static STRICT_ENABLED: RefCell<bool> = const {RefCell::new(false)};
+    static MAX_RUNTIME_RECURSION: RefCell<usize> = const {RefCell::new(800)};
+    static MAX_SYNTAX_RECURSION: RefCell<usize> = const {RefCell::new(100)};
+    static MAX_USEMODE_RECURSION: RefCell<usize> = const {RefCell::new(100)};
 }
 
 // 辅助函数

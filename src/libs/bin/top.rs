@@ -108,7 +108,7 @@ fn help(
                 writeln!(s, "Builtin Library List\n").unwrap();
                 LIBS_INFO.with(|h| {
                     // let _ = pprint(
-                    //     &vec![Expression::from(
+                    //     &[Expression::from(
                     //         h.keys()
                     //             .map(|k| Expression::String(k.to_string()))
                     //             .collect::<Vec<_>>(),
@@ -159,19 +159,16 @@ fn help(
             }
             "tops" => {
                 writeln!(s, "Top level Functions List\n").unwrap();
-                LIBS_INFO.with(|h| match h.get("") {
-                    Some(map) => {
-                        for (func, info) in map {
-                            writeln!(
-                                s,
-                                "\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
-                                info.hint
-                            )
-                            .unwrap();
-                            writeln!(s, "\t{}", info.descr).unwrap();
-                        }
+                LIBS_INFO.with(|h| if let Some(map) = h.get("") {
+                    for (func, info) in map {
+                        writeln!(
+                            s,
+                            "\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
+                            info.hint
+                        )
+                        .unwrap();
+                        writeln!(s, "\t{}", info.descr).unwrap();
                     }
-                    _ => {}
                 });
                 writeln!(s, "\njust use them directly anywhere!").unwrap();
             }
@@ -203,20 +200,16 @@ fn help(
                                 }
                             }
                             _ => {
-                                LIBS_INFO.with(|h| match h.get("") {
-                                    Some(map) => match map.get(name) {
-                                        Some(info) => {
-                                            writeln!(s, "\x1b[92m\x1b[1m{name}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                            writeln!(s, "\t{}\n", info.descr).unwrap();
-                                        }
-                                        _ => {
-                                            writeln!(s, "no function named `{name}` in top\n")
-                                                .unwrap();
-                                        }
-                                    },
-                                    _ => {
+                                LIBS_INFO.with(|h| if let Some(map) = h.get("") { match map.get(name) {
+                                    Some(info) => {
+                                        writeln!(s, "\x1b[92m\x1b[1m{name}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
+                                        writeln!(s, "\t{}\n", info.descr).unwrap();
                                     }
-                                });
+                                    _ => {
+                                        writeln!(s, "no function named `{name}` in top\n")
+                                            .unwrap();
+                                    }
+                                } });
                                  writeln!(s, "no lib named `{name}`\n").unwrap();
                             }
                         });
@@ -323,7 +316,7 @@ fn cd(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     // target
-    let p = if args.len() == 0 {
+    let p = if args.is_empty() {
         "~".to_string()
     } else {
         match args.into_iter().next().unwrap() {
@@ -461,7 +454,7 @@ pub fn pprint(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("pprint", &args, 1.., ctx)?;
     for arg in args.iter() {
-        pretty_printer(&arg)?;
+        pretty_printer(arg)?;
     }
     Ok(Expression::None)
 }
@@ -536,7 +529,7 @@ pub fn len(
         Expression::Table(t) => t.row_count() as Int,
         Expression::Symbol(x) | Expression::String(x) => x.chars().count() as Int,
         Expression::Bytes(bytes) => bytes.len() as Int,
-        Expression::Range(a, b) => a.to_owned().step_by(b.clone()).count() as Int,
+        Expression::Range(a, b) => a.to_owned().step_by(*b).count() as Int,
         Expression::None => 0,
         expr => {
             return Err(RuntimeError::new(
@@ -560,7 +553,7 @@ pub fn rev(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("rev", &args, 1, ctx)?;
-    match args.iter().next().unwrap() {
+    match args.first().unwrap() {
         Expression::List(list) => {
             let r = list.iter().rev().cloned().collect::<Vec<_>>();
             Ok(Expression::from(r))
@@ -632,7 +625,7 @@ fn eval(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("eval", &args, 1, ctx)?;
-    Ok(args[0].eval_in_assign(env)?)
+    args[0].eval_in_assign(env)
 }
 // need args evaled already
 fn exec(
@@ -642,14 +635,14 @@ fn exec(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("exec", &args, 1, ctx)?;
     let mut new_env = env.fork();
-    Ok(args[0].eval_in_assign(&mut new_env)?)
+    args[0].eval_in_assign(&mut new_env)
 }
 
 fn flat(expr: &Expression) -> Vec<Expression> {
     match expr {
-        Expression::List(list) => list.as_ref().iter().flat_map(|item| flat(item)).collect(),
-        Expression::HMap(map) => map.as_ref().values().flat_map(|item| flat(item)).collect(),
-        Expression::Map(map) => map.as_ref().values().flat_map(|item| flat(item)).collect(),
+        Expression::List(list) => list.as_ref().iter().flat_map(flat).collect(),
+        Expression::HMap(map) => map.as_ref().values().flat_map(flat).collect(),
+        Expression::Map(map) => map.as_ref().values().flat_map(flat).collect(),
         expr => vec![expr.clone()],
     }
 }
@@ -808,8 +801,7 @@ pub fn get(
                 Ok(key) => {
                     current = table
                         .rows()
-                        .iter()
-                        .nth(key)
+                        .get(key)
                         .cloned()
                         .map(Expression::from)
                         .ok_or_else(|| {

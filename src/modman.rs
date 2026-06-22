@@ -49,7 +49,7 @@ pub fn use_module_wrap<'a>(
     }
 
     // 使用别名或模块名作为键，存储为Map
-    let module_name = get_module_name_from_path(&alias, module_path)?;
+    let module_name = get_module_name_from_path(alias, module_path)?;
     Ok((module_name, Expression::from(map)))
 }
 fn load_module(
@@ -81,11 +81,11 @@ fn find_module_file(
 
     let candidate_paths = vec![
         cwd.join("mods").join(&file),
-        cwd.join("mods").join(&modname).join("main.lm"),
+        cwd.join("mods").join(modname).join("main.lm"),
         cwd.join(&file),
-        cwd.join(&modname).join("main.lm"),
+        cwd.join(modname).join("main.lm"),
         lib.join(&file),
-        lib.join(&modname).join("main.lm"),
+        lib.join(modname).join("main.lm"),
     ];
 
     // 使用 iter() 和 find_map() 查找第一个有效路径

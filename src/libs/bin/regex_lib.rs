@@ -52,7 +52,7 @@ fn get_r_args<'a>(
             Expression::String(r) | Expression::Symbol(r),
             Expression::String(t) | Expression::Symbol(t),
         ) => Ok((
-            Regex::new(&r).map_err(|e| {
+            Regex::new(r).map_err(|e| {
                 RuntimeError::common(format!("invalid regex pattern: {e}").into(), ctx.clone(), 0)
             })?,
             t,
@@ -74,7 +74,7 @@ fn r#match(
     check_exact_args_len("match", &args, 2, ctx)?;
     let (regex, text) = get_r_args(&args, env, ctx)?;
 
-    Ok(Expression::Boolean(regex.is_match(&text)))
+    Ok(Expression::Boolean(regex.is_match(text)))
 }
 // 查找定位函数
 fn find(
@@ -85,7 +85,7 @@ fn find(
     check_exact_args_len("find", &args, 2, ctx)?;
     let (regex, text) = get_r_args(&args, env, ctx)?;
 
-    regex.find(&text).map_or(Ok(Expression::None), |m| {
+    regex.find(text).map_or(Ok(Expression::None), |m| {
         Ok(Expression::from(common_macros::b_tree_map! {
           String::from("start") => Expression::Integer(m.start() as i64),
           String::from("end") => Expression::Integer(m.end() as i64),
@@ -103,7 +103,7 @@ fn find_all(
     let (regex, text) = get_r_args(&args, env, ctx)?;
 
     let matches: Vec<Expression> = regex
-        .find_iter(&text)
+        .find_iter(text)
         .map(|m| {
             Expression::from(common_macros::b_tree_map! {
               String::from("start") => Expression::Integer(m.start() as i64),
@@ -123,7 +123,7 @@ fn capture(
     check_exact_args_len("capture", &args, 2, ctx)?;
     let (regex, text) = get_r_args(&args, env, ctx)?;
 
-    regex.captures(&text).map_or(Ok(Expression::None), |caps| {
+    regex.captures(text).map_or(Ok(Expression::None), |caps| {
         let groups: Vec<Expression> = (0..caps.len())
             .map(|i| {
                 caps.get(i)
@@ -144,7 +144,7 @@ fn captures(
     let (regex, text) = get_r_args(&args, env, ctx)?;
 
     let all_caps: Vec<Expression> = regex
-        .captures_iter(&text)
+        .captures_iter(text)
         .map(|caps| {
             let groups: Vec<Expression> = (0..caps.len())
                 .map(|i| {
@@ -167,7 +167,7 @@ fn capture_name(
     check_exact_args_len("capture_name", &args, 2, ctx)?;
     let (re, text) = get_r_args(&args, env, ctx)?;
 
-    if let Some(caps) = re.captures(&text) {
+    if let Some(caps) = re.captures(text) {
         let mut found = std::collections::BTreeMap::new();
         for (i, name) in re.capture_names().enumerate().skip(1) {
             if let (Some(mat), Some(n)) = (caps.get(i), name) {
@@ -188,7 +188,7 @@ fn split(
     let (regex, text) = get_r_args(&args, env, ctx)?;
 
     let parts: Vec<Expression> = regex
-        .split(&text)
+        .split(text)
         .map(|s| Expression::String(s.to_string()))
         .collect();
     Ok(Expression::from(parts))
@@ -244,6 +244,6 @@ fn replace(
     };
 
     Ok(Expression::String(
-        regex.replace_all(&text, replacement.as_str()).to_string(),
+        regex.replace_all(text, replacement.as_str()).to_string(),
     ))
 }

@@ -53,8 +53,7 @@ fn bin(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    current_exe()
-        .and_then(|b| Ok(Expression::String(b.to_string_lossy().to_string())))
+    current_exe().map(|b| Expression::String(b.to_string_lossy().to_string()))
         .map_err(|e| RuntimeError::from_io_error(e, "read current executor".into(), ctx.clone(), 0))
 }
 fn prelude(

@@ -78,7 +78,7 @@ impl State {
 impl State {
     pub const IN_DOMAINS: u8 = 1 << 6;
 
-    pub fn extend_lookup_domains(&mut self, domains: &Vec<String>) {
+    pub fn extend_lookup_domains(&mut self, domains: &[String]) {
         self.2.extend_from_slice(domains);
     }
     pub fn truncate_lookup_domains(&mut self, size: usize) {
@@ -158,7 +158,7 @@ impl State {
                     };
                     Ok(true)
                 } else {
-                    return Err(RuntimeErrorKind::IteratorExhausted(v.clone()));
+                    Err(RuntimeErrorKind::IteratorExhausted(v.clone()))
                 }
             }
             None => Ok(false),
@@ -367,7 +367,7 @@ impl Expression {
 
                     if state.contains(State::IN_LOCAL) {
                         // if not exists, see if strict
-                        if state.contains(State::STRICT) && !state.has_local_var(&name) {
+                        if state.contains(State::STRICT) && !state.has_local_var(name) {
                             return Err(RuntimeError::new(
                                 RuntimeErrorKind::UndeclaredLocalVariable(name.clone()),
                                 job.clone(),
@@ -447,11 +447,10 @@ impl Expression {
                     // dbg!("2.--->group:", &inner, &state);
                     // return inner.as_ref().eval_mut(state, env, depth + 1);
                     job = inner.as_ref();
-                    if state.contains(State::IN_ASSIGN) {
-                        if let Expression::Symbol(_) = job {
-                            return job.eval_command(&vec![], state, env, depth + 1);
+                    if state.contains(State::IN_ASSIGN)
+                        && let Expression::Symbol(_) = job {
+                            return job.eval_command(&[], state, env, depth + 1);
                         }
-                    }
                     continue;
                 }
                 // Self::Quote(inner) => return Ok(inner.as_ref().clone()),
@@ -1421,11 +1420,11 @@ impl Expression {
         let r = rhs.as_ref().eval_mut(state, env, depth)?;
         // state.clear(State::SKIP_BUILTIN_SEEK);
 
-        return match (l, r) {
+        match (l, r) {
             (left, Self::Range(r, step)) => self.handle_slice(left, r, step, state, env, depth),
             (left, right) => Ok(Self::handle_index(left, right)
                 .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
-        };
+        }
     }
     /// slice String/List by range
     fn handle_slice(
@@ -1453,13 +1452,13 @@ impl Expression {
                         .skip(start as usize)
                         .take((end - start) as usize)
                         .collect();
-                    return Ok(Expression::String(res));
+                    Ok(Expression::String(res))
                 } else {
-                    return Err(RuntimeError::common(
+                    Err(RuntimeError::common(
                         "string slice step not supported.".into(),
                         self.clone(),
                         depth,
-                    ));
+                    ))
                 }
             }
             Expression::List(list) => {
@@ -1475,7 +1474,7 @@ impl Expression {
                     }
                     i += step_int;
                 }
-                return Ok(Self::from(result));
+                Ok(Self::from(result))
             }
             Expression::BSet(set) => {
                 let len = set.len() as Int;
@@ -1490,7 +1489,7 @@ impl Expression {
                     }
                     i += step_int;
                 }
-                return Ok(Self::BSet(Rc::new(result)));
+                Ok(Self::BSet(Rc::new(result)))
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
@@ -1614,14 +1613,13 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // 优先检查是否在循环状态中
-        if state.contains(State::IN_LOCAL) {
-            if let Some(local_val) = state.get_local_var(name) {
+        if state.contains(State::IN_LOCAL)
+            && let Some(local_val) = state.get_local_var(name) {
                 return Ok(local_val.clone());
             }
-        }
 
         // 从环境读取
-        return match env.get(name) {
+        match env.get(name) {
             Some(expr) => Ok(expr),
             None => match allow_sym {
                 false => Err(RuntimeError::new(
@@ -1631,7 +1629,7 @@ impl Expression {
                 )),
                 true => Ok(Expression::Symbol(name.to_string())),
             },
-        };
+        }
     }
 
     fn handle_pipe_method(

@@ -45,7 +45,7 @@ impl TableData {
                 .collect(),
         )
     }
-    pub fn get_header_indexes(&self, col_names: &Vec<String>) -> Vec<usize> {
+    pub fn get_header_indexes(&self, col_names: &[String]) -> Vec<usize> {
         col_names
             .iter()
             .filter_map(|x| self.headers.iter().position(|h| h == x))
@@ -61,7 +61,7 @@ impl TableData {
                 .map(|row| {
                     indexes
                         .iter()
-                        .map(|i| row.iter().nth(*i).map_or(Expression::None, |x| x.clone()))
+                        .map(|i| row.get(*i).map_or(Expression::None, |x| x.clone()))
                         .collect()
                 })
                 .collect::<Vec<_>>(),
@@ -214,7 +214,7 @@ impl fmt::Display for TableData {
             }
         } else {
             // 紧凑格式输出
-            write!(f, "[\n")?;
+            writeln!(f, "[")?;
             if !self.headers.is_empty() {
                 write!(f, "  [{}]", self.headers.join(", "))?;
             }

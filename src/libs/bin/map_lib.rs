@@ -196,7 +196,7 @@ fn find(
     check_exact_args_len("find", &args, 2, ctx)?;
 
     let predicate = &args[1];
-    check_fn_arg(&predicate, 2, ctx)?;
+    check_fn_arg(predicate, 2, ctx)?;
     let map = get_map_ref(&args[0], ctx)?;
 
     let items = map
@@ -225,7 +225,7 @@ fn filter(
     check_exact_args_len("filter", &args, 2, ctx)?;
 
     let predicate = &args[1];
-    check_fn_arg(&predicate, 2, ctx)?;
+    check_fn_arg(predicate, 2, ctx)?;
     let map = get_map_ref(&args[0], ctx)?;
 
     let items = map
@@ -301,11 +301,10 @@ fn from_items(
     if let Expression::List(list) = expr {
         let mut map = BTreeMap::new();
         for item in list.as_ref() {
-            if let Expression::List(pair) = item {
-                if pair.as_ref().len() == 2 {
+            if let Expression::List(pair) = item
+                && pair.as_ref().len() == 2 {
                     map.insert(pair.as_ref()[0].to_string(), pair.as_ref()[1].clone());
                 }
-            }
         }
         Ok(Expression::from(map))
     } else {
@@ -406,15 +405,14 @@ fn deep_merge_hmaps(
     let mut result = a.clone();
 
     for (k, v) in b.iter() {
-        if let Some(existing) = result.get(k) {
-            if let (Expression::Map(ma), Expression::Map(mb)) = (existing, v) {
+        if let Some(existing) = result.get(k)
+            && let (Expression::Map(ma), Expression::Map(mb)) = (existing, v) {
                 result.insert(
                     k.clone(),
                     Expression::Map(Rc::new(deep_merge_hmaps(ma.as_ref(), mb.as_ref())?)),
                 );
                 continue;
             }
-        }
         result.insert(k.clone(), v.clone());
     }
 
@@ -431,8 +429,8 @@ fn map(
 
     let key_func = &args[1];
     let val_func = &args[2];
-    check_fn_arg(&key_func, 1, ctx)?;
-    check_fn_arg(&val_func, 1, ctx)?;
+    check_fn_arg(key_func, 1, ctx)?;
+    check_fn_arg(val_func, 1, ctx)?;
     let map = get_map_ref(&args[0], ctx)?;
 
     let items = map
@@ -443,8 +441,8 @@ fn map(
     let mut new_map = BTreeMap::new();
     let mut state = State::new();
     for it in items {
-        let new_k = key_func.eval_apply(key_func, &vec![it[0].clone()], &mut state, env, 0)?;
-        let new_v = val_func.eval_apply(key_func, &vec![it[1].clone()], &mut state, env, 0)?;
+        let new_k = key_func.eval_apply(key_func, &[it[0].clone()], &mut state, env, 0)?;
+        let new_v = val_func.eval_apply(key_func, &[it[1].clone()], &mut state, env, 0)?;
 
         new_map.insert(new_k.to_string(), new_v);
     }

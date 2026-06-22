@@ -12,6 +12,12 @@ pub struct History {
     search_index: usize,
 }
 
+impl Default for History {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl History {
     pub fn new() -> Self {
         Self {
@@ -253,6 +259,10 @@ impl History {
 
     pub fn len(&self) -> usize {
         self.entries.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.entries.is_empty()
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &str> {

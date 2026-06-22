@@ -82,7 +82,7 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
     let mut libs_info = BTreeMap::new();
     let mut top_info = bin::top::regist_info();
     let se_info = bin::se_lib::regist_info();
-    top_info.extend(se_info.into_iter());
+    top_info.extend(se_info);
     libs_info.insert("", top_info); //regist to top
     libs_info.insert("boolean", bin::boolean_lib::regist_info());
     libs_info.insert("string", bin::string_lib::regist_info());
@@ -322,6 +322,6 @@ pub fn exec_self_expand_lib(
             let result = selib(args, env, state, ctx)?;
             return Ok(Some(result));
         }
-        return Ok(None);
+        Ok(None)
     })
 }

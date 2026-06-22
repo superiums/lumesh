@@ -26,10 +26,10 @@ fn and(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("and", &&args, 2.., ctx)?;
+    check_args_len("and", &args, 2.., ctx)?;
     let r = args
         .iter()
-        .any(|x| !x.eval(env).map_or(false, |y| y.is_truthy()));
+        .any(|x| !x.eval(env).is_ok_and(|y| y.is_truthy()));
     Ok(Expression::Boolean(r))
 }
 fn or(
@@ -37,10 +37,10 @@ fn or(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("or", &&args, 2.., ctx)?;
+    check_args_len("or", &args, 2.., ctx)?;
     let r = args
         .iter()
-        .any(|x| x.eval(env).map_or(false, |y| y.is_truthy()));
+        .any(|x| x.eval(env).is_ok_and(|y| y.is_truthy()));
     Ok(Expression::Boolean(r))
 }
 pub fn not(
@@ -48,9 +48,9 @@ pub fn not(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("not", &&args, 2.., ctx)?;
+    check_args_len("not", &args, 2.., ctx)?;
     let r = args
         .iter()
-        .any(|x| !x.eval(env).map_or(false, |y| y.is_truthy()));
+        .any(|x| !x.eval(env).is_ok_and(|y| y.is_truthy()));
     Ok(Expression::Boolean(!r))
 }

@@ -48,11 +48,10 @@ impl PromptEngineCommon for PromptEngine {
     fn get_prompt(&self) -> String {
         // dbg!("getting prompt");
         // 1. 检查缓存有效性
-        if let Ok(cache) = self.cache.lock() {
-            if cache.last_update.elapsed() < cache.ttl {
+        if let Ok(cache) = self.cache.lock()
+            && cache.last_update.elapsed() < cache.ttl {
                 return cache.content.clone();
             }
-        }
 
         // 2. 生成新提示符
         let prompt = match self.mode {
@@ -121,8 +120,8 @@ impl PromptEngine {
     // }
     fn render_from_func(&self, func: &Expression) -> String {
         // dbg!(&func.type_name());
-        if let Ok(cwd) = env::current_dir() {
-            if let Some(cwd_str) = cwd.to_str() {
+        if let Ok(cwd) = env::current_dir()
+            && let Some(cwd_str) = cwd.to_str() {
                 let cfm = CFM_ENABLED.with_borrow(|cfm| cfm == &true);
                 let strict = STRICT_ENABLED.with_borrow(|s| s == &true);
                 let ctx = Expression::from(hash_map! {
@@ -137,7 +136,6 @@ impl PromptEngine {
                     _ => self.default_prompt(),
                 };
             }
-        }
         self.default_prompt()
     }
     fn render_template(&self, template: &str) -> String {
@@ -160,24 +158,22 @@ impl PromptEngine {
                 },
             );
 
-        if let Ok(cwd) = env::current_dir() {
-            if let Some(cwd_str) = cwd.to_str() {
+        if let Ok(cwd) = env::current_dir()
+            && let Some(cwd_str) = cwd.to_str() {
                 result = if result.contains("$CWD_SHORT") {
                     result.replace("$CWD_SHORT", &get_short_path(cwd.as_path()))
                 } else {
                     #[cfg(unix)]
-                    if cwd_str.starts_with("/home/") {
-                        if let Some(home_dir) = dirs::home_dir() {
+                    if cwd_str.starts_with("/home/")
+                        && let Some(home_dir) = dirs::home_dir() {
                             let cwd_new_str = cwd_str
                                 .to_owned()
                                 .replace(home_dir.to_string_lossy().as_ref(), "~");
                             return result.replace("$CWD", &cwd_new_str);
                         }
-                    }
                     result.replace("$CWD", cwd_str)
                 };
             }
-        }
         // 可以扩展更多占位符...
         result
     }
@@ -201,14 +197,13 @@ impl PromptEngine {
 
     fn default_prompt(&self) -> String {
         // 简约但有用的默认提示符
-        if let Ok(cwd) = env::current_dir() {
-            if let Some(cwd_str) = cwd.to_str() {
+        if let Ok(cwd) = env::current_dir()
+            && let Some(cwd_str) = cwd.to_str() {
                 #[cfg(windows)]
                 return format!("(lumesh){cwd_str} ❯ ");
                 #[cfg(unix)]
                 return format!("\x1b[1;34m(lumesh)\x1b[0m{cwd_str} \x1b[32m❯\x1b[0m ");
             }
-        }
         ">> ".into()
     }
 }
@@ -224,16 +219,14 @@ fn get_short_path(path: &Path) -> String {
     // #[cfg(unix)]
     let is_home = dirs::home_dir().is_some_and(|home_dir| path.starts_with(home_dir));
     // #[cfg(unix)]
-    if is_home {
-        if let Some(home_dir) = dirs::home_dir() {
-            if components.len() < 6 {
+    if is_home
+        && let Some(home_dir) = dirs::home_dir()
+            && components.len() < 6 {
                 return path
                     .to_string_lossy()
                     .to_string()
                     .replace(home_dir.to_str().unwrap(), "~");
             }
-        }
-    }
 
     // 检查路径组件数量
 

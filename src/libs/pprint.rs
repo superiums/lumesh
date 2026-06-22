@@ -48,17 +48,12 @@ pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::RuntimeErro
     Ok(Expression::None)
 }
 
-#[derive(Tabled, PartialOrd, PartialEq, Eq)]
+#[derive(Tabled, PartialEq, Eq, PartialOrd, Ord)]
 struct KeyValueRow {
     #[tabled(rename = "KEY")]
     key: String,
     #[tabled(rename = "VALUE")]
     value: String,
-}
-impl Ord for KeyValueRow {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.key.cmp(&other.key)
-    }
 }
 fn pprint_map_internal<I>(items: I, is_hmap: bool) -> Table
 where

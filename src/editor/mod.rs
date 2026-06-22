@@ -1,4 +1,5 @@
 mod buffer;
+#[allow(clippy::module_inception)]
 pub mod editor;
 mod history;
 mod key;

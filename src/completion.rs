@@ -17,6 +17,12 @@ pub struct CompletionDatabase {
     entries: HashMap<String, Arc<Vec<CompletionEntry>>>,
     // base_dir: String,
 }
+impl Default for CompletionDatabase {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CompletionDatabase {
     pub fn new() -> Self {
         Self {
@@ -114,8 +120,8 @@ fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
             priority: record[6].trim().parse().unwrap_or(0),
             description: if record.len() > 7 {
                 record[7]
-                    .trim_start_matches(&['\'', '"', ' '])
-                    .trim_end_matches(&['\'', '"', ' '])
+                    .trim_start_matches(['\'', '"', ' '])
+                    .trim_end_matches(['\'', '"', ' '])
                     .to_string()
             } else {
                 String::new()
@@ -222,7 +228,7 @@ impl ParamCompleter {
                 return !reverse;
             }
         }
-        return reverse;
+        reverse
     }
 
     fn check_cond_group(&self, group: &str, args: &[&str]) -> bool {
@@ -240,7 +246,7 @@ impl ParamCompleter {
             } else {
                 (part, false)
             };
-            let matched = args.iter().any(|a| *a == expected);
+            let matched = args.contains(&expected);
             if negate {
                 if matched {
                     return false;
@@ -279,7 +285,7 @@ impl ParamCompleter {
             return false;
         }
 
-        return true;
+        true
     }
 
     /**
@@ -295,13 +301,12 @@ impl ParamCompleter {
         // check condition as subcommand
         // 无参数，若有condition则列出
         if current_token.starts_with("--") && entry.long_opt.is_some() {
-            if current_token.len() == 2
+            if (current_token.len() == 2
                 || entry
                     .long_opt
                     .as_ref()
-                    .is_some_and(|x| x.starts_with(&current_token[2..]))
-            {
-                if self.check_condition(entry, args, current_token) {
+                    .is_some_and(|x| x.starts_with(&current_token[2..])))
+                && self.check_condition(entry, args, current_token) {
                     if entry
                         .long_opt
                         .as_ref()
@@ -315,16 +320,14 @@ impl ParamCompleter {
                         return MatchType::Long;
                     }
                 }
-            }
             return MatchType::None;
         } else if current_token.starts_with("-") && entry.short_opt.is_some() {
-            if current_token.len() == 1
+            if (current_token.len() == 1
                 || entry
                     .short_opt
                     .as_ref()
-                    .is_some_and(|x| x.starts_with(&current_token[1..]))
-            {
-                if self.check_condition(entry, args, current_token) {
+                    .is_some_and(|x| x.starts_with(&current_token[1..])))
+                && self.check_condition(entry, args, current_token) {
                     if entry
                         .short_opt
                         .as_ref()
@@ -338,7 +341,6 @@ impl ParamCompleter {
                         return MatchType::Short;
                     }
                 }
-            }
             return MatchType::None;
             // 只检测正在输入
         } else if !current_token.is_empty() {
@@ -468,20 +470,16 @@ impl ParamCompleter {
                     .short_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(current_token))
-                {
-                    if entry.directives.iter().any(|d| d == "@m") {
+                    && entry.directives.iter().any(|d| d == "@m") {
                         return MatchType::Short;
                     }
-                }
                 if entry
                     .long_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(current_token))
-                {
-                    if entry.directives.iter().any(|d| d == "@m") {
+                    && entry.directives.iter().any(|d| d == "@m") {
                         return MatchType::Long;
                     }
-                }
             }
 
             return MatchType::None;
@@ -542,11 +540,10 @@ impl ParamCompleter {
         //         Some(Cow::Owned(arc_entry))
         //     }
         // }
-        if let Ok(db) = COMPLETION_DB.read() {
-            if let Some(entries) = db.entries.get(command) {
+        if let Ok(db) = COMPLETION_DB.read()
+            && let Some(entries) = db.entries.get(command) {
                 return Some(Arc::clone(entries));
             }
-        }
 
         // 如果不存在，获取写锁并插入
         if let Ok(mut db) = COMPLETION_DB.write() {
@@ -700,14 +697,13 @@ impl ParamCompleter {
                     MatchType::ArgumentWithLong => {
                         // arg需要过滤
                         for x in entry.args.iter() {
-                            if x.starts_with(current_token) {
-                                if let Some(long) = entry.long_opt.clone() {
+                            if x.starts_with(current_token)
+                                && let Some(long) = entry.long_opt.clone() {
                                     v.push(CompletionPair {
                                         display: format_arg_opt(entry, x),
                                         replacement: format!("--{} {}", long, x),
                                     })
                                 }
-                            }
                         }
 
                         // v.push()
@@ -715,22 +711,21 @@ impl ParamCompleter {
                     MatchType::ArgumentWithShort => {
                         // arg需要过滤
                         for x in entry.args.iter() {
-                            if x.starts_with(current_token) {
-                                if let Some(short) = entry.short_opt.clone() {
+                            if x.starts_with(current_token)
+                                && let Some(short) = entry.short_opt.clone() {
                                     v.push(CompletionPair {
                                         display: format_arg_opt(entry, x),
                                         replacement: format!("-{} {}", short, x),
                                     })
                                 }
-                            }
                         }
                     }
                     MatchType::ExternalCMD => {
                         let mut env = Environment::new();
                         env.define("T", Expression::String(current_token.to_string()));
 
-                        if let Ok(expr) = parse(&entry.description) {
-                            if let Ok(result) = expr.eval_in_assign(&mut env) {
+                        if let Ok(expr) = parse(&entry.description)
+                            && let Ok(result) = expr.eval_in_assign(&mut env) {
                                 match result {
                                     Expression::List(items) => {
                                         for item in items.iter() {
@@ -765,7 +760,6 @@ impl ParamCompleter {
                                     }
                                 }
                             }
-                        }
                     }
                     MatchType::File => {
                         let dir_only = entry.directives.iter().any(|d| d == "@D");
@@ -793,7 +787,7 @@ impl ParamCompleter {
 /// directories end with `/`; paths with spaces are quoted with `'...'`.
 pub(crate) fn list_path_entries(current_token: &str, dir_only: bool) -> Vec<(String, String)> {
     let mut items = Vec::new();
-    let (dir, file_prefix) = match current_token.rfind(|c| c == '/' || c == '\\') {
+    let (dir, file_prefix) = match current_token.rfind(['/', '\\']) {
         Some(i) => (&current_token[..=i], &current_token[i + 1..]),
         None => ("./", current_token),
     };
@@ -804,8 +798,8 @@ pub(crate) fn list_path_entries(current_token: &str, dir_only: bool) -> Vec<(Str
     };
     if let Ok(entries) = std::fs::read_dir(dir_path) {
         for entry in entries.flatten() {
-            if let Some(name) = entry.file_name().to_str() {
-                if name.starts_with(file_prefix) {
+            if let Some(name) = entry.file_name().to_str()
+                && name.starts_with(file_prefix) {
                     let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
                     if dir_only && !is_dir {
                         continue;
@@ -823,7 +817,6 @@ pub(crate) fn list_path_entries(current_token: &str, dir_only: bool) -> Vec<(Str
                     };
                     items.push((name.to_string(), full))
                 }
-            }
         }
     }
     items

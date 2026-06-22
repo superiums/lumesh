@@ -216,7 +216,7 @@ fn sleep(
     let duration = match &args[0] {
         Expression::Float(n) if *n > 0.0 => Duration::from_millis(*n as u64),
         Expression::Integer(n) if *n > 0 => Duration::from_millis(*n as u64),
-        Expression::String(s) => parse_duration_string(&s, ctx)?,
+        Expression::String(s) => parse_duration_string(s, ctx)?,
         otherwise => {
             return Err(RuntimeError::common(
                 format!("expected positive number or duration string, got {otherwise}").into(),
@@ -436,7 +436,7 @@ fn now(
                     ));
                 }
             };
-            Ok(Expression::String(Local::now().format(&format).to_string()))
+            Ok(Expression::String(Local::now().format(format).to_string()))
         }
         _ => Err(RuntimeError::common(
             "now expects 0 or 1 arguments".into(),
@@ -722,10 +722,10 @@ fn timezone(
         Local::now().with_timezone(&offset).naive_local()
     };
 
-    if let Some(a2) = it.next() {
-        if let Expression::String(format) = a2 {
-            return Ok(Expression::String(dt.format(&format).to_string()));
-        }
+    if let Some(a2) = it.next()
+        && let Expression::String(format) = a2
+    {
+        return Ok(Expression::String(dt.format(&format).to_string()));
     }
 
     Ok(Expression::DateTime(dt))

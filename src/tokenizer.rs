@@ -46,7 +46,7 @@ impl Ctx {
             _ => match last_char {
                 Some(c) if c.is_ascii_whitespace() => Ctx::Space,
                 Some(c) if c.is_ascii_alphanumeric() || c == '_' => Ctx::Word,
-                Some(c) if matches!(c, ')' | ']' | '}' | '\'' | '"' | '`') => Ctx::Word,
+                Some(')' | ']' | '}' | '\'' | '"' | '`') => Ctx::Word,
                 _ => Ctx::Open,
             },
         }
@@ -1030,10 +1030,10 @@ fn parse_command_token(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
 
 fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // 读取直到遇到空格、括号或管道符号
-    let mut chars = input.chars();
+    let chars = input.chars();
     let mut length = 0;
     // `=` is used for var asign: IFS='';xx
-    while let Some(c) = chars.next() {
+    for c in chars {
         if c.is_ascii_whitespace()
             || matches!(
                 &c,

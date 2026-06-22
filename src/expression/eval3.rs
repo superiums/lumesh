@@ -13,9 +13,9 @@ use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, Runtim
 // the resean to excute it here, is for local vars in loop,
 // only current env knows the state.
 #[inline]
-pub fn prepare_args<'a>(
+pub fn prepare_args(
     // cmd: &str,
-    args: &'a [Expression],
+    args: &[Expression],
     // check_lazy: bool,
     insert_arg: Option<Expression>,
     env: &mut Environment,
@@ -210,9 +210,9 @@ impl Expression {
                 // 执行 before 函数
                 state.set(State::IN_DECO);
                 for (i, decoder) in decoders.iter().enumerate() {
-                    let before = decoder.get(0).unwrap();
+                    let before = decoder.first().unwrap();
                     if !matches!(before, &Expression::None | &Expression::Blank) {
-                        before.eval_apply(before, &vec![], state, &mut env_stack[i], depth)?;
+                        before.eval_apply(before, &[], state, &mut env_stack[i], depth)?;
                     }
                 }
                 state.clear(State::IN_DECO);
@@ -227,7 +227,7 @@ impl Expression {
                     if !matches!(after, &Expression::None | &Expression::Blank) {
                         let env_idx = decoders.len() - 1 - i;
                         env_stack[env_idx].define("RESULT", result.clone());
-                        after.eval_apply(after, &vec![], state, &mut env_stack[env_idx], depth)?;
+                        after.eval_apply(after, &[], state, &mut env_stack[env_idx], depth)?;
                     }
                 }
                 state.clear(State::IN_DECO);
@@ -331,10 +331,10 @@ impl Expression {
             }
 
             Expression::Function(.., ref decos) => {
-                return match decos.is_empty() {
+                match decos.is_empty() {
                     true => self.eval_normal_function(func_eval, args, state, env, depth),
                     false => self.eval_function_with_deco(func_eval, args, state, env, depth),
-                };
+                }
             }
             // 命令形式的内置函数调用如： fs.read! a
             // 不用!,则进入eval_cmd中
@@ -346,7 +346,7 @@ impl Expression {
                 let result = self.eval_apply(&function, args, state, env, depth + 1);
                 state.truncate_lookup_domains(modules.len());
                 state.clear(State::IN_DOMAINS);
-                return result;
+                result
                 // return self.eval_symbo_with_domain(module, function, args, state, env, depth + 1);
             }
             // Expression::None => Ok(Expression::None),
@@ -452,17 +452,17 @@ impl Expression {
                         }
                     }
                 }
-                return match env.get(name) {
+                match env.get(name) {
                     Some(expr) => Ok(expr),
                     None => Ok(self.clone()),
-                };
+                }
             }
             // may values as builtin
             Self::Property(lhs, rhs) => {
-                return self.handle_property(lhs, rhs, state, env, depth + 1);
+                self.handle_property(lhs, rhs, state, env, depth + 1)
             }
             Self::Index(lhs, rhs) => {
-                return self.handle_index_or_slice(lhs, rhs, state, env, depth + 1);
+                self.handle_index_or_slice(lhs, rhs, state, env, depth + 1)
             }
             // for lambda/function/moduleCall them self.
             _ => Ok(self.clone()),
@@ -473,7 +473,7 @@ impl Expression {
     #[inline]
     pub fn eval_command(
         &self,
-        args: &Vec<Expression>,
+        args: &[Expression],
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -496,7 +496,7 @@ impl Expression {
                         handle_command(
                             self,
                             &aa.0.to_vec().first().unwrap().to_string(),
-                            &aa.1.to_vec(),
+                            aa.1,
                             state,
                             env,
                             depth + 1,
@@ -528,7 +528,7 @@ impl Expression {
             // 延迟赋值命令 let x := ls
             Expression::Command(cmd_sym, cmd_args) => {
                 let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
-                new_vec.extend_from_slice(&cmd_args);
+                new_vec.extend_from_slice(cmd_args);
                 new_vec.extend_from_slice(args);
                 handle_command(self, &cmd_sym.to_string(), &new_vec, state, env, depth + 1)
             }
@@ -729,8 +729,8 @@ impl Expression {
 /// 返回元组: (剩余未绑定的形式参数)
 #[inline]
 pub fn bind_arguments(
-    params: &Vec<String>,
-    args: &Vec<Expression>,
+    params: &[String],
+    args: &[Expression],
     target_env: &mut Environment,
 ) -> Option<Vec<String>> {
     // 计算实际能绑定的参数数量
@@ -785,24 +785,23 @@ impl Expression {
     pub fn handle_builtin_n_normal_cmd(
         &self,
         cmd: &Expression,
-        args: &Vec<Expression>,
+        args: &[Expression],
         state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // inject builtin cmd executor here, to invoid to influent other index eval.
 
-        if let Expression::Property(base, method) = cmd {
-            if let Some(btr) =
+        if let Expression::Property(base, method) = cmd
+            && let Some(btr) =
                 handle_builtin(base, &method.to_string(), args, self, state, env, depth)?
             {
                 return Ok(btr);
             }
             // 自定义Map不应以命令方式调用,但文件名可能以a.b的方式存在
-        }
 
-        if let Expression::Symbol(cmd_sym) = cmd {
-            if let Some(btr) = handle_builtin(
+        if let Expression::Symbol(cmd_sym) = cmd
+            && let Some(btr) = handle_builtin(
                 &Expression::Blank,
                 cmd_sym.as_ref(),
                 args,
@@ -813,17 +812,16 @@ impl Expression {
             )? {
                 return Ok(btr);
             }
-        }
 
         // symbol和Property方式匹配失败后，允许其他含义，所以继续匹配
-        return match cmd {
+        match cmd {
             Expression::Variable(_) | Expression::Property(..) => {
                 let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
-                return eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
+                eval_cmd.eval_command(args.as_ref(), state, env, depth + 1)
             }
             // 这里的symbol不再当变量解析，全部按原始symbol含义处理
             Expression::Symbol(_) | Expression::String(_) => {
-                return cmd.eval_command(args.as_ref(), state, env, depth + 1);
+                cmd.eval_command(args.as_ref(), state, env, depth + 1)
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
@@ -834,7 +832,7 @@ impl Expression {
                 self.clone(),
                 depth,
             )),
-        };
+        }
     }
 
     /// chain call

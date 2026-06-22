@@ -273,6 +273,6 @@ fn cds(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let cmd = "ui.pick $PATH_SESSION 'cd to:' ?! | cd _";
-    parse_and_eval(&cmd, env);
+    parse_and_eval(cmd, env);
     Ok(Expression::None)
 }

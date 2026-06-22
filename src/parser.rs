@@ -288,7 +288,7 @@ impl PrattParser {
                     match &lhs {
                         Expression::Symbol(_)|Expression::Variable(_)| Expression::String(_)
                         |Expression::Index(.. ) | Expression::Property(..)=>{}
-                        _ => break()
+                        _ => break
                     }
                     if input.len() == 1 {
                         // CMD arg1, 只有第一个参数
@@ -1018,6 +1018,7 @@ fn parse_param(
 }
 
 // 函数参数列表解析
+#[allow(clippy::type_complexity)]
 fn parse_param_list(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, (Vec<(String, Option<Expression>)>, Option<String>), SyntaxErrorKind> {
@@ -1832,22 +1833,8 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
     Ok((input, statement))
 }
 ///命令或数学运算。
-///语句开始，等号后，括号中：应匹配 cmd call，match compute.
-
-/// 便捷控制台打印
-// fn parse_direct_print(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-//     // dbg!("--direct print--");
-//     let (input, _) = text(":")(input)?;
-//     parse_func_call(input)
-// }
-
-/// 运算语句
-// fn parse_math(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-//     if input.is_empty() {
-//         return Err(nom::Err::Error(SyntaxErrorKind::NoExpression));
-//     }
-//     // dbg!("--->parse_math---");
-//     match input.first().unwrap().kind {
+// ///语句开始，等号后，括号中：应匹配 cmd call，match compute.
+// /// 便捷控制台打印
 //         TokenKind::IntegerLiteral
 //         | TokenKind::FloatLiteral
 //         | TokenKind::Operator
@@ -2096,7 +2083,7 @@ fn parse_block_as_sequence(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression,
                 parse_statement,
                 opt(many0(kind(TokenKind::LineBreak))),
             )),
-            |stmts| Expression::Sequence(stmts),
+            Expression::Sequence,
         ),
         text_close("}"),
     )(input)?;

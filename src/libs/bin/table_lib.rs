@@ -141,7 +141,7 @@ fn rows(
     let mut it = args.into_iter();
     let data = it.next().unwrap();
     let table = get_table_arg(data, ctx)?;
-    let to_map = it.next().map_or(false, |x| x.is_truthy());
+    let to_map = it.next().is_some_and(|x| x.is_truthy());
     if to_map {
         let r: Vec<BTreeMap<String, Expression>> = table
             .rows()
@@ -177,7 +177,7 @@ fn first(
     let mut it = args.into_iter();
     let data = it.next().unwrap();
     let table = get_table_arg(data, ctx)?;
-    let to_map = it.next().map_or(false, |x| x.is_truthy());
+    let to_map = it.next().is_some_and(|x| x.is_truthy());
 
     let row = table.rows().first();
     match row {
@@ -214,7 +214,7 @@ fn last(
     let mut it = args.into_iter();
     let data = it.next().unwrap();
     let table = get_table_arg(data, ctx)?;
-    let to_map = it.next().map_or(false, |x| x.is_truthy());
+    let to_map = it.next().is_some_and(|x| x.is_truthy());
 
     let row = table.rows().last();
     match row {
@@ -253,9 +253,9 @@ fn at(
     let table = get_table_arg(data, ctx)?;
     let index = it.next().unwrap();
     let idx = get_integer_arg(index, ctx)? as usize;
-    let to_map = it.next().map_or(false, |x| x.is_truthy());
+    let to_map = it.next().is_some_and(|x| x.is_truthy());
 
-    let row = table.rows().iter().nth(idx);
+    let row = table.rows().get(idx);
     match row {
         None => Ok(Expression::None),
         Some(row) => {
@@ -355,13 +355,8 @@ fn find(
         Expression::Function(..) | Expression::Lambda(..) => {
             let state = &mut State::new();
             for (i, row) in table.rows().iter().enumerate().skip(start) {
-                let r = &target.eval_apply(
-                    &target,
-                    &vec![Expression::from(row.clone())],
-                    state,
-                    env,
-                    0,
-                )?;
+                let r =
+                    &target.eval_apply(&target, &[Expression::from(row.clone())], state, env, 0)?;
                 if let Expression::Boolean(true) = r {
                     return Ok(Expression::Integer(i as i64));
                 }
@@ -403,13 +398,8 @@ fn find_last(
         Expression::Function(..) | Expression::Lambda(..) => {
             let state = &mut State::new();
             for (i, row) in table.rows().iter().enumerate().rev().skip(start) {
-                let r = &target.eval_apply(
-                    &target,
-                    &vec![Expression::from(row.clone())],
-                    state,
-                    env,
-                    0,
-                )?;
+                let r =
+                    &target.eval_apply(&target, &[Expression::from(row.clone())], state, env, 0)?;
                 if let Expression::Boolean(true) = r {
                     return Ok(Expression::Integer(i as i64));
                 }
@@ -451,8 +441,8 @@ fn filter(
                 .iter()
                 .filter(|&row| {
                     target
-                        .eval_apply(&target, &vec![Expression::from(row.clone())], state, env, 0)
-                        .map_or(false, |r| r.is_truthy())
+                        .eval_apply(&target, &[Expression::from(row.clone())], state, env, 0)
+                        .is_ok_and(|r| r.is_truthy())
                 })
                 .cloned()
                 .collect()

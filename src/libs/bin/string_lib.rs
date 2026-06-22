@@ -217,7 +217,7 @@ fn is_title(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_title", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
-    let title = to_title_inner(&text);
+    let title = to_title_inner(text);
     Ok(Expression::Boolean(text == &title))
 }
 
@@ -368,7 +368,7 @@ fn words_quoted(
 
     let re = regex_lite::Regex::new(r#""((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+)"#).unwrap();
     let words = re
-        .captures_iter(&text)
+        .captures_iter(text)
         .filter_map(|cap| {
             cap.get(1)
                 .or_else(|| cap.get(2))
@@ -436,7 +436,7 @@ fn repeat(
     let count = get_integer_ref(&args[1], ctx)?;
 
     Ok(Expression::String(
-        text.repeat(count.max(0).min(1000) as usize),
+        text.repeat(count.clamp(0, 1000) as usize),
     ))
 }
 
@@ -621,7 +621,7 @@ fn to_title(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_title", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
-    let title = to_title_inner(&text);
+    let title = to_title_inner(text);
     Ok(Expression::String(title))
 }
 
@@ -900,7 +900,7 @@ fn colors(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    if args.len() > 0 && !args[0].is_truthy() {
+    if !args.is_empty() && !args[0].is_truthy() {
         Ok(Expression::from(
             COLOR_MAP
                 .iter()
@@ -984,7 +984,7 @@ fn true_color(
                 }
             }
             // Parse RGB
-            3 => format!("{}", parts.join(";")),
+            3 => parts.join(";").to_string(),
             _ => {
                 return Err(RuntimeError::common(
                     "invalid color format, expected hex or r,g,b".into(),

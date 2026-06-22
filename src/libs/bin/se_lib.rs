@@ -54,7 +54,7 @@ fn r#where(
     state: &mut State,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("where", &args, 2, ctx)?;
+    check_exact_args_len("where", args, 2, ctx)?;
     let data_evaled = args[0].eval_mut(state, env, 0)?;
     let data = get_table_arg(data_evaled, ctx)?;
 
@@ -101,7 +101,7 @@ fn repeat(
     state: &mut State,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("repeat", &args, 2, ctx)?;
+    check_exact_args_len("repeat", args, 2, ctx)?;
     let n = get_integer_arg(args[1].eval_mut(state, env, 0)?, ctx)?;
     let results = (0..n)
         .map(|_| args[0].eval_with_assign(state, env))
@@ -154,7 +154,7 @@ fn r#typeof(
     state: &mut State,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("typeof", &args, 1, ctx)?;
+    check_exact_args_len("typeof", args, 1, ctx)?;
     let t = args[0].eval_with_assign(state, env)?.type_name();
     Ok(Expression::from(t))
 }
@@ -166,7 +166,7 @@ fn format(
     state: &mut State,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("format", &args, 1.., ctx)?;
+    check_args_len("format", args, 1.., ctx)?;
     let template_expr = args[0].eval_mut(state, env, 0)?;
     let template = get_string_arg(template_expr, ctx)?;
 
@@ -195,7 +195,7 @@ pub fn set_root(
     state: &mut State,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set_root", &args, 2, ctx)?;
+    check_exact_args_len("set_root", args, 2, ctx)?;
     let name = args[0].to_string();
     let expr = args[1].eval_with_assign(state, env)?;
     env.define_in_root(&name, expr);
@@ -209,7 +209,7 @@ pub fn unset_root(
     _state: &mut State,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("unset_root", &args, 1, ctx)?;
+    check_exact_args_len("unset_root", args, 1, ctx)?;
     let name = args[0].to_string();
     env.undefine_in_root(&name);
     Ok(Expression::None)

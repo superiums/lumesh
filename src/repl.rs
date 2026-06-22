@@ -117,7 +117,7 @@ impl LumeCompleter {
                                     .collect();
                             }
                         });
-                        items.sort_by(|a, b| a.display_text().len().cmp(&b.display_text().len()));
+                        items.sort_by_key(|a| a.display_text().len());
                         return items;
                     }
                 }
@@ -132,7 +132,7 @@ impl LumeCompleter {
             }
         }
 
-        items.sort_by(|a, b| a.display_text().len().cmp(&b.display_text().len()));
+        items.sort_by_key(|a| a.display_text().len());
         items
     }
 
@@ -234,6 +234,7 @@ impl Highlighter for LumeHighlighter {
 }
 
 struct LumeHinter {
+    #[allow(clippy::type_complexity)]
     hinter: Option<Box<dyn Fn(&str, usize) -> Option<String>>>,
 }
 
@@ -285,16 +286,14 @@ pub fn run_repl(env: &mut Environment) {
             let path = c_dir.join(".lume_history");
             #[cfg(windows)]
             let path = c_dir.join("lume_history.log");
-            if !c_dir.exists() {
-                if let Err(e) = std::fs::create_dir_all(&c_dir) {
+            if !c_dir.exists()
+                && let Err(e) = std::fs::create_dir_all(&c_dir) {
                     eprintln!("Failed to create cache directory: {e}");
                 }
-            }
-            if !path.exists() {
-                if let Err(e) = std::fs::File::create(&path) {
+            if !path.exists()
+                && let Err(e) = std::fs::File::create(&path) {
                     eprintln!("Failed to create cache file: {e}");
                 }
-            }
             path.into_os_string().into_string().unwrap()
         }
     };
@@ -425,9 +424,9 @@ pub fn run_repl(env: &mut Environment) {
     }
     editor.set_validator(Box::new(LumeValidator));
 
-    // Share env with the editor callback via Arc<Mutex<>> so the callback
+    // Share env with the editor callback via Rc<Mutex<>> so the callback
     // can fork a live snapshot of the current environment at hotkey time.
-    let shared_env = Arc::new(Mutex::new(env.clone()));
+    let shared_env = Rc::new(Mutex::new(env.clone()));
 
     // Custom hotkeys LUME_HOT_BINDINGS
     let hotkey_bindings = env.get("LUME_HOT_BINDINGS");
@@ -436,8 +435,8 @@ pub fn run_repl(env: &mut Environment) {
     if let Some(Expression::Map(bindings)) = hotkey_bindings {
         for (k, v) in bindings.iter() {
             let key_str = k.to_string();
-            if let Some((mod_str, key_char)) = key_str.rsplit_once('_') {
-                if let Some(ch) = key_char.chars().next() {
+            if let Some((mod_str, key_char)) = key_str.rsplit_once('_')
+                && let Some(ch) = key_char.chars().next() {
                     let key = parse_hot_key(mod_str, ch);
                     match v {
                         Expression::String(s) => {
@@ -474,7 +473,6 @@ pub fn run_repl(env: &mut Environment) {
                         }
                     }
                 }
-            }
         }
     }
     let _abbr_map: HashMap<String, String> = match _abbr {
@@ -544,9 +542,9 @@ pub fn run_repl(env: &mut Environment) {
             continue;
         }
 
-        if parse_and_eval(&full_input, &mut *shared_env.lock().unwrap()) {}
+        parse_and_eval(&full_input, &mut shared_env.lock().unwrap());
 
-        let _ = editor.history_mut().add(full_input);
+        editor.history_mut().add(full_input);
 
         // 检查命令执行期间是否收到 SIGINT（Ctrl+C）
         if childman::check_and_clear_sigint() {
@@ -555,11 +553,10 @@ pub fn run_repl(env: &mut Environment) {
     }
 
     // Save history
-    if !no_history {
-        if let Err(e) = editor.history_mut().save_to_file(&history_file) {
+    if !no_history
+        && let Err(e) = editor.history_mut().save_to_file(&history_file) {
             eprintln!("Failed to save history: {e}");
         }
-    }
 }
 
 fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Option<String> {
@@ -571,7 +568,7 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
         return None;
     }
 
-    let mut matches = collect_command_with_prefix(&segment);
+    let mut matches = collect_command_with_prefix(segment);
 
     if matches.is_empty() {
         let ends: &[_] = &['(', ' '];
@@ -616,7 +613,7 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
         return None;
     }
 
-    matches.sort_by(|a, b| a.len().cmp(&b.len()));
+    matches.sort_by_key(|a| a.len());
     if let Some(matched) = matches.first() {
         let suffix = &matched[segment.len()..];
         if !suffix.is_empty() {

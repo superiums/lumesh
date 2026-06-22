@@ -352,7 +352,6 @@ mod tokenizer_tests {
             );
         }
     }
-
 }
 
 // ============================================================
@@ -578,7 +577,7 @@ mod parser_tests {
     fn parse_lambda() {
         match parse_script("(x) -> x * 2").unwrap() {
             Expression::Lambda(ref params, ref body, _) => {
-                assert_eq!(params, &vec!["x".to_string()]);
+                assert_eq!(params, &["x".to_string()]);
                 // body should be Block containing BinaryOp
                 match body.as_ref() {
                     Expression::Block(stmts) => {
@@ -908,7 +907,11 @@ mod operator_tests {
     #[test]
     fn test_mul_string_int_zero() {
         let result = (Expression::String("abc".into()) * Expression::Integer(0)).unwrap();
-        assert_eq!(result, Expression::String("".into()), "'abc' * 0 should be ''");
+        assert_eq!(
+            result,
+            Expression::String("".into()),
+            "'abc' * 0 should be ''"
+        );
     }
 
     #[test]
@@ -1465,15 +1468,21 @@ fn test_quote_single_pure_literal() {
     assert_eq!(tokens[0].kind, crate::TokenKind::StringRaw);
 
     let result = eval_str("'hello\\nworld'").unwrap();
-    assert_eq!(result, Expression::String("hello\\nworld".into()),
-               "single-quoted \\n should stay literal");
+    assert_eq!(
+        result,
+        Expression::String("hello\\nworld".into()),
+        "single-quoted \\n should stay literal"
+    );
 }
 
 #[test]
 fn test_quote_double_newline() {
     let result = eval_str(r#""hello\nworld""#).unwrap();
-    assert_eq!(result, Expression::String("hello\nworld".into()),
-               "double-quoted \\n should become newline");
+    assert_eq!(
+        result,
+        Expression::String("hello\nworld".into()),
+        "double-quoted \\n should become newline"
+    );
 }
 
 #[test]
@@ -1503,15 +1512,21 @@ fn test_quote_double_escaped_quote() {
 #[test]
 fn test_quote_double_invalid_escape() {
     let result = eval_str(r#""hello\nworld\zfoo""#).unwrap();
-    assert_eq!(result, Expression::String("hello\nworld\\zfoo".into()),
-               "valid \\n should process, invalid \\z becomes literal");
+    assert_eq!(
+        result,
+        Expression::String("hello\nworld\\zfoo".into()),
+        "valid \\n should process, invalid \\z becomes literal"
+    );
 }
 
 #[test]
 fn test_quote_backtick_newline() {
     let result = eval_str(r"`hello\nworld`").unwrap();
-    assert_eq!(result, Expression::String("hello\nworld".into()),
-               "backtick \\n should be newline");
+    assert_eq!(
+        result,
+        Expression::String("hello\nworld".into()),
+        "backtick \\n should be newline"
+    );
 }
 
 #[test]
@@ -1535,8 +1550,11 @@ fn test_quote_backtick_backslash() {
 #[test]
 fn test_quote_backtick_escaped_backtick() {
     let result = eval_str(r"`back\tick`").unwrap();
-    assert_eq!(result, Expression::String("back\tick".into()),
-               "backtick \\t should become tab");
+    assert_eq!(
+        result,
+        Expression::String("back\tick".into()),
+        "backtick \\t should become tab"
+    );
 }
 
 #[test]
@@ -1551,8 +1569,11 @@ fn test_quote_backtick_escape_and_interpolation() {
 #[test]
 fn test_quote_backtick_invalid_escape() {
     let result = eval_str(r"`hello\nworld\zfoo`").unwrap();
-    assert_eq!(result, Expression::String("hello\nworld\\zfoo".into()),
-               "valid \\n should process, invalid \\z becomes literal");
+    assert_eq!(
+        result,
+        Expression::String("hello\nworld\\zfoo".into()),
+        "valid \\n should process, invalid \\z becomes literal"
+    );
 }
 
 #[test]
@@ -1795,7 +1816,11 @@ mod evaluator_tests {
     #[test]
     fn test_eval_string_times_zero() {
         let result = eval_str(r#""ab" * 0"#).unwrap();
-        assert_eq!(result, Expression::String("".into()), "'ab' * 0 should be ''");
+        assert_eq!(
+            result,
+            Expression::String("".into()),
+            "'ab' * 0 should be ''"
+        );
     }
 
     #[test]
@@ -1909,7 +1934,11 @@ mod bug_reproduction_tests {
     #[test]
     fn bug_mul_string_by_zero_returns_empty() {
         let result = (Expression::String("abc".into()) * Expression::Integer(0)).unwrap();
-        assert_eq!(result, Expression::String("".into()), "String * 0 should be ''");
+        assert_eq!(
+            result,
+            Expression::String("".into()),
+            "String * 0 should be ''"
+        );
     }
 
     #[test]
@@ -1976,7 +2005,11 @@ mod bug_reproduction_tests {
     fn bug_addassign_overflow_wraps() {
         let mut val = Expression::Integer(i64::MAX);
         val += Expression::Integer(1);
-        assert_eq!(val, Expression::Integer(i64::MIN), "AddAssign should wrap on overflow");
+        assert_eq!(
+            val,
+            Expression::Integer(i64::MIN),
+            "AddAssign should wrap on overflow"
+        );
     }
 
     #[test]
@@ -1984,7 +2017,11 @@ mod bug_reproduction_tests {
         let mut val = Expression::Integer(i64::MAX);
         val *= Expression::Integer(2);
         // wrapping_mul: i64::MAX * 2 = -2
-        assert_eq!(val, Expression::Integer(-2), "MulAssign should wrap on overflow");
+        assert_eq!(
+            val,
+            Expression::Integer(-2),
+            "MulAssign should wrap on overflow"
+        );
     }
 
     /// Test that `!:` and `:` as match operators work

@@ -322,7 +322,7 @@ pub fn check_fn_arg(
 }
 
 // 辅助函数：将 List<Map> 转换为 TableData
-pub fn convert_list_map_to_table(list: &Vec<Expression>) -> TableData {
+pub fn convert_list_map_to_table(list: &[Expression]) -> TableData {
     if list.is_empty() {
         return TableData::with_header(Vec::new());
     }
@@ -355,16 +355,14 @@ pub fn get_table_arg(expr: Expression, ctx: &Expression) -> Result<TableData, Ru
     match expr {
         Expression::List(list) => Ok(convert_list_map_to_table(&list)),
         Expression::Table(t) => Ok(t),
-        e => {
-            return Err(RuntimeError::new(
-                RuntimeErrorKind::TypeError {
-                    expected: "Table/List as 1st arg for sortby".into(),
-                    found: e.type_name(),
-                    sym: e.to_string(),
-                },
-                ctx.clone(),
-                0,
-            ));
-        }
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "Table/List as 1st arg for sortby".into(),
+                found: e.type_name(),
+                sym: e.to_string(),
+            },
+            ctx.clone(),
+            0,
+        )),
     }
 }

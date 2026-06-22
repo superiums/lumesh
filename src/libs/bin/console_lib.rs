@@ -446,7 +446,7 @@ fn read_password(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("read_password", &args, 0..1, ctx)?;
-    let rst = if args.len() > 0 {
+    let rst = if !args.is_empty() {
         rpassword::prompt_password(args[0].to_string())
     } else {
         rpassword::prompt_password("")

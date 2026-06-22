@@ -378,7 +378,7 @@ pub fn regist_const_style() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 pub static COLOR_MAP: LazyLock<HashMap<&'static str, (i64, i64, i64)>> =
-    LazyLock::new(|| init_color_map());
+    LazyLock::new(init_color_map);
 
 fn init_color_map() -> HashMap<&'static str, (i64, i64, i64)> {
     hash_map! {
@@ -642,18 +642,18 @@ pub fn true_color_by_hex(hex: &str, is_bg: bool, ctx: &Expression) -> Result<Str
         let prefix = if is_bg { "48" } else { "38" };
         Ok(format!("\x1b[{};2;{}m", prefix, color_code))
     } else {
-        return Err(RuntimeError::common(
+        Err(RuntimeError::common(
             "invalid hex color format".into(),
             ctx.clone(),
             0,
-        ));
+        ))
     }
 }
 
 /// style
 pub fn handle_style(name: &str, ctx: &Expression) -> Result<Expression, RuntimeError> {
     let code = if name == "RESET" {
-        0 as usize
+        0_usize
     } else if let Some(reset) = name.strip_prefix("RESET_") {
         get_style_code(reset, ctx)? + 20
     } else {

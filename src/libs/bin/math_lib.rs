@@ -9,7 +9,7 @@ pub fn handle_math(arg: &str, ctx: &Expression) -> Result<Expression, RuntimeErr
     match arg {
         "E" => Ok(Expression::Float(std::f64::consts::E)),
         "PI" => Ok(Expression::Float(std::f64::consts::PI)),
-        "PHI" => Ok(Expression::Float(1.618_033_988_749_895_f64.into())),
+        "PHI" => Ok(Expression::Float(1.618_033_988_749_895_f64)),
         _ => Err(RuntimeError::common(
             "unkown const in MATH".into(),
             ctx.clone(),
@@ -339,7 +339,7 @@ fn bit_shl(
 
     let a = get_integer_ref(&args[0], ctx)?;
     let b = get_integer_ref(&args[1], ctx)?;
-    if b < 0 || b > 63 {
+    if !(0..=63).contains(&b) {
         return Err(RuntimeError::common(
             format!("shift amount {} out of range (0-63)", a).into(),
             ctx.clone(),
@@ -358,7 +358,7 @@ fn bit_shr(
 
     let a = get_integer_ref(&args[0], ctx)?;
     let b = get_integer_ref(&args[1], ctx)?;
-    if b < 0 || b > 63 {
+    if !(0..=63).contains(&b) {
         return Err(RuntimeError::common(
             format!("shift amount {} out of range (0-63)", a).into(),
             ctx.clone(),

@@ -389,7 +389,7 @@ fn widget(
     } - 2;
 
     // 自动计算高度
-    let auto_height = calculate_auto_height(&content, text_width);
+    let auto_height = calculate_auto_height(content, text_width);
     let widget_height = if args.len() >= 4 {
         get_integer_ref(&args[3], ctx)? as usize
     } else {

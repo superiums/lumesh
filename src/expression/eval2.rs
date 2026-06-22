@@ -87,11 +87,11 @@ impl Expression {
                         captured_env.insert(var.to_string(), value);
                     }
                 }
-                return Ok(Self::Lambda(
+                Ok(Self::Lambda(
                     params.clone(),
                     body.clone(),
                     Some(captured_env),
-                ));
+                ))
             }
             // 处理函数定义
             Self::Function(name, params, pc, body, decos) => {
@@ -259,6 +259,7 @@ impl Expression {
     // }
 
     #[inline]
+    #[allow(clippy::too_many_arguments)]
     fn handle_for(
         &self,
         var: String,
@@ -741,11 +742,9 @@ impl Expression {
 
 fn glob_expand(s: &str) -> Vec<String> {
     let mut elist = vec![];
-    if let Some(g) = glob(s).ok() {
-        for entry in g {
-            if let Ok(p) = entry {
-                elist.push(p.to_string_lossy().to_string())
-            }
+    if let Ok(g) = glob(s) {
+        for p in g.flatten() {
+            elist.push(p.to_string_lossy().to_string())
         }
     }
     elist
@@ -777,6 +776,7 @@ pub fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
 }
 
 #[inline]
+#[allow(clippy::too_many_arguments)]
 pub fn execute_iteration<I>(
     var_name: String,
     index_name: Option<String>,
@@ -799,7 +799,7 @@ where
     let r = if state.contains(State::IN_ASSIGN) || state.contains(State::IN_PIPE) {
         let mut results = Vec::with_capacity(count);
         for _ in 0..count {
-            if let Err(_) = state.pop_iter() {
+            if state.pop_iter().is_err() {
                 break;
             };
             match body.eval_mut(state, env, depth) {
@@ -836,7 +836,7 @@ where
         }
     } else {
         for _ in 0..count {
-            if let Err(_) = state.pop_iter() {
+            if state.pop_iter().is_err() {
                 break;
             }
             match body.eval_mut(state, env, depth) {

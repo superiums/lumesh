@@ -154,11 +154,10 @@ pub fn init_config(env: &mut Environment) {
         _ => match dirs::config_dir() {
             Some(config_dir) => {
                 let config_path = config_dir.join("lumesh");
-                if !config_path.exists() {
-                    if let Err(e) = create_dir(&config_path) {
+                if !config_path.exists()
+                    && let Err(e) = create_dir(&config_path) {
                         eprintln!("Error while create prelude dir: {e}");
                     }
-                }
                 config_path.join("config.lm")
             }
             _ => PathBuf::from(".lume_config"),
@@ -224,7 +223,6 @@ fn init_cmds(env: &mut Environment) {
     if let Some(Expression::String(pathes)) = env.get("PATH") {
         let np = pathes
             .split_terminator(sp)
-            .into_iter()
             .filter(|p| !p.is_empty()) // 可选：过滤空字符串
             .map(|p| expand_home(p))
             .collect::<HashSet<_>>() // 使用 HashSet 去重
@@ -265,10 +263,9 @@ pub const IFS_STR: u8 = 1 << 3; // string.split
 pub const IFS_CSV: u8 = 1 << 4; // parse.to_csv
 pub const IFS_PCK: u8 = 1 << 5; // ui.pick
 pub fn ifs_contains(mode: u8, env: &mut Environment) -> bool {
-    if let Some(Expression::Integer(m)) = env.get("LUME_IFS_MODE") {
-        if m as u8 & mode != 0 {
+    if let Some(Expression::Integer(m)) = env.get("LUME_IFS_MODE")
+        && m as u8 & mode != 0 {
             return true;
         }
-    }
     false
 }

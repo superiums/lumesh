@@ -19,6 +19,7 @@ use std::{
 /// 8=background, 11=background,shutdown_all
 /// 16=pty
 /// 执行单个命令（支持管道）
+#[allow(clippy::too_many_arguments)]
 fn exec_single_cmd(
     job: &Expression,
     cmdstr: &String,
@@ -110,13 +111,12 @@ fn exec_single_cmd(
 
     // TODO not work yet
     // 合并 stderr 和 stdout 的流
-    if mode & 4 != 0 {
-        if let Some(mut stderr) = child.stderr.take() {
+    if mode & 4 != 0
+        && let Some(mut stderr) = child.stderr.take() {
             // if let Some(mut stdout) = child.stdout.take() {
             std::io::copy(&mut stderr, &mut std::io::stdout()).unwrap(); // 将 stderr 合并到 stdout
             // }
         }
-    }
 
     // 中断信号处理：SIGINT 由全局 handler 捕获（在 repl.rs 中安装），
     // 仅设置标志位，不会杀死 lume 自身。
@@ -153,7 +153,7 @@ fn exec_single_cmd(
             // );
             combined.extend(output.stderr);
             // println!("Combined output: {}", String::from_utf8_lossy(&combined));
-            return Ok(Some(combined));
+            Ok(Some(combined))
         } else {
             if mode & 2 == 0 {
                 //未关闭错误输出才返回错误
@@ -172,11 +172,11 @@ fn exec_single_cmd(
                 // 如果关闭了错误输出，则尝试返回标准输出，二者可能同时存在。
                 return Ok(Some(output.stdout));
             }
-            return Ok(None);
+            Ok(None)
         }
     } else if mode & 8 != 0 {
         // 后台运行
-        return Ok(None);
+        Ok(None)
     } else {
         // 正常模式
         let status = child.wait().map_err(|e| {
@@ -190,7 +190,7 @@ fn exec_single_cmd(
         childman::clear_child();
 
         if status.success() {
-            return Ok(None);
+            Ok(None)
         } else if mode & 2 == 0 {
             //未关闭错误输出才返回错误
             // windows spectial
@@ -256,7 +256,7 @@ pub fn handle_command(
                 let s = expand_home(&st).to_string();
                 if s.contains('*') {
                     let mut matched = false;
-                    if let Some(g) = glob(&s).ok() {
+                    if let Ok(g) = glob(&s) {
                         for path in g.filter_map(Result::ok) {
                             matched = true;
                             cmd_args.push(path.to_string_lossy().to_string());

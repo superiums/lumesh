@@ -22,17 +22,11 @@ pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
                 _ => "/v1/chat/completions".into(),
             },
             complete_max_tokens: match cfg_map.as_ref().get("complete_max_tokens") {
-                Some(h) => match h {
-                    Expression::Integer(c_token) => *c_token as u8,
-                    _ => 10,
-                },
+                Some(Expression::Integer(c_token)) => *c_token as u8,
                 _ => 10,
             },
             chat_max_tokens: match cfg_map.as_ref().get("chat_max_tokens") {
-                Some(h) => match h {
-                    Expression::Integer(c_token) => *c_token as u8,
-                    _ => 100,
-                },
+                Some(Expression::Integer(c_token)) => *c_token as u8,
                 _ => 100,
             },
             model: match cfg_map.as_ref().get("model") {
@@ -99,13 +93,11 @@ impl AIClient for MockAIClient {
                 if let JsonValue::Object(obj) = parsed {
                     if let Some(JsonValue::String(content)) = obj.get("content") {
                         return Ok(content.clone());
-                    } else if let Some(JsonValue::Array(choices)) = obj.get("choices") {
-                        if let Some(JsonValue::Object(choice)) = choices.first() {
-                            if let Some(JsonValue::String(text)) = choice.get("text") {
+                    } else if let Some(JsonValue::Array(choices)) = obj.get("choices")
+                        && let Some(JsonValue::Object(choice)) = choices.first()
+                            && let Some(JsonValue::String(text)) = choice.get("text") {
                                 return Ok(text.clone());
                             }
-                        }
-                    }
                 }
                 Ok("No suggestion".to_string())
             }
@@ -139,11 +131,10 @@ impl AIClient for MockAIClient {
                 if let JsonValue::Object(obj) = parsed {
                     if let Some(JsonValue::Array(choices)) = obj.get("choices") {
                         if let Some(JsonValue::Object(choice)) = choices.first() {
-                            if let Some(JsonValue::Object(message)) = choice.get("message") {
-                                if let Some(JsonValue::String(content)) = message.get("content") {
+                            if let Some(JsonValue::Object(message)) = choice.get("message")
+                                && let Some(JsonValue::String(content)) = message.get("content") {
                                     return Ok(content.clone());
                                 }
-                            }
                             return Ok(chat_response);
                         }
                     } else if let Some(JsonValue::String(message)) = obj.get("message") {

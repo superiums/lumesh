@@ -13,6 +13,8 @@ use super::history::History;
 use super::key::{Cmd, KeyEvent};
 use super::kring::KillRing;
 
+type HotkeyFn = Box<dyn Fn(&str) -> Option<String>>;
+
 const MAX_POPUP_HEIGHT: usize = 10;
 
 #[derive(Debug, Clone)]
@@ -108,7 +110,7 @@ pub struct Editor {
     highlighter: Option<Box<dyn Highlighter>>,
     hinter: Option<Box<dyn Hinter>>,
     custom_bindings: HashMap<KeyEvent, Cmd>,
-    hotkey_fns: HashMap<KeyEvent, Box<dyn Fn(&str) -> Option<String>>>,
+    hotkey_fns: HashMap<KeyEvent, HotkeyFn>,
     abbreviations: HashMap<String, String>,
     sudo_cmd: String,
     is_history_completion: bool,
@@ -126,6 +128,12 @@ pub struct Editor {
     cont_prompt_width: usize,
     show_hint: bool,
     validator: Option<Box<dyn Validator>>,
+}
+
+impl Default for Editor {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Editor {
@@ -276,11 +284,10 @@ impl Editor {
             let event = self.read_event()?;
 
             // Completion mode: handle events
-            if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
-                if self.try_completion_event(&event) {
+            if matches!(self.mode, EditorMode::CompletionSelect { .. })
+                && self.try_completion_event(&event) {
                     continue;
                 }
-            }
 
             // Check hotkey function bindings first (for function/lambda values)
             if let Some(f) = self.hotkey_fns.get(&event) {
@@ -335,20 +342,20 @@ impl Editor {
                     self.leave_completion();
                     self.buffer.insert(c);
                 }
-                KeyEvent::Ctrl(c) if c == 'c' => {
+                KeyEvent::Ctrl('c') => {
                     return Err(ReadlineError::Interrupted);
                 }
-                KeyEvent::Ctrl(c) if c == 'd' => {
+                KeyEvent::Ctrl('d') => {
                     if self.buffer.is_empty() {
                         return Err(ReadlineError::Eof);
                     }
                     self.buffer.delete();
                     self.leave_completion();
                 }
-                KeyEvent::Ctrl(c) if c == 's' => {
+                KeyEvent::Ctrl('s') => {
                     // May want to add Ctrl+S binding later
                 }
-                KeyEvent::Ctrl(c) if c == 'l' => {
+                KeyEvent::Ctrl('l') => {
                     let _ = terminal::Clear(ClearType::All);
                     self.prompt_row = 0;
                 }
@@ -555,7 +562,11 @@ impl Editor {
     fn refresh_completions(&mut self) {
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
-        let byte_pos = line.char_indices().nth(pos).map(|(i, _)| i).unwrap_or(line.len());
+        let byte_pos = line
+            .char_indices()
+            .nth(pos)
+            .map(|(i, _)| i)
+            .unwrap_or(line.len());
         let (old_completions, old_sel) = match &self.mode {
             EditorMode::CompletionSelect {
                 completions,
@@ -582,7 +593,7 @@ impl Editor {
                 .collect()
         };
 
-        let start_pos = if line[..byte_pos].contains(|c| c == '/' || c == '\\') {
+        let start_pos = if line[..byte_pos].contains(['/', '\\']) {
             Self::find_path_start(&line, byte_pos)
         } else {
             Self::find_word_start(&line, byte_pos)
@@ -611,14 +622,13 @@ impl Editor {
 
     fn handle_space(&mut self) {
         let text = self.buffer.text();
-        if !text.contains(' ') {
-            if let Some(expanded) = self.abbreviations.get(text.trim()) {
+        if !text.contains(' ')
+            && let Some(expanded) = self.abbreviations.get(text.trim()) {
                 self.buffer.set_text(expanded);
                 self.buffer.insert(' ');
                 self.buffer.move_to_end();
                 return;
             }
-        }
         self.buffer.insert(' ');
     }
 
@@ -719,11 +729,10 @@ impl Editor {
             Cmd::AcceptLine => {}
             Cmd::Cancel => {
                 self.leave_completion();
-                if self.history.is_navigating() {
-                    if let Some(restored) = self.history.cancel_navigation() {
+                if self.history.is_navigating()
+                    && let Some(restored) = self.history.cancel_navigation() {
                         self.buffer.set_text(&restored);
                     }
-                }
             }
             Cmd::Complete => {
                 self.handle_tab();
@@ -743,8 +752,12 @@ impl Editor {
             Cmd::HistorySearch => {
                 let line = self.buffer.text();
                 let pos = self.buffer.cursor();
-                let byte_pos = line.char_indices().nth(pos).map(|(i, _)| i).unwrap_or(line.len());
-                let start_pos = if line[..byte_pos].contains(|c| c == '/' || c == '\\') {
+                let byte_pos = line
+                    .char_indices()
+                    .nth(pos)
+                    .map(|(i, _)| i)
+                    .unwrap_or(line.len());
+                let start_pos = if line[..byte_pos].contains(['/', '\\']) {
                     Self::find_path_start(&line, byte_pos)
                 } else {
                     Self::find_word_start(&line, byte_pos)
@@ -842,14 +855,18 @@ impl Editor {
         }
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
-        let byte_pos = line.char_indices().nth(pos).map(|(i, _)| i).unwrap_or(line.len());
+        let byte_pos = line
+            .char_indices()
+            .nth(pos)
+            .map(|(i, _)| i)
+            .unwrap_or(line.len());
         self.init_search_pos = byte_pos;
         if let Some(ref completer) = self.completer {
             let completions = completer.complete(&line, byte_pos);
             if completions.is_empty() {
                 return;
             }
-            let start_pos = if line[..byte_pos].contains(|c| c == '/' || c == '\\') {
+            let start_pos = if line[..byte_pos].contains(['/', '\\']) {
                 Self::find_path_start(&line, byte_pos)
             } else {
                 Self::find_word_start(&line, byte_pos)
@@ -884,6 +901,9 @@ impl Editor {
                     selected: new_sel,
                     start_pos: *start_pos,
                 };
+            }
+            EditorMode::Multiline => {
+                // delete a indent
             }
             _ => {}
         }
@@ -1006,8 +1026,10 @@ impl Editor {
             queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
             self.prompt_row = 0;
         } else {
-            let est_visual_rows = 1 + (self.prompt_width + line.len()) / self.terminal_width as usize;
-            let available_rows = (self.terminal_height as usize).saturating_sub(self.prompt_row as usize);
+            let est_visual_rows =
+                1 + (self.prompt_width + line.len()) / self.terminal_width as usize;
+            let available_rows =
+                (self.terminal_height as usize).saturating_sub(self.prompt_row as usize);
             if est_visual_rows > available_rows {
                 queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
                 self.prompt_row = 0;
@@ -1031,8 +1053,7 @@ impl Editor {
                 };
                 queue!(stdout, Print(prefix)).map_err(ReadlineError::Io)?;
                 if let Some(ref hl) = self.highlighter {
-                    queue!(stdout, Print(&hl.highlight(part)))
-                        .map_err(ReadlineError::Io)?;
+                    queue!(stdout, Print(&hl.highlight(part))).map_err(ReadlineError::Io)?;
                 } else {
                     queue!(stdout, Print(part)).map_err(ReadlineError::Io)?;
                 }
@@ -1043,15 +1064,18 @@ impl Editor {
         } else {
             queue!(stdout, Print(&self.prompt)).map_err(ReadlineError::Io)?;
             if let Some(ref hl) = self.highlighter {
-                queue!(stdout, Print(&hl.highlight(&line)))
-                    .map_err(ReadlineError::Io)?;
+                queue!(stdout, Print(&hl.highlight(&line))).map_err(ReadlineError::Io)?;
             } else {
                 queue!(stdout, Print(&line)).map_err(ReadlineError::Io)?;
             }
         }
 
         // Compute cursor position
-        let byte_cursor = line.char_indices().nth(cursor).map(|(i, _)| i).unwrap_or(line.len());
+        let byte_cursor = line
+            .char_indices()
+            .nth(cursor)
+            .map(|(i, _)| i)
+            .unwrap_or(line.len());
         let lines_before_cursor: Vec<&str> = line[..byte_cursor].split('\n').collect();
         let cursor_row_offset = lines_before_cursor.len() - 1;
         let col_in_last = visible_width(lines_before_cursor.last().copied().unwrap_or(""));
@@ -1068,9 +1092,9 @@ impl Editor {
 
         // Cache and render hint at cursor position
         self.current_hint = None;
-        if self.show_hint {
-            if let Some(ref hinter) = self.hinter {
-                if let Some(hint) = hinter.hint(&line, byte_cursor) {
+        if self.show_hint
+            && let Some(ref hinter) = self.hinter
+                && let Some(hint) = hinter.hint(&line, byte_cursor) {
                     self.current_hint = Some(hint.clone());
                     queue!(
                         stdout,
@@ -1081,8 +1105,6 @@ impl Editor {
                     )
                     .map_err(ReadlineError::Io)?;
                 }
-            }
-        }
 
         // Render completion popup
         let popup_data = match &self.mode {
@@ -1134,11 +1156,10 @@ impl Editor {
         let scroll_end = (scroll_start + height).min(total);
         let popup_width = self.terminal_width as usize;
 
-        for i in scroll_start..scroll_end {
-            let display_idx = i - scroll_start;
+        for (idx, item) in completions.iter().enumerate().skip(scroll_start).take(scroll_end - scroll_start) {
+            let display_idx = idx - scroll_start;
             let row = start_row + display_idx as u16;
-            let item = &completions[i];
-            let is_selected = i == selected;
+            let is_selected = idx == selected;
 
             queue!(_stdout, MoveTo(0, row)).map_err(ReadlineError::Io)?;
 
@@ -1283,7 +1304,7 @@ fn fuzzy_match(query: &str, candidate: &str) -> bool {
     let q: Vec<char> = query.chars().collect();
     let mut qi = 0;
     for c in candidate.chars() {
-        if qi < q.len() && c.to_ascii_lowercase() == q[qi].to_ascii_lowercase() {
+        if qi < q.len() && c.eq_ignore_ascii_case(&q[qi]) {
             qi += 1;
         }
     }

@@ -148,13 +148,13 @@ fn find(
     check_exact_args_len("find", &args, 2, ctx)?;
 
     let predicate = &args[1];
-    check_fn_arg(&predicate, 1, ctx)?;
+    check_fn_arg(predicate, 1, ctx)?;
     let set = get_bset_ref(&args[0], ctx)?;
 
     let mut state = State::new();
     for item in set.iter() {
         if predicate
-            .eval_apply(predicate, &vec![item.clone()], &mut state, env, 0)?
+            .eval_apply(predicate, std::slice::from_ref(item), &mut state, env, 0)?
             .is_truthy()
         {
             return Ok(item.clone());
@@ -172,14 +172,14 @@ fn filter(
     check_exact_args_len("filter", &args, 2, ctx)?;
 
     let predicate = &args[1];
-    check_fn_arg(&predicate, 1, ctx)?;
+    check_fn_arg(predicate, 1, ctx)?;
     let set = get_bset_ref(&args[0], ctx)?;
 
     let mut new_set = BTreeSet::new();
     let mut state = State::new();
     for item in set.iter() {
         if predicate
-            .eval_apply(predicate, &vec![item.clone()], &mut state, env, 0)?
+            .eval_apply(predicate, std::slice::from_ref(item), &mut state, env, 0)?
             .is_truthy()
         {
             new_set.insert(item.clone());
@@ -322,13 +322,13 @@ fn map(
     check_exact_args_len("map", &args, 2, ctx)?;
 
     let func = &args[1];
-    check_fn_arg(&func, 1, ctx)?;
+    check_fn_arg(func, 1, ctx)?;
     let set = get_bset_ref(&args[0], ctx)?;
 
     let mut new_set = BTreeSet::new();
     let mut state = State::new();
     for item in set.iter() {
-        let new_item = func.eval_apply(func, &vec![item.clone()], &mut state, env, 0)?;
+        let new_item = func.eval_apply(func, std::slice::from_ref(item), &mut state, env, 0)?;
         new_set.insert(new_item);
     }
 

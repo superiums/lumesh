@@ -104,10 +104,11 @@ pub fn table(
     } else {
         // 检测已经是列表格式的：首行首尾都是相同的符号
         let mut c = lines.first().unwrap().chars();
-        if let Some(first) = c.next() {
-            if first.is_ascii_punctuation() && Some(first) == c.last() {
-                return Ok(Expression::String(data));
-            }
+        if let Some(first) = c.next()
+            && first.is_ascii_punctuation()
+            && Some(first) == c.last()
+        {
+            return Ok(Expression::String(data));
         }
     }
 
@@ -147,15 +148,15 @@ pub fn table(
 
     // Filter short tip lines
     if lines.len() > 2 {
-        let first_line_cols = split_line(&lines[0], &splitter);
-        let second_line_cols = split_line(&lines[1], &splitter);
+        let first_line_cols = split_line(lines[0], &splitter);
+        let second_line_cols = split_line(lines[1], &splitter);
 
         if first_line_cols.len() < second_line_cols.len() {
             lines.remove(0);
         }
 
         let last_line_cols = split_line(lines.last().unwrap(), &splitter);
-        let second_last_line_cols = split_line(&lines[lines.len() - 2], &splitter);
+        let second_last_line_cols = split_line(lines[lines.len() - 2], &splitter);
 
         if last_line_cols.len() < second_last_line_cols.len() {
             lines.pop();
@@ -165,7 +166,7 @@ pub fn table(
     // Try to detect headers
     let (data_lines, detected_headers) = if headers.is_empty() {
         let maybe_header = lines[0];
-        let first_line_cols = split_line(&maybe_header, &splitter);
+        let first_line_cols = split_line(maybe_header, &splitter);
         let looks_like_header = first_line_cols
             .iter()
             .all(|s| s.chars().any(|c| c.is_uppercase() || !c.is_ascii()));
@@ -288,10 +289,7 @@ pub fn float(
         Expression::String(x) => {
             let xt = x.trim();
             let r = match xt.ends_with("%") {
-                true => xt
-                    .trim_end_matches('%')
-                    .parse::<f64>()
-                    .and_then(|f| Ok(f * 0.01)),
+                true => xt.trim_end_matches('%').parse::<f64>().map(|f| f * 0.01),
                 false => xt.parse::<f64>(),
             };
             if let Ok(n) = r {
@@ -351,8 +349,7 @@ fn split_file_size(size_str: &str) -> Option<(f64, &'static str)> {
     let trimmed = size_str.trim();
 
     // 查找单位
-    let mut unit_index = 0;
-    for unit in units {
+    for (unit_index, unit) in units.iter().enumerate() {
         // 检查单位是否在字符串中
         if let Some(pos) = trimmed.find(unit) {
             // 提取数字部分
@@ -362,9 +359,8 @@ fn split_file_size(size_str: &str) -> Option<(f64, &'static str)> {
                 // 处理可选的"B"
                 return Some((number * 1024_f64, units[unit_index - 1]));
             }
-            return Some((number, unit));
+            return Some((number, *unit));
         }
-        unit_index += 1;
     }
 
     // 如果没有找到单位，返回None
@@ -583,7 +579,7 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
             output.join("\n")
         }
         // 其他类型保持原样
-        other => format!("\"{}\"", other.to_string()),
+        other => format!("\"{}\"", other),
     }
 }
 
@@ -606,13 +602,7 @@ fn expr_to_json_string(expr: &Expression) -> String {
         Expression::Integer(i) => i.to_string(),
         Expression::Float(f) => {
             // 处理特殊值
-            if f.is_infinite() {
-                if f.is_sign_positive() {
-                    "null".to_string() // JSON 不支持 inf，用 null 代替
-                } else {
-                    "null".to_string()
-                }
-            } else if f.is_nan() {
+            if f.is_infinite() || f.is_nan() {
                 "null".to_string() // JSON 不支持 nan，用 null 代替
             } else {
                 f.to_string()
@@ -685,7 +675,7 @@ fn expr_to_json_string(expr: &Expression) -> String {
 
             format!("[{}]", items.join(","))
         }
-        other => format!("\"{}\"", other.to_string()),
+        other => format!("\"{}\"", other),
     }
 }
 
@@ -823,5 +813,5 @@ pub fn striped(
     check_exact_args_len("striped", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
 
-    Ok(strip_ansi_escapes(&p).into())
+    Ok(strip_ansi_escapes(p).into())
 }

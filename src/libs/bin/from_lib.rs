@@ -57,7 +57,7 @@ fn toml(
     check_exact_args_len("toml", &args, 1, ctx)?;
     let text_str = get_string_ref(&args[0], ctx)?;
 
-    toml::from_str::<serde_json::Value>(&text_str).map(toml_to_expr).map_err(|e| {
+    toml::from_str::<serde_json::Value>(text_str).map(toml_to_expr).map_err(|e| {
         RuntimeError::common(format!("Toml parser error:\n{e}").into(), ctx.clone(), 0)
     })
 }
@@ -237,9 +237,9 @@ fn script(
         return Ok(Expression::None);
     }
 
-    Ok(parse(&script).map_err(|e| {
+    parse(script).map_err(|e| {
         RuntimeError::common(format!("Script parser error:\n{e}").into(), ctx.clone(), 0)
-    })?)
+    })
 }
 
 // Command Output Parser
@@ -331,7 +331,7 @@ fn jq(
     let query_result = match query {
         Expression::String(q) => {
             // 解析管道查询
-            let pipeline = parse_jq_pipeline(&q);
+            let pipeline = parse_jq_pipeline(q);
             apply_jq_pipeline(&pipeline, &json_value)
         }
 

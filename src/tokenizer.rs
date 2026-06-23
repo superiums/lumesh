@@ -203,28 +203,28 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
 fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Word => alt((
-            map_valid_token(keyword_tag("-="), TokenKind::Operator),
+            map_valid_token(punctuation_tag("-="), TokenKind::Operator),
             map_valid_token(punctuation_tag("->"), TokenKind::Operator),
-            map_valid_token(keyword_tag("-"), TokenKind::Operator), //a-b as operator
-                                                                    // map_valid_token(symbol, TokenKind::Symbol),
+            map_valid_token(punctuation_tag("-"), TokenKind::Operator), //a-b as operator
+                                                                        // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
         Ctx::Start | Ctx::Space => alt((
-            map_valid_token(keyword_tag("-="), TokenKind::Operator),
+            map_valid_token(punctuation_tag("-="), TokenKind::Operator),
             map_valid_token(punctuation_tag("->"), TokenKind::Operator),
             // `--flag` style: two dashes → argument symbol
             map_valid_token(whole_word("--"), TokenKind::StringRaw),
             // single `-` followed by literal/number/paren/letter → OperatorPrefix
             map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
             // bare `-` as operator (e.g. `- ` followed by space)
-            map_valid_token(keyword_tag("-"), TokenKind::Operator),
+            map_valid_token(punctuation_tag("-"), TokenKind::Operator),
             // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
         Ctx::Open => alt((
             // single `-` followed by literal/number/paren/letter → OperatorPrefix
             map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
-            number_literal,
-            map_valid_token(keyword_tag("-"), TokenKind::Operator),
-            // map_valid_token(symbol, TokenKind::Symbol),
+            // number_literal,
+            map_valid_token(punctuation_tag("-"), TokenKind::OperatorPrefix), // +(-5); a[-1]
+                                                                              // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
     }
 }
@@ -284,6 +284,7 @@ fn alpha_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token,
         map_valid_token(any_keyword, TokenKind::Keyword),
         map_valid_token(value_symbol, TokenKind::ValueSymbol),
         string_literal, // r'...' or t'...'
+        map_valid_token(protocals, TokenKind::StringRaw),
         map_valid_token(symbol, TokenKind::Symbol),
     ))(input)
 }
@@ -604,6 +605,15 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 
+fn protocals(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        whole_word("https://"),
+        whole_word("http://"),
+        whole_word("ftps://"),
+        whole_word("ftp://"),
+        whole_word("file://"),
+    ))(input)
+}
 fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // 1. 解析开始引号 — 直接根据首字符判断，避免 alt 嵌套开销
     let quote_prefix: &str = match input.chars().next() {
@@ -860,13 +870,16 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
 /// Mathes whole word with a prefix
 fn whole_word(prefix: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
-        let (r, _) = input.strip_prefix(prefix).ok_or(NOT_FOUND)?;
-        let len = r
-            .chars()
-            .take_while(|c| !matches!(c, ' ' | '\n' | '\t' | '\r'))
-            .map(char::len_utf8)
-            .sum();
-        Ok(input.split_at(len))
+        if input.starts_with(prefix) {
+            let len = input
+                .chars()
+                .take_while(|c| !matches!(c, ' ' | '\n' | '\t' | '\r' | ')' | ']' | '}'))
+                .map(char::len_utf8)
+                .sum();
+            Ok(input.split_at(len))
+        } else {
+            Err(NOT_FOUND)
+        }
     }
 }
 
@@ -1002,6 +1015,7 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
     if !input.is_empty() {
         diagnostics.push(Diagnostic::NotTokenized(input.as_str_slice()))
     }
+    // dbg!(&tokens);
     (tokens, diagnostics)
 }
 

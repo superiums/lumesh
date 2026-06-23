@@ -30,15 +30,20 @@ impl<I> ParseError<I> for NotFoundError {
 type TokenizationResult<'a, T = StrSlice> = IResult<Input<'a>, T, NotFoundError>;
 
 /// Context based on the previous token's last character.
+/// Determines how the next token is classified.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Ctx {
-    Start,
-    Space,
-    Word,
-    Open,
+    Start, // line start / initial state
+    Space, // prev token ended with whitespace (Whitespace/LineBreak/Comment)
+    Word,  // prev token ended with alphanumeric, `_`, or closing bracket/quote
+    Open,  // other (non-space, non-word symbol)
 }
 
 impl Ctx {
+    /// Determine the next context based on the current token's ending character.
+    /// Whitespace/LineBreak/Comment → Space
+    /// Alphanumeric/`_`/closing bracket/quote → Word
+    /// Other symbols → Open
     fn after_token(token: &Token, original: &str) -> Self {
         let last_char = token.range.to_str(original).chars().next_back();
         match token.kind {
@@ -53,6 +58,8 @@ impl Ctx {
     }
 }
 
+/// Dispatch tokenization based on the first character and context.
+/// Each character triggers a specific parsing path.
 fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     let first = match input.chars().next() {
         Some(c) => c,
@@ -83,18 +90,18 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '0'..='9' => number_literal(input),
 
-        '.' => dot_dispatch(input, ctx),
+        '.' => dot_dispatch(input, ctx), // context-aware: method call vs path
 
-        '-' => minus_dispatch(input, ctx),
+        '-' => minus_dispatch(input, ctx), // context-aware: negative vs flag vs operator
 
         '(' | ')' | '[' | ']' | '{' | '}' | ',' => dispatch_paren(input, ctx, first),
 
-        'H' | 'M' | 'S' => try_map_or_symbol(input, ctx, first),
+        'H' | 'M' | 'S' => try_map_or_symbol(input, ctx, first), // H{ M{ S{ map/set literals
 
         '%' if input.len() > 1 => {
             let bytes = input.as_ref().as_bytes();
             if bytes.len() > 1 && bytes[1] == b'{' {
-                m!(punctuation_tag("%{"), TokenKind::Punctuation)
+                m!(punctuation_tag("%{"), TokenKind::Punctuation) // %{ explicit block
             } else {
                 operator_or_symbol(input, ctx, first)
             }
@@ -102,22 +109,22 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '+' | '=' => operator_or_symbol(input, ctx, first),
 
-        '!' => bang_dispatch(input, ctx),
+        '!' => bang_dispatch(input, ctx), // context-aware: prefix negate vs postfix call
 
         '?' => question_dispatch(input, ctx),
 
         '$' => alt((
-            map_valid_token(prefix_tag("$"), TokenKind::OperatorPrefix),
-            map_valid_token(symbol, TokenKind::Symbol),
+            map_valid_token(prefix_tag("$"), TokenKind::OperatorPrefix), // $var
+            map_valid_token(symbol, TokenKind::Symbol),                  // $ as symbol
         ))(input),
 
         '|' | '&' | '^' | '*' | '/' | '<' | '>' | ':' | '~' | '@' => {
             operator_or_symbol(input, ctx, first)
         }
 
-        '_' => underscore_dispatch(input, ctx),
+        '_' => underscore_dispatch(input, ctx), // standalone _ vs _ in symbol
 
-        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx),
+        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx), // keyword / value_symbol / string / symbol
 
         c if !c.is_ascii() => m!(non_ascii, TokenKind::StringRaw),
 
@@ -146,6 +153,8 @@ fn map_valid_token(
 
 // ========== Context-aware dispatch helpers ==========
 
+/// `(` or `[` after Word context → OperatorPostfix (function call/index)
+/// Otherwise → Punctuation (standalone bracket/comma)
 fn dispatch_paren(
     input: Input<'_>,
     ctx: Ctx,
@@ -161,6 +170,8 @@ fn dispatch_paren(
     }
 }
 
+/// `Word` context → `...=`/`...`/`..=`/`..` infix range, or `.` postfix (method call)
+/// `Start/Space/Open` context → `..` operator, `.` prefix (pipemethod), argument path, number literal, or standalone `.`/`..`
 fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Word => alt((
@@ -181,6 +192,10 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
     }
 }
 
+/// Context-aware `-` dispatch:
+/// - Word context: operator (no prefix/argument, just `-=`, `->`, `-` or symbol)
+/// - Start/Space: argument flag (`--flag`), prefix `-`, negative number, or operator
+/// - Open: prefix `-`, negative number, or operator
 fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Word => alt((
@@ -207,6 +222,9 @@ fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
     }
 }
 
+/// Context-aware `!` dispatch:
+/// - Word context: `!=`/`!==` comparison, `!~:` pattern match, or `!` postfix (flat call)
+/// - Start/Space/Open: same operators but `!` as prefix (negation) instead of postfix
 fn bang_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Word => alt((
@@ -250,6 +268,9 @@ fn alpha_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token,
     ))(input)
 }
 
+/// Generic dispatch for operators (`+`, `=`, `|`, `&`, `*`, `/`, `<`, `>`, `:`, `~`, `@`, `^`):
+/// - Word context: operator or symbol (no argument matching)
+/// - Non-word context: also tries argument_symbol before short_operator
 fn operator_or_symbol(
     input: Input<'_>,
     ctx: Ctx,
@@ -745,9 +766,7 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 }
 
 /// Matches a keyword/operator that must NOT be followed by symbol characters.
-///
-/// Used for multi-char operators (`&&`, `||`, `=>`, `::`, `<<`, etc.) where
-/// the operator should not merge into a longer symbol.
+/// Prevents operators from merging into longer symbols (e.g. `&&` vs `&&&`).
 fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -756,7 +775,9 @@ fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
             .ok_or(NOT_FOUND)
     }
 }
+
 /// Matches a keyword that must be followed by whitespace (not end-of-input).
+/// Used for standalone keywords like `let`, `set`, `if`, `fn`, `match`.
 fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -765,7 +786,9 @@ fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
             .ok_or(NOT_FOUND)
     }
 }
+
 /// Matches a keyword that must be followed by whitespace OR end-of-input.
+/// Used for tokens like `.`, `..`, `&-` that can appear at end of input.
 fn keyword_alone_or_end(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -774,10 +797,9 @@ fn keyword_alone_or_end(keyword: &str) -> impl '_ + Fn(Input<'_>) -> Tokenizatio
             .ok_or(NOT_FOUND)
     }
 }
+
 /// Matches an operator that must NOT be followed by ASCII punctuation.
-///
-/// Used for single-char operators (`+`, `=`, `<`, etc.) to prevent them from
-/// merging into longer operator sequences (e.g. `+` vs `+=`).
+/// Prevents single-char operators from merging into longer sequences (e.g. `+` vs `+=`).
 fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -788,9 +810,9 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
             .ok_or(NOT_FOUND)
     }
 }
+
 /// Matches a token that must be surrounded by whitespace or punctuation (not letters).
-///
-/// Used for `_` to distinguish standalone `_` value from `_` within a symbol.
+/// Used for `_` to distinguish standalone `_` value from `_` within a symbol like `foo_bar`.
 fn among_punc_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -802,8 +824,8 @@ fn among_punc_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResul
             .ok_or(NOT_FOUND)
     }
 }
+
 /// Matches a prefix operator that must be followed by a value-start character.
-///
 /// After stripping the prefix, checks the rest starts with alphanumeric, `(`, `[`, `{`, or `$`.
 fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
@@ -817,6 +839,9 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
             .ok_or(NOT_FOUND)
     }
 }
+
+/// Matches an infix operator (range `..`, `...` etc.) that must sit between operands.
+/// Requires previous char to be alphanumeric/`)`/`]`/`_` and next char to be alphanumeric/`(`/`_`/`-`.
 fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -829,9 +854,9 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
             .ok_or(NOT_FOUND)
     }
 }
+
 /// Matches a postfix operator that must be followed by whitespace or end-of-input.
-///
-/// Used for postfix `!` and `^` when they should not merge with following characters.
+/// Used for postfix `!` and `^` to prevent merging with following characters.
 fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -843,6 +868,8 @@ fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
     }
 }
 /// Checks whether the character is allowed in a symbol.
+/// Symbol chars: alphanumeric, `_`, `~`, `?`, `&`, `#`, `$`, `-`, `/`, `\`
+/// Excluded (cause operator/punctuation parsing instead): `+`, `=`, `<`, `>`, `*`, `%`, `^`, `|`, `:`, `@`, `!`, `.`, `,`, `;`, `(`, `)`, `[`, `]`, `{`, `}`, `'`, `"`, backtick, whitespace
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
@@ -878,19 +905,20 @@ fn is_symbol_char(c: char) -> bool {
     }
 }
 
+/// Main tokenization entry point.
+/// - Single-line input (no `:`) → CFM (Command First Mode) for shell-like parsing
+/// - Multi-line or `:`-prefixed → Expression mode with context-aware dispatch
 pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
-    // 检查是否为单行命令模式
     if is_cfm_mode(input) {
         return parse_command_tokens(input);
     }
 
-    // 多行输入使用正常模式
     let mut tokens = Vec::new();
     let mut diagnostics = Vec::new();
     let mut ctx = Ctx::Start;
     let mut input = input;
 
-    // skip multiline mode prefix
+    // skip multiline mode prefix `:`
     if let Ok((new_input, (token, diagnostic))) =
         map_valid_token(punctuation_tag(":"), TokenKind::Comment)(input)
     {
@@ -900,7 +928,7 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
         diagnostics.push(diagnostic);
     }
 
-    // go
+    // tokenize one by one with context tracking
     loop {
         match parse_token_dispatch(input, ctx) {
             Err(_) => break,
@@ -924,7 +952,8 @@ pub fn tokenize(input: &str) -> (Vec<Token>, Vec<Diagnostic>) {
     parse_tokens(input)
 }
 
-/// CFM: command first mode
+/// CFM: Command First Mode — shell-style parsing for single-line commands.
+/// Active when: input starts with `>`, OR (not multiline, not `:`-prefixed, and CFM enabled).
 fn is_cfm_mode(input: Input<'_>) -> bool {
     with_cfm_enabled(|cfm_enabled| {
         input.starts_with(">") || (!input.starts_with(":") && !input.contains('\n') && cfm_enabled)

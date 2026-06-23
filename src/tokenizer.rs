@@ -187,7 +187,7 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punct_seq_tag(".."), TokenKind::Operator),
             map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix),
-            map_valid_token(argument_symbol, TokenKind::StringRaw),
+            map_valid_token(whole_word("./"), TokenKind::StringRaw),
             number_literal,
             map_valid_token(keyword_alone_or_end("."), TokenKind::ValueSymbol),
             map_valid_token(keyword_alone_or_end(".."), TokenKind::ValueSymbol),

@@ -75,7 +75,8 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
     match first {
         ' ' | '\t' => m!(whitespace, TokenKind::Whitespace),
 
-        '\n' | ';' => m!(linebreak, TokenKind::LineBreak),
+        ';' => m!(punctuation_tag(";"), TokenKind::LineBreak),
+        '\n' => m!(punctuation_tag("\n"), TokenKind::LineBreak),
 
         '\\' => {
             if let Ok(r) = m!(line_continuation, TokenKind::Whitespace) {
@@ -118,9 +119,11 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
             map_valid_token(symbol, TokenKind::Symbol),                  // $ as symbol
         ))(input),
 
-        '|' | '&' | '^' | '*' | '/' | '<' | '>' | ':' | '~' | '@' => {
-            operator_or_symbol(input, ctx, first)
-        }
+        '|' | '&' | '^' | '*' | '/' | '<' | '>' | '~' => operator_or_symbol(input, ctx, first),
+
+        ':' => colon_dispatch(input, ctx),
+
+        '@' => at_dispatch(input, ctx),
 
         '_' => underscore_dispatch(input, ctx), // standalone _ vs _ in symbol
 
@@ -193,33 +196,50 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
 }
 
 /// Context-aware `-` dispatch:
-/// - Word context: operator (no prefix/argument, just `-=`, `->`, `-` or symbol)
-/// - Start/Space: argument flag (`--flag`), prefix `-`, negative number, or operator
-/// - Open: prefix `-`, negative number, or operator
+/// - Word context: operator only (`-=`, `->`, `-` or symbol) — no prefix/argument
+/// - Start/Space: prefix `-` when followed by literal/number/paren/letter (parser distinguishes negation vs flag);
+///   `argument_symbol` only for `--` style flags; `number_literal` for bare digits
+/// - Open: prefix `-` when followed by literal/number/paren/letter
 fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Word => alt((
             map_valid_token(keyword_tag("-="), TokenKind::Operator),
             map_valid_token(punctuation_tag("->"), TokenKind::Operator),
-            map_valid_token(keyword_tag("-"), TokenKind::Operator),
-            map_valid_token(symbol, TokenKind::Symbol),
+            map_valid_token(keyword_tag("-"), TokenKind::Operator), //a-b as operator
+                                                                    // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
         Ctx::Start | Ctx::Space => alt((
             map_valid_token(keyword_tag("-="), TokenKind::Operator),
             map_valid_token(punctuation_tag("->"), TokenKind::Operator),
-            map_valid_token(argument_symbol, TokenKind::StringRaw),
-            map_valid_token(prefix_tag("-"), TokenKind::OperatorPrefix),
-            number_literal,
+            // `--flag` style: two dashes → argument symbol
+            map_valid_token(whole_word("--"), TokenKind::StringRaw),
+            // single `-` followed by literal/number/paren/letter → OperatorPrefix
+            map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
+            // bare `-` as operator (e.g. `- ` followed by space)
             map_valid_token(keyword_tag("-"), TokenKind::Operator),
-            map_valid_token(symbol, TokenKind::Symbol),
+            // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
         Ctx::Open => alt((
-            map_valid_token(prefix_tag("-"), TokenKind::OperatorPrefix),
+            // single `-` followed by literal/number/paren/letter → OperatorPrefix
+            map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
             number_literal,
             map_valid_token(keyword_tag("-"), TokenKind::Operator),
-            map_valid_token(symbol, TokenKind::Symbol),
+            // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
     }
+}
+
+/// Matches `-` as a prefix operator when followed by a literal/number/paren/identifier.
+/// This lets the parser decide: `-42` → negation, `-arg` → flag, `-(expr)` → grouped negation.
+fn prefix_minus_tag(input: Input<'_>) -> TokenizationResult<'_> {
+    input
+        .strip_prefix("-")
+        .filter(|(rest, _)| {
+            rest.starts_with(|c: char| {
+                c.is_ascii_alphanumeric() || matches!(c, '(' | '[' | '{' | '.')
+            })
+        })
+        .ok_or(NOT_FOUND)
 }
 
 /// Context-aware `!` dispatch:
@@ -305,6 +325,33 @@ fn try_map_or_symbol(
         )(input)
     } else {
         alpha_dispatch(input, ctx)
+    }
+}
+
+/// `::` module call infix operator (e.g. `mod::func`).
+/// Requires Word context (preceded by identifier) and followed by identifier.
+fn colon_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((
+            map_valid_token(keyword_tag("::"), TokenKind::OperatorInfix),
+            map_valid_token(operator_tag(":"), TokenKind::Punctuation), //{k:v} a?b:c
+        ))(input),
+        _ => map_valid_token(operator_tag(":"), TokenKind::Operator)(input),
+    }
+}
+
+/// `@` as prefix operator for decorators (e.g. `@deco`).
+/// Requires non-Word context (standalone `@` before identifier).
+fn at_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => {
+            // Inside an identifier, `@` is not valid — fall through to symbol
+            map_valid_token(symbol, TokenKind::Symbol)(input)
+        }
+        _ => alt((
+            map_valid_token(prefix_tag("@"), TokenKind::OperatorPrefix), // @deco, @(expr)
+                                                                         // map_valid_token(operator_tag("@"), TokenKind::Operator),
+        ))(input),
     }
 }
 
@@ -728,7 +775,6 @@ fn comment(input: Input<'_>) -> TokenizationResult<'_> {
         .take_while(|&c| !matches!(c, '\n' | '\r'))
         .map(char::len_utf8)
         .sum();
-
     Ok(input.split_at(len))
 }
 
@@ -808,6 +854,19 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
                 rest.starts_with(|c: char| c.is_whitespace() || !c.is_ascii_punctuation())
             })
             .ok_or(NOT_FOUND)
+    }
+}
+
+/// Mathes whole word with a prefix
+fn whole_word(prefix: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        let (r, _) = input.strip_prefix(prefix).ok_or(NOT_FOUND)?;
+        let len = r
+            .chars()
+            .take_while(|c| !matches!(c, ' ' | '\n' | '\t' | '\r'))
+            .map(char::len_utf8)
+            .sum();
+        Ok(input.split_at(len))
     }
 }
 

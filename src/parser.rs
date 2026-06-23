@@ -352,35 +352,41 @@ impl PrattParser {
         match first.kind {
             TokenKind::OperatorPrefix => {
                 let op = first.text(input);
-                // vars
-                if op == "$" {
-                    return cut(parse_variable)(input);
-                }
-                if op == "." {
-                    return cut(parse_pipe_method)(input);
-                }
-                // unary op
-                let prec = match op {
-                    "!" | "-" => PREC_UNARY,
-                    // "++" | "--" => PREC_PRIFIX,
+                match op {
+                    "$" => cut(parse_variable)(input),
+                    "." => cut(parse_pipe_method)(input),
+                    "@" => cut(parse_fn_declare)(input),
+                    // "--" if min_prec == PREC_CMD_ARG => {
+                    //     let input = input.skip_n(1);
+                    //     // TODO add more: --color=red
+                    //     let (input, arg) = cut(parse_symbol_string)(input)?;
+                    //     Ok((input, Expression::String(format!("--{})", arg))))
+                    // }
+                    "-" if min_prec == PREC_CMD_ARG => {
+                        let input = input.skip_n(1);
+                        let (input, arg) = cut(parse_symbol_string)(input)?;
+                        Ok((input, Expression::String(format!("-{})", arg))))
+                    }
+                    "!" | "-" => {
+                        let prec = PREC_UNARY;
+                        if prec < min_prec {
+                            return Err(nom::Err::Error(SyntaxErrorKind::PrecedenceTooLow(
+                                input.get_str_slice(),
+                            )));
+                        }
+
+                        let input = input.skip_n(1);
+                        let (input, expr) = parse_expr_or_failure(input, prec, depth + 1)?;
+                        // let (input, expr) = Self::parse_prefix(input, prec)?;
+                        Ok((input, Expression::UnaryOp(op.into(), Rc::new(expr), true)))
+                    }
                     _ => {
                         return Err(nom::Err::Failure(SyntaxErrorKind::UnknownOperator(
                             op.to_string(),
                             input.get_str_slice(),
                         )));
                     }
-                };
-
-                if prec < min_prec {
-                    return Err(nom::Err::Error(SyntaxErrorKind::PrecedenceTooLow(
-                        input.get_str_slice(),
-                    )));
                 }
-
-                let input = input.skip_n(1);
-                let (input, expr) = parse_expr_or_failure(input, prec, depth + 1)?;
-                // let (input, expr) = Self::parse_prefix(input, prec)?;
-                Ok((input, Expression::UnaryOp(op.into(), Rc::new(expr), true)))
             }
             TokenKind::Symbol => parse_symbol(input),
             TokenKind::StringLiteral if PREC_LITERAL >= min_prec => parse_string(input),
@@ -1344,7 +1350,8 @@ fn parse_string_common(
         let content: Cow<'_, str> = match kind_token {
             TokenKind::StringLiteral => ansi_escaped, //never replace "", snailquote need.
             TokenKind::StringTemplate => {
-                let inner = cs.to_str(input.str)
+                let inner = cs
+                    .to_str(input.str)
                     .replace("\\x1b", "\x1b")
                     .replace("\\033", "\x1b")
                     .replace("\\007", "\x07");

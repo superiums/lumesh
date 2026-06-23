@@ -21,9 +21,9 @@
 | `ValueSymbol` | 预定义值 | `true`, `false`, `none`, `_` |
 | `Punctuation` | 标点/括号分隔符 | `(`, `)`, `[`, `]`, `{`, `}`, `,`, `H{`, `M{`, `S{`, `%{` |
 | `Operator` | 通用运算符 | `==`, `!=`, `&&`, `\|\|`, `+=`, `->` |
-| `OperatorPrefix` | 前缀运算符 | `$var`, `!neg`, `.method` |
+| `OperatorPrefix` | 前缀运算符 | `$var`, `@deco`, `!neg`, `.method` |
 | `OperatorPostfix` | 后缀运算符 | `func!`, `(call)`, `obj.` |
-| `OperatorInfix` | 中缀运算符 | `..`, `...`, `..=`, `...=` |
+| `OperatorInfix` | 中缀运算符 | `..`, `...`, `..=`, `...=`, `::` |
 
 ## 2. 上下文（Ctx）设计
 
@@ -52,7 +52,12 @@ ASCII 符号字符包括：`a-z`, `A-Z`, `0-9`, `_`, `~`, `?`, `&`, `#`, `$`, `-
 **被排除的 ASCII 符号**（即不会作为符号的一部分，而是触发运算符/标点解析）：
 - `+`, `=`, `<`, `>`, `*`, `%`, `^`, `|`, `:`, `@`, `!`, `.`, `,`, `;`, `(`, `)`, `[`, `]`, `{`, `}`, `'`, `"`, ` `` `, 空白字符
 
-### 3.2 非 ASCII 字符
+### 3.2 `:` 和 `@` 的特殊处理
+
+- **`:`** — 在 `Ctx::Word` 下，`::` 解析为 `OperatorInfix`（模块调用，如 `mod::func`）；单个 `:` 解析为 `Operator`。
+- **`@`** — 在非 `Ctx::Word` 下，`@` 解析为 `OperatorPrefix`（装饰器，如 `@deco`）；在 `Ctx::Word` 中作为 `Symbol` 的一部分。
+
+### 3.3 非 ASCII 字符
 
 非 ASCII（Unicode）字符一律解析为 `TokenKind::StringRaw` 的单一 token。
 
@@ -65,7 +70,7 @@ ASCII 符号字符包括：`a-z`, `A-Z`, `0-9`, `_`, `~`, `?`, `&`, `#`, `$`, `-
 | 中缀运算符 | `..`, `...`, `..=`, `...=` 必须在 `Ctx::Word` 下且后接字母/数字/`(`/`_`/`-` |
 | 关键字约束 | `keyword_tag`: 关键字后不能紧跟符号字符；`keyword_alone_tag`: 关键字后必须是空白；`keyword_alone_or_end`: 关键字后可以是空白或输入结束 |
 | 运算符约束 | `operator_tag`: 不允许后跟 ASCII 标点（防止 `+` 合并成 `+=`）|
-| 前缀约束 | `prefix_tag`: 必须后跟字母/数字/`(`/`[`/`{`/`$`；前一个字符必须是空白或 `(`/`[`/`{`/`等 |
+| 前缀约束 | `prefix_tag`: 必须后跟字母/数字/`(`/`[`/`{`/`$`；`prefix_minus_tag`: 必须后跟字母/数字/`(`/`[`/`{`/`"`/`'`/`` ` ``/`.`/`-`；`@` 在非 Word 上下文下解析为 `OperatorPrefix` |
 | 后缀约束 | `postfix_break_tag`: 必须后跟空白或行尾；`postfix_tag`: 前一个字符必须是字母/数字/`)`/`]`/`}`/引号 |
 | 中缀前文约束 | `infix_tag`: 前一个字符必须是字母/数字/`)`/`]`/`_` |
 | `among_punc_tag` | 匹配必须被空白或标点包围（如 `_` 不能是符号 `foo_bar` 的一部分） |
@@ -84,8 +89,10 @@ ASCII 符号字符包括：`a-z`, `A-Z`, `0-9`, `_`, `~`, `?`, `&`, `#`, `$`, `-
 | 上下文 | 匹配优先级 |
 |---|---|
 | **Ctx::Word** | `-=` > `->` > `-`（Operator）> symbol |
-| **Ctx::Start / Space** | `-=` > `->` > argument_symbol（如 `--flag`）> prefix `-` > number_literal > `-`（Operator）> symbol |
-| **Ctx::Open** | prefix `-` > number_literal > `-`（Operator）> symbol |
+| **Ctx::Start / Space** | `-=` > `->` > argument_symbol（如 `--flag`）> `prefix_minus_tag`（`-` 后接字母/数字/括号/引号 → `OperatorPrefix`）> `-`（Operator）> symbol |
+| **Ctx::Open** | `prefix_minus_tag`（`-` 后接字母/数字/括号/引号 → `OperatorPrefix`）> number_literal > `-`（Operator）> symbol |
+
+**`prefix_minus_tag`**：匹配 `-` 作为前缀运算符，要求 `-` 后紧跟字母、数字、`(`、`[`、`{`、`"`、`'`、`` ` ``、`.` 或 `-`。这使解析器可以区分：`-42` → 取负，`-arg` → 标志，`-(expr)` → 分组取负。
 
 ### `!`（bang_dispatch）
 
@@ -118,8 +125,9 @@ ASCII 符号字符包括：`a-z`, `A-Z`, `0-9`, `_`, `~`, `?`, `&`, `#`, `$`, `-
 
 - **符号解析**：`cfm_parse_symbol` — 读取直到遇到空白、`=`、`>`、括号、`^`、`$`、`!`、`|`、`;`、`.`、`,` 或控制字符
 - **运算符**：简化版运算符集，无复杂中缀，主要为管道/比较/箭头
-- **前缀**：`.`, `!`, `$`
+- **前缀**：`.`, `!`, `$`, `@`（装饰器）
 - **后缀**：`.`, `!`, `^`, `(`
+- **中缀**：`::`（模块调用）
 - **参数符号优先**：在非 Word 上下文中优先解析 `argument_symbol`
 
 ## 7. 字符串字面量
@@ -134,7 +142,7 @@ ASCII 符号字符包括：`a-z`, `A-Z`, `0-9`, `_`, `~`, `?`, `&`, `#`, `$`, `-
 
 ## 8. 数字字面量
 
-- `-` 前缀仅在 `Ctx::Space` / `Ctx::Start` / `Ctx::Open` 下可作为负数解析
+- `-` 前缀仅在 `Ctx::Space` / `Ctx::Start` / `Ctx::Open` 下可作为前缀运算符（通过 `prefix_minus_tag`，后接数字时为负数，后接字母时为标志）
 - `0..` 触发 range 运算符时不解析为浮点数
 - 整数：`42` → `IntegerLiteral`
 - 浮点数：`3.14` → `FloatLiteral`；`3.` → `FloatLiteral`（带 `InvalidNumber` 诊断）

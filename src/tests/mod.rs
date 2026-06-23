@@ -110,7 +110,7 @@ mod tokenizer_tests {
 
     #[test]
     fn test_integer_literals() {
-        let (tokens, diags) = tokenize("42 -17 0");
+        let (tokens, diags) = tokenize("42 17 0");
         let valid: Vec<&Diagnostic> = diags.iter().filter(|d| d != &&Diagnostic::Valid).collect();
         assert!(valid.is_empty(), "Got diagnostics: {valid:?}");
         assert_eq!(tokens.len(), 5); // int, ws, int, ws, int
@@ -124,6 +124,15 @@ mod tokenizer_tests {
             valid.is_empty(),
             "Got diagnostics: {valid:?}, tokens: {tokens:?}"
         );
+    }
+
+    #[test]
+    fn test_leading_dot_float() {
+        let (tokens, diags) = tokenize(".3");
+        let valid: Vec<&Diagnostic> = diags.iter().filter(|d| d != &&Diagnostic::Valid).collect();
+        assert!(valid.is_empty(), "Got diagnostics: {valid:?}");
+        assert_eq!(tokens.len(), 1);
+        assert_eq!(tokens[0].kind, crate::TokenKind::FloatLiteral);
     }
 
     #[test]
@@ -375,10 +384,12 @@ mod parser_tests {
     #[test]
     fn test_parse_negative_integer() {
         let expr = parse_script("-17").unwrap();
-        // -17 is parsed as a String("-17") because the tokenizer treats
-        // `-` prefix as argument_symbol/path, not as unary minus + integer.
+        // `-` prefix as unary minus + integer.
         // Use space to force unary op: - 17
-        assert_eq!(expr, Expression::String("-17".to_string()));
+        assert_eq!(
+            expr,
+            Expression::UnaryOp("-".to_string(), Rc::new(Expression::Integer(17)), true)
+        );
     }
 
     #[test]

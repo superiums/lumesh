@@ -186,11 +186,10 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
         ))(input),
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punct_seq_tag(".."), TokenKind::Operator),
-            map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix),
+            number_literal,                                              //.5
+            map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix), //.method
             map_valid_token(whole_word("./"), TokenKind::StringRaw),
-            number_literal,
-            map_valid_token(keyword_alone_or_end("."), TokenKind::ValueSymbol),
-            map_valid_token(keyword_alone_or_end(".."), TokenKind::ValueSymbol),
+            map_valid_token(keyword_alone_or_end(".."), TokenKind::OperatorPrefix), //..3
         ))(input),
     }
 }
@@ -283,8 +282,9 @@ fn alpha_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token,
     alt((
         map_valid_token(any_keyword, TokenKind::Keyword),
         map_valid_token(value_symbol, TokenKind::ValueSymbol),
-        string_literal, // r'...' or t'...'
-        map_valid_token(protocals, TokenKind::StringRaw),
+        regex_literal,
+        time_literal,
+        map_valid_token(protocols, TokenKind::StringRaw),
         map_valid_token(symbol, TokenKind::Symbol),
     ))(input)
 }
@@ -376,11 +376,12 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("=>"), //for match
+        // comparison / equality
+        keyword_tag("=>"),
         punctuation_tag("!=="),
         punctuation_tag("==="),
         punctuation_tag("!="),
-        punctuation_tag("=="), //to allow a==b
+        punctuation_tag("=="),
         punctuation_tag(">="),
         punctuation_tag("<="),
         keyword_tag("!~:"),
@@ -388,19 +389,23 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
     .or_else(|_| {
         alt((
+            // logical / pipe
             keyword_tag("&&"),
             keyword_tag("||"),
-            keyword_tag("|>"), //dispatch pipe
-            keyword_tag("|^"), //pty pipe
+            keyword_tag("|>"),
+            keyword_tag("|^"),
             keyword_tag("<<"),
             keyword_tag(">!"),
             keyword_tag(">>"),
+            // assignment
             operator_tag("+="),
             operator_tag("-="),
             operator_tag("*="),
             operator_tag("/="),
             keyword_tag(":="),
-            punctuation_tag("->"), // `->foo` is also a valid symbol
+            // arrow
+            punctuation_tag("->"),
+            // ?-operators
             question_operator,
         ))(input)
     })
@@ -421,18 +426,18 @@ fn question_operator(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("-"), // not followed by symbol, allow punct follow.
+        keyword_tag("-"),
         keyword_tag("/"),
-        keyword_tag("|"),  //standard io stream pipe
-        operator_tag("<"), // not followed by punct, allow space,symbol like.
+        keyword_tag("|"),
+        operator_tag("<"),
         operator_tag(">"),
         operator_tag("*"),
         operator_tag("%"),
-        operator_tag("^"), //math power
+        operator_tag("^"),
         punctuation_tag("+"),
-        punctuation_tag("="), // allow all.
+        punctuation_tag("="),
         operator_tag("?"),
-        punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
+        punctuation_tag(":"),
     ))(input)
 }
 
@@ -443,7 +448,6 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_alone_tag("alias"),
         keyword_alone_tag("export"),
         keyword_alone_tag("if"),
-        // keyword_tag("then"),
         keyword_tag("else"),
         keyword_alone_tag("fn"),
         keyword_alone_tag("match"),
@@ -473,48 +477,58 @@ fn punct_seq_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
     }
 }
 
+/// Path/argument prefix matcher: consumes a `punct` prefix then scans forward
+/// until a delimiter or end of input.
+///
+/// Delimiters: whitespace, `;`, `` ` ``, `)`, `]`, `}`, `|`, `>`.
+/// Escape: `\X` skips the next byte (on Unix, `\ ` / `\`"` / `\''` are escaped pairs).
 fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if !input.starts_with(punct) {
             return Err(NOT_FOUND);
         }
-        let mut rest = input;
-        let mut places = 0;
 
-        while let Some(c) = rest.chars().next() {
-            if c == '\\' {
-                if let Some(next_c) = rest.chars().nth(1) {
-                    #[cfg(windows)]
-                    let is_esc_space = matches!(next_c, ' ');
-                    #[cfg(not(windows))]
-                    let is_esc_space = matches!(next_c, ' ' | '"' | '\'');
+        let bytes = input.as_ref().as_bytes();
+        let prefix_len = punct.len();
+        let mut i = prefix_len;
 
-                    if is_esc_space {
-                        places += c.len_utf8() + next_c.len_utf8();
-                        rest = rest.split_at(c.len_utf8() + next_c.len_utf8()).0;
-                        continue;
-                    }
+        while i < bytes.len() {
+            let b = bytes[i];
+
+            // escape sequence: skip backslash + next byte
+            if b == b'\\' {
+                i += 1; // skip backslash
+                if i < bytes.len() {
+                    i += 1; // skip escaped byte
+                    continue;
                 }
-                places += rest.chars().nth(1).map_or(0, |c| c.len_utf8());
-            } else if c.is_ascii_whitespace()
-                || matches!(c, ';' | '`' | ')' | ']' | '}' | '|' | '>')
-            {
+                // backslash at end of input — treat as literal, stop
                 break;
             }
 
-            places += c.len_utf8();
-            rest = rest.split_at(c.len_utf8()).0;
+            // delimiter — stop scanning
+            if is_path_delimiter(b as char) {
+                break;
+            }
+
+            // skip multi-byte UTF-8: advance by char length
+            let char_len = (b as char).len_utf8();
+            i += char_len;
         }
 
-        if places > 1 {
-            return Ok(input.split_at(places));
+        // need at least 1 byte of content beyond the prefix
+        if i > prefix_len {
+            Ok(input.split_at(i))
+        } else {
+            Err(NOT_FOUND)
         }
-
-        if places + punct.len() >= input.len() {
-            return Ok(input.split_at(places));
-        }
-        Err(NOT_FOUND)
     }
+}
+
+/// Returns true if byte `b` is a path-scanning delimiter.
+#[inline]
+fn is_path_delimiter(c: char) -> bool {
+    matches!(c, ';' | '`' | ')' | ']' | '}' | '|' | '>') || c.is_ascii_whitespace()
 }
 
 #[cfg(windows)]
@@ -525,20 +539,15 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
             && it.next().map_or(false, |c| c.is_ascii_uppercase())
             && it.next().map_or(false, |c| c == ':')
         {
-            let places = input
+            let byte_len = input
                 .chars()
-                .take_while(|&c| {
-                    !c.is_whitespace() && !matches!(&c, ';' | '`' | ')' | ']' | '}' | '|' | '>')
-                })
-                .count();
-            if places > 1 {
-                return Ok(input.split_at(places));
-            }
-            if places >= input.len() {
-                return Ok(input.split_at(input.len()));
-            }
+                .take_while(|&c| !is_path_delimiter(c))
+                .map(char::len_utf8)
+                .sum::<usize>();
+            Ok(input.split_at(byte_len))
+        } else {
+            Err(NOT_FOUND)
         }
-        Err(NOT_FOUND)
     }
 }
 
@@ -546,28 +555,29 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
 #[cfg(windows)]
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        // allow unix style
+        // unix-style paths (also valid on Windows)
         path_tag("../"),
         path_tag("./"),
         path_tag("*/"),
         path_tag("**/"),
-        // win style
-        path_tag("--"),
-        path_tag("-"),
+        // windows drive paths
         win_abpath_tag(":"),
+        // windows paths
         path_tag("..\\"),
         path_tag(".\\"),
-        path_tag("~"),
         path_tag("*\\"),
         path_tag("**\\"),
+        // flags and special tokens
+        path_tag("--"),
+        path_tag("-"),
+        path_tag("~"),
         path_tag("*."),
-        alt((
-            path_tag("http:"),
-            path_tag("https:"),
-            path_tag("ftp:"),
-            path_tag("ftps:"),
-            path_tag("file:"),
-        )),
+        // url schemes
+        path_tag("http:"),
+        path_tag("https:"),
+        path_tag("ftp:"),
+        path_tag("ftps:"),
+        path_tag("file:"),
         keyword_alone_or_end("."),
         keyword_alone_or_end(".."),
         keyword_alone_or_end("&-"),
@@ -580,22 +590,23 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
 #[cfg(unix)]
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
+        // flags
         path_tag("--"),
         path_tag("-"),
+        // paths
         path_tag("/"),
         path_tag("../"),
         path_tag("./"),
-        path_tag("~"),
         path_tag("*/"),
         path_tag("**/"),
         path_tag("*."),
+        path_tag("~"),
+        // url schemes
         path_tag("http:"),
         path_tag("https:"),
         path_tag("ftp:"),
         path_tag("ftps:"),
         path_tag("file:"),
-        // keyword_alone_or_end("~"),
-        // keyword_alone_or_end("/"),
         keyword_alone_or_end("."),
         keyword_alone_or_end(".."),
         keyword_alone_or_end("&-"),
@@ -605,7 +616,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 
-fn protocals(input: Input<'_>) -> TokenizationResult<'_> {
+fn protocols(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         whole_word("https://"),
         whole_word("http://"),
@@ -615,90 +626,136 @@ fn protocals(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    // 1. 解析开始引号 — 直接根据首字符判断，避免 alt 嵌套开销
-    let quote_prefix: &str = match input.chars().next() {
-        Some('"') => "\"",
-        Some('\'') => "'",
-        Some('`') => "`",
-        Some('r') if input.as_ref().starts_with("r'") => "r'",
-        Some('t') if input.as_ref().starts_with("t'") => "t'",
-        _ => return Err(NOT_FOUND),
-    };
-    let (rest_after_start, _start_quote_range) =
-        input.strip_prefix(quote_prefix).ok_or(NOT_FOUND)?;
-    let quote_char = if quote_prefix.len() == 1 {
-        quote_prefix
+    match input.chars().next() {
+        Some('"') => parse_string(input, '"', TokenKind::StringLiteral),
+        Some('\'') => parse_string(input, '\'', TokenKind::StringRaw),
+        Some('`') => parse_string(input, '`', TokenKind::StringTemplate),
+        _ => Err(NOT_FOUND),
+    }
+}
+
+fn regex_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    if input.as_ref().starts_with("r'") {
+        parse_prefixed_string(input, "r'", TokenKind::Regex)
     } else {
-        "'"
-    };
+        Err(NOT_FOUND)
+    }
+}
 
-    // 2. 解析字符串内容（含转义处理）
-    let (rest_after_content, diagnostics) =
-        parse_string_inner(rest_after_start, quote_char.chars().next().unwrap())?;
+fn time_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    if input.as_ref().starts_with("t'") {
+        parse_prefixed_string(input, "t'", TokenKind::Time)
+    } else {
+        Err(NOT_FOUND)
+    }
+}
 
-    let (rest, content_range) = match punctuation_tag(quote_char)(rest_after_content) {
-        Ok((rest_after_end, _)) => input.split_until(rest_after_end),
-        Err(_) => input.split_until(rest_after_content),
-    };
+/// Core string parser: scan for matching close quote, return (rest, (token, diagnostic)).
+fn parse_string(
+    input: Input<'_>,
+    quote: char,
+    kind: TokenKind,
+) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    let quote_str = quote.to_string();
+    let (inner, _) = input.strip_prefix(&quote_str).ok_or(NOT_FOUND)?;
 
-    let kind = match quote_prefix {
-        "'" => TokenKind::StringRaw,
-        "\"" => TokenKind::StringLiteral,
-        "`" => TokenKind::StringTemplate,
-        "r'" => TokenKind::Regex,
-        "t'" => TokenKind::Time,
-        _ => unreachable!(),
-    };
-    let token = Token::new(kind, content_range);
-    Ok((rest, (token, diagnostics)))
+    let (rest_after_content, diagnostic) = parse_string_inner(inner, quote)?;
+
+    let (rest, content) = finish_string(input, rest_after_content, quote);
+
+    let token = Token::new(kind, content);
+    Ok((rest, (token, diagnostic)))
+}
+
+fn parse_prefixed_string<'a>(
+    input: Input<'a>,
+    prefix: &str,
+    kind: TokenKind,
+) -> TokenizationResult<'a, (Token, Diagnostic)> {
+    let (inner, _prefix) = input.strip_prefix(prefix).ok_or(NOT_FOUND)?;
+    let quote = prefix.as_bytes().last().copied().unwrap_or(b'\'') as char;
+    let (rest_after_content, diagnostic) = parse_string_inner(inner, quote)?;
+
+    let (rest, content) = finish_string(input, rest_after_content, quote);
+
+    let token = Token::new(kind, content);
+    Ok((rest, (token, diagnostic)))
+}
+
+/// Given the full input and the position after the string content,
+/// consume the closing quote (if present) and return (rest, content_range).
+fn finish_string<'a>(
+    input: Input<'a>,
+    rest_after_content: Input<'a>,
+    quote: char,
+) -> (Input<'a>, StrSlice) {
+    let quote_str = quote.to_string();
+    match rest_after_content.strip_prefix(&quote_str) {
+        Some((after_close, _)) => {
+            let (_, content) = input.split_until(after_close);
+            (after_close, content)
+        }
+        None => (rest_after_content, input.split_until(rest_after_content).1),
+    }
 }
 
 fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    // skip sign
-    let (rest, _) = input.strip_prefix("-").unwrap_or_else(|| input.split_at(0));
-
-    // skip places before the dot
-    let (rest, _) = rest
-        .strip_prefix("0")
-        .or_else(|| {
-            let places = rest.chars().take_while(char::is_ascii_digit).count();
-            if places > 0 {
-                Some(rest.split_at(places))
-            } else {
-                None
-            }
-        })
-        .ok_or(NOT_FOUND)?;
-
-    // skip .. only take number
-    if rest.starts_with("..") {
-        let (rest, number) = input.split_until(rest);
-        let token = Token::new(TokenKind::IntegerLiteral, number);
-        return Ok((rest, (token, Diagnostic::Valid)));
+    let bytes = input.as_ref().as_bytes();
+    let mut i = 0;
+    // skip leading dot
+    if bytes.get(0) == Some(&b'.') {
+        i += 1
+    }
+    // skip leading digits
+    let digit_start = i;
+    while i < bytes.len() && bytes[i].is_ascii_digit() {
+        i += 1;
+    }
+    if i == digit_start {
+        return Err(NOT_FOUND);
     }
 
-    // skip the dot, if present
-    let (rest, _) = match rest.strip_prefix(".") {
-        Some(s) => s,
-        None => {
-            let (rest, number) = input.split_until(rest);
-            let token = Token::new(TokenKind::IntegerLiteral, number);
-            return Ok((rest, (token, Diagnostic::Valid)));
+    let has_tailing_dot = bytes.get(i) == Some(&b'.');
+    // `N..` → integer literal, leave `..` for range operator
+    if has_tailing_dot && bytes.get(i + 1) == Some(&b'.') {
+        let (rest, range) = input.split_at(i);
+        return Ok((
+            rest,
+            (
+                Token::new(TokenKind::IntegerLiteral, range),
+                Diagnostic::Valid,
+            ),
+        ));
+    }
+
+    // optional fractional part
+    if has_tailing_dot {
+        i += 1;
+        let frac_start = i;
+        while i < bytes.len() && bytes[i].is_ascii_digit() {
+            i += 1;
         }
-    };
-
-    // skip places after the dot
-    let places = rest.chars().take_while(char::is_ascii_digit).count();
-    if places == 0 {
-        let (rest, range) = input.split_until(rest);
-        let token = Token::new(TokenKind::FloatLiteral, range);
-        return Ok((rest, (token, Diagnostic::InvalidNumber(range))));
+        if i == frac_start {
+            // `3.` — invalid float (no fractional digits)
+            let (rest, range) = input.split_at(i);
+            return Ok((
+                rest,
+                (
+                    Token::new(TokenKind::FloatLiteral, range),
+                    Diagnostic::InvalidNumber(range),
+                ),
+            ));
+        }
     }
-    let (rest, _) = rest.split_at(places);
 
-    let (rest, range) = input.split_until(rest);
-    let token = Token::new(TokenKind::FloatLiteral, range);
-    Ok((rest, (token, Diagnostic::Valid)))
+    let (rest, range) = input.split_at(i);
+
+    let kind = if digit_start > 0 || has_tailing_dot {
+        TokenKind::FloatLiteral
+    } else {
+        TokenKind::IntegerLiteral
+    };
+    Ok((rest, (Token::new(kind, range), Diagnostic::Valid)))
 }
 
 fn value_symbol(input: Input<'_>) -> TokenizationResult<'_> {
@@ -801,11 +858,12 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
         if b == quote_byte {
             // 匹配到结束引号
             return Ok((input.split_at(pos).0, Diagnostic::Valid));
-        } else if b == b'\\' {
-            // 处理转义：跳过反斜杠及其后一个字节
-            pos += 2;
         } else {
             pos += 1;
+            if pos + 1 < bytes.len() {
+                // 处理转义：跳过反斜杠及其后一个字节
+                pos += 1;
+            }
         }
     }
 
@@ -943,38 +1001,10 @@ fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
 /// Symbol chars: alphanumeric, `_`, `~`, `?`, `&`, `#`, `$`, `-`, `/`, `\`
 /// Excluded (cause operator/punctuation parsing instead): `+`, `=`, `<`, `>`, `*`, `%`, `^`, `|`, `:`, `@`, `!`, `.`, `,`, `;`, `(`, `)`, `[`, `]`, `{`, `}`, `'`, `"`, backtick, whitespace
 fn is_symbol_char(c: char) -> bool {
-    macro_rules! special_char_pattern {
-        () => {
-            '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\'
-        };
-        // add - / back because it's used so offen in cmd string. "connman-gtk"
-        // remove + - /  %  > < to allow non space operator such as a+1
-        // remove : to use in dict
-        // remove . for dict use. but filename ?
-        // $ to use as var prefix, compatil with bash
-    }
-
-    static ASCII_SYMBOL_CHARS: [bool; 128] = {
-        let mut array = [false; 128];
-        let mut i = 0u8;
-
-        while i < 128 {
-            array[i as usize] = matches!(
-                i as char,
-                'a'..='z' | 'A'..='Z' | '0'..='9' | special_char_pattern!()
-            );
-            i += 1;
-        }
-
-        array
-    };
-
-    if c.is_ascii() {
-        ASCII_SYMBOL_CHARS[c as usize]
-    } else {
-        false
-        // currently only ASCII identifiers are supported :/
-    }
+    matches!(
+        c,
+        'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\'
+    )
 }
 
 /// Main tokenization entry point.
@@ -1084,6 +1114,8 @@ fn parse_command_token(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
 
     try_parser!(map_valid_token(linebreak, TokenKind::LineBreak)(input));
     try_parser!(string_literal(input));
+    try_parser!(regex_literal(input));
+    try_parser!(time_literal(input));
 
     if ctx != Ctx::Word {
         try_parser!(map_valid_token(argument_symbol, TokenKind::StringRaw)(

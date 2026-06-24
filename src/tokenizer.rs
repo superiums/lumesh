@@ -566,12 +566,15 @@ fn last_path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
 
         while i < bytes.len() {
             let b = bytes[i];
-            if is_path_delimiter(b as char) {
-                return Ok(input.split_at(i));
+            if !matches!(b, b' ' | b'\t') {
+                if is_path_delimiter(b as char) {
+                    return Ok(input.split_at(i));
+                }
+                return Err(NOT_FOUND);
             }
             i += (b as char).len_utf8();
         }
-        return Err(NOT_FOUND);
+        return Ok(input.split_at(i));
     }
 }
 
@@ -911,7 +914,7 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
             return Ok((input.split_at(pos).0, Diagnostic::Valid));
         } else {
             pos += 1;
-            if pos + 1 < bytes.len() {
+            if b == b'\\' && pos + 1 < bytes.len() {
                 // 处理转义：跳过反斜杠及其后一个字节
                 pos += 1;
             }

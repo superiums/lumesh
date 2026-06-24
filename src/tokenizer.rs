@@ -1095,7 +1095,6 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
         map_valid_token(punctuation_tag(":"), TokenKind::Comment)(input)
     {
         input = new_input;
-        ctx = Ctx::after_token(&token, input.as_original_str());
         tokens.push(token);
         diagnostics.push(diagnostic);
     }
@@ -1143,7 +1142,6 @@ fn parse_command_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
         map_valid_token(punctuation_tag(">"), TokenKind::Comment)(input)
     {
         input = new_input;
-        ctx = Ctx::after_token(&token, input.as_original_str());
         tokens.push(token);
         diagnostics.push(diagnostic);
     }

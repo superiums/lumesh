@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.15.5]
+- restructor tokenizer with dispatch.
+- update add condition for completions.
+- add +and! as condition for completion. rename @n to @i
+
 ## [0.15.4]
 - rewrite exec col for comletion
 - clean completions

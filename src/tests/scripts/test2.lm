@@ -96,7 +96,7 @@ time.sleep(10)
 let now = time.now()
 print(now)
 
-# fs 
+# fs
 print(fs.exists("/tmp"))
 print(fs.is_dir("/tmp"))
 
@@ -121,7 +121,7 @@ let r = 1..5 |> list.from
 print(r)
 
 # set
-let s = {1, 2, 3}
+let s = S{1, 2, 3}
 print(s)
 
 # map

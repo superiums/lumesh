@@ -1663,6 +1663,7 @@ pub fn tokenize_source(input: &Str) -> Result<Vec<Token>, nom::Err<SyntaxErrorKi
     // 错误处理
     diagnostics.retain(|d| d != &Diagnostic::Valid);
     if !diagnostics.is_empty() {
+        dbg!(&token_vec);
         return Err(nom::Err::Failure(SyntaxErrorKind::TokenizationErrors(
             diagnostics.into_boxed_slice(),
         )));

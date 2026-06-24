@@ -89,9 +89,9 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '"' | '\'' | '`' => string_literal(input),
 
-        '0'..='9' => number_literal(input),
+        '0'..='9' => number_literal(input), //TODO unit M K % postfix
 
-        '.' => dot_dispatch(input, ctx), // context-aware: method call vs path
+        '.' => dot_dispatch(input, ctx), // context-aware: method call/range/path/customop
 
         '-' => minus_dispatch(input, ctx), // context-aware: negative vs flag vs operator
 
@@ -220,9 +220,9 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punct_seq_tag(".."), TokenKind::Operator), // ..+ customOp
             number_literal,                                            //.5
-            map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix), //.method
-            map_valid_token(path_tag("./", true), TokenKind::StringRaw),
+            map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix), //.pipemethod
             map_valid_token(path_tag("../", true), TokenKind::StringRaw),
+            map_valid_token(path_tag("./", true), TokenKind::StringRaw),
             map_valid_token(keyword_alone_or_end(".."), TokenKind::StringRaw), // parent path
             map_valid_token(keyword_alone_or_end("."), TokenKind::StringRaw),  // current path
                                                                                // TODO ..3
@@ -258,8 +258,8 @@ fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
             // single `-` followed by literal/number/paren/letter → OperatorPrefix
             map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
             // number_literal,
-            map_valid_token(punctuation_tag("-"), TokenKind::OperatorPrefix), // +(-5); a[-1]
-                                                                              // map_valid_token(symbol, TokenKind::Symbol),
+            // map_valid_token(punctuation_tag("-"), TokenKind::OperatorPrefix), // +(-5); a[-1]
+            // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
     }
 }
@@ -307,11 +307,14 @@ fn question_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Tok
     ))(input)
 }
 
-fn underscore_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    alt((
-        map_valid_token(among_punc_tag("_"), TokenKind::ValueSymbol),
-        map_valid_token(symbol, TokenKind::Symbol),
-    ))(input)
+fn underscore_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((
+            map_valid_token(punct_seq_tag("__"), TokenKind::OperatorPostfix),
+            map_valid_token(symbol, TokenKind::Symbol),
+        ))(input),
+        _ => map_valid_token(keyword_alone_or_end("_"), TokenKind::ValueSymbol)(input),
+    }
 }
 
 fn alpha_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {

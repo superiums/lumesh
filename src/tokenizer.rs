@@ -89,15 +89,11 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '"' | '\'' | '`' => string_literal(input),
 
-        '0'..='9' => number_literal(input), //TODO unit M K % postfix
-
         '.' => dot_dispatch(input, ctx), // context-aware: method call/range/path/customop
 
         '-' => minus_dispatch(input, ctx), // context-aware: negative vs flag vs operator
 
         '(' | ')' | '[' | ']' | '{' | '}' | ',' => dispatch_paren(input, ctx, first),
-
-        'H' | 'M' | 'S' => try_map_or_symbol(input, ctx, first), // H{ M{ S{ map/set literals
 
         '%' if input.len() > 1 => {
             let bytes = input.as_ref().as_bytes();
@@ -122,8 +118,14 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
             map_valid_token(operator_tag("^"), TokenKind::Operator),
         ))(input),
 
-        '+' | '=' => operator_or_symbol(input, ctx, first),
-        '|' | '&' | '*' | '<' | '>' => operator_or_symbol(input, ctx, first),
+        '&' => and_dispatch(input, ctx),
+        '|' => m!(pipe_tag, TokenKind::Operator),
+        '+' => m!(plus_tag, TokenKind::Operator),
+        '=' => m!(equal_tag, TokenKind::Operator),
+        '<' => m!(less_tag, TokenKind::Operator),
+        '>' => m!(greater_tag, TokenKind::Operator),
+
+        '*' => star_dispatch(input, ctx),
 
         '/' => slash_dispatch(input, ctx),
 
@@ -134,6 +136,10 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
         '@' => at_dispatch(input, ctx),
 
         '_' => underscore_dispatch(input, ctx), // standalone _ vs _ in symbol
+
+        '0'..='9' => number_literal(input), //TODO unit M K % postfix
+
+        'H' | 'M' | 'S' => try_map_or_symbol(input, ctx, first), // H{ M{ S{ map/set literals
 
         'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx), // keyword / value_symbol / string / symbol
 
@@ -177,13 +183,79 @@ fn dispatch_paren(
             TokenKind::OperatorPostfix,
         )(input)
     } else {
-        map_valid_token(any_punctuation, TokenKind::Punctuation)(input)
+        map_valid_token(punctuation_tag(&first.to_string()), TokenKind::Punctuation)(input)
+    }
+}
+
+fn equal_tag(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        keyword_tag("=>"),
+        // punctuation_tag("!=="),
+        punctuation_tag("==="),
+        // punctuation_tag("!="),
+        punctuation_tag("=="),
+        punctuation_tag("="),
+        // punctuation_tag(">="),
+        // punctuation_tag("<="),\
+    ))(input)
+}
+fn less_tag(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        punctuation_tag("<="),
+        punctuation_tag("<<"),
+        punctuation_tag("<"),
+    ))(input)
+}
+fn greater_tag(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        punctuation_tag(">="),
+        punctuation_tag(">>"),
+        punctuation_tag(">!"),
+        punctuation_tag(">"),
+    ))(input)
+}
+fn plus_tag(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((punctuation_tag("+="), punctuation_tag("+")))(input)
+}
+fn pipe_tag(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        operator_tag("||"),
+        punctuation_tag("|>"),
+        punctuation_tag("|^"),
+        punctuation_tag("|"),
+    ))(input)
+}
+
+fn and_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input), //NEVER USE
+        Ctx::Start | Ctx::Space | Ctx::Open => alt((
+            map_valid_token(operator_tag("&&"), TokenKind::Operator),
+            map_valid_token(keyword_alone_or_end("&+"), TokenKind::StringRaw),
+            map_valid_token(keyword_alone_or_end("&-"), TokenKind::StringRaw),
+            map_valid_token(keyword_alone_or_end("&?"), TokenKind::StringRaw),
+            map_valid_token(keyword_alone_or_end("&."), TokenKind::StringRaw),
+        ))(input),
+    }
+}
+
+fn star_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input), // wildcard
+        Ctx::Start | Ctx::Space | Ctx::Open => alt((
+            map_valid_token(operator_tag("*="), TokenKind::Operator),
+            map_valid_token(path_tag("**/", true), TokenKind::StringRaw), // **/ path
+            map_valid_token(path_tag("*/", true), TokenKind::StringRaw),  // */ path
+            map_valid_token(path_tag("*.", true), TokenKind::StringRaw),  // *. path
+            map_valid_token(operator_tag("*"), TokenKind::Operator),
+            map_valid_token(last_path_tag("*"), TokenKind::StringRaw), // `ls *` path at end
+        ))(input),
     }
 }
 
 fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input),
+        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input), //NEVER USE
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("~:"), TokenKind::Operator),
             // map_valid_token(operator_tag("~="), TokenKind::Operator),
@@ -196,7 +268,7 @@ fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
 
 fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input),
+        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Operator),))(input), //divide
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punctuation_tag("/="), TokenKind::Operator),
             map_valid_token(path_tag("/", false), TokenKind::StringRaw), // /x path
@@ -287,14 +359,14 @@ fn bang_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, D
             map_valid_token(punctuation_tag("!="), TokenKind::Operator),
             map_valid_token(keyword_tag("!~:"), TokenKind::Operator),
             map_valid_token(postfix_break_tag("!"), TokenKind::OperatorPostfix),
-            map_valid_token(any_punctuation, TokenKind::Punctuation),
+            map_valid_token(punctuation_tag("!"), TokenKind::Punctuation),
         ))(input),
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punctuation_tag("!=="), TokenKind::Operator),
             map_valid_token(punctuation_tag("!="), TokenKind::Operator),
             map_valid_token(keyword_tag("!~:"), TokenKind::Operator),
             map_valid_token(prefix_tag("!"), TokenKind::OperatorPrefix),
-            map_valid_token(any_punctuation, TokenKind::Punctuation),
+            map_valid_token(punctuation_tag("!"), TokenKind::Punctuation),
         ))(input),
     }
 }
@@ -313,7 +385,19 @@ fn underscore_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
             map_valid_token(punct_seq_tag("__"), TokenKind::OperatorPostfix),
             map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
-        _ => map_valid_token(keyword_alone_or_end("_"), TokenKind::ValueSymbol)(input),
+        _ => map_valid_token(
+            |input| {
+                input
+                    .strip_prefix("_")
+                    .filter(|(rest, _)| {
+                        rest.is_empty()
+                            || rest.starts_with(&[' ', '\n', ']'])
+                            || rest.starts_with("..")
+                    })
+                    .ok_or(NOT_FOUND)
+            },
+            TokenKind::ValueSymbol,
+        )(input), //`ls _` `[0.._]` `[_..9]`
     }
 }
 
@@ -328,32 +412,9 @@ fn alpha_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token,
     ))(input)
 }
 
-/// Generic dispatch for operators (`+`, `=`, `|`, `&`, `*`, `/`, `<`, `>`, `:`, `~`, `@`, `^`):
-/// - Word context: operator or symbol (no argument matching)
-/// - Non-word context: also tries argument_symbol before short_operator
-fn operator_or_symbol(
-    input: Input<'_>,
-    ctx: Ctx,
-    _first: char,
-) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    match ctx {
-        Ctx::Word => alt((
-            map_valid_token(long_operator, TokenKind::Operator),
-            map_valid_token(short_operator, TokenKind::Operator),
-            map_valid_token(symbol, TokenKind::Symbol),
-        ))(input),
-        _ => alt((
-            map_valid_token(long_operator, TokenKind::Operator),
-            // map_valid_token(argument_symbol, TokenKind::StringRaw),
-            map_valid_token(short_operator, TokenKind::Operator),
-            map_valid_token(symbol, TokenKind::Symbol),
-        ))(input),
-    }
-}
-
 fn try_map_or_symbol(
     input: Input<'_>,
-    ctx: Ctx,
+    _ctx: Ctx,
     first: char,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // H{, M{, S{ — check if followed by {
@@ -364,7 +425,7 @@ fn try_map_or_symbol(
             TokenKind::Punctuation,
         )(input)
     } else {
-        alpha_dispatch(input, ctx)
+        map_valid_token(symbol, TokenKind::Symbol)(input)
     }
 }
 
@@ -375,7 +436,7 @@ fn colon_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
         Ctx::Word => alt((
             map_valid_token(keyword_tag("::"), TokenKind::OperatorInfix),
             map_valid_token(punctuation_tag(":="), TokenKind::Operator),
-            map_valid_token(operator_tag(":"), TokenKind::Punctuation), //{k:v} a?b:c
+            map_valid_token(operator_tag(":"), TokenKind::Operator), //{k:v} a?b:c
         ))(input),
         _ => alt((
             map_valid_token(punctuation_tag(":="), TokenKind::Operator),
@@ -399,61 +460,6 @@ fn at_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Dia
     }
 }
 
-// =====================================================
-
-fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        punctuation_tag(","),
-        punctuation_tag("("),
-        punctuation_tag(")"),
-        punctuation_tag("["),
-        punctuation_tag("]"),
-        punctuation_tag("{"),
-        punctuation_tag("}"),
-        punctuation_tag("H{"), //hashMap
-        punctuation_tag("M{"), //bMap
-        punctuation_tag("S{"), //bSet
-        punctuation_tag("%{"), //explicit block
-    ))(input)
-}
-
-fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        // comparison / equality
-        keyword_tag("=>"),
-        punctuation_tag("!=="),
-        punctuation_tag("==="),
-        punctuation_tag("!="),
-        punctuation_tag("=="),
-        punctuation_tag(">="),
-        punctuation_tag("<="),
-        // keyword_tag("!~:"),
-        // keyword_tag("~:"),
-    ))(input)
-    .or_else(|_| {
-        alt((
-            // logical / pipe
-            keyword_tag("&&"),
-            keyword_tag("||"),
-            keyword_tag("|>"),
-            keyword_tag("|^"),
-            keyword_tag("<<"),
-            keyword_tag(">!"),
-            keyword_tag(">>"),
-            // assignment
-            operator_tag("+="),
-            // operator_tag("-="),
-            operator_tag("*="),
-            // operator_tag("/="),
-            // keyword_tag(":="),
-            // arrow
-            // punctuation_tag("->"),
-            // ?-operators
-            // question_operator,
-        ))(input)
-    })
-}
-
 /// Matches `?`-prefixed multi-char operators (`?+`, `?.`, `??`, `?>`, `?!`, `?:`, `?~`).
 fn question_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
@@ -464,23 +470,6 @@ fn question_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("?!"),
         keyword_tag("?:"),
         keyword_tag("?~"),
-    ))(input)
-}
-
-fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        // keyword_tag("-"),
-        // keyword_tag("/"),
-        keyword_tag("|"),
-        operator_tag("<"),
-        operator_tag(">"),
-        operator_tag("*"),
-        // operator_tag("%"),
-        // operator_tag("^"),
-        punctuation_tag("+"),
-        punctuation_tag("="),
-        // operator_tag("?"),
-        // punctuation_tag(":"),
     ))(input)
 }
 
@@ -1203,8 +1192,10 @@ fn parse_command_token(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
         )(input));
     }
 
-    try_parser!(map_valid_token(any_punctuation, TokenKind::Punctuation)(
-        input
+    try_parser!(dispatch_paren(
+        input,
+        ctx,
+        input.chars().next().unwrap_or_default()
     ));
     try_parser!(map_valid_token(any_keyword, TokenKind::Keyword)(input));
     try_parser!(map_valid_token(whitespace, TokenKind::Whitespace)(input));

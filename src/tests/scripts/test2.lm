@@ -27,11 +27,11 @@ for i in 1..4 {
 let i = 0
 while i < 3 {
     print(i)
-    i = i + 1
+    set i = i + 1
 }
 
 # pipe
-"hello" | string.upper | string.length |> print
+"hello" | string.to_upper() | string.len |> print
 
 # dispatch pipe
 [1, 2, 3] |> print
@@ -66,7 +66,7 @@ print(val2)
 # loop
 let count = 0
 loop {
-    count = count + 1
+    set count = count + 1
     if count > 2 {
         break
     }
@@ -86,7 +86,7 @@ print("hello".len())
 # string lib
 print("hello".red())
 print("hello".green())
-"hello" | string.upper |> print
+"hello" | string.to_upper() |> print
 
 # math lib
 print(math.sin(1.0))
@@ -113,11 +113,11 @@ print(rev "hello")
 print(rev [1, 2, 3])
 
 # throw caught
-let caught = "test \( throw "error" ?. )"
+let caught = "test \( throw \"error\" ?. )"
 print(caught)
 
 # range to list
-let r = 1..5 |> list.from
+let r = 1..5 | list.from
 print(r)
 
 # set

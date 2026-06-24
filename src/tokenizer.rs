@@ -95,14 +95,7 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '(' | ')' | '[' | ']' | '{' | '}' | ',' => dispatch_paren(input, ctx, first),
 
-        '%' if input.len() > 1 => {
-            let bytes = input.as_ref().as_bytes();
-            if bytes.len() > 1 && bytes[1] == b'{' {
-                m!(punctuation_tag("%{"), TokenKind::Punctuation) // %{ explicit block
-            } else {
-                m!(operator_tag("%{"), TokenKind::Operator) // %{ explicit block
-            }
-        }
+        '%' => percent_dispatch(input, ctx),
 
         '!' => bang_dispatch(input, ctx), // context-aware: prefix negate vs postfix call
 
@@ -113,11 +106,7 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
             map_valid_token(symbol, TokenKind::Symbol),                  // $ as symbol
         ))(input),
 
-        '^' => alt((
-            map_valid_token(keyword_alone_or_end("^"), TokenKind::OperatorPostfix),
-            map_valid_token(operator_tag("^"), TokenKind::Operator),
-        ))(input),
-
+        '^' => circum_dispatch(input, ctx),
         '&' => and_dispatch(input, ctx),
         '|' => m!(pipe_tag, TokenKind::Operator),
         '+' => m!(plus_tag, TokenKind::Operator),
@@ -347,6 +336,31 @@ fn prefix_minus_tag(input: Input<'_>) -> TokenizationResult<'_> {
             })
         })
         .ok_or(NOT_FOUND)
+}
+
+fn circum_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((map_valid_token(
+            punctuation_tag("^"),
+            TokenKind::OperatorPostfix,
+        ),))(input), //5%
+        Ctx::Start | Ctx::Space | Ctx::Open => {
+            map_valid_token(punctuation_tag("^"), TokenKind::Operator)(input)
+        }
+    }
+}
+
+fn percent_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((map_valid_token(
+            punctuation_tag("%"),
+            TokenKind::OperatorPostfix,
+        ),))(input), //5%
+        Ctx::Start | Ctx::Space | Ctx::Open => alt((
+            map_valid_token(punctuation_tag("%{"), TokenKind::Operator),
+            map_valid_token(punctuation_tag("%"), TokenKind::Operator),
+        ))(input),
+    }
 }
 
 /// Context-aware `!` dispatch:

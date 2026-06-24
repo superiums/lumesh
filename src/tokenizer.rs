@@ -119,7 +119,11 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
             map_valid_token(symbol, TokenKind::Symbol),                  // $ as symbol
         ))(input),
 
-        '|' | '&' | '^' | '*' | '/' | '<' | '>' | '~' => operator_or_symbol(input, ctx, first),
+        '|' | '&' | '^' | '*' | '<' | '>' => operator_or_symbol(input, ctx, first),
+
+        '/' => slash_dispatch(input, ctx),
+
+        '~' => tiled_dispatch(input, ctx),
 
         ':' => colon_dispatch(input, ctx),
 
@@ -173,6 +177,30 @@ fn dispatch_paren(
     }
 }
 
+fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input),
+        Ctx::Start | Ctx::Space | Ctx::Open => alt((
+            map_valid_token(operator_tag("~:"), TokenKind::Operator),
+            map_valid_token(operator_tag("~="), TokenKind::Operator),
+            map_valid_token(path_tag("~/", true), TokenKind::StringRaw), // ~/ path
+            map_valid_token(last_path_tag("~"), TokenKind::StringRaw),   // `ls ~` path at end
+                                                                         // map_valid_token(keyword_alone_or_end("~"), TokenKind::Operator), // reverse?
+        ))(input),
+    }
+}
+
+fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    match ctx {
+        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input),
+        Ctx::Start | Ctx::Space | Ctx::Open => alt((
+            map_valid_token(path_tag("/", false), TokenKind::StringRaw), // /x path
+            map_valid_token(last_path_tag("/"), TokenKind::StringRaw),   // `ls /` path at end
+            map_valid_token(keyword_alone_or_end("/"), TokenKind::Operator), // divide
+        ))(input),
+    }
+}
+
 /// `Word` context → `...=`/`...`/`..=`/`..` infix range, or `.` postfix (method call)
 /// `Start/Space/Open` context → `..` operator, `.` prefix (pipemethod), argument path, number literal, or standalone `.`/`..`
 fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
@@ -181,15 +209,18 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
             map_valid_token(infix_tag("...="), TokenKind::OperatorInfix),
             map_valid_token(infix_tag("..."), TokenKind::OperatorInfix),
             map_valid_token(infix_tag("..="), TokenKind::OperatorInfix),
-            map_valid_token(infix_tag(".."), TokenKind::OperatorInfix),
-            map_valid_token(punctuation_tag("."), TokenKind::OperatorPostfix),
+            map_valid_token(infix_tag(".."), TokenKind::OperatorInfix), //range
+            map_valid_token(punctuation_tag("."), TokenKind::OperatorPostfix), //call
         ))(input),
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
-            map_valid_token(punct_seq_tag(".."), TokenKind::Operator),
-            number_literal,                                              //.5
+            map_valid_token(punct_seq_tag(".."), TokenKind::Operator), // ..+ customOp
+            number_literal,                                            //.5
             map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix), //.method
-            map_valid_token(whole_word("./"), TokenKind::StringRaw),
-            map_valid_token(keyword_alone_or_end(".."), TokenKind::OperatorPrefix), //..3
+            map_valid_token(path_tag("./", true), TokenKind::StringRaw),
+            map_valid_token(path_tag("../", true), TokenKind::StringRaw),
+            map_valid_token(keyword_alone_or_end(".."), TokenKind::StringRaw), // parent path
+            map_valid_token(keyword_alone_or_end("."), TokenKind::StringRaw),  // current path
+                                                                               // TODO ..3
         ))(input),
     }
 }
@@ -305,7 +336,7 @@ fn operator_or_symbol(
         ))(input),
         _ => alt((
             map_valid_token(long_operator, TokenKind::Operator),
-            map_valid_token(argument_symbol, TokenKind::StringRaw),
+            // map_valid_token(argument_symbol, TokenKind::StringRaw),
             map_valid_token(short_operator, TokenKind::Operator),
             map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
@@ -464,12 +495,12 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
 
 /// Matches a sequence of ASCII punctuation starting with `punct` (length ≥ 2).
 ///
-/// Used for `..` range operator at expression-start/non-word positions.
+/// Used for `..` custom operator at expression-start/non-word positions.
 fn punct_seq_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.starts_with(punct) {
             let places = input.chars().take_while(char::is_ascii_punctuation).count();
-            if places > 1 {
+            if places > 1 + punct.len() {
                 return Ok(input.split_at(places));
             }
         }
@@ -482,7 +513,7 @@ fn punct_seq_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
 ///
 /// Delimiters: whitespace, `;`, `` ` ``, `)`, `]`, `}`, `|`, `>`.
 /// Escape: `\X` skips the next byte (on Unix, `\ ` / `\`"` / `\''` are escaped pairs).
-fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+fn path_tag(punct: &str, alone_ok: bool) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if !input.starts_with(punct) {
             return Err(NOT_FOUND);
@@ -512,16 +543,35 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
             }
 
             // skip multi-byte UTF-8: advance by char length
-            let char_len = (b as char).len_utf8();
-            i += char_len;
+            i += (b as char).len_utf8();
         }
 
         // need at least 1 byte of content beyond the prefix
-        if i > prefix_len {
+        if alone_ok || i > prefix_len {
             Ok(input.split_at(i))
         } else {
             Err(NOT_FOUND)
         }
+    }
+}
+
+fn last_path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if !input.starts_with(punct) {
+            return Err(NOT_FOUND);
+        }
+        let bytes = input.as_ref().as_bytes();
+        let prefix_len = punct.len();
+        let mut i = prefix_len;
+
+        while i < bytes.len() {
+            let b = bytes[i];
+            if is_path_delimiter(b as char) {
+                return Ok(input.split_at(i));
+            }
+            i += (b as char).len_utf8();
+        }
+        return Err(NOT_FOUND);
     }
 }
 
@@ -552,69 +602,69 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
 }
 
 // parse argument such as ipconfig /all; C:\
-#[cfg(windows)]
-fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        // unix-style paths (also valid on Windows)
-        path_tag("../"),
-        path_tag("./"),
-        path_tag("*/"),
-        path_tag("**/"),
-        // windows drive paths
-        win_abpath_tag(":"),
-        // windows paths
-        path_tag("..\\"),
-        path_tag(".\\"),
-        path_tag("*\\"),
-        path_tag("**\\"),
-        // flags and special tokens
-        path_tag("--"),
-        path_tag("-"),
-        path_tag("~"),
-        path_tag("*."),
-        // url schemes
-        path_tag("http:"),
-        path_tag("https:"),
-        path_tag("ftp:"),
-        path_tag("ftps:"),
-        path_tag("file:"),
-        keyword_alone_or_end("."),
-        keyword_alone_or_end(".."),
-        keyword_alone_or_end("&-"),
-        keyword_alone_or_end("&?"),
-        keyword_alone_or_end("&+"),
-        keyword_alone_or_end("&."),
-    ))(input)
-}
+// #[cfg(windows)]
+// fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
+//     alt((
+//         // unix-style paths (also valid on Windows)
+//         path_tag("../"),
+//         path_tag("./"),
+//         path_tag("*/"),
+//         path_tag("**/"),
+//         // windows drive paths
+//         win_abpath_tag(":"),
+//         // windows paths
+//         path_tag("..\\"),
+//         path_tag(".\\"),
+//         path_tag("*\\"),
+//         path_tag("**\\"),
+//         // flags and special tokens
+//         path_tag("--"),
+//         path_tag("-"),
+//         path_tag("~"),
+//         path_tag("*."),
+//         // url schemes
+//         path_tag("http:"),
+//         path_tag("https:"),
+//         path_tag("ftp:"),
+//         path_tag("ftps:"),
+//         path_tag("file:"),
+//         keyword_alone_or_end("."),
+//         keyword_alone_or_end(".."),
+//         keyword_alone_or_end("&-"),
+//         keyword_alone_or_end("&?"),
+//         keyword_alone_or_end("&+"),
+//         keyword_alone_or_end("&."),
+//     ))(input)
+// }
 // parse argument such as ls -l --color=auto ./
-#[cfg(unix)]
-fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        // flags
-        path_tag("--"),
-        path_tag("-"),
-        // paths
-        path_tag("/"),
-        path_tag("../"),
-        path_tag("./"),
-        path_tag("*/"),
-        path_tag("**/"),
-        path_tag("*."),
-        path_tag("~"),
-        // url schemes
-        path_tag("http:"),
-        path_tag("https:"),
-        path_tag("ftp:"),
-        path_tag("ftps:"),
-        path_tag("file:"),
-        keyword_alone_or_end("."),
-        keyword_alone_or_end(".."),
-        keyword_alone_or_end("&-"),
-        keyword_alone_or_end("&?"),
-        keyword_alone_or_end("&+"),
-        keyword_alone_or_end("&."),
-    ))(input)
-}
+// #[cfg(unix)]
+// fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
+//     alt((
+//         // flags
+//         path_tag("--"),
+//         path_tag("-"),
+//         // paths
+//         path_tag("/"),
+//         path_tag("../"),
+//         path_tag("./"),
+//         path_tag("*/"),
+//         path_tag("**/"),
+//         path_tag("*."),
+//         path_tag("~"),
+//         // url schemes
+//         path_tag("http:"),
+//         path_tag("https:"),
+//         path_tag("ftp:"),
+//         path_tag("ftps:"),
+//         path_tag("file:"),
+//         keyword_alone_or_end("."),
+//         keyword_alone_or_end(".."),
+//         keyword_alone_or_end("&-"),
+//         keyword_alone_or_end("&?"),
+//         keyword_alone_or_end("&+"),
+//         keyword_alone_or_end("&."),
+//     ))(input)
+// }
 
 fn protocols(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
@@ -625,6 +675,7 @@ fn protocols(input: Input<'_>) -> TokenizationResult<'_> {
         whole_word("file://"),
     ))(input)
 }
+
 fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match input.chars().next() {
         Some('"') => parse_string(input, '"', TokenKind::StringLiteral),
@@ -926,6 +977,7 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
 }
 
 /// Mathes whole word with a prefix
+/// similar with path_tag,but don't skip anything. eg `\ `
 fn whole_word(prefix: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.starts_with(prefix) {
@@ -1118,9 +1170,9 @@ fn parse_command_token(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
     try_parser!(time_literal(input));
 
     if ctx != Ctx::Word {
-        try_parser!(map_valid_token(argument_symbol, TokenKind::StringRaw)(
-            input
-        ));
+        // try_parser!(map_valid_token(argument_symbol, TokenKind::StringRaw)(
+        //     input
+        // ));
         try_parser!(map_valid_token(
             cfm_prefix_operator,
             TokenKind::OperatorPrefix

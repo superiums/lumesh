@@ -1,6 +1,6 @@
 use std::{
     collections::{BTreeMap, HashMap},
-    io::{IsTerminal, Write},
+    io::Write,
     rc::Rc,
 };
 
@@ -159,15 +159,17 @@ fn help(
             }
             "tops" => {
                 writeln!(s, "Top level Functions List\n").unwrap();
-                LIBS_INFO.with(|h| if let Some(map) = h.get("") {
-                    for (func, info) in map {
-                        writeln!(
-                            s,
-                            "\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
-                            info.hint
-                        )
-                        .unwrap();
-                        writeln!(s, "\t{}", info.descr).unwrap();
+                LIBS_INFO.with(|h| {
+                    if let Some(map) = h.get("") {
+                        for (func, info) in map {
+                            writeln!(
+                                s,
+                                "\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
+                                info.hint
+                            )
+                            .unwrap();
+                            writeln!(s, "\t{}", info.descr).unwrap();
+                        }
                     }
                 });
                 writeln!(s, "\njust use them directly anywhere!").unwrap();
@@ -411,21 +413,22 @@ fn print(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let is_tty = std::io::stdout().is_terminal();
+    // let is_tty = std::io::stdout().is_terminal();
     let mut stdout = std::io::stdout().lock();
     for x in args.iter() {
         let s = format!("{x} ");
-        if is_tty {
-            let _ = write!(&mut stdout, "{}", s.replace('\n', "\r\n"));
-        } else {
-            let _ = write!(&mut stdout, "{s}");
-        }
+        // if is_tty {
+        //     let _ = write!(&mut stdout, "{}", s);
+        //     // let _ = write!(&mut stdout, "{}", s.replace('\n', "\r\n"));
+        // } else {
+        let _ = write!(&mut stdout, "{s}");
+        // }
     }
-    if is_tty {
-        let _ = write!(&mut stdout, "\r\n");
-    } else {
-        let _ = writeln!(&mut stdout);
-    }
+    // if is_tty {
+    //     let _ = write!(&mut stdout, "\r\n");
+    // } else {
+    let _ = writeln!(&mut stdout);
+    // }
     let _ = stdout.flush();
     Ok(Expression::None)
 }
@@ -434,15 +437,10 @@ fn println(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let is_tty = std::io::stdout().is_terminal();
     let mut stdout = std::io::stdout().lock();
     for x in args.iter() {
         let s = format!("{x}");
-        if is_tty {
-            let _ = write!(&mut stdout, "{}\r\n", s.replace('\n', "\r\n"));
-        } else {
-            let _ = writeln!(&mut stdout, "{s}");
-        }
+        let _ = writeln!(&mut stdout, "{s}");
     }
     let _ = stdout.flush();
     Ok(Expression::None)
@@ -463,18 +461,10 @@ fn eprint(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let is_tty = std::io::stderr().is_terminal();
     let mut stderr = std::io::stderr().lock();
     for (i, x) in args.iter().enumerate() {
         let s = format!("\x1b[38;5;9m{x}\x1b[m\x1b[0m");
-        if is_tty {
-            let s = s.replace('\n', "\r\n");
-            if i < args.len() - 1 {
-                let _ = write!(&mut stderr, "{s} ");
-            } else {
-                let _ = writeln!(&mut stderr, "{s}");
-            }
-        } else if i < args.len() - 1 {
+        if i < args.len() - 1 {
             let _ = write!(&mut stderr, "{s} ");
         } else {
             let _ = writeln!(&mut stderr, "{s}");
@@ -488,15 +478,10 @@ fn eprintln(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let is_tty = std::io::stderr().is_terminal();
     let mut stderr = std::io::stderr().lock();
     for x in args.iter() {
         let s = format!("\x1b[38;5;9m{x}\x1b[m\x1b[0m");
-        if is_tty {
-            let _ = writeln!(&mut stderr, "{}", s.replace('\n', "\r\n"));
-        } else {
-            let _ = writeln!(&mut stderr, "{s}");
-        }
+        let _ = writeln!(&mut stderr, "{s}");
     }
     let _ = stderr.flush();
     Ok(Expression::None)

@@ -285,9 +285,10 @@ impl Editor {
 
             // Completion mode: handle events
             if matches!(self.mode, EditorMode::CompletionSelect { .. })
-                && self.try_completion_event(&event) {
-                    continue;
-                }
+                && self.try_completion_event(&event)
+            {
+                continue;
+            }
 
             // Check hotkey function bindings first (for function/lambda values)
             if let Some(f) = self.hotkey_fns.get(&event) {
@@ -361,6 +362,7 @@ impl Editor {
                 }
                 KeyEvent::Enter => {
                     self.current_hint = None;
+                    self.show_hint = false;
                     if matches!(self.mode, EditorMode::Multiline) {
                         if self.buffer.cursor_on_empty_line() {
                             return self.accept_line();
@@ -623,12 +625,13 @@ impl Editor {
     fn handle_space(&mut self) {
         let text = self.buffer.text();
         if !text.contains(' ')
-            && let Some(expanded) = self.abbreviations.get(text.trim()) {
-                self.buffer.set_text(expanded);
-                self.buffer.insert(' ');
-                self.buffer.move_to_end();
-                return;
-            }
+            && let Some(expanded) = self.abbreviations.get(text.trim())
+        {
+            self.buffer.set_text(expanded);
+            self.buffer.insert(' ');
+            self.buffer.move_to_end();
+            return;
+        }
         self.buffer.insert(' ');
     }
 
@@ -730,9 +733,10 @@ impl Editor {
             Cmd::Cancel => {
                 self.leave_completion();
                 if self.history.is_navigating()
-                    && let Some(restored) = self.history.cancel_navigation() {
-                        self.buffer.set_text(&restored);
-                    }
+                    && let Some(restored) = self.history.cancel_navigation()
+                {
+                    self.buffer.set_text(&restored);
+                }
             }
             Cmd::Complete => {
                 self.handle_tab();
@@ -995,7 +999,6 @@ impl Editor {
     }
 
     // ---- Rendering ----
-
     fn render(&mut self) -> Result<(), ReadlineError> {
         // Auto-scroll: if in completion mode and not enough room below, clear screen
         if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
@@ -1094,17 +1097,18 @@ impl Editor {
         self.current_hint = None;
         if self.show_hint
             && let Some(ref hinter) = self.hinter
-                && let Some(hint) = hinter.hint(&line, byte_cursor) {
-                    self.current_hint = Some(hint.clone());
-                    queue!(
-                        stdout,
-                        MoveTo(cursor_col, cursor_row),
-                        SetForegroundColor(self.theme.hint_color),
-                        Print(&hint),
-                        ResetColor
-                    )
-                    .map_err(ReadlineError::Io)?;
-                }
+            && let Some(hint) = hinter.hint(&line, byte_cursor)
+        {
+            self.current_hint = Some(hint.clone());
+            queue!(
+                stdout,
+                MoveTo(cursor_col, cursor_row),
+                SetForegroundColor(self.theme.hint_color),
+                Print(&hint),
+                ResetColor
+            )
+            .map_err(ReadlineError::Io)?;
+        }
 
         // Render completion popup
         let popup_data = match &self.mode {
@@ -1156,7 +1160,12 @@ impl Editor {
         let scroll_end = (scroll_start + height).min(total);
         let popup_width = self.terminal_width as usize;
 
-        for (idx, item) in completions.iter().enumerate().skip(scroll_start).take(scroll_end - scroll_start) {
+        for (idx, item) in completions
+            .iter()
+            .enumerate()
+            .skip(scroll_start)
+            .take(scroll_end - scroll_start)
+        {
             let display_idx = idx - scroll_start;
             let row = start_row + display_idx as u16;
             let is_selected = idx == selected;

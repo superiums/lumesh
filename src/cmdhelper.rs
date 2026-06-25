@@ -30,19 +30,19 @@ fn init_lm_cmds() -> HashSet<&'static str> {
         // "clear".into(),
         // "rm ".into(),
         // "cp -r",
-        "let ",
-        "fn ",
-        "if ",
+        "let",
+        "fn",
+        "if",
         "else {",
-        "match ",
+        "match",
         "while (",
-        "for i in ",
+        "for i in",
         "loop {\n",
         "break",
         "return",
         "history",
-        "del ",
-        "use ",
+        "del",
+        "use",
     };
     // cmds.extend(get_builtin_tips());
     // cmds.extend(scan_cmds());
@@ -61,7 +61,8 @@ pub fn collect_command_with_prefix(prefix: &str) -> Vec<&str> {
 
     let c1 = get_lm_commands()
         .iter()
-        .filter(|x| x.starts_with(prefix)).copied()
+        .filter(|x| x.starts_with(prefix))
+        .copied()
         .collect::<Vec<_>>();
     if c1.is_empty() {
         match get_lib_completions(prefix) {
@@ -119,9 +120,10 @@ fn scan_path_cmds(dir: &Path) -> Vec<String> {
             if path.is_dir() {
                 commands.extend(scan_path_cmds(&path));
             } else if is_executable(&path)
-                && let Some(stem) = path.file_stem().and_then(OsStr::to_str) {
-                    commands.push(stem.to_string());
-                }
+                && let Some(stem) = path.file_stem().and_then(OsStr::to_str)
+            {
+                commands.push(stem.to_string());
+            }
         }
     }
     commands

@@ -98,7 +98,7 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '-' => minus_dispatch(input, ctx), // context-aware: negative vs flag vs operator
 
-        '(' | ')' | '[' | ']' | '{' | '}' | ',' => dispatch_paren(input, ctx, first),
+        '(' | ')' | '[' | ']' | '{' | '}' | ',' => paren_dispatch(input, ctx, first),
 
         '%' => percent_dispatch(input, ctx),
 
@@ -113,11 +113,12 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '^' => circum_dispatch(input, ctx),
         '&' => and_dispatch(input, ctx),
-        '|' => m!(pipe_tag, TokenKind::Operator),
-        '+' => m!(plus_tag, TokenKind::Operator),
-        '=' => m!(equal_tag, TokenKind::Operator),
-        '<' => m!(less_tag, TokenKind::Operator),
-        '>' => m!(greater_tag, TokenKind::Operator),
+        '|' => m!(pipe_parser, TokenKind::Operator),
+        '=' => m!(equal_parser, TokenKind::Operator),
+        '<' => m!(less_parser, TokenKind::Operator),
+        '>' => m!(greater_parser, TokenKind::Operator),
+
+        '+' => plus_dispatch(input, ctx),
 
         '*' => star_dispatch(input, ctx),
 
@@ -164,7 +165,7 @@ fn map_valid_token(
 
 /// `(` or `[` after Word context → OperatorPostfix (function call/index)
 /// Otherwise → Punctuation (standalone bracket/comma)
-fn dispatch_paren(
+fn paren_dispatch(
     input: Input<'_>,
     ctx: Ctx,
     first: char,
@@ -179,7 +180,7 @@ fn dispatch_paren(
     }
 }
 
-fn equal_tag(input: Input<'_>) -> TokenizationResult<'_> {
+fn equal_parser(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("=>"),
         // punctuation_tag("!=="),
@@ -191,14 +192,14 @@ fn equal_tag(input: Input<'_>) -> TokenizationResult<'_> {
         // punctuation_tag("<="),\
     ))(input)
 }
-fn less_tag(input: Input<'_>) -> TokenizationResult<'_> {
+fn less_parser(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         punctuation_tag("<="),
         punctuation_tag("<<"),
         punctuation_tag("<"),
     ))(input)
 }
-fn greater_tag(input: Input<'_>) -> TokenizationResult<'_> {
+fn greater_parser(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         punctuation_tag(">="),
         punctuation_tag(">>"),
@@ -206,10 +207,25 @@ fn greater_tag(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag(">"),
     ))(input)
 }
-fn plus_tag(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((punctuation_tag("+="), punctuation_tag("+")))(input)
+fn plus_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    // if ctx == Ctx::Space {
+    //     map_valid_token(
+    //         |input: Input<'_>| {
+    //             input
+    //                 .strip_prefix("+")
+    //                 .filter(|(rest, _)| !rest.starts_with(is_symbol_char))
+    //                 .ok_or(NOT_FOUND)
+    //         },
+    //         TokenKind::Operator,
+    //     )(input)
+    // } else {
+    alt((
+        map_valid_token(punctuation_tag("+="), TokenKind::Operator),
+        map_valid_token(punctuation_tag("+"), TokenKind::Operator),
+    ))(input)
+    // }
 }
-fn pipe_tag(input: Input<'_>) -> TokenizationResult<'_> {
+fn pipe_parser(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         operator_tag("||"),
         punctuation_tag("|>"),
@@ -225,10 +241,10 @@ fn and_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
         } //NEVER USE
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("&&"), TokenKind::Operator),
-            map_valid_token(keyword_alone_or_end("&+"), TokenKind::StringRaw),
-            map_valid_token(keyword_alone_or_end("&-"), TokenKind::StringRaw),
-            map_valid_token(keyword_alone_or_end("&?"), TokenKind::StringRaw),
-            map_valid_token(keyword_alone_or_end("&."), TokenKind::StringRaw),
+            map_valid_token(postfix_break_tag("&+"), TokenKind::StringRaw),
+            map_valid_token(postfix_break_tag("&-"), TokenKind::StringRaw),
+            map_valid_token(postfix_break_tag("&?"), TokenKind::StringRaw),
+            map_valid_token(postfix_break_tag("&."), TokenKind::StringRaw),
         ))(input),
     }
 }
@@ -259,7 +275,7 @@ fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
             // map_valid_token(operator_tag("~="), TokenKind::Operator),
             map_valid_token(path_tag("~/", true), TokenKind::StringRaw), // ~/ path
             map_valid_token(last_path_tag("~"), TokenKind::StringRaw),   // `ls ~` path at end
-                                                                         // map_valid_token(keyword_alone_or_end("~"), TokenKind::Operator), // reverse?
+                                                                         // map_valid_token(postfix_break_tag("~"), TokenKind::Operator), // reverse?
         ))(input),
     }
 }
@@ -273,7 +289,7 @@ fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
             map_valid_token(punctuation_tag("/="), TokenKind::Operator),
             map_valid_token(path_tag("/", false), TokenKind::StringRaw), // /x path
             map_valid_token(last_path_tag("/"), TokenKind::StringRaw),   // `ls /` path at end
-            map_valid_token(keyword_alone_or_end("/"), TokenKind::Operator), // divide
+            map_valid_token(postfix_break_tag("/"), TokenKind::Operator), // divide
         ))(input),
     }
 }
@@ -283,26 +299,24 @@ fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
 fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Letter | Ctx::Number | Ctx::Word => alt((
-            map_valid_token(infix_tag("...="), TokenKind::OperatorInfix),
-            map_valid_token(infix_tag("..."), TokenKind::OperatorInfix),
-            map_valid_token(infix_tag("..="), TokenKind::OperatorInfix),
-            map_valid_token(infix_tag(".."), TokenKind::OperatorInfix), //a..b range
-            map_valid_token(keyword_alone_or_end(".."), TokenKind::OperatorPostfix), //a.. range
-            // TODO allow a..:step
+            map_valid_token(prefix_range_tag("...="), TokenKind::OperatorInfix),
+            map_valid_token(prefix_range_tag("..."), TokenKind::OperatorInfix),
+            map_valid_token(prefix_range_tag("..="), TokenKind::OperatorInfix),
+            map_valid_token(prefix_range_tag(".."), TokenKind::OperatorInfix), //a..b range
+            map_valid_token(postfix_break_tag(".."), TokenKind::OperatorPostfix), //a.. range
             map_valid_token(punctuation_tag("."), TokenKind::OperatorPostfix), //call
         ))(input),
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
-            map_valid_token(prefix_tag("..="), TokenKind::OperatorPrefix), // ..=b range
-            map_valid_token(prefix_tag(".."), TokenKind::OperatorPrefix),  // ..b range
-            // TODO allow ..-1 ?
-            number_literal,                                              //.5
-            map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix), //.pipemethod
+            map_valid_token(prefix_range_tag("..="), TokenKind::OperatorPrefix), // ..=b range
+            map_valid_token(prefix_range_tag(".."), TokenKind::OperatorPrefix),  // ..b range
+            number_literal,                                                      //.5
+            map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix),         //.pipemethod
             map_valid_token(path_tag("../", true), TokenKind::StringRaw),
             map_valid_token(path_tag("./", true), TokenKind::StringRaw),
             // eager eat, must bellow others
             map_valid_token(punct_seq_tag(".."), TokenKind::Operator), // ..+ customOp
-            map_valid_token(keyword_alone_or_end(".."), TokenKind::StringRaw), // parent path
-            map_valid_token(keyword_alone_or_end("."), TokenKind::StringRaw), // current path                                                                     // TODO ..3
+            map_valid_token(postfix_break_tag(".."), TokenKind::StringRaw), // parent path
+            map_valid_token(postfix_break_tag("."), TokenKind::StringRaw), // current path                                                                     // TODO ..3
         ))(input),
     }
 }
@@ -348,6 +362,21 @@ fn prefix_minus_tag(input: Input<'_>) -> TokenizationResult<'_> {
             })
         })
         .ok_or(NOT_FOUND)
+}
+
+/// Maches range prefix, allow followed by literal/number/(_:]
+/// a..-2  a.._  a..(a+b)  a..:2  [a..]
+fn prefix_range_tag(prefix: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        input
+            .strip_prefix(prefix)
+            .filter(|(rest, _)| {
+                rest.starts_with(|c: char| {
+                    c.is_ascii_alphanumeric() || matches!(c, '(' | '-' | '_' | ':' | ']')
+                })
+            })
+            .ok_or(NOT_FOUND)
+    }
 }
 
 fn circum_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
@@ -496,48 +525,47 @@ fn colon_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
 /// Requires non-Word context (standalone `@` before identifier).
 fn at_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => {
+        Ctx::Start => alt((
+            map_valid_token(prefix_tag("@"), TokenKind::OperatorPrefix), // @deco, @(expr)
+        ))(input),
+        _ => {
             // Inside an identifier, `@` is not valid — fall through to symbol
             map_valid_token(symbol, TokenKind::Symbol)(input)
         }
-        _ => alt((
-            map_valid_token(prefix_tag("@"), TokenKind::OperatorPrefix), // @deco, @(expr)
-                                                                         // map_valid_token(operator_tag("@"), TokenKind::Operator),
-        ))(input),
     }
 }
 
 /// Matches `?`-prefixed multi-char operators (`?+`, `?.`, `??`, `?>`, `?!`, `?:`, `?~`).
 fn question_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("?+"),
-        keyword_tag("?."),
-        keyword_tag("??"),
-        keyword_tag("?>"),
-        keyword_tag("?!"),
-        keyword_tag("?:"),
-        keyword_tag("?~"),
+        postfix_break_tag("?+"),
+        postfix_break_tag("?."),
+        postfix_break_tag("??"),
+        postfix_break_tag("?>"),
+        postfix_break_tag("?!"),
+        space_brace_followed_tag("?:"),
+        postfix_break_tag("?~"),
     ))(input)
 }
 
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_alone_tag("let"),
-        keyword_alone_tag("set"),
-        keyword_alone_tag("alias"),
-        keyword_alone_tag("export"),
-        keyword_alone_tag("if"),
-        keyword_tag("else"),
-        keyword_alone_tag("fn"),
-        keyword_alone_tag("match"),
-        keyword_alone_tag("for"),
-        keyword_alone_tag("in"),
-        keyword_alone_tag("while"),
-        keyword_alone_tag("loop"),
-        keyword_tag("break"),
-        keyword_tag("return"),
-        keyword_alone_tag("del"),
-        keyword_alone_tag("use"),
+        space_followed_tag("let"),
+        space_followed_tag("set"),
+        space_followed_tag("alias"),
+        space_followed_tag("export"),
+        space_brace_followed_tag("if"),
+        space_brace_followed_tag("else"),
+        space_followed_tag("fn"),
+        space_brace_followed_tag("match"),
+        space_followed_tag("for"),
+        space_followed_tag("in"),
+        space_brace_followed_tag("while"),
+        space_brace_followed_tag("loop"),
+        postfix_break_tag("break"),
+        postfix_break_tag("return"),
+        space_followed_tag("del"),
+        space_followed_tag("use"),
     ))(input)
 }
 
@@ -629,7 +657,7 @@ fn last_path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
 /// Returns true if byte `b` is a path-scanning delimiter.
 #[inline]
 fn is_path_delimiter(c: char) -> bool {
-    matches!(c, ';' | '`' | ')' | ']' | '}' | '|' | '>') || c.is_ascii_whitespace()
+    c.is_ascii_whitespace() || matches!(c, ';' | '`' | ')' | ']' | '}' | '|' | '>')
 }
 
 #[cfg(windows)]
@@ -679,12 +707,12 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
 //         path_tag("ftp:"),
 //         path_tag("ftps:"),
 //         path_tag("file:"),
-//         keyword_alone_or_end("."),
-//         keyword_alone_or_end(".."),
-//         keyword_alone_or_end("&-"),
-//         keyword_alone_or_end("&?"),
-//         keyword_alone_or_end("&+"),
-//         keyword_alone_or_end("&."),
+//         postfix_break_tag("."),
+//         postfix_break_tag(".."),
+//         postfix_break_tag("&-"),
+//         postfix_break_tag("&?"),
+//         postfix_break_tag("&+"),
+//         postfix_break_tag("&."),
 //     ))(input)
 // }
 // parse argument such as ls -l --color=auto ./
@@ -708,12 +736,12 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
 //         path_tag("ftp:"),
 //         path_tag("ftps:"),
 //         path_tag("file:"),
-//         keyword_alone_or_end("."),
-//         keyword_alone_or_end(".."),
-//         keyword_alone_or_end("&-"),
-//         keyword_alone_or_end("&?"),
-//         keyword_alone_or_end("&+"),
-//         keyword_alone_or_end("&."),
+//         postfix_break_tag("."),
+//         postfix_break_tag(".."),
+//         postfix_break_tag("&-"),
+//         postfix_break_tag("&?"),
+//         postfix_break_tag("&+"),
+//         postfix_break_tag("&."),
 //     ))(input)
 // }
 
@@ -994,7 +1022,7 @@ fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
 
 /// Matches a keyword that must be followed by whitespace (not end-of-input).
 /// Used for standalone keywords like `let`, `set`, `if`, `fn`, `match`.
-fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+fn space_followed_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
             .strip_prefix(keyword)
@@ -1002,14 +1030,15 @@ fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
             .ok_or(NOT_FOUND)
     }
 }
-
-/// Matches a keyword that must be followed by whitespace OR end-of-input.
-/// Used for tokens like `.`, `..`, `&-` that can appear at end of input.
-fn keyword_alone_or_end(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+fn space_brace_followed_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
             .strip_prefix(keyword)
-            .filter(|(rest, _)| rest.is_empty() || rest.starts_with(char::is_whitespace))
+            .filter(|(rest, _)| {
+                rest.starts_with(char::is_whitespace)
+                    || rest.starts_with('{')
+                    || rest.starts_with('(')
+            })
             .ok_or(NOT_FOUND)
     }
 }
@@ -1073,30 +1102,13 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
     }
 }
 
-/// Matches an infix operator (range `..`, `...` etc.) that must sit between operands.
-/// Requires previous char to be alphanumeric/`)`/`]`/`_` and next char to be alphanumeric/`(`/`_`/`-`.
-fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
-    move |input: Input<'_>| {
-        input
-            .strip_prefix(keyword)
-            .filter(|(rest, _)| {
-                rest.starts_with(|c: char| {
-                    c.is_ascii_alphanumeric() || matches!(&c, '(' | '_' | '-')
-                })
-            })
-            .ok_or(NOT_FOUND)
-    }
-}
-
 /// Matches a postfix operator that must be followed by whitespace or end-of-input.
 /// Used for postfix `!` and `^` to prevent merging with following characters.
 fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
             .strip_prefix(keyword)
-            .filter(|(rest, _)| {
-                rest.is_empty() || rest.starts_with(|c: char| c.is_ascii_whitespace())
-            })
+            .filter(|(rest, _)| rest.is_empty() || rest.starts_with(|c: char| is_path_delimiter(c)))
             .ok_or(NOT_FOUND)
     }
 }
@@ -1237,7 +1249,7 @@ fn parse_command_token(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
         )(input));
     }
 
-    try_parser!(dispatch_paren(
+    try_parser!(paren_dispatch(
         input,
         ctx,
         input.chars().next().unwrap_or_default()
@@ -1315,9 +1327,9 @@ fn cfm_short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("|"),
         punctuation_tag("="), // allow all.
-        keyword_alone_tag("+"),
-        keyword_alone_tag("?"),
-        keyword_alone_tag(":"),
+        space_followed_tag("+"),
+        space_followed_tag("?"),
+        space_followed_tag(":"),
     ))(input)
 }
 

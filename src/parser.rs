@@ -362,10 +362,10 @@ impl PrattParser {
                     //     let (input, arg) = cut(parse_symbol_string)(input)?;
                     //     Ok((input, Expression::String(format!("--{})", arg))))
                     // }
-                    "-" if min_prec == PREC_CMD_ARG => {
+                    "-" | "+" if min_prec == PREC_CMD_ARG => {
                         let input = input.skip_n(1);
                         let (input, arg) = cut(parse_symbol_string)(input)?;
-                        Ok((input, Expression::String(format!("-{}", arg))))
+                        Ok((input, Expression::String(format!("{}{}", op, arg))))
                     }
                     "!" | "-" => {
                         let prec = PREC_UNARY;

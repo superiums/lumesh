@@ -500,6 +500,11 @@ fn alpha_dispatch(
         return try_map_or_symbol(input, ctx, first, is_cfm);
     }
 
+    #[cfg(windows)]
+    if let Ok(r) = map_valid_token(win_abpath_tag, TokenKind::StringRaw)(input) {
+        return Ok(r);
+    }
+
     alt((
         map_valid_token(any_keyword, TokenKind::Keyword),
         map_valid_token(value_symbol, TokenKind::ValueSymbol),
@@ -690,22 +695,20 @@ fn is_path_delimiter(c: char) -> bool {
 }
 
 #[cfg(windows)]
-fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
-    move |input: Input<'_>| {
-        let mut it = input.chars();
-        if input.len() > 1
-            && it.next().map_or(false, |c| c.is_ascii_uppercase())
-            && it.next().map_or(false, |c| c == ':')
-        {
-            let byte_len = input
-                .chars()
-                .take_while(|&c| !is_path_delimiter(c))
-                .map(char::len_utf8)
-                .sum::<usize>();
-            Ok(input.split_at(byte_len))
-        } else {
-            Err(NOT_FOUND)
-        }
+fn win_abpath_tag(input: Input<'_>) -> TokenizationResult<'_> {
+    let mut it = input.chars();
+    if input.len() > 1
+        && it.next().map_or(false, |c| c.is_ascii_uppercase())
+        && it.next().map_or(false, |c| c == ':')
+    {
+        let byte_len = input
+            .chars()
+            .take_while(|&c| !is_path_delimiter(c))
+            .map(char::len_utf8)
+            .sum::<usize>();
+        Ok(input.split_at(byte_len))
+    } else {
+        Err(NOT_FOUND)
     }
 }
 

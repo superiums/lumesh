@@ -506,13 +506,16 @@ fn alpha_dispatch(
         regex_literal,
         time_literal,
         map_valid_token(protocols, TokenKind::StringRaw),
-        map_valid_token(|input| symbol(input, is_cfm), TokenKind::Symbol),
+        map_valid_token(
+            |input| symbol(input, is_cfm, ctx == Ctx::Space),
+            TokenKind::Symbol,
+        ),
     ))(input)
 }
 
 fn try_map_or_symbol(
     input: Input<'_>,
-    _ctx: Ctx,
+    ctx: Ctx,
     first: char,
     is_cfm: bool,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
@@ -524,7 +527,10 @@ fn try_map_or_symbol(
             TokenKind::Punctuation,
         )(input)
     } else {
-        map_valid_token(|input| symbol(input, is_cfm), TokenKind::Symbol)(input)
+        map_valid_token(
+            |input| symbol(input, is_cfm, ctx == Ctx::Space),
+            TokenKind::Symbol,
+        )(input)
     }
 }
 
@@ -960,10 +966,10 @@ fn value_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 
-fn symbol(input: Input<'_>, is_cfm: bool) -> TokenizationResult<'_> {
+fn symbol(input: Input<'_>, is_cfm: bool, is_space_ctx: bool) -> TokenizationResult<'_> {
     let len = input
         .chars()
-        .take_while(|&c| is_symbol_char(c, is_cfm))
+        .take_while(|&c| is_symbol_char(c, is_cfm, is_space_ctx))
         .count();
 
     if len == 0 {
@@ -1181,8 +1187,15 @@ fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
 /// Checks whether the character is allowed in a symbol.
 /// Symbol chars: alphanumeric, `_`, `~`, `?`, `&`, `#`, `$`, `-`, `/`, `\`
 /// Excluded (cause operator/punctuation parsing instead): `+`, `=`, `<`, `>`, `*`, `%`, `^`, `|`, `:`, `@`, `!`, `.`, `,`, `;`, `(`, `)`, `[`, `]`, `{`, `}`, `'`, `"`, backtick, whitespace
-fn is_symbol_char(c: char, is_cfm: bool) -> bool {
+fn is_symbol_char(c: char, is_cfm: bool, is_space_ctx: bool) -> bool {
     if is_cfm {
+        // eat `.` only on space_ctx
+        if is_space_ctx {
+            return matches!(
+                c,
+                'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\' | '=' | '+' | '.'
+            );
+        }
         // eat `=` for `dd if=/dev`
         // eat `+` for `cmd arg+`
         return matches!(

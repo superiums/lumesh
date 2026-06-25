@@ -65,7 +65,11 @@ impl Ctx {
 
 /// Dispatch tokenization based on the first character and context.
 /// Each character triggers a specific parsing path.
-fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+fn parse_token_dispatch(
+    input: Input<'_>,
+    ctx: Ctx,
+    is_cfm: bool,
+) -> TokenizationResult<'_, (Token, Diagnostic)> {
     let first = match input.chars().next() {
         Some(c) => c,
         None => return Err(NOT_FOUND),
@@ -81,13 +85,18 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
         ' ' | '\t' => m!(whitespace, TokenKind::Whitespace),
 
         ';' => m!(punctuation_tag(";"), TokenKind::LineBreak),
+        #[cfg(windows)]
+        '\r' => alt((
+            map_valid_token(punctuation_tag("\r\n"), TokenKind::LineBreak), // $var
+            map_valid_token(punctuation_tag("\r"), TokenKind::Whitespace),  // $ as symbol
+        ))(input),
         '\n' => m!(punctuation_tag("\n"), TokenKind::LineBreak),
 
         '\\' => {
             if let Ok(r) = m!(line_continuation, TokenKind::Whitespace) {
                 return Ok(r);
             }
-            m!(symbol, TokenKind::Symbol)
+            m!(punctuation_tag("\\"), TokenKind::Symbol)
         }
 
         '#' => m!(comment, TokenKind::Comment),
@@ -108,7 +117,7 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '$' => alt((
             map_valid_token(prefix_tag("$"), TokenKind::OperatorPrefix), // $var
-            map_valid_token(symbol, TokenKind::Symbol),                  // $ as symbol
+            map_valid_token(punctuation_tag("$"), TokenKind::Symbol),    // $ as symbol
         ))(input),
 
         '^' => circum_dispatch(input, ctx),
@@ -118,7 +127,7 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
         '<' => m!(less_parser, TokenKind::Operator),
         '>' => m!(greater_parser, TokenKind::Operator),
 
-        '+' => plus_dispatch(input, ctx),
+        '+' => plus_dispatch(input, ctx, is_cfm),
 
         '*' => star_dispatch(input, ctx),
 
@@ -134,7 +143,7 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '0'..='9' => number_literal(input),
 
-        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx, first), // keyword / value_symbol / string / symbol
+        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx, first, is_cfm), // keyword / value_symbol / string / symbol
 
         c if !c.is_ascii() => m!(non_ascii, TokenKind::StringRaw),
 
@@ -182,7 +191,7 @@ fn paren_dispatch(
 
 fn equal_parser(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("=>"),
+        space_brace_followed_tag("=>"),
         // punctuation_tag("!=="),
         punctuation_tag("==="),
         // punctuation_tag("!="),
@@ -207,7 +216,11 @@ fn greater_parser(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag(">"),
     ))(input)
 }
-fn plus_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+fn plus_dispatch(
+    input: Input<'_>,
+    ctx: Ctx,
+    is_cfm: bool,
+) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // if ctx == Ctx::Space {
     //     map_valid_token(
     //         |input: Input<'_>| {
@@ -219,11 +232,16 @@ fn plus_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token, 
     //         TokenKind::Operator,
     //     )(input)
     // } else {
-    alt((
-        map_valid_token(punctuation_tag("+="), TokenKind::Operator),
-        map_valid_token(punctuation_tag("+"), TokenKind::Operator),
-    ))(input)
-    // }
+    match ctx {
+        Ctx::Space if is_cfm => alt((
+            map_valid_token(punctuation_tag("+="), TokenKind::Operator),
+            map_valid_token(whole_word("+"), TokenKind::Symbol), //important for `chmod +x`
+        ))(input),
+        _ => alt((
+            map_valid_token(punctuation_tag("+="), TokenKind::Operator),
+            map_valid_token(punctuation_tag("+"), TokenKind::Operator),
+        ))(input),
+    }
 }
 fn pipe_parser(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
@@ -237,7 +255,7 @@ fn pipe_parser(input: Input<'_>) -> TokenizationResult<'_> {
 fn and_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Word | Ctx::Number | Ctx::Letter => {
-            alt((map_valid_token(symbol, TokenKind::Symbol),))(input)
+            alt((map_valid_token(punctuation_tag("&"), TokenKind::Symbol),))(input)
         } //NEVER USE
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("&&"), TokenKind::Operator),
@@ -268,7 +286,7 @@ fn star_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, D
 fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Letter | Ctx::Word | Ctx::Number => {
-            map_valid_token(symbol, TokenKind::Symbol)(input) //NEVER
+            map_valid_token(punctuation_tag("~"), TokenKind::Symbol)(input) //NEVER
         } //NEVER USE
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("~:"), TokenKind::Operator),
@@ -283,7 +301,7 @@ fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
 fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Letter | Ctx::Word | Ctx::Number => {
-            alt((map_valid_token(symbol, TokenKind::Operator),))(input)
+            alt((map_valid_token(punctuation_tag("/"), TokenKind::Operator),))(input)
         } //divide
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punctuation_tag("/="), TokenKind::Operator),
@@ -334,7 +352,8 @@ fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
             map_valid_token(punctuation_tag("-"), TokenKind::Operator), //a-b as operator
                                                                         // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
-        Ctx::Start | Ctx::Space => alt((
+        Ctx::Start => alt((map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),))(input),
+        Ctx::Space => alt((
             map_valid_token(punctuation_tag("-="), TokenKind::Operator),
             map_valid_token(punctuation_tag("->"), TokenKind::Operator),
             // `--flag` style: two dashes → argument symbol
@@ -342,7 +361,9 @@ fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
             // single `-` followed by literal/number/paren/letter → OperatorPrefix
             map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
             // bare `-` as operator (e.g. `- ` followed by space)
-            map_valid_token(punctuation_tag("-"), TokenKind::Operator),
+            map_valid_token(space_followed_tag("-"), TokenKind::Operator),
+            // must after '- ' to exclude it
+            map_valid_token(postfix_break_tag("-"), TokenKind::StringRaw), //ls | cat -
         ))(input),
         Ctx::Open => alt((
             map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
@@ -416,14 +437,14 @@ fn bang_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, D
         Ctx::Letter | Ctx::Word | Ctx::Number => alt((
             map_valid_token(punctuation_tag("!=="), TokenKind::Operator),
             map_valid_token(punctuation_tag("!="), TokenKind::Operator),
-            map_valid_token(keyword_tag("!~:"), TokenKind::Operator),
+            map_valid_token(prefix_tag("!~:"), TokenKind::Operator),
             map_valid_token(postfix_break_tag("!"), TokenKind::OperatorPostfix),
             map_valid_token(punctuation_tag("!"), TokenKind::Punctuation),
         ))(input),
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punctuation_tag("!=="), TokenKind::Operator),
             map_valid_token(punctuation_tag("!="), TokenKind::Operator),
-            map_valid_token(keyword_tag("!~:"), TokenKind::Operator),
+            map_valid_token(prefix_tag("!~:"), TokenKind::Operator),
             map_valid_token(prefix_tag("!"), TokenKind::OperatorPrefix),
             map_valid_token(punctuation_tag("!"), TokenKind::Punctuation),
         ))(input),
@@ -434,15 +455,15 @@ fn question_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Tok
     alt((
         map_valid_token(question_operator, TokenKind::Operator),
         map_valid_token(operator_tag("?"), TokenKind::Operator),
-        map_valid_token(symbol, TokenKind::Symbol),
+        map_valid_token(punctuation_tag("?"), TokenKind::Symbol),
     ))(input)
 }
 
 fn underscore_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((
+        Ctx::Letter | Ctx::Word | Ctx::Number => alt((
             map_valid_token(punct_seq_tag("__"), TokenKind::OperatorPostfix),
-            map_valid_token(symbol, TokenKind::Symbol),
+            map_valid_token(punctuation_tag("_"), TokenKind::Symbol),
         ))(input),
         _ => map_valid_token(
             |input| {
@@ -464,6 +485,7 @@ fn alpha_dispatch(
     input: Input<'_>,
     ctx: Ctx,
     first: char,
+    is_cfm: bool,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // filesize
     if ctx == Ctx::Number && matches!(&first, 'B' | 'K' | 'M' | 'G' | 'T' | 'P') {
@@ -475,7 +497,7 @@ fn alpha_dispatch(
 
     // H{ M{ S{ map/set literals
     if matches!(ctx, Ctx::Space | Ctx::Start) && matches!(&first, 'H' | 'M' | 'S') {
-        return try_map_or_symbol(input, ctx, first);
+        return try_map_or_symbol(input, ctx, first, is_cfm);
     }
 
     alt((
@@ -484,7 +506,7 @@ fn alpha_dispatch(
         regex_literal,
         time_literal,
         map_valid_token(protocols, TokenKind::StringRaw),
-        map_valid_token(symbol, TokenKind::Symbol),
+        map_valid_token(|input| symbol(input, is_cfm), TokenKind::Symbol),
     ))(input)
 }
 
@@ -492,6 +514,7 @@ fn try_map_or_symbol(
     input: Input<'_>,
     _ctx: Ctx,
     first: char,
+    is_cfm: bool,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // H{, M{, S{ — check if followed by {
     let bytes = input.as_ref().as_bytes();
@@ -501,7 +524,7 @@ fn try_map_or_symbol(
             TokenKind::Punctuation,
         )(input)
     } else {
-        map_valid_token(symbol, TokenKind::Symbol)(input)
+        map_valid_token(|input| symbol(input, is_cfm), TokenKind::Symbol)(input)
     }
 }
 
@@ -510,7 +533,7 @@ fn try_map_or_symbol(
 fn colon_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Word => alt((
-            map_valid_token(keyword_tag("::"), TokenKind::OperatorInfix),
+            map_valid_token(prefix_tag("::"), TokenKind::OperatorInfix),
             map_valid_token(punctuation_tag(":="), TokenKind::Operator),
             map_valid_token(operator_tag(":"), TokenKind::Operator), //{k:v} a?b:c
         ))(input),
@@ -530,7 +553,7 @@ fn at_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Dia
         ))(input),
         _ => {
             // Inside an identifier, `@` is not valid — fall through to symbol
-            map_valid_token(symbol, TokenKind::Symbol)(input)
+            map_valid_token(punctuation_tag("@"), TokenKind::Symbol)(input)
         }
     }
 }
@@ -829,12 +852,52 @@ fn finish_string<'a>(
     }
 }
 
+fn ip_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    // Simple IP detection: four groups of digits separated by dots
+    let mut parts = 0;
+    let mut i = 0;
+    let bytes = input.as_ref().as_bytes();
+    while i < bytes.len() {
+        // consume digits
+        let start = i;
+        while i < bytes.len() && bytes[i].is_ascii_digit() {
+            i += 1;
+        }
+        if i == start {
+            break;
+        }
+        parts += 1;
+        if parts == 4 {
+            break;
+        }
+        // expect a dot
+        if i < bytes.len() && bytes[i] == b'.' {
+            i += 1;
+        } else {
+            break;
+        }
+    }
+    if parts == 4 {
+        let (rest, range) = input.split_at(i);
+        Ok((
+            rest,
+            (Token::new(TokenKind::StringRaw, range), Diagnostic::Valid),
+        ))
+    } else {
+        Err(NOT_FOUND)
+    }
+}
+
 fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    // First, try to parse as an IP address (e.g., 192.168.0.1)
+    if let Ok(res) = ip_literal(input) {
+        return Ok(res);
+    }
+    // Original numeric literal parsing
     let bytes = input.as_ref().as_bytes();
     let mut i = 0;
-    // skip leading dot
     if bytes.get(0) == Some(&b'.') {
-        i += 1
+        i += 1;
     }
     // skip leading digits
     let digit_start = i;
@@ -890,15 +953,18 @@ fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
 
 fn value_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("true"),
-        keyword_tag("false"),
-        keyword_tag("none"),
-        among_punc_tag("_"),
+        postfix_break_tag("true"),
+        postfix_break_tag("false"),
+        postfix_break_tag("none"),
+        space_punc_followed_tag("_"),
     ))(input)
 }
 
-fn symbol(input: Input<'_>) -> TokenizationResult<'_> {
-    let len = input.chars().take_while(|&c| is_symbol_char(c)).count();
+fn symbol(input: Input<'_>, is_cfm: bool) -> TokenizationResult<'_> {
+    let len = input
+        .chars()
+        .take_while(|&c| is_symbol_char(c, is_cfm))
+        .count();
 
     if len == 0 {
         return Err(NOT_FOUND);
@@ -930,29 +996,29 @@ fn non_ascii(input: Input<'_>) -> TokenizationResult<'_> {
     Ok(input.split_at(len))
 }
 
-fn linebreak(input: Input<'_>) -> TokenizationResult<'_> {
-    let (input, _) = {
-        let ws_chars = input.chars().take_while(|c| *c == ' ').count();
-        if ws_chars > 0 {
-            input.split_at(ws_chars)
-        } else {
-            (input, input.as_str_slice())
-        }
-    };
+// fn linebreak(input: Input<'_>) -> TokenizationResult<'_> {
+//     let (input, _) = {
+//         let ws_chars = input.chars().take_while(|c| *c == ' ').count();
+//         if ws_chars > 0 {
+//             input.split_at(ws_chars)
+//         } else {
+//             (input, input.as_str_slice())
+//         }
+//     };
 
-    #[cfg(windows)]
-    if let Some((rest, nl_slice)) = input.strip_prefix("\r\n") {
-        return Ok((rest, nl_slice));
-    }
+//     #[cfg(windows)]
+//     if let Some((rest, nl_slice)) = input.strip_prefix("\r\n") {
+//         return Ok((rest, nl_slice));
+//     }
 
-    if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
-        Ok((rest, nl_slice))
-    } else if let Some((rest, matched)) = input.strip_prefix(";") {
-        Ok((rest, matched))
-    } else {
-        Err(NOT_FOUND)
-    }
-}
+//     if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
+//         Ok((rest, nl_slice))
+//     } else if let Some((rest, matched)) = input.strip_prefix(";") {
+//         Ok((rest, matched))
+//     } else {
+//         Err(NOT_FOUND)
+//     }
+// }
 // 新增续行符解析函数
 fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
     if let Some((rest, matched)) = input.strip_prefix("\\\n") {
@@ -1011,14 +1077,14 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 
 /// Matches a keyword/operator that must NOT be followed by symbol characters.
 /// Prevents operators from merging into longer symbols (e.g. `&&` vs `&&&`).
-fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
-    move |input: Input<'_>| {
-        input
-            .strip_prefix(keyword)
-            .filter(|(rest, _)| !rest.starts_with(is_symbol_char))
-            .ok_or(NOT_FOUND)
-    }
-}
+// fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+//     move |input: Input<'_>| {
+//         input
+//             .strip_prefix(keyword)
+//             .filter(|(rest, _)| !rest.starts_with(is_symbol_char))
+//             .ok_or(NOT_FOUND)
+//     }
+// }
 
 /// Matches a keyword that must be followed by whitespace (not end-of-input).
 /// Used for standalone keywords like `let`, `set`, `if`, `fn`, `match`.
@@ -1073,9 +1139,9 @@ fn whole_word(prefix: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
     }
 }
 
-/// Matches a token that must be surrounded by whitespace or punctuation (not letters).
+/// Matches a token that must be followed by whitespace or punctuation (not letters).
 /// Used for `_` to distinguish standalone `_` value from `_` within a symbol like `foo_bar`.
-fn among_punc_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+fn space_punc_followed_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
             .strip_prefix(keyword)
@@ -1102,7 +1168,7 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
     }
 }
 
-/// Matches a postfix operator that must be followed by whitespace or end-of-input.
+/// Matches a postfix operator that must be followed by whitespace or dilimeter or end-of-input.
 /// Used for postfix `!` and `^` to prevent merging with following characters.
 fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
@@ -1115,7 +1181,16 @@ fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
 /// Checks whether the character is allowed in a symbol.
 /// Symbol chars: alphanumeric, `_`, `~`, `?`, `&`, `#`, `$`, `-`, `/`, `\`
 /// Excluded (cause operator/punctuation parsing instead): `+`, `=`, `<`, `>`, `*`, `%`, `^`, `|`, `:`, `@`, `!`, `.`, `,`, `;`, `(`, `)`, `[`, `]`, `{`, `}`, `'`, `"`, backtick, whitespace
-fn is_symbol_char(c: char) -> bool {
+fn is_symbol_char(c: char, is_cfm: bool) -> bool {
+    if is_cfm {
+        // eat `=` for `dd if=/dev`
+        // eat `+` for `cmd arg+`
+        return matches!(
+            c,
+            'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\' | '=' | '+'
+        );
+    }
+    // allow `a-b` as symbo
     matches!(
         c,
         'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\'
@@ -1126,9 +1201,11 @@ fn is_symbol_char(c: char) -> bool {
 /// - Single-line input (no `:`) → CFM (Command First Mode) for shell-like parsing
 /// - Multi-line or `:`-prefixed → Expression mode with context-aware dispatch
 pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
-    if is_cfm_mode(input) {
-        return parse_command_tokens(input);
-    }
+    // if is_cfm_mode(input) {
+    //     return parse_command_tokens(input);
+    // }
+    let is_cfm = is_cfm_mode(input);
+    let leading_char = if is_cfm { ">" } else { ":" };
 
     let mut tokens = Vec::new();
     let mut diagnostics = Vec::new();
@@ -1137,7 +1214,7 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
 
     // skip multiline mode prefix `:`
     if let Ok((new_input, (token, diagnostic))) =
-        map_valid_token(punctuation_tag(":"), TokenKind::Comment)(input)
+        map_valid_token(punctuation_tag(leading_char), TokenKind::Comment)(input)
     {
         input = new_input;
         tokens.push(token);
@@ -1146,7 +1223,7 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
 
     // tokenize one by one with context tracking
     loop {
-        match parse_token_dispatch(input, ctx) {
+        match parse_token_dispatch(input, ctx, is_cfm) {
             Err(_) => break,
             Ok((new_input, (token, diagnostic))) => {
                 ctx = Ctx::after_token(&token, input.as_original_str());
@@ -1173,182 +1250,6 @@ pub fn tokenize(input: &str) -> (Vec<Token>, Vec<Diagnostic>) {
 /// Active when: input starts with `>`, OR (not multiline, not `:`-prefixed, and CFM enabled).
 fn is_cfm_mode(input: Input<'_>) -> bool {
     with_cfm_enabled(|cfm_enabled| {
-        input.starts_with(">") || (!input.starts_with(":") && !input.contains('\n') && cfm_enabled)
+        input.starts_with(">") || (cfm_enabled && !input.starts_with(":") && !input.contains('\n'))
     })
-}
-
-fn parse_command_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
-    let mut tokens = Vec::new();
-    let mut diagnostics = Vec::new();
-    let mut ctx = Ctx::Start;
-    let mut input = input;
-
-    if let Ok((new_input, (token, diagnostic))) =
-        map_valid_token(punctuation_tag(">"), TokenKind::Comment)(input)
-    {
-        input = new_input;
-        tokens.push(token);
-        diagnostics.push(diagnostic);
-    }
-
-    while !input.is_empty() {
-        match parse_command_token(input, ctx) {
-            Ok((new_input, (token, diagnostic))) => {
-                ctx = Ctx::after_token(&token, input.as_original_str());
-                input = new_input;
-                tokens.push(token);
-                diagnostics.push(diagnostic);
-            }
-            Err(_) => {
-                let next = input.chars().next().unwrap();
-                let (new_input, range) = input.split_at(next.len_utf8());
-                input = new_input;
-                let token = Token::new(TokenKind::Symbol, range);
-                tokens.push(token);
-                diagnostics.push(Diagnostic::IllegalChar(range));
-            }
-        }
-    }
-    (tokens, diagnostics)
-}
-
-fn parse_command_token(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    if input.is_empty() {
-        return Err(NOT_FOUND);
-    }
-
-    macro_rules! try_parser {
-        ($e:expr) => {
-            if let Ok(r) = $e {
-                return Ok(r);
-            }
-        };
-    }
-
-    try_parser!(map_valid_token(linebreak, TokenKind::LineBreak)(input));
-    try_parser!(string_literal(input));
-    try_parser!(regex_literal(input));
-    try_parser!(time_literal(input));
-
-    if ctx != Ctx::Word {
-        // try_parser!(map_valid_token(argument_symbol, TokenKind::StringRaw)(
-        //     input
-        // ));
-        try_parser!(map_valid_token(
-            cfm_prefix_operator,
-            TokenKind::OperatorPrefix
-        )(input));
-    }
-
-    try_parser!(map_valid_token(cfm_operator, TokenKind::Operator)(input));
-
-    if ctx == Ctx::Word {
-        try_parser!(map_valid_token(
-            cfm_postfix_operator,
-            TokenKind::OperatorPostfix
-        )(input));
-    }
-
-    try_parser!(paren_dispatch(
-        input,
-        ctx,
-        input.chars().next().unwrap_or_default()
-    ));
-    try_parser!(map_valid_token(any_keyword, TokenKind::Keyword)(input));
-    try_parser!(map_valid_token(whitespace, TokenKind::Whitespace)(input));
-    try_parser!(map_valid_token(value_symbol, TokenKind::ValueSymbol)(input));
-    try_parser!(map_valid_token(comment, TokenKind::Comment)(input));
-    try_parser!(map_valid_token(non_ascii, TokenKind::StringRaw)(input));
-
-    cfm_parse_symbol(input)
-}
-
-fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    // 读取直到遇到空格、括号或管道符号
-    let chars = input.chars();
-    let mut length = 0;
-    // `=` is used for var asign: IFS='';xx
-    for c in chars {
-        if c.is_ascii_whitespace()
-            || matches!(
-                &c,
-                '=' | '>'
-                    | '('
-                    | '['
-                    | '{'
-                    | '^'
-                    | '$'
-                    | '!'
-                    | '|'
-                    | ';'
-                    | ')'
-                    | ']'
-                    | '}'
-                    | '.'
-                    | ','
-            )
-            || c.is_control()
-        {
-            break;
-        }
-        length += c.len_utf8();
-    }
-
-    if length == 0 {
-        Err(NOT_FOUND)
-    } else {
-        let (rest, range) = input.split_at(length);
-        let token = Token::new(TokenKind::Symbol, range);
-        Ok((rest, (token, Diagnostic::Valid)))
-    }
-}
-
-fn cfm_prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        prefix_tag("."), //pipemethod
-        prefix_tag("!"), //bool negtive
-        prefix_tag("$"), //var
-    ))(input)
-}
-
-fn cfm_postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        punctuation_tag("."), //chaind call/property
-        punctuation_tag("!"), //func call as flat as cmd
-        punctuation_tag("^"), //make symbo as cmd
-        punctuation_tag("("), //func call
-    ))(input)
-}
-
-fn cfm_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((cfm_long_operator, cfm_short_operator))(input)
-}
-fn cfm_short_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        keyword_tag("|"),
-        punctuation_tag("="), // allow all.
-        space_followed_tag("+"),
-        space_followed_tag("?"),
-        space_followed_tag(":"),
-    ))(input)
-}
-
-fn cfm_long_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((
-        keyword_tag("=>"),
-        keyword_tag("!~:"),
-        keyword_tag("~:"),
-        keyword_tag("!~="),
-        keyword_tag("~="),
-        keyword_tag("&&"),
-        keyword_tag("||"),
-        keyword_tag("|>"),
-        keyword_tag("|^"),
-        keyword_tag("<<"),
-        keyword_tag(">!"),
-        keyword_tag(">>"),
-        keyword_tag(":="),
-        punctuation_tag("->"),
-        question_operator,
-    ))(input)
 }

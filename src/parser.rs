@@ -380,6 +380,25 @@ impl PrattParser {
                         // let (input, expr) = Self::parse_prefix(input, prec)?;
                         Ok((input, Expression::UnaryOp(op.into(), Rc::new(expr), true)))
                     }
+                    ".." | "..=" => {
+                        // ..b   ..b:2
+                        let input = input.skip_n(1);
+                        let (input, rhs) = Self::parse_prefix(input, PREC_RANGE, depth + 1)?;
+
+                        let (input, steps) = opt(preceded(
+                            text(":"),
+                            cut(alt((parse_symbol, parse_integer, parse_variable))),
+                        ))(input)?;
+                        Ok((
+                            input,
+                            Expression::RangeOp(
+                                op.to_string(),
+                                Rc::new(Expression::Blank),
+                                Rc::new(rhs),
+                                steps.map(Rc::new),
+                            ),
+                        ))
+                    }
                     _ => {
                         return Err(nom::Err::Failure(SyntaxErrorKind::UnknownOperator(
                             op.to_string(),
@@ -488,6 +507,22 @@ impl PrattParser {
             "[" => {
                 // 数组索引或切片
                 parse_index(lhs, input, depth)
+            }
+            ".." => {
+                // a..   a..:2
+                let (input, steps) = opt(preceded(
+                    text(":"),
+                    cut(alt((parse_symbol, parse_integer, parse_variable))),
+                ))(input.skip_n(1))?;
+                Ok((
+                    input,
+                    Expression::RangeOp(
+                        op,
+                        Rc::new(lhs),
+                        Rc::new(Expression::Blank),
+                        steps.map(Rc::new),
+                    ),
+                ))
             }
             // "++" | "--" => {
             //     // 后置自增/自减
@@ -2322,6 +2357,7 @@ fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synt
     )(input)?;
     Ok((input, pat))
 }
+// only used for match arm
 fn parse_num_range(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, start) = alt((parse_integer, parse_blank))(input)?;
     let (new_input, optoken) = alt((text("..="), text("..")))(input)?;

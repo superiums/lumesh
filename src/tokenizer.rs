@@ -33,10 +33,12 @@ type TokenizationResult<'a, T = StrSlice> = IResult<Input<'a>, T, NotFoundError>
 /// Determines how the next token is classified.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Ctx {
-    Start, // line start / initial state
-    Space, // prev token ended with whitespace (Whitespace/LineBreak/Comment)
-    Word,  // prev token ended with alphanumeric, `_`, or closing bracket/quote
-    Open,  // other (non-space, non-word symbol)
+    Number, // Digits sequence, used to detect postfix units like K,M,G,T
+    Letter, // Alphabetic sequence
+    Start,  // line start / initial state
+    Space,  // prev token ended with whitespace (Whitespace/LineBreak/Comment)
+    Word,   // prev token ended with  `_`, or closing bracket/quote
+    Open,   // other (non-space, non-word symbol)
 }
 
 impl Ctx {
@@ -47,11 +49,14 @@ impl Ctx {
     fn after_token(token: &Token, original: &str) -> Self {
         let last_char = token.range.to_str(original).chars().next_back();
         match token.kind {
-            TokenKind::Whitespace | TokenKind::LineBreak | TokenKind::Comment => Ctx::Space,
+            TokenKind::Whitespace | TokenKind::Comment => Ctx::Space,
+            TokenKind::LineBreak => Ctx::Start,
+            TokenKind::IntegerLiteral | TokenKind::FloatLiteral => Ctx::Number,
             _ => match last_char {
-                Some(c) if c.is_ascii_whitespace() => Ctx::Space,
-                Some(c) if c.is_ascii_alphanumeric() || c == '_' => Ctx::Word,
-                Some(')' | ']' | '}' | '\'' | '"' | '`') => Ctx::Word,
+                // Some(c) if c.is_ascii_whitespace() => Ctx::Space,
+                // Some(c) if c.is_ascii_digit() => Ctx::Number,
+                Some(c) if c.is_ascii_alphabetic() => Ctx::Letter,
+                Some(')' | ']' | '}' | '\'' | '"' | '`' | '_') => Ctx::Word,
                 _ => Ctx::Open,
             },
         }
@@ -126,11 +131,9 @@ fn parse_token_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (T
 
         '_' => underscore_dispatch(input, ctx), // standalone _ vs _ in symbol
 
-        '0'..='9' => number_literal(input), //TODO unit M K % postfix
+        '0'..='9' => number_literal(input),
 
-        'H' | 'M' | 'S' => try_map_or_symbol(input, ctx, first), // H{ M{ S{ map/set literals
-
-        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx), // keyword / value_symbol / string / symbol
+        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx, first), // keyword / value_symbol / string / symbol
 
         c if !c.is_ascii() => m!(non_ascii, TokenKind::StringRaw),
 
@@ -166,7 +169,7 @@ fn dispatch_paren(
     ctx: Ctx,
     first: char,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    if ctx == Ctx::Word && matches!(first, '(' | '[') {
+    if matches!(ctx, Ctx::Letter | Ctx::Word) && matches!(first, '(' | '[') {
         map_valid_token(
             punctuation_tag(&first.to_string()),
             TokenKind::OperatorPostfix,
@@ -217,7 +220,9 @@ fn pipe_tag(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn and_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input), //NEVER USE
+        Ctx::Word | Ctx::Number | Ctx::Letter => {
+            alt((map_valid_token(symbol, TokenKind::Symbol),))(input)
+        } //NEVER USE
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("&&"), TokenKind::Operator),
             map_valid_token(keyword_alone_or_end("&+"), TokenKind::StringRaw),
@@ -230,7 +235,9 @@ fn and_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
 
 fn star_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input), // wildcard
+        Ctx::Letter | Ctx::Word | Ctx::Number => {
+            map_valid_token(operator_tag("*"), TokenKind::Operator)(input)
+        }
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("*="), TokenKind::Operator),
             map_valid_token(path_tag("**/", true), TokenKind::StringRaw), // **/ path
@@ -244,7 +251,9 @@ fn star_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, D
 
 fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Symbol),))(input), //NEVER USE
+        Ctx::Letter | Ctx::Word | Ctx::Number => {
+            map_valid_token(symbol, TokenKind::Symbol)(input) //NEVER
+        } //NEVER USE
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("~:"), TokenKind::Operator),
             // map_valid_token(operator_tag("~="), TokenKind::Operator),
@@ -257,7 +266,9 @@ fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
 
 fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(symbol, TokenKind::Operator),))(input), //divide
+        Ctx::Letter | Ctx::Word | Ctx::Number => {
+            alt((map_valid_token(symbol, TokenKind::Operator),))(input)
+        } //divide
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punctuation_tag("/="), TokenKind::Operator),
             map_valid_token(path_tag("/", false), TokenKind::StringRaw), // /x path
@@ -271,22 +282,27 @@ fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
 /// `Start/Space/Open` context → `..` operator, `.` prefix (pipemethod), argument path, number literal, or standalone `.`/`..`
 fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((
+        Ctx::Letter | Ctx::Number | Ctx::Word => alt((
             map_valid_token(infix_tag("...="), TokenKind::OperatorInfix),
             map_valid_token(infix_tag("..."), TokenKind::OperatorInfix),
             map_valid_token(infix_tag("..="), TokenKind::OperatorInfix),
-            map_valid_token(infix_tag(".."), TokenKind::OperatorInfix), //range
+            map_valid_token(infix_tag(".."), TokenKind::OperatorInfix), //a..b range
+            map_valid_token(keyword_alone_or_end(".."), TokenKind::OperatorPostfix), //a.. range
+            // TODO allow a..:step
             map_valid_token(punctuation_tag("."), TokenKind::OperatorPostfix), //call
         ))(input),
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
-            map_valid_token(punct_seq_tag(".."), TokenKind::Operator), // ..+ customOp
-            number_literal,                                            //.5
+            map_valid_token(prefix_tag("..="), TokenKind::OperatorPrefix), // ..=b range
+            map_valid_token(prefix_tag(".."), TokenKind::OperatorPrefix),  // ..b range
+            // TODO allow ..-1 ?
+            number_literal,                                              //.5
             map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix), //.pipemethod
             map_valid_token(path_tag("../", true), TokenKind::StringRaw),
             map_valid_token(path_tag("./", true), TokenKind::StringRaw),
+            // eager eat, must bellow others
+            map_valid_token(punct_seq_tag(".."), TokenKind::Operator), // ..+ customOp
             map_valid_token(keyword_alone_or_end(".."), TokenKind::StringRaw), // parent path
-            map_valid_token(keyword_alone_or_end("."), TokenKind::StringRaw),  // current path
-                                                                               // TODO ..3
+            map_valid_token(keyword_alone_or_end("."), TokenKind::StringRaw), // current path                                                                     // TODO ..3
         ))(input),
     }
 }
@@ -298,7 +314,7 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
 /// - Open: prefix `-` when followed by literal/number/paren/letter
 fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((
+        Ctx::Letter | Ctx::Word | Ctx::Number => alt((
             map_valid_token(punctuation_tag("-="), TokenKind::Operator),
             map_valid_token(punctuation_tag("->"), TokenKind::Operator),
             map_valid_token(punctuation_tag("-"), TokenKind::Operator), //a-b as operator
@@ -313,14 +329,10 @@ fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
             map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
             // bare `-` as operator (e.g. `- ` followed by space)
             map_valid_token(punctuation_tag("-"), TokenKind::Operator),
-            // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
         Ctx::Open => alt((
-            // single `-` followed by literal/number/paren/letter → OperatorPrefix
             map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),
-            // number_literal,
-            // map_valid_token(punctuation_tag("-"), TokenKind::OperatorPrefix), // +(-5); a[-1]
-            // map_valid_token(symbol, TokenKind::Symbol),
+            map_valid_token(punctuation_tag("-"), TokenKind::Symbol),
         ))(input),
     }
 }
@@ -340,7 +352,7 @@ fn prefix_minus_tag(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn circum_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(
+        Ctx::Letter | Ctx::Word | Ctx::Number => alt((map_valid_token(
             punctuation_tag("^"),
             TokenKind::OperatorPostfix,
         ),))(input), //5%
@@ -352,10 +364,14 @@ fn circum_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token,
 
 fn percent_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((map_valid_token(
+        Ctx::Number => alt((map_valid_token(
             punctuation_tag("%"),
             TokenKind::OperatorPostfix,
         ),))(input), //5%
+        Ctx::Letter | Ctx::Word => {
+            map_valid_token(punctuation_tag("%"), TokenKind::Operator)(input)
+        } //a%b
+
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punctuation_tag("%{"), TokenKind::Operator),
             map_valid_token(punctuation_tag("%"), TokenKind::Operator),
@@ -368,7 +384,7 @@ fn percent_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token
 /// - Start/Space/Open: same operators but `!` as prefix (negation) instead of postfix
 fn bang_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((
+        Ctx::Letter | Ctx::Word | Ctx::Number => alt((
             map_valid_token(punctuation_tag("!=="), TokenKind::Operator),
             map_valid_token(punctuation_tag("!="), TokenKind::Operator),
             map_valid_token(keyword_tag("!~:"), TokenKind::Operator),
@@ -415,7 +431,24 @@ fn underscore_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
     }
 }
 
-fn alpha_dispatch(input: Input<'_>, _ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+fn alpha_dispatch(
+    input: Input<'_>,
+    ctx: Ctx,
+    first: char,
+) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    // filesize
+    if ctx == Ctx::Number && matches!(&first, 'B' | 'K' | 'M' | 'G' | 'T' | 'P') {
+        return map_valid_token(
+            postfix_break_tag(&first.to_string()),
+            TokenKind::OperatorPostfix,
+        )(input);
+    }
+
+    // H{ M{ S{ map/set literals
+    if matches!(ctx, Ctx::Space | Ctx::Start) && matches!(&first, 'H' | 'M' | 'S') {
+        return try_map_or_symbol(input, ctx, first);
+    }
+
     alt((
         map_valid_token(any_keyword, TokenKind::Keyword),
         map_valid_token(value_symbol, TokenKind::ValueSymbol),

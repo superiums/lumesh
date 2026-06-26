@@ -506,8 +506,13 @@ fn alpha_dispatch(
         return Ok(r);
     }
 
+    // keyword should only in ctx::Start/Space, not in ctx::OPen, like `regex.match`
+    if ctx == Ctx::Start || ctx == Ctx::Space {
+        if let Ok(r) = map_valid_token(any_keyword, TokenKind::Keyword)(input) {
+            return Ok(r);
+        }
+    }
     alt((
-        map_valid_token(any_keyword, TokenKind::Keyword),
         map_valid_token(value_symbol, TokenKind::ValueSymbol),
         regex_literal,
         time_literal,

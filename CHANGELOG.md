@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.15.6]
+- improve completion color
+- clear hint after enter
+- remove theme from completer
+- fix `ls --` syntax highlight. unify highlight. protect input - 
+- Create rustfmt.toml
+- format code as 2024
+- fix regex.match recog as keyword
+- fix completion for cd
+- fix suffix for dir; fix match_more always return File. change - h
+- update completion data
+- improve symbo for CFM, improve ctx:Start
+
 ## [0.15.5]
 - restructor tokenizer with dispatch.
 - update add condition for completions.

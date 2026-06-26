@@ -17,8 +17,8 @@ let start=time.stamp_ms();
 let sum=0;
 let i = count;
 while (i>0) {
-    i = i - 1
-    sum += i
+    set i = i - 1
+    set sum = sum + i
 };
 let end=time.stamp_ms();
 print "从 1 到 "count" 的总和是: " sum;

@@ -6,6 +6,5 @@ zabbix_agentd,,p,print, ,@f,104,Print known items and exit.
 zabbix_agentd,,t,test, ,@f,105,Test single item and exit.
 zabbix_agentd,,h,help, ,@f,106,Display this help and exit.
 zabbix_agentd,,V,version, ,@f,107,Output version information and exit.
-zabbix_agentd,log_level_increase,R,runtime-control, ,@E @f @r,108,log_level_increase
+zabbix_agentd,log_level_increase,R,runtime-control, ,@E @f @r,108,print __log_level_increase not implemented
 zabbix_agentd,,R,runtime-control, ,@f @r,110,Perform administrative functions.
-

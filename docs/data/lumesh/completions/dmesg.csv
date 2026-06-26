@@ -28,7 +28,6 @@ dmesg,all,a, , ,@f,126,
 kernel,,c, , ,@f,127,
 dmesg,,M, , ,@r,128,namelist
 dmesg,,N, , ,@r,129,namelist
-dmesg,,f,facility,,@E @f @r,131,echo 'kern user mail daemon auth syslog lpr news uucp cron security ftp ntp audit console', kern user mail daemon auth syslog lpr news
+dmesg,,f,facility,,@E @f @r,131,'kern user mail daemon auth syslog lpr news uucp cron security ftp ntp audit console'
 dmesg,,l,level, ,@f @r,142,
 dmesg,,n,console-level, ,@f @r,143,
-

@@ -5,4 +5,4 @@ yo,,f,force, , ,103,Allow overwrite files that already exist
 yo,, ,no-color, , ,104,Disable colors
 yo,, ,generators, , ,105,List available generators
 yo,--generators, ,local-only, , ,106,Disable lookup of globally-installed generators
-yo,, , , ,@E,107,yo --generators | sed -n '3,\$p' | sed '\$d' | string replace --regex '^\s+' ''
+yo,, , , ,@E,107,yo --generators | sed -n '3,\$p' | sed '\$d' | regex.replace r'^\s+' ''

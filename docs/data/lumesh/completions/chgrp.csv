@@ -9,7 +9,7 @@ chgrp,,R,recursive, , ,107,Operate recursively
 chgrp,,v,verbose, , ,108,Output diagnostic for every file
 chgrp,, ,help, , ,109,Display help and exit
 chgrp,, ,version, , ,110,Display version and exit
-chgrp,,,,,@E,111,cut -d: -f1 /etc/group
+chgrp,,,,,@E,111,cut -d':' -f1 /etc/group
 chgrp,,h,,, ,112,Don't dereference symlinks
 chgrp,,H,,, ,113,Follow specified symlinks with -R
 chgrp,,L,,, ,114,Follow all symlinks with -R
@@ -19,4 +19,3 @@ chgrp,,n,,, ,117,id is numeric; avoid lookup
 chgrp,,R,,, ,118,Operate recursively
 chgrp,,v,,, ,119,Output filenames
 chgrp,,x,,, ,120,Don't traverse fs mountpoints
-

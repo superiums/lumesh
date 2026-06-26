@@ -5,5 +5,4 @@ doas,,C, , ,@i @r,105,validate given config file and test it against given comma
 doas,,L, , ,@i,106,Clear persisted authorizations, then exit
 doas,,n, , ,@i,107,Fail if doas would prompt for password
 doas,,s, , ,@i,108,Execute the shell from SHELL or /etc/passwd
-doas,,u, , ,@E @f @i @r,109,cut -d: -f1 /etc/passwd
-
+doas,,u, , ,@E @f @i @r,109,cut -d':' -f1 /etc/passwd

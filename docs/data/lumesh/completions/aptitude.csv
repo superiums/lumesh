@@ -20,7 +20,7 @@ aptitude,,t,target-release, ,@r,144,Set the release from which packages should b
 aptitude,,O,sort, ,@r,145,Specify the order for the output from the search command
 aptitude,,o, , ,@r,146,Set a configuration file option directly
 aptitude,,w,width, ,@r,147,Specify the display width for the output from the search command
-aptitude,, , , ,@E @F,148,apt list --installed &? | cut -d/ -f1 | tail -n +2
+aptitude,, , , ,@E @F,148,apt list --installed &? | cut -d '/' -f1 | tail -n '+2'
 aptitude,, , ,autoclean,@f,149,Remove any cached packages which can no longer be downloaded
 aptitude,, , ,clean,@f,150,Remove all downloaded .deb files from the package cache directory
 aptitude,, , ,forget-new,@f,151,Forget all internal information about what packages are

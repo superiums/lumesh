@@ -43,7 +43,7 @@ chafa,, ,help, , ,142,Show help
 chafa,, ,probe,auto on off,@f @r,143,Probe terminal
 chafa,, ,verbose, , ,144,Be verbose
 chafa,, ,format,iterm kitty sixels symbols,@f @r,145,Set output format
-chafa,, ,optimize, ,@E @f @r,146,seq 0 9
+chafa,, ,optimize, ,@E @f @r,146,0...9
 chafa,, ,relative,on off,@f @r,147,Use relative cursor positioning
 chafa,, ,passthrough,auto none screen tmux,@f @r,148,Graphics protocol passthrough
 chafa,, ,polite,on off,@f @r,149,Polite mode

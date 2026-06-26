@@ -28,4 +28,4 @@ apt-cache,, ,installed, ,@f,126,Limit to installed
 apt-cache,,v,version, ,@f,127,Display version and exit
 apt-cache,,c,config-file, ,@r,128,Specify config file
 apt-cache,,o,option, ,@f @r,129,Specify options
-apt-cache,, , , ,@E @F,130,apt list --installed &? | cut -d/ -f1 | tail -n +2
+apt-cache,, , , ,@E @F,130,apt list --installed &? | cut -d '/' -f1 | tail -n '+2'

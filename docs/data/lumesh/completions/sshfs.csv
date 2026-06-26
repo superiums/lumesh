@@ -10,5 +10,4 @@ sshfs,,f, , , ,108,Foreground operation
 sshfs,,s, , , ,109,Disable multi-threaded operation
 sshfs,,r, , , ,110,Mount options
 sshfs,,h, , , ,111,Display help and exit
-sshfs,, , ,cut -d: -f1 /etc/passwd; cut -d' ' -f2 /etc/hosts,@E @f @r,112,Hostname
-
+sshfs,, , ,,@E @f @r,112,cut -d':' -f1 /etc/passwd; cut -d' ' -f2 /etc/hosts

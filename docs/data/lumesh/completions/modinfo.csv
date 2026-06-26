@@ -10,5 +10,4 @@ modinfo,,k,set-version, ,@f @r,108,Use VERSION instead of `uname -r`
 modinfo,,b,basedir, ,@r,109,Use DIR as filesystem root for /lib/modules
 modinfo,,V,version, , ,110,Show version
 modinfo,,h,help, , ,111,Show help
-modinfo,, , , ,@E,112,lsmod | tail -n +2 | cut -d' ' -f1
-
+modinfo,, , , ,@E,112,lsmod | tail -n '+2' | cut -d' ' -f1

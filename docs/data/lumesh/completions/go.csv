@@ -47,7 +47,7 @@ go,mod, , ,tidy,@f,178,add missing and remove unused modules
 go,mod, , ,vendor,@f,179,make vendored copy of dependencies
 go,mod, , ,verify,@f,180,verify dependencies have expected content
 go,mod, , ,why,@f,181,explain why packages or modules are needed
-go,build compile fix fmt install test vet,,,,@E @f @k @r,182,","
+go,build compile fix fmt install test vet,,,,@f @k @r,182,
 go,clean,i,,, ,185,remove the corresponding installed archive or binary
 go,clean,n,,, ,186,print the command that would be executed without running
 go,clean,r,,, ,187,recursively clean all the dependencies of package named by the import paths
@@ -61,4 +61,4 @@ go,,,,help, ,216,get help on topic
 go,list,e,,, ,252,tolerate erroneous packages
 go,list,m,,, ,253,list modules instead of packages
 go,,,,version,@f,259,print Go version
-go,build doc fix fmt install test vet, , , ,@E @f @r,264,"
+go,build doc fix fmt install test vet, , , ,@f @r,264,

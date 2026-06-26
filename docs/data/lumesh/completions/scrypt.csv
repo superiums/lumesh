@@ -13,5 +13,4 @@ scrypt,, , ,info,@f @r,113,Print information about the encryption parameters
 scrypt,enc dec,f, , , ,114,Force the operation to proceed
 scrypt,enc dec,P, , , ,115,Deprecated synonym for `--passphrase dev:stdin-once`
 scrypt,enc dec,v, , , ,116,Print encryption parameters and memory/CPU limits
-scrypt,enc dec, ,passphrase,find . -type f,@E @f @r,117,Read the passphrase using the specified method
-
+scrypt,enc dec, ,passphrase,,@F @r,117,Read the passphrase using the specified method

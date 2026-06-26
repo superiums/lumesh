@@ -76,4 +76,4 @@ adb,install,s,,, ,225,Install on SD card instead of internal storage
 adb,uninstall,k,,, ,227,Keep the data and cache directories
 adb,backup,f,,, ,230,File to write backup data to
 adb,logcat,v,format,, ,232,Sets log print format verb and adverbs
-adb,logcat,d, , , ,234,Dump the log and then exit (don
+adb,logcat,d, , , ,234,Dump the log and then exit

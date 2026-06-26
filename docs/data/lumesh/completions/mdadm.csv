@@ -18,7 +18,7 @@ mdadm,assemble build create follow monitor grow incremental auto-detect,F,monito
 mdadm,assemble build create follow monitor grow incremental auto-detect,G,grow, ,@i,179,Change the size or shape of an active array
 mdadm,assemble build create follow monitor grow incremental auto-detect,I,incremental, ,@i,180,Manage devices in array, and possibly start it
 mdadm,assemble build create follow monitor grow incremental auto-detect, ,auto-detect, ,@i,181,Start all auto-detected arrays
-mdadm,,e,metadata,,@E @f @r,182,Set metadata style to use
+mdadm,,e,metadata,,@f @r,182,Set metadata style to use
 mdadm,,n,raid-devices, ,@f @r,183,Specify the number of active devices
 mdadm,-s B build C create G grow,x,spare-devices, ,@f @r,184,Specify the number of spare devices
 mdadm,-s B build C create G grow,z,size, ,@f @r,185,Specify the space to use from each drive
@@ -47,7 +47,7 @@ mdadm,-s A assemble,u,uuid, ,@f @r,207,UUID of array to assemble
 mdadm,-s A assemble,m,super-minor, ,@f @r,208,Minor number of array device
 mdadm,A assemble s scan, ,no-degraded, , ,209,Refuse to start without all drives
 mdadm,-s A assemble, ,invalid-backup, , ,210,Do not ask for backup file, unavailable
-mdadm,-s A assemble,U,update,,@E @f @r,211,Update superblock properties
+mdadm,-s A assemble,U,update,,@f @r,211,Update superblock properties
 mdadm,-s A assemble, ,freeze-reshape, , ,212,Freeze --grow command
 mdadm,,t,test, , ,213,Test mode
 mdadm,assemble build create follow monitor grow incremental auto-detect, ,re-add, ,@i,215,Re-add a previously removed device
@@ -85,4 +85,3 @@ mdadm,F follow monitor 1 oneshot,i,pid-file, ,@r,246,Write PID file when running
 mdadm,-s F follow monitor,1,oneshot, , ,247,Check arrays only once
 mdadm,-s F follow monitor, ,no-sharing, , ,248,Do not move spares between arrays
 mdadm,,b,brief, , ,249,Be more concise
-

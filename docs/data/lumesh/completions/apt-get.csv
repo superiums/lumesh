@@ -33,7 +33,7 @@ apt-get,, ,allow-unauthenticated, , ,146,Ignore non-authenticated packages
 apt-get,,v,version, , ,147,Display version and exit
 apt-get,,c,config-file, ,@r,148,Specify a config file
 apt-get,,o,option, ,@r,149,Set a config option
-apt-get,,,,,@E,150,apt list --installed &? | cut -d/ -f1 | tail -n +2
+apt-get,,,,,@E,150,apt list --installed &? | cut -d '/' -f1 | tail -n '+2'
 apt-get,,,,update,@f,151,Update sources
 apt-get,,,,upgrade,@f,152,Upgrade or install newest packages
 apt-get,,,,dselect-upgrade,@f,153,Use with dselect front-end

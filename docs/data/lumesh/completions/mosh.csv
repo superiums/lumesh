@@ -7,6 +7,5 @@ mosh,, ,predict,adaptive always never experimental,@f,107,Controls use of specul
 mosh,,p,port, , ,108,Use a particular server-side UDP port or port range
 mosh,,a, , , ,109,Synonym for --predict=always
 mosh,,n, , , ,110,Synonym for --predict=never
-mosh,, , ,cut -d: -f1 /etc/passwd; printf '@',@E,111,User
+mosh,, , ,,@E,111,cut -d':' -f1 /etc/passwd |> format('{}@',_ )
 mosh,e 2, , , ,@E @f @r,112,--fcs-skip=2
-

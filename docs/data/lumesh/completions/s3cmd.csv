@@ -141,6 +141,6 @@ s3cmd,, , ,cfinfo, ,282,Display CloudFront distribution point parameters
 s3cmd,, , ,cfcreate, ,283,Create CloudFront distribution point
 s3cmd,, , ,cfdelete, ,284,Delete CloudFront distribution point
 s3cmd,, , ,cfmodify, ,285,Change CloudFront distribution point parameters
-s3cmd,, , , ,@E @f,286,"s3cmd ls (commandline -ct) ~: r's3://.*'"
+s3cmd,, , , ,@E @f,286,"s3cmd ls $T ~: r's3://.*'"
 s3cmd,, , ,rm, ,287,Delete file from bucket (alias for del)
 s3cmd,, , ,cfinvalinfo, ,288,Display CloudFront invalidation request(s) status

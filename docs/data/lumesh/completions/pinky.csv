@@ -1,7 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 pinky,, ,help, , ,101,display this help and exit
 pinky,, ,version, , ,102,output version information and exit
-pinky,, , , ,@E @f,103,cut -d: -f1 /etc/passwd
+pinky,, , , ,@E @f,103,cut -d':' -f1 /etc/passwd
 pinky,,l, , , ,104,produce long format output for the specified USERs
 pinky,,b, , , ,105,omit the user's home directory and shell in long format
 pinky,,h, , , ,106,omit the user's project file in long format
@@ -11,4 +11,3 @@ pinky,,f, , , ,109,omit the line of column headings in short format
 pinky,,w, , , ,110,omit the user's full name in short format
 pinky,,i, , , ,111,omit the user's full name and remote host in short format
 pinky,,q, , , ,112,omit the user's full name, remote host and idle time in short format
-

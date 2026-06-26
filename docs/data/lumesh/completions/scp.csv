@@ -1,5 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
-scp, , , ,',@f,101,Remote Path
+scp, , , , ,@f,101,Remote Path
 scp,,D, , ,@f @r,102,Connect directly to a local SFTP server
 scp,,l, , ,@f @r,103,Bandwidth limit
 scp,,P, , ,@f @r,104,Port
@@ -11,6 +11,5 @@ scp,,R,,, ,109,Copies between two remote hosts are performed by executing scp on
 scp,,r,,, ,110,Recursively copy
 scp,,S,,, ,111,Encryption program
 scp,,T,,, ,112,Disable strict filename checking
-scp,t, , , ,@E,113,ssh &?
-scp,t, , , ,@i,114,Local Path
 scp,t, , , ,@E @f,115,ssh &?
+scp,t, , , ,@i,114,Local Path

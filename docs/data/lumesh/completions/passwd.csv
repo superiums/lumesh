@@ -18,5 +18,4 @@ passwd,,l, , ,@f @r,119,Location to be updated on chosen directory system
 passwd,,u, , ,@f @r,120,User name to use on chosen directory system
 passwd,,l, , ,@f,121,Update locally, not in Kerberos
 passwd,-s S status,a,all, ,@f,124,Display password state for all users
-passwd,all, , , ,@E @f @i,125,cut -d: -f1 /etc/passwd
-
+passwd,all, , , ,@E @f @i,125,cut -d':' -f1 /etc/passwd

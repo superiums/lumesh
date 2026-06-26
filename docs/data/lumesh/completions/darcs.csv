@@ -17,7 +17,7 @@ darcs,, ,standard-verbosity, , ,166,Neither verbose nor quiet output [DEFAULT]
 darcs,,v,verbose, , ,167,Give verbose output
 darcs,, ,timings, , ,168,Provide debugging timings information
 darcs,, ,no-cache, , ,169,Don't use patch caches
-darcs,, , , ,@E,170,test -f _darcs/prefs/repos; and cat _darcs/prefs/repos
+darcs,, , , ,@E,170,fs.read _darcs/prefs/repos
 darcs,, , ,help,@f @r,171,Display help about darcs and darcs commands
 darcs,, , ,add,@f @r,172,Add new files to version control
 darcs,, , ,remove,@f @r,173,Remove files from version control

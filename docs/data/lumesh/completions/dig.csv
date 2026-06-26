@@ -50,4 +50,3 @@ dig,, , ,+time=,@f,148,Set query timeout
 dig,, , ,+bufsize=,@f,149,Set EDNS0 Max UDP packet size
 dig,, , ,+ndots=,@f,150,Set NDOTS value
 dig,, , ,+edns=,@f,151,Set EDNS version
-dig,,,,,@E,152,dig &?

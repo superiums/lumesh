@@ -32,4 +32,4 @@ psql,,p,port, ,@f @r,130,Database server port
 psql,,U,username, ,@f @r,131,Database user name
 psql,,w,no-password, , ,132,Never prompt for password
 psql,,W,password, , ,133,Force password prompt (should happen automatically)
-psql,, , , ,@E @f,134,psql -l &? | tail -n +3 | head -n -2 | cut -d'|' -f1 | sed 's/ //g'
+psql,, , , ,@E @f,134,psql -l &? | tail -n '+3' | head -n -2 | cut -d'|' -f1 | sed 's/ //g'

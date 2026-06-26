@@ -493,7 +493,6 @@ git,log, ,topo-order, , ,673,
 git,log, ,reverse, , ,674,
 git,log, ,no-walk,sorted unsorted,@f,675,
 git,log, ,do-walk, , ,676,
-git,log, ,format, , ,677,
 git,log, ,abbrev-commit, , ,678,
 git,log, ,no-abbrev-commit, , ,679,
 git,log, ,oneline, , ,680,
@@ -937,7 +936,7 @@ git,shortlog,,no-group,, ,1466,Disable custom groupings
 git,shortlog,w,,, ,1467,"Linewrap entries as width[,indent1[,indent2]]"
 git,log,,decorate,short\tHide\ prefixes full\tShow\ full\ ref\ names auto\tHide\ prefixes\ if\ printed\ to\ terminal no\tDon\\\,@f,1468,Print out ref names
 git,log shortlog rev-list,,since-as-filter,,@f @r,1472,Show commits more recent than date without stopping traversal early
-git,log shortlog,,format,,@E @f @r,1524,print #__git_show_opt not implemented
+git,log shortlog,,format,email format full fuller mboxrd medium oneline raw reference short,@f @r,1524,
 git,log shortlog,,date,relative local iso iso-local iso8601 iso8601-local iso-strict iso-strict-local iso8601-strict iso8601-strict-local rfc-local rfc2822-local short short-local raw human unix format: default default-local,@f @r,1525,
 git,log,c,,, ,1526,
 git,log,m,,, ,1527,

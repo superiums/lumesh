@@ -6,5 +6,3 @@ time,,v,verbose, , ,105,Verbose mode
 time,, ,help, , ,106,Display help and exit
 time,,V,version, , ,107,Display version and exit
 time,,a,append, , ,108,(Used together with -o) Do not overwrite but append
-time,, , , ,@E,109,echo # completes to subcommand of time
-

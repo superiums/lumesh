@@ -30,10 +30,10 @@ impl Default for EditorTheme {
     fn default() -> Self {
         Self {
             hint_color: Color::DarkGrey,
-            completion_bg: Color::DarkGrey,
-            completion_fg: Color::White,
-            completion_selected_bg: Color::White,
-            completion_selected_fg: Color::Black,
+            completion_bg: Color::Black,
+            completion_fg: Color::DarkYellow,
+            completion_selected_bg: Color::Red,
+            completion_selected_fg: Color::White,
         }
     }
 }

@@ -52,11 +52,11 @@ if IS_INTERACTIVE {
     # }
 
     LUME_EDITOR_THEME = {
-        hint = "grey"
-        completion_bg = "green"
-        completion_fg = "green"
-        completion_selected_bg = "green"
-        completion_selected_fg = "green"
+        hint : "grey",
+        completion_bg : "black",
+        completion_fg : "dark_yellow",
+        completion_selected_bg : "red",
+        completion_selected_fg : "white"
     }
 
     # ## ---interactive---

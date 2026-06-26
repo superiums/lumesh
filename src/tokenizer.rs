@@ -57,6 +57,7 @@ impl Ctx {
                 // Some(c) if c.is_ascii_digit() => Ctx::Number,
                 Some(c) if c.is_ascii_alphabetic() => Ctx::Letter,
                 Some(')' | ']' | '}' | '\'' | '"' | '`' | '_') => Ctx::Word,
+                Some('(' | '[' | '{' | '|') => Ctx::Start,
                 _ => Ctx::Open,
             },
         }
@@ -471,7 +472,7 @@ fn underscore_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
                     .strip_prefix("_")
                     .filter(|(rest, _)| {
                         rest.is_empty()
-                            || rest.starts_with(&[' ', '\n', ']'])
+                            || rest.starts_with(&[' ', '\n', ')', ']', '}', ';'])
                             || rest.starts_with("..")
                     })
                     .ok_or(NOT_FOUND)
@@ -1191,12 +1192,16 @@ fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
 /// Symbol chars: alphanumeric, `_`, `~`, `?`, `&`, `#`, `$`, `-`, `/`, `\`
 /// Excluded (cause operator/punctuation parsing instead): `+`, `=`, `<`, `>`, `*`, `%`, `^`, `|`, `:`, `@`, `!`, `.`, `,`, `;`, `(`, `)`, `[`, `]`, `{`, `}`, `'`, `"`, backtick, whitespace
 fn is_symbol_char(c: char, is_cfm: bool, is_space_ctx: bool) -> bool {
+    if c.is_ascii_whitespace() {
+        return false;
+    }
     if is_cfm {
-        // eat `.` only on space_ctx
+        // eat `.` only on space_ctx, for 'git tag v0.0.1'
+        // eat `:` only on space_ctx, for 'cut -d:'
         if is_space_ctx {
             return matches!(
                 c,
-                'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\' | '=' | '+' | '.'
+                'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\' | '=' | '+' | '.' | ':'
             );
         }
         // eat `=` for `dd if=/dev`

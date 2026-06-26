@@ -381,6 +381,7 @@ impl Editor {
                             self.buffer.insert_str(&indent);
                         }
                     } else if self.should_accept() {
+                        let _ = self.render(); //clear hint
                         return self.accept_line();
                     } else {
                         let indent = self.buffer.current_line_indent();

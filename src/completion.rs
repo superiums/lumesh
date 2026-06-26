@@ -51,6 +51,7 @@ pub struct ParamCompleter {
     // entries: Rc<HashMap<String, Vec<CompletionEntry>>>,
     base_dirs: Vec<PathBuf>,
 }
+#[derive(Debug)]
 enum MatchType {
     // Condition,
     Short,
@@ -63,6 +64,7 @@ enum MatchType {
     // All,
     ExternalCMD,
     File,
+    Dir,
     Require,
     Space,
     None,
@@ -76,9 +78,8 @@ fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
         .from_reader(csv_content.as_bytes());
 
     for result in rdr.records() {
-        let record = result.map_err(|e| {
-            RuntimeError::common(e.to_string().into(), Expression::None, 0)
-        })?;
+        let record =
+            result.map_err(|e| RuntimeError::common(e.to_string().into(), Expression::None, 0))?;
         if record.len() < 7 {
             continue;
         }
@@ -95,11 +96,19 @@ fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
             },
             short_opt: {
                 let s = record[2].trim();
-                if s.is_empty() { None } else { Some(s.to_string()) }
+                if s.is_empty() {
+                    None
+                } else {
+                    Some(s.to_string())
+                }
             },
             long_opt: {
                 let s = record[3].trim();
-                if s.is_empty() { None } else { Some(s.to_string()) }
+                if s.is_empty() {
+                    None
+                } else {
+                    Some(s.to_string())
+                }
             },
             args: {
                 let s = record[4].trim();
@@ -306,20 +315,21 @@ impl ParamCompleter {
                     .long_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(&current_token[2..])))
-                && self.check_condition(entry, args, current_token) {
-                    if entry
-                        .long_opt
-                        .as_ref()
-                        .is_some_and(|x| x == &current_token[2..])
-                    {
-                        return MatchType::Space;
-                    }
-                    if entry.directives.iter().any(|d| d == "@m")
-                        || !self.check_opt(entry, args, current_token)
-                    {
-                        return MatchType::Long;
-                    }
+                && self.check_condition(entry, args, current_token)
+            {
+                if entry
+                    .long_opt
+                    .as_ref()
+                    .is_some_and(|x| x == &current_token[2..])
+                {
+                    return MatchType::Space;
                 }
+                if entry.directives.iter().any(|d| d == "@m")
+                    || !self.check_opt(entry, args, current_token)
+                {
+                    return MatchType::Long;
+                }
+            }
             return MatchType::None;
         } else if current_token.starts_with("-") && entry.short_opt.is_some() {
             if (current_token.len() == 1
@@ -327,20 +337,21 @@ impl ParamCompleter {
                     .short_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(&current_token[1..])))
-                && self.check_condition(entry, args, current_token) {
-                    if entry
-                        .short_opt
-                        .as_ref()
-                        .is_some_and(|x| x == &current_token[1..])
-                    {
-                        return MatchType::Space;
-                    }
-                    if entry.directives.iter().any(|d| d == "@m")
-                        || !self.check_opt(entry, args, current_token)
-                    {
-                        return MatchType::Short;
-                    }
+                && self.check_condition(entry, args, current_token)
+            {
+                if entry
+                    .short_opt
+                    .as_ref()
+                    .is_some_and(|x| x == &current_token[1..])
+                {
+                    return MatchType::Space;
                 }
+                if entry.directives.iter().any(|d| d == "@m")
+                    || !self.check_opt(entry, args, current_token)
+                {
+                    return MatchType::Short;
+                }
+            }
             return MatchType::None;
             // 只检测正在输入
         } else if !current_token.is_empty() {
@@ -349,7 +360,10 @@ impl ParamCompleter {
                 if entry.directives.iter().any(|d| d == "@E") {
                     return MatchType::ExternalCMD;
                 }
-                if entry.directives.iter().any(|d| d == "@F" || d == "@D") {
+                if entry.directives.iter().any(|d| d == "@D") {
+                    return MatchType::Dir;
+                }
+                if entry.directives.iter().any(|d| d == "@F") {
                     return MatchType::File;
                 }
                 // 如果满足长短选项，则只匹配argument；如未满足，则匹配argument后携带长短选项
@@ -395,7 +409,10 @@ impl ParamCompleter {
                     if entry.directives.iter().any(|d| d == "@E") {
                         return MatchType::ExternalCMD;
                     }
-                    if entry.directives.iter().any(|d| d == "@F" || d == "@D") {
+                    if entry.directives.iter().any(|d| d == "@D") {
+                        return MatchType::Dir;
+                    }
+                    if entry.directives.iter().any(|d| d == "@F") {
                         return MatchType::File;
                     }
                     if entry.args.is_empty() {
@@ -437,7 +454,12 @@ impl ParamCompleter {
                 if !self.check_opt(entry, args, current_token) {
                     // 无ignore file标记，则进行路径补全
                     if !entry.directives.iter().any(|d| d == "@f") {
-                        return MatchType::File;
+                        if entry.directives.iter().any(|d| d == "@D") {
+                            return MatchType::Dir;
+                        }
+                        if entry.directives.iter().any(|d| d == "@F") {
+                            return MatchType::File;
+                        }
                     }
 
                     if entry.args.iter().any(|x| x.starts_with(current_token)) {
@@ -470,16 +492,18 @@ impl ParamCompleter {
                     .short_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(current_token))
-                    && entry.directives.iter().any(|d| d == "@m") {
-                        return MatchType::Short;
-                    }
+                    && entry.directives.iter().any(|d| d == "@m")
+                {
+                    return MatchType::Short;
+                }
                 if entry
                     .long_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(current_token))
-                    && entry.directives.iter().any(|d| d == "@m") {
-                        return MatchType::Long;
-                    }
+                    && entry.directives.iter().any(|d| d == "@m")
+                {
+                    return MatchType::Long;
+                }
             }
 
             return MatchType::None;
@@ -490,7 +514,12 @@ impl ParamCompleter {
                 if !self.check_opt(entry, args, current_token) {
                     // 无ignore file标记，则进行路径补全
                     if !entry.directives.iter().any(|d| d == "@f") {
-                        return MatchType::File;
+                        if entry.directives.iter().any(|d| d == "@D") {
+                            return MatchType::Dir;
+                        }
+                        if entry.directives.iter().any(|d| d == "@F") {
+                            return MatchType::File;
+                        }
                     }
                     // 【扩展匹配】列出长短选项，允许多次出现的，或未出现过的
                     if entry.directives.iter().any(|d| d == "@m")
@@ -541,9 +570,10 @@ impl ParamCompleter {
         //     }
         // }
         if let Ok(db) = COMPLETION_DB.read()
-            && let Some(entries) = db.entries.get(command) {
-                return Some(Arc::clone(entries));
-            }
+            && let Some(entries) = db.entries.get(command)
+        {
+            return Some(Arc::clone(entries));
+        }
 
         // 如果不存在，获取写锁并插入
         if let Ok(mut db) = COMPLETION_DB.write() {
@@ -698,12 +728,13 @@ impl ParamCompleter {
                         // arg需要过滤
                         for x in entry.args.iter() {
                             if x.starts_with(current_token)
-                                && let Some(long) = entry.long_opt.clone() {
-                                    v.push(CompletionPair {
-                                        display: format_arg_opt(entry, x),
-                                        replacement: format!("--{} {}", long, x),
-                                    })
-                                }
+                                && let Some(long) = entry.long_opt.clone()
+                            {
+                                v.push(CompletionPair {
+                                    display: format_arg_opt(entry, x),
+                                    replacement: format!("--{} {}", long, x),
+                                })
+                            }
                         }
 
                         // v.push()
@@ -712,12 +743,13 @@ impl ParamCompleter {
                         // arg需要过滤
                         for x in entry.args.iter() {
                             if x.starts_with(current_token)
-                                && let Some(short) = entry.short_opt.clone() {
-                                    v.push(CompletionPair {
-                                        display: format_arg_opt(entry, x),
-                                        replacement: format!("-{} {}", short, x),
-                                    })
-                                }
+                                && let Some(short) = entry.short_opt.clone()
+                            {
+                                v.push(CompletionPair {
+                                    display: format_arg_opt(entry, x),
+                                    replacement: format!("-{} {}", short, x),
+                                })
+                            }
                         }
                     }
                     MatchType::ExternalCMD => {
@@ -725,32 +757,12 @@ impl ParamCompleter {
                         env.define("T", Expression::String(current_token.to_string()));
 
                         if let Ok(expr) = parse(&entry.description)
-                            && let Ok(result) = expr.eval_in_assign(&mut env) {
-                                match result {
-                                    Expression::List(items) => {
-                                        for item in items.iter() {
-                                            let s = item.to_string();
-                                            if !s.is_empty() {
-                                                v.push(CompletionPair {
-                                                    display: s.clone(),
-                                                    replacement: s,
-                                                });
-                                            }
-                                        }
-                                    }
-                                    Expression::String(s) => {
-                                        for line in s.lines() {
-                                            let trimmed = line.trim();
-                                            if !trimmed.is_empty() {
-                                                v.push(CompletionPair {
-                                                    display: trimmed.to_string(),
-                                                    replacement: trimmed.to_string(),
-                                                });
-                                            }
-                                        }
-                                    }
-                                    other => {
-                                        let s = other.to_string();
+                            && let Ok(result) = expr.eval_in_assign(&mut env)
+                        {
+                            match result {
+                                Expression::List(items) => {
+                                    for item in items.iter() {
+                                        let s = item.to_string();
                                         if !s.is_empty() {
                                             v.push(CompletionPair {
                                                 display: s.clone(),
@@ -759,7 +771,35 @@ impl ParamCompleter {
                                         }
                                     }
                                 }
+                                Expression::String(s) => {
+                                    for line in s.lines() {
+                                        let trimmed = line.trim();
+                                        if !trimmed.is_empty() {
+                                            v.push(CompletionPair {
+                                                display: trimmed.to_string(),
+                                                replacement: trimmed.to_string(),
+                                            });
+                                        }
+                                    }
+                                }
+                                other => {
+                                    let s = other.to_string();
+                                    if !s.is_empty() {
+                                        v.push(CompletionPair {
+                                            display: s.clone(),
+                                            replacement: s,
+                                        });
+                                    }
+                                }
                             }
+                        }
+                    }
+                    MatchType::Dir => {
+                        for item in self.complete_path(current_token, true) {
+                            if !v.iter().any(|x| x.replacement == item.replacement) {
+                                v.push(item);
+                            }
+                        }
                     }
                     MatchType::File => {
                         let dir_only = entry.directives.iter().any(|d| d == "@D");
@@ -799,24 +839,25 @@ pub(crate) fn list_path_entries(current_token: &str, dir_only: bool) -> Vec<(Str
     if let Ok(entries) = std::fs::read_dir(dir_path) {
         for entry in entries.flatten() {
             if let Some(name) = entry.file_name().to_str()
-                && name.starts_with(file_prefix) {
-                    let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
-                    if dir_only && !is_dir {
-                        continue;
-                    }
-                    let full = format!("{dir}{name}");
-                    let has_space = full.chars().any(|c| c.is_ascii_whitespace());
-                    let full = if has_space {
-                        if is_dir {
-                            format!("'{full}/'")
-                        } else {
-                            format!("'{full}'")
-                        }
-                    } else {
-                        if is_dir { format!("{full}/") } else { full }
-                    };
-                    items.push((name.to_string(), full))
+                && name.starts_with(file_prefix)
+            {
+                let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
+                if dir_only && !is_dir {
+                    continue;
                 }
+                let full = format!("{dir}{name}");
+                let has_space = full.chars().any(|c| c.is_ascii_whitespace());
+                let full = if has_space {
+                    if is_dir {
+                        format!("'{full}/'")
+                    } else {
+                        format!("'{full}'")
+                    }
+                } else {
+                    if is_dir { format!("{full}/") } else { full }
+                };
+                items.push((name.to_string(), full))
+            }
         }
     }
     items

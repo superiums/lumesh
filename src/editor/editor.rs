@@ -42,7 +42,7 @@ impl Default for EditorTheme {
 pub struct CompletionItem {
     pub display: Option<String>,
     pub replacement: String,
-    pub suffix: char,
+    pub suffix: Option<char>,
 }
 
 impl CompletionItem {
@@ -50,7 +50,7 @@ impl CompletionItem {
         Self {
             display: None,
             replacement,
-            suffix: ' ',
+            suffix: None,
         }
     }
 
@@ -58,7 +58,15 @@ impl CompletionItem {
         Self {
             display: Some(display),
             replacement,
-            suffix: ' ',
+            suffix: None,
+        }
+    }
+
+    pub fn with(display: String, replacement: String, suffix: char) -> Self {
+        Self {
+            display: Some(display),
+            replacement,
+            suffix: Some(suffix),
         }
     }
 
@@ -616,8 +624,16 @@ impl Editor {
     fn apply_completion(&mut self, item: &CompletionItem, start_pos: usize) {
         let cursor = self.buffer.cursor();
         let end_pos = cursor.max(start_pos);
-        let replacement = format!("{}{}", item.replacement, item.suffix);
-        self.buffer.replace_range(start_pos, end_pos, &replacement);
+        match item.suffix {
+            Some(suf) => self.buffer.replace_range(
+                start_pos,
+                end_pos,
+                &format!("{}{}", item.replacement, suf),
+            ),
+            None => self
+                .buffer
+                .replace_range(start_pos, end_pos, &item.replacement),
+        }
     }
 
     // ---- Abbreviation handling ----

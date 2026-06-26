@@ -46,6 +46,7 @@ impl Completer for LumeCompleter {
     }
 }
 
+// only needed on head of line, without cmd
 fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
     let prefix = &line[..pos];
     let path_start = prefix
@@ -68,7 +69,7 @@ fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
         .map(|(name, full_path)| CompletionItem {
             display: Some(name),
             replacement: full_path,
-            suffix: ' ',
+            suffix: None,
         })
         .collect();
     items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
@@ -87,15 +88,13 @@ impl LumeCompleter {
             .iter()
             .map(|cmd| {
                 let display = format!("{cpl_color}{cmd}{RESET}");
-                CompletionItem::with_display(display, cmd.to_string())
+                CompletionItem::with(
+                    display,
+                    cmd.to_string(),
+                    if is_lib(cmd) { '.' } else { ' ' },
+                )
             })
             .collect();
-
-        for item in &mut items {
-            if is_lib(&item.replacement) {
-                item.suffix = '.';
-            }
-        }
 
         if items.is_empty() {
             match prefix.split_once(".") {
@@ -107,12 +106,11 @@ impl LumeCompleter {
                                     .iter()
                                     .filter(|(f, _)| f.starts_with(func))
                                     .map(|(cmd, _)| {
-                                        let mut ci = CompletionItem::with_display(
+                                        CompletionItem::with(
                                             format!("{cpl_color}{cmd}{RESET}"),
                                             cmd.to_string(),
-                                        );
-                                        ci.suffix = '(';
-                                        ci
+                                            '(',
+                                        )
                                     })
                                     .collect();
                             }
@@ -161,7 +159,13 @@ impl LumeCompleter {
 
             let mut items: Vec<CompletionItem> = pairs
                 .into_iter()
-                .map(|p| CompletionItem::with_display(p.display, p.replacement))
+                .map(|p| {
+                    if p.replacement.ends_with("/") {
+                        CompletionItem::with_display(p.display, p.replacement)
+                    } else {
+                        CompletionItem::with(p.display, p.replacement, ' ')
+                    }
+                })
                 .collect();
             items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
             return items;
@@ -287,13 +291,15 @@ pub fn run_repl(env: &mut Environment) {
             #[cfg(windows)]
             let path = c_dir.join("lume_history.log");
             if !c_dir.exists()
-                && let Err(e) = std::fs::create_dir_all(&c_dir) {
-                    eprintln!("Failed to create cache directory: {e}");
-                }
+                && let Err(e) = std::fs::create_dir_all(&c_dir)
+            {
+                eprintln!("Failed to create cache directory: {e}");
+            }
             if !path.exists()
-                && let Err(e) = std::fs::File::create(&path) {
-                    eprintln!("Failed to create cache file: {e}");
-                }
+                && let Err(e) = std::fs::File::create(&path)
+            {
+                eprintln!("Failed to create cache file: {e}");
+            }
             path.into_os_string().into_string().unwrap()
         }
     };
@@ -436,43 +442,44 @@ pub fn run_repl(env: &mut Environment) {
         for (k, v) in bindings.iter() {
             let key_str = k.to_string();
             if let Some((mod_str, key_char)) = key_str.rsplit_once('_')
-                && let Some(ch) = key_char.chars().next() {
-                    let key = parse_hot_key(mod_str, ch);
-                    match v {
-                        Expression::String(s) => {
-                            // String value: insert directly into buffer
-                            editor.bind_sequence(key, Cmd::InsertStr(s.clone()));
-                        }
-                        Expression::Function(..) | Expression::Lambda(..) => {
-                            // Function/Lambda: execute with buffer as argument,
-                            // insert result if it returns a string
-                            let expr = v.clone();
-                            let shared_env = shared_env.clone();
-                            editor.bind_hotkey_fn(key, move |buffer: &str| -> Option<String> {
-                                let env_guard = shared_env.lock().ok()?;
-                                let mut fork_env = env_guard.fork();
-                                drop(env_guard);
-                                let call = Expression::Apply(
-                                    Rc::new(expr.clone()),
-                                    Rc::new(vec![Expression::String(buffer.to_string())]),
-                                );
-                                match call.eval_cmd(&mut fork_env) {
-                                    Ok(Expression::String(s)) => Some(s),
-                                    // Ok(other) if other != Expression::None => {
-                                    //     println!("{other}");
-                                    //     let _ = std::io::stdout().flush();
-                                    //     None
-                                    // }
-                                    _ => None,
-                                }
-                            });
-                        }
-                        other => {
-                            // Other types
-                            eprintln!("invalid bindings: {} -> {}", key_str, other);
-                        }
+                && let Some(ch) = key_char.chars().next()
+            {
+                let key = parse_hot_key(mod_str, ch);
+                match v {
+                    Expression::String(s) => {
+                        // String value: insert directly into buffer
+                        editor.bind_sequence(key, Cmd::InsertStr(s.clone()));
+                    }
+                    Expression::Function(..) | Expression::Lambda(..) => {
+                        // Function/Lambda: execute with buffer as argument,
+                        // insert result if it returns a string
+                        let expr = v.clone();
+                        let shared_env = shared_env.clone();
+                        editor.bind_hotkey_fn(key, move |buffer: &str| -> Option<String> {
+                            let env_guard = shared_env.lock().ok()?;
+                            let mut fork_env = env_guard.fork();
+                            drop(env_guard);
+                            let call = Expression::Apply(
+                                Rc::new(expr.clone()),
+                                Rc::new(vec![Expression::String(buffer.to_string())]),
+                            );
+                            match call.eval_cmd(&mut fork_env) {
+                                Ok(Expression::String(s)) => Some(s),
+                                // Ok(other) if other != Expression::None => {
+                                //     println!("{other}");
+                                //     let _ = std::io::stdout().flush();
+                                //     None
+                                // }
+                                _ => None,
+                            }
+                        });
+                    }
+                    other => {
+                        // Other types
+                        eprintln!("invalid bindings: {} -> {}", key_str, other);
                     }
                 }
+            }
         }
     }
     let _abbr_map: HashMap<String, String> = match _abbr {
@@ -553,10 +560,9 @@ pub fn run_repl(env: &mut Environment) {
     }
 
     // Save history
-    if !no_history
-        && let Err(e) = editor.history_mut().save_to_file(&history_file) {
-            eprintln!("Failed to save history: {e}");
-        }
+    if !no_history && let Err(e) = editor.history_mut().save_to_file(&history_file) {
+        eprintln!("Failed to save history: {e}");
+    }
 }
 
 fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Option<String> {

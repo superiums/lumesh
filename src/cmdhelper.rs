@@ -133,11 +133,13 @@ fn scan_path_cmds(dir: &Path) -> Vec<String> {
 //  line: &str,
 // pos: usize,
 pub fn should_trigger_path_completion(line: &str, pos: usize) -> bool {
-    // most efficiency if not allow space in path
-    let last = line[..pos]
-        .rfind(|c: char| c.is_ascii_whitespace() || is_separator(c))
-        .unwrap_or(0);
-    is_separator(line.chars().nth(last).unwrap_or_default())
+    if let Some(_) = line[..pos].rfind(' ') {
+        return false;
+    }
+    if let Some(_) = line[..pos].find(is_separator) {
+        return true;
+    }
+    false
 }
 
 // 扩展补全类型枚举
@@ -161,6 +163,12 @@ pub fn detect_completion_type(
     }
 
     let prefix = &line[..pos];
+
+    // only trigger path on leading word
+    // Check path completion first (highest priority)
+    if should_trigger_path_completion(line, pos) {
+        return (LumeCompletionType::Path, pos);
+    }
 
     // Check AI completion with new trigger logic
     if ai_avaluable && should_trigger_ai(prefix) {
@@ -198,12 +206,6 @@ pub fn detect_completion_type(
         //     }
         // }
         // return (LumeCompletionType::Param, command_pos);
-    }
-
-    // only trigger path when param failed, infact only on leading word
-    // Check path completion first (highest priority)
-    if should_trigger_path_completion(line, pos) {
-        return (LumeCompletionType::Path, pos);
     }
 
     (LumeCompletionType::None, pos)

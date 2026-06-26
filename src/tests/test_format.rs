@@ -1,4 +1,4 @@
-use lumesh::{parse_script, Expression};
+use lumesh::{Expression, parse_script};
 fn main() {
     let expr = parse_script("fn add(a, b) { a + b }").unwrap();
     println!("FN DEF: {:?}", expr);

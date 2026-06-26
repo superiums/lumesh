@@ -952,7 +952,13 @@ impl Expression {
                 cmd.fmt_indent(f, indent + 1)
             }
             Self::Use(name, path) => {
-                writeln!(f, "{}Use〈{} as {}〉", prefix, path, name.as_ref().map_or("_", |n| n.as_str()))?;
+                writeln!(
+                    f,
+                    "{}Use〈{} as {}〉",
+                    prefix,
+                    path,
+                    name.as_ref().map_or("_", |n| n.as_str())
+                )?;
                 Ok(())
             }
             Self::Del(name) => write!(f, "{}Del〈{}〉", prefix, name),

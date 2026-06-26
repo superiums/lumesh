@@ -270,7 +270,11 @@ impl LineBuffer {
     }
 
     pub fn byte_cursor(&self) -> usize {
-        self.chars.iter().take(self.cursor).map(|c| c.len_utf8()).sum()
+        self.chars
+            .iter()
+            .take(self.cursor)
+            .map(|c| c.len_utf8())
+            .sum()
     }
 
     pub fn len(&self) -> usize {

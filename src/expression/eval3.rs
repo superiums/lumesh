@@ -330,12 +330,10 @@ impl Expression {
                 }
             }
 
-            Expression::Function(.., ref decos) => {
-                match decos.is_empty() {
-                    true => self.eval_normal_function(func_eval, args, state, env, depth),
-                    false => self.eval_function_with_deco(func_eval, args, state, env, depth),
-                }
-            }
+            Expression::Function(.., ref decos) => match decos.is_empty() {
+                true => self.eval_normal_function(func_eval, args, state, env, depth),
+                false => self.eval_function_with_deco(func_eval, args, state, env, depth),
+            },
             // 命令形式的内置函数调用如： fs.read! a
             // 不用!,则进入eval_cmd中
             // Expression::Index
@@ -458,12 +456,8 @@ impl Expression {
                 }
             }
             // may values as builtin
-            Self::Property(lhs, rhs) => {
-                self.handle_property(lhs, rhs, state, env, depth + 1)
-            }
-            Self::Index(lhs, rhs) => {
-                self.handle_index_or_slice(lhs, rhs, state, env, depth + 1)
-            }
+            Self::Property(lhs, rhs) => self.handle_property(lhs, rhs, state, env, depth + 1),
+            Self::Index(lhs, rhs) => self.handle_index_or_slice(lhs, rhs, state, env, depth + 1),
             // for lambda/function/moduleCall them self.
             _ => Ok(self.clone()),
         }
@@ -795,10 +789,10 @@ impl Expression {
         if let Expression::Property(base, method) = cmd
             && let Some(btr) =
                 handle_builtin(base, &method.to_string(), args, self, state, env, depth)?
-            {
-                return Ok(btr);
-            }
-            // 自定义Map不应以命令方式调用,但文件名可能以a.b的方式存在
+        {
+            return Ok(btr);
+        }
+        // 自定义Map不应以命令方式调用,但文件名可能以a.b的方式存在
 
         if let Expression::Symbol(cmd_sym) = cmd
             && let Some(btr) = handle_builtin(
@@ -809,9 +803,10 @@ impl Expression {
                 state,
                 env,
                 depth,
-            )? {
-                return Ok(btr);
-            }
+            )?
+        {
+            return Ok(btr);
+        }
 
         // symbol和Property方式匹配失败后，允许其他含义，所以继续匹配
         match cmd {

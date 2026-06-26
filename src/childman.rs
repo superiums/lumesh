@@ -64,7 +64,7 @@ pub fn clear_child() {
 pub fn install_sigint_handler() {
     #[cfg(unix)]
     {
-        use nix::sys::signal::{self, SigAction, SigHandler, SaFlags, SigSet};
+        use nix::sys::signal::{self, SaFlags, SigAction, SigHandler, SigSet};
         // 使用非局部函数，避免 extern "C" fn 嵌套闭包
         extern "C" fn handle_sigint(_: i32) {
             SIGINT_RECEIVED.store(true, Ordering::SeqCst);

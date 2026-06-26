@@ -155,9 +155,10 @@ pub fn init_config(env: &mut Environment) {
             Some(config_dir) => {
                 let config_path = config_dir.join("lumesh");
                 if !config_path.exists()
-                    && let Err(e) = create_dir(&config_path) {
-                        eprintln!("Error while create prelude dir: {e}");
-                    }
+                    && let Err(e) = create_dir(&config_path)
+                {
+                    eprintln!("Error while create prelude dir: {e}");
+                }
                 config_path.join("config.lm")
             }
             _ => PathBuf::from(".lume_config"),
@@ -264,8 +265,9 @@ pub const IFS_CSV: u8 = 1 << 4; // parse.to_csv
 pub const IFS_PCK: u8 = 1 << 5; // ui.pick
 pub fn ifs_contains(mode: u8, env: &mut Environment) -> bool {
     if let Some(Expression::Integer(m)) = env.get("LUME_IFS_MODE")
-        && m as u8 & mode != 0 {
-            return true;
-        }
+        && m as u8 & mode != 0
+    {
+        return true;
+    }
     false
 }

@@ -448,9 +448,10 @@ impl Expression {
                     // return inner.as_ref().eval_mut(state, env, depth + 1);
                     job = inner.as_ref();
                     if state.contains(State::IN_ASSIGN)
-                        && let Expression::Symbol(_) = job {
-                            return job.eval_command(&[], state, env, depth + 1);
-                        }
+                        && let Expression::Symbol(_) = job
+                    {
+                        return job.eval_command(&[], state, env, depth + 1);
+                    }
                     continue;
                 }
                 // Self::Quote(inner) => return Ok(inner.as_ref().clone()),
@@ -1614,9 +1615,10 @@ impl Expression {
     ) -> Result<Expression, RuntimeError> {
         // 优先检查是否在循环状态中
         if state.contains(State::IN_LOCAL)
-            && let Some(local_val) = state.get_local_var(name) {
-                return Ok(local_val.clone());
-            }
+            && let Some(local_val) = state.get_local_var(name)
+        {
+            return Ok(local_val.clone());
+        }
 
         // 从环境读取
         match env.get(name) {

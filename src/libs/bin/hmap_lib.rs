@@ -302,9 +302,10 @@ fn from_items(
         let mut map = HashMap::new();
         for item in list.as_ref() {
             if let Expression::List(pair) = item
-                && pair.as_ref().len() == 2 {
-                    map.insert(pair.as_ref()[0].to_string(), pair.as_ref()[1].clone());
-                }
+                && pair.as_ref().len() == 2
+            {
+                map.insert(pair.as_ref()[0].to_string(), pair.as_ref()[1].clone());
+            }
         }
         Ok(Expression::from(map))
     } else {
@@ -406,13 +407,14 @@ fn deep_merge_hmaps(
 
     for (k, v) in b.iter() {
         if let Some(existing) = result.get(k)
-            && let (Expression::HMap(ma), Expression::HMap(mb)) = (existing, v) {
-                result.insert(
-                    k.clone(),
-                    Expression::HMap(Rc::new(deep_merge_hmaps(ma.as_ref(), mb.as_ref())?)),
-                );
-                continue;
-            }
+            && let (Expression::HMap(ma), Expression::HMap(mb)) = (existing, v)
+        {
+            result.insert(
+                k.clone(),
+                Expression::HMap(Rc::new(deep_merge_hmaps(ma.as_ref(), mb.as_ref())?)),
+            );
+            continue;
+        }
         result.insert(k.clone(), v.clone());
     }
 

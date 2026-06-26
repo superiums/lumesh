@@ -57,9 +57,11 @@ fn toml(
     check_exact_args_len("toml", &args, 1, ctx)?;
     let text_str = get_string_ref(&args[0], ctx)?;
 
-    toml::from_str::<serde_json::Value>(text_str).map(toml_to_expr).map_err(|e| {
-        RuntimeError::common(format!("Toml parser error:\n{e}").into(), ctx.clone(), 0)
-    })
+    toml::from_str::<serde_json::Value>(text_str)
+        .map(toml_to_expr)
+        .map_err(|e| {
+            RuntimeError::common(format!("Toml parser error:\n{e}").into(), ctx.clone(), 0)
+        })
 }
 
 fn toml_to_expr(val: serde_json::Value) -> Expression {
@@ -98,7 +100,10 @@ fn try_convert_toml_array_to_table(
     }
 
     // Check if all elements are tables
-    if !arr.iter().all(|v| matches!(v, serde_json::Value::Object(_))) {
+    if !arr
+        .iter()
+        .all(|v| matches!(v, serde_json::Value::Object(_)))
+    {
         return None;
     }
 

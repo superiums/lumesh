@@ -12,11 +12,11 @@ use crossterm::cursor::{
 use crossterm::event::{Event, KeyCode, read};
 use crossterm::style::Print;
 use crossterm::terminal::{
-    Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen, SetTitle,
-    disable_raw_mode, enable_raw_mode, size,
+    Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen, SetTitle, disable_raw_mode,
+    enable_raw_mode, size,
 };
 use crossterm::{execute, queue};
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -119,8 +119,9 @@ fn write(
                     RuntimeError::common(format!("Write failed: {e}").into(), ctx.clone(), 0)
                 })?;
             }
-            out.flush()
-                .map_err(|e| RuntimeError::common(format!("Flush failed: {e}").into(), ctx.clone(), 0))?;
+            out.flush().map_err(|e| {
+                RuntimeError::common(format!("Flush failed: {e}").into(), ctx.clone(), 0)
+            })?;
             Ok(Expression::None)
         }
         (m, n) => Err(RuntimeError::common(
@@ -144,8 +145,9 @@ fn title(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("title", &args, 1, ctx)?;
-    execute!(stdout(), SetTitle(args[0].to_string()))
-        .map_err(|e| RuntimeError::common(format!("Failed to set title: {e}").into(), ctx.clone(), 0))?;
+    execute!(stdout(), SetTitle(args[0].to_string())).map_err(|e| {
+        RuntimeError::common(format!("Failed to set title: {e}").into(), ctx.clone(), 0)
+    })?;
     Ok(Expression::None)
 }
 
@@ -195,8 +197,9 @@ fn screen_alternate(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    execute!(stdout(), EnterAlternateScreen)
-        .map_err(|_| RuntimeError::common("Failed to enter alternate screen".into(), _ctx.clone(), 0))?;
+    execute!(stdout(), EnterAlternateScreen).map_err(|_| {
+        RuntimeError::common("Failed to enter alternate screen".into(), _ctx.clone(), 0)
+    })?;
     Ok(Expression::None)
 }
 
@@ -205,8 +208,9 @@ fn screen_normal(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    execute!(stdout(), LeaveAlternateScreen)
-        .map_err(|_| RuntimeError::common("Failed to leave alternate screen".into(), _ctx.clone(), 0))?;
+    execute!(stdout(), LeaveAlternateScreen).map_err(|_| {
+        RuntimeError::common("Failed to leave alternate screen".into(), _ctx.clone(), 0)
+    })?;
     Ok(Expression::None)
 }
 // Cursor Control Functions
@@ -219,8 +223,9 @@ fn cursor_to(
 
     match (&args[0], &args[1]) {
         (Expression::Integer(x), Expression::Integer(y)) => {
-            execute!(stdout(), MoveTo(*x as u16, *y as u16))
-                .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+            execute!(stdout(), MoveTo(*x as u16, *y as u16)).map_err(|e| {
+                RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0)
+            })?;
             Ok(Expression::None)
         }
         (m, n) => Err(RuntimeError::common(
@@ -245,8 +250,9 @@ fn cursor_up(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cursor_up", &args, 1, ctx)?;
     if let Expression::Integer(n) = args[0] {
-        execute!(stdout(), MoveUp(n as u16))
-            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        execute!(stdout(), MoveUp(n as u16)).map_err(|e| {
+            RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0)
+        })?;
         Ok(Expression::None)
     } else {
         Err(RuntimeError::common(
@@ -264,8 +270,9 @@ fn cursor_down(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cursor_down", &args, 1, ctx)?;
     if let Expression::Integer(n) = args[0] {
-        execute!(stdout(), MoveDown(n as u16))
-            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        execute!(stdout(), MoveDown(n as u16)).map_err(|e| {
+            RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0)
+        })?;
         Ok(Expression::None)
     } else {
         Err(RuntimeError::common(
@@ -283,8 +290,9 @@ fn cursor_left(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cursor_left", &args, 1, ctx)?;
     if let Expression::Integer(n) = args[0] {
-        execute!(stdout(), MoveLeft(n as u16))
-            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        execute!(stdout(), MoveLeft(n as u16)).map_err(|e| {
+            RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0)
+        })?;
         Ok(Expression::None)
     } else {
         Err(RuntimeError::common(
@@ -302,8 +310,9 @@ fn cursor_right(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cursor_right", &args, 1, ctx)?;
     if let Expression::Integer(n) = args[0] {
-        execute!(stdout(), MoveRight(n as u16))
-            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        execute!(stdout(), MoveRight(n as u16)).map_err(|e| {
+            RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0)
+        })?;
         Ok(Expression::None)
     } else {
         Err(RuntimeError::common(
@@ -319,8 +328,9 @@ fn cursor_save(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    execute!(stdout(), SavePosition)
-        .map_err(|_| RuntimeError::common("Failed to save cursor position".into(), _ctx.clone(), 0))?;
+    execute!(stdout(), SavePosition).map_err(|_| {
+        RuntimeError::common("Failed to save cursor position".into(), _ctx.clone(), 0)
+    })?;
     Ok(Expression::None)
 }
 
@@ -329,8 +339,9 @@ fn cursor_restore(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    execute!(stdout(), RestorePosition)
-        .map_err(|_| RuntimeError::common("Failed to restore cursor position".into(), _ctx.clone(), 0))?;
+    execute!(stdout(), RestorePosition).map_err(|_| {
+        RuntimeError::common("Failed to restore cursor position".into(), _ctx.clone(), 0)
+    })?;
     Ok(Expression::None)
 }
 

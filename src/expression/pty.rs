@@ -1,8 +1,8 @@
 use super::terminal::{TerminalOps, get_terminal_impl};
-#[cfg(unix)]
-use nix::sys::signal::{self, SigAction, SigHandler, SaFlags, SigSet};
 use crate::utils::get_current_path;
 use crate::{Environment, Expression, RuntimeErrorKind, childman};
+#[cfg(unix)]
+use nix::sys::signal::{self, SaFlags, SigAction, SigHandler, SigSet};
 use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::io::{self, Read, Write};
 use std::path::PathBuf;

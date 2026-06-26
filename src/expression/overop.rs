@@ -248,9 +248,10 @@ impl Sub for Expression {
                         Ok(Self::String("".to_owned()))
                     }
                 } else {
-                    let l = n.checked_neg().ok_or_else(|| {
-                        RuntimeErrorKind::Overflow(format!("-{n}"))
-                    })? as usize;
+                    let l = n
+                        .checked_neg()
+                        .ok_or_else(|| RuntimeErrorKind::Overflow(format!("-{n}")))?
+                        as usize;
                     if l <= m.len() {
                         Ok(Self::String(m[l..].to_string()))
                     } else {

@@ -618,7 +618,8 @@ fn group(
         Expression::Lambda(..) | Expression::Function(..) => {
             let state = &mut State::new();
             for item in list.as_ref().iter() {
-                let r = key_func.eval_apply(&key_func, std::slice::from_ref(item), state, env, 0)?;
+                let r =
+                    key_func.eval_apply(&key_func, std::slice::from_ref(item), state, env, 0)?;
 
                 let key = match r {
                     Expression::String(s) => s,

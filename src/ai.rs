@@ -95,9 +95,10 @@ impl AIClient for MockAIClient {
                         return Ok(content.clone());
                     } else if let Some(JsonValue::Array(choices)) = obj.get("choices")
                         && let Some(JsonValue::Object(choice)) = choices.first()
-                            && let Some(JsonValue::String(text)) = choice.get("text") {
-                                return Ok(text.clone());
-                            }
+                        && let Some(JsonValue::String(text)) = choice.get("text")
+                    {
+                        return Ok(text.clone());
+                    }
                 }
                 Ok("No suggestion".to_string())
             }
@@ -132,9 +133,10 @@ impl AIClient for MockAIClient {
                     if let Some(JsonValue::Array(choices)) = obj.get("choices") {
                         if let Some(JsonValue::Object(choice)) = choices.first() {
                             if let Some(JsonValue::Object(message)) = choice.get("message")
-                                && let Some(JsonValue::String(content)) = message.get("content") {
-                                    return Ok(content.clone());
-                                }
+                                && let Some(JsonValue::String(content)) = message.get("content")
+                            {
+                                return Ok(content.clone());
+                            }
                             return Ok(chat_response);
                         }
                     } else if let Some(JsonValue::String(message)) = obj.get("message") {

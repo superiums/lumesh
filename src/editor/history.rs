@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{self, Write, BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, Write};
 use std::path::Path;
 
 pub struct History {
@@ -83,7 +83,11 @@ impl History {
     }
 
     fn as_ref_saved(&self) -> Option<&str> {
-        if self.saved_line.is_empty() { None } else { Some(self.saved_line.as_str()) }
+        if self.saved_line.is_empty() {
+            None
+        } else {
+            Some(self.saved_line.as_str())
+        }
     }
 
     pub fn cancel_navigation(&mut self) -> Option<String> {
@@ -105,7 +109,9 @@ impl History {
             self.search_index = 0;
             return;
         }
-        self.search_matches = self.entries.iter()
+        self.search_matches = self
+            .entries
+            .iter()
             .enumerate()
             .filter(|(_, e)| e.contains(&self.search_query))
             .map(|(i, _)| i)
@@ -127,7 +133,9 @@ impl History {
 
     pub fn search_append(&mut self, c: char) -> Option<&str> {
         self.search_query.push(c);
-        self.search_matches = self.entries.iter()
+        self.search_matches = self
+            .entries
+            .iter()
             .enumerate()
             .filter(|(_, e)| e.contains(&self.search_query))
             .map(|(i, _)| i)
@@ -153,7 +161,9 @@ impl History {
             self.index = None;
             return self.as_ref_saved();
         }
-        self.search_matches = self.entries.iter()
+        self.search_matches = self
+            .entries
+            .iter()
             .enumerate()
             .filter(|(_, e)| e.contains(&self.search_query))
             .map(|(i, _)| i)
@@ -225,7 +235,8 @@ impl History {
     }
 
     pub fn search_entries(&self) -> Vec<String> {
-        self.search_matches.iter()
+        self.search_matches
+            .iter()
             .map(|&i| self.entries[i].clone())
             .collect()
     }
@@ -290,7 +301,10 @@ fn unescape_newlines(s: &str) -> String {
             match chars.next() {
                 Some('n') => result.push('\n'),
                 Some('\\') => result.push('\\'),
-                Some(c) => { result.push('\\'); result.push(c); }
+                Some(c) => {
+                    result.push('\\');
+                    result.push(c);
+                }
                 None => result.push('\\'),
             }
         } else {

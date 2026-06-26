@@ -112,11 +112,12 @@ fn exec_single_cmd(
     // TODO not work yet
     // 合并 stderr 和 stdout 的流
     if mode & 4 != 0
-        && let Some(mut stderr) = child.stderr.take() {
-            // if let Some(mut stdout) = child.stdout.take() {
-            std::io::copy(&mut stderr, &mut std::io::stdout()).unwrap(); // 将 stderr 合并到 stdout
-            // }
-        }
+        && let Some(mut stderr) = child.stderr.take()
+    {
+        // if let Some(mut stdout) = child.stdout.take() {
+        std::io::copy(&mut stderr, &mut std::io::stdout()).unwrap(); // 将 stderr 合并到 stdout
+        // }
+    }
 
     // 中断信号处理：SIGINT 由全局 handler 捕获（在 repl.rs 中安装），
     // 仅设置标志位，不会杀死 lume 自身。

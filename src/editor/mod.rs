@@ -5,10 +5,13 @@ mod history;
 mod key;
 mod kring;
 
-pub use editor::{Editor, Completer, Highlighter, Hinter, ReadlineError, CompletionItem, EditorTheme, Validator, ValidationResult};
+pub use buffer::LineBuffer;
+pub use editor::{
+    Completer, CompletionItem, Editor, EditorTheme, Highlighter, Hinter, ReadlineError,
+    ValidationResult, Validator,
+};
 pub use history::History;
 pub use key::{Cmd, KeyEvent};
-pub use buffer::LineBuffer;
 
 #[cfg(test)]
 mod tests {

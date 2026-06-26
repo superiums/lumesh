@@ -1705,7 +1705,12 @@ pub fn tokenize_source(input: &Str) -> Result<Vec<Token>, nom::Err<SyntaxErrorKi
     }
 
     // remove whitespace
-    token_vec.retain(|t| !matches!(t.kind, TokenKind::Whitespace | TokenKind::Comment));
+    token_vec.retain(|t| {
+        !matches!(
+            t.kind,
+            TokenKind::Whitespace | TokenKind::Comment | TokenKind::ModeTip
+        )
+    });
     normalize_linebreaks(&mut token_vec);
     Ok(token_vec)
 }

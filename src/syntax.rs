@@ -5,6 +5,7 @@ use std::collections::{BTreeMap, HashMap};
 
 use crate::{
     Diagnostic, Expression, TokenKind,
+    cmdhelper::is_valid_command,
     libs::{is_lib, is_top_or_se},
     tokenize,
 };
@@ -110,6 +111,9 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                     } else if is_lib(l) {
                         result.push_str(get_color("builtin_lib", theme));
                         is_colored = true;
+                    } else if is_valid_command(l) {
+                        result.push_str(get_color("command_valid", theme));
+                        is_colored = true;
                     } else if is_colored {
                         result.push_str(get_color("reset", theme));
                         is_colored = false;
@@ -126,6 +130,11 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
             }
             (TokenKind::Comment, w) => {
                 result.push_str(get_color("comment", theme));
+                is_colored = true;
+                result.push_str(w);
+            }
+            (TokenKind::ModeTip, w) => {
+                result.push_str(get_color("mode", theme));
                 is_colored = true;
                 result.push_str(w);
             }

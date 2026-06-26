@@ -83,10 +83,10 @@ fn parse_token_dispatch(
     }
 
     match first {
-        ' ' | '\t' => m!(whitespace, TokenKind::Whitespace),
+        ' ' | '\t' | '\0' => m!(whitespace, TokenKind::Whitespace),
 
         ';' => m!(punctuation_tag(";"), TokenKind::LineBreak),
-        #[cfg(windows)]
+        // #[cfg(windows)]
         '\r' => alt((
             map_valid_token(punctuation_tag("\r\n"), TokenKind::LineBreak), // $var
             map_valid_token(punctuation_tag("\r"), TokenKind::Whitespace),  // $ as symbol
@@ -1240,7 +1240,7 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
 
     // skip multiline mode prefix `:`
     if let Ok((new_input, (token, diagnostic))) =
-        map_valid_token(punctuation_tag(leading_char), TokenKind::Comment)(input)
+        map_valid_token(punctuation_tag(leading_char), TokenKind::ModeTip)(input)
     {
         input = new_input;
         tokens.push(token);

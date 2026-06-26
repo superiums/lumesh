@@ -1,7 +1,6 @@
 use crate::ai::{MockAIClient, init_ai};
 use crate::cmdhelper::{
     LumeCompletionType, collect_command_with_prefix, detect_completion_type, find_command_pos,
-    is_valid_command,
 };
 use crate::completion::{ParamCompleter, list_path_entries};
 use crate::editor::{
@@ -188,48 +187,17 @@ impl Highlighter for LumeHighlighter {
         if line.is_empty() {
             return String::new();
         }
-
-        let (prefix, rest) = if let Some(cmd) = line.strip_prefix(':') {
-            (":", cmd)
-        } else if let Some(cmd) = line.strip_prefix('>') {
-            (">", cmd)
-        } else {
-            ("", line)
-        };
-
-        let (cmd, rest_op) = match rest.split_once(' ') {
-            Some((a, b)) => (a, Some(b)),
-            _ => (rest, None),
-        };
-
-        let (color, is_valid) = if is_valid_command(cmd) {
-            (
-                self.theme
-                    .get("command_valid")
-                    .map_or(DEFAULT, |c| c.as_str()),
-                true,
-            )
-        } else {
-            (DEFAULT, false)
-        };
-
-        let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
-
-        match rest_op {
-            None if is_valid => format!("{pre_color}{prefix}{color}{cmd}{RESET}"),
-            None => {
-                let highlighted_line = highlight(rest, &self.theme);
-                format!("{pre_color}{prefix}{RESET}{highlighted_line}")
-            }
-            Some(rest) if is_valid => {
-                let highlighted_rest = highlight(rest, &self.theme);
-                format!("{pre_color}{prefix}{color}{cmd}{RESET} {highlighted_rest}")
-            }
-            Some(_) => {
-                let highlighted_line = highlight(rest, &self.theme);
-                format!("{pre_color}{prefix}{RESET}{highlighted_line}")
-            }
-        }
+        // if let Some(rest) = line.strip_prefix('>') {
+        //     let highlighted_line = highlight(rest, &self.theme);
+        //     let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
+        //     format!("{pre_color}>{RESET}{highlighted_line}")
+        // } else if let Some(rest) = line.strip_prefix(':') {
+        //     let highlighted_line = highlight(rest, &self.theme);
+        //     let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
+        //     format!("{pre_color}:{RESET}{highlighted_line}")
+        // } else {
+        // }
+        highlight(line, &self.theme)
     }
 
     fn highlight_char(&self, _line: &str, _pos: usize) -> bool {

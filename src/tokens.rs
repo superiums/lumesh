@@ -131,6 +131,7 @@ pub enum TokenKind {
     OperatorPostfix,
     // LineContinuation, //add linecontinue
     Comment,
+    ModeTip,
     Regex,
     Time,
 }

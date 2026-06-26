@@ -15,6 +15,7 @@ use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_en
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::rc::Rc;
+use std::str::FromStr;
 use std::sync::{Arc, Mutex};
 
 use crossterm::style::Color;
@@ -26,7 +27,6 @@ const RESET: &str = "\x1b[0m";
 struct LumeCompleter {
     ai_client: Option<Arc<MockAIClient>>,
     param_completer: Arc<ParamCompleter>,
-    theme: HashMap<String, String>,
 }
 
 impl Completer for LumeCompleter {
@@ -78,21 +78,10 @@ fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
 impl LumeCompleter {
     fn cmd_completion(&self, line: &str, pos: usize, section_start: usize) -> Vec<CompletionItem> {
         let prefix = &line[section_start..pos];
-        let cpl_color = self
-            .theme
-            .get("completion_cmd")
-            .map_or(DEFAULT, |c| c.as_str());
 
         let mut items: Vec<CompletionItem> = collect_command_with_prefix(prefix)
             .iter()
-            .map(|cmd| {
-                let display = format!("{cpl_color}{cmd}{RESET}");
-                CompletionItem::with(
-                    display,
-                    cmd.to_string(),
-                    if is_lib(cmd) { '.' } else { ' ' },
-                )
-            })
+            .map(|cmd| CompletionItem::with(cmd.to_string(), if is_lib(cmd) { '.' } else { ' ' }))
             .collect();
 
         if items.is_empty() {
@@ -104,13 +93,7 @@ impl LumeCompleter {
                                 items = lib
                                     .iter()
                                     .filter(|(f, _)| f.starts_with(func))
-                                    .map(|(cmd, _)| {
-                                        CompletionItem::with(
-                                            format!("{cpl_color}{cmd}{RESET}"),
-                                            cmd.to_string(),
-                                            '(',
-                                        )
-                                    })
+                                    .map(|(cmd, _)| CompletionItem::with(cmd.to_string(), '('))
                                     .collect();
                             }
                         });
@@ -121,9 +104,7 @@ impl LumeCompleter {
                 _ => {
                     items = get_alias_completion(prefix)
                         .into_iter()
-                        .map(|cmd| {
-                            CompletionItem::with_display(format!("{cpl_color}{cmd}{RESET}"), cmd)
-                        })
+                        .map(|cmd| CompletionItem::with(cmd, ' '))
                         .collect();
                 }
             }
@@ -162,7 +143,11 @@ impl LumeCompleter {
                     if p.replacement.ends_with("/") {
                         CompletionItem::with_display(p.display, p.replacement)
                     } else {
-                        CompletionItem::with(p.display, p.replacement, ' ')
+                        CompletionItem {
+                            display: Some(p.display),
+                            replacement: p.replacement,
+                            suffix: Some(' '),
+                        }
                     }
                 })
                 .collect();
@@ -187,16 +172,6 @@ impl Highlighter for LumeHighlighter {
         if line.is_empty() {
             return String::new();
         }
-        // if let Some(rest) = line.strip_prefix('>') {
-        //     let highlighted_line = highlight(rest, &self.theme);
-        //     let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
-        //     format!("{pre_color}>{RESET}{highlighted_line}")
-        // } else if let Some(rest) = line.strip_prefix(':') {
-        //     let highlighted_line = highlight(rest, &self.theme);
-        //     let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
-        //     format!("{pre_color}:{RESET}{highlighted_line}")
-        // } else {
-        // }
         highlight(line, &self.theme)
     }
 
@@ -334,7 +309,6 @@ pub fn run_repl(env: &mut Environment) {
     let completer = LumeCompleter {
         ai_client,
         param_completer: Arc::new(ParamCompleter::new(completion_dir)),
-        theme: theme_merged.clone(),
     };
     editor.set_completer(Box::new(completer));
 
@@ -613,23 +587,24 @@ fn parse_hot_key(modifier_str: &str, key_char: char) -> KeyEvent {
 }
 
 fn parse_color(s: &str) -> Color {
-    match s.to_lowercase().as_str() {
-        "black" => Color::Black,
-        "dark_grey" => Color::DarkGrey,
-        "red" => Color::Red,
-        "dark_red" => Color::DarkRed,
-        "green" => Color::Green,
-        "dark_green" => Color::DarkGreen,
-        "yellow" => Color::Yellow,
-        "dark_yellow" => Color::DarkYellow,
-        "blue" => Color::Blue,
-        "dark_blue" => Color::DarkBlue,
-        "magenta" => Color::Magenta,
-        "dark_magenta" => Color::DarkMagenta,
-        "cyan" => Color::Cyan,
-        "dark_cyan" => Color::DarkCyan,
-        "white" => Color::White,
-        "grey" => Color::Grey,
-        _ => Color::DarkGrey,
-    }
+    Color::from_str(s).unwrap_or(Color::Grey)
+    // match s.to_lowercase().as_str() {
+    //     "black" => Color::Black,
+    //     "dark_grey" => Color::DarkGrey,
+    //     "red" => Color::Red,
+    //     "dark_red" => Color::DarkRed,
+    //     "green" => Color::Green,
+    //     "dark_green" => Color::DarkGreen,
+    //     "yellow" => Color::Yellow,
+    //     "dark_yellow" => Color::DarkYellow,
+    //     "blue" => Color::Blue,
+    //     "dark_blue" => Color::DarkBlue,
+    //     "magenta" => Color::Magenta,
+    //     "dark_magenta" => Color::DarkMagenta,
+    //     "cyan" => Color::Cyan,
+    //     "dark_cyan" => Color::DarkCyan,
+    //     "white" => Color::White,
+    //     "grey" => Color::Grey,
+    //     _ => Color::DarkGrey,
+    // }
 }

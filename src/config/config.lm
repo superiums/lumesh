@@ -51,9 +51,15 @@ if IS_INTERACTIVE {
     #    ...
     # }
 
+    LUME_EDITOR_THEME = {
+        hint = "grey"
+        completion_bg = "green"
+        completion_fg = "green"
+        completion_selected_bg = "green"
+        completion_selected_fg = "green"
+    }
+
     # ## ---interactive---
-    # ## default repl mode
-    # LUME_VI_MODE = true
 
     # ## default strict mode
     # set LUME_STRICT = true

@@ -62,9 +62,9 @@ impl CompletionItem {
         }
     }
 
-    pub fn with(display: String, replacement: String, suffix: char) -> Self {
+    pub fn with(replacement: String, suffix: char) -> Self {
         Self {
-            display: Some(display),
+            display: None,
             replacement,
             suffix: Some(suffix),
         }

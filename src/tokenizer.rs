@@ -258,13 +258,15 @@ fn and_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
         Ctx::Word | Ctx::Number | Ctx::Letter => {
             alt((map_valid_token(punctuation_tag("&"), TokenKind::Symbol),))(input)
         } //NEVER USE
-        Ctx::Start | Ctx::Space | Ctx::Open => alt((
+        Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("&&"), TokenKind::Operator),
             map_valid_token(postfix_break_tag("&+"), TokenKind::StringRaw),
             map_valid_token(postfix_break_tag("&-"), TokenKind::StringRaw),
             map_valid_token(postfix_break_tag("&?"), TokenKind::StringRaw),
             map_valid_token(postfix_break_tag("&."), TokenKind::StringRaw),
+            map_valid_token(postfix_break_tag("&"), TokenKind::StringRaw),
         ))(input),
+        Ctx::Start  => {},
     }
 }
 

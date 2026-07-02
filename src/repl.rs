@@ -526,7 +526,14 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
                     (
                         lib.iter()
                             .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
-                            .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
+                            .map(|(f, info)| {
+                                let tip = if func.trim_end().ends_with('(') {
+                                    format!("{f}({})", info.hint.replace(' ', ","))
+                                } else {
+                                    format!("{f} {}", info.hint)
+                                };
+                                (tip, f.len())
+                            })
                             .collect::<Vec<_>>(),
                         func.len(),
                     )
@@ -539,7 +546,14 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
                     (
                         lib.iter()
                             .filter(|(f, _)| f.starts_with(segment.trim_matches(ends)))
-                            .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
+                            .map(|(f, info)| {
+                                let tip = if segment.trim_end().ends_with('(') {
+                                    format!("{f}({})", info.hint.replace(' ', ","))
+                                } else {
+                                    format!("{f} {}", info.hint)
+                                };
+                                (tip, f.len())
+                            })
                             .collect::<Vec<_>>(),
                         segment.len(),
                     )

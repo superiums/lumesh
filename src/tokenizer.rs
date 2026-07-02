@@ -266,7 +266,7 @@ fn and_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
             map_valid_token(postfix_break_tag("&."), TokenKind::StringRaw),
             map_valid_token(postfix_break_tag("&"), TokenKind::StringRaw),
         ))(input),
-        Ctx::Start  => {},
+        Ctx::Start => alt((map_valid_token(punctuation_tag("&"), TokenKind::Symbol),))(input),
     }
 }
 

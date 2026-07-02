@@ -457,9 +457,7 @@ impl ParamCompleter {
                         if entry.directives.iter().any(|d| d == "@D") {
                             return MatchType::Dir;
                         }
-                        if entry.directives.iter().any(|d| d == "@F") {
-                            return MatchType::File;
-                        }
+                        return MatchType::File;
                     }
 
                     if entry.args.iter().any(|x| x.starts_with(current_token)) {
@@ -517,9 +515,7 @@ impl ParamCompleter {
                         if entry.directives.iter().any(|d| d == "@D") {
                             return MatchType::Dir;
                         }
-                        if entry.directives.iter().any(|d| d == "@F") {
-                            return MatchType::File;
-                        }
+                        return MatchType::File;
                     }
                     // 【扩展匹配】列出长短选项，允许多次出现的，或未出现过的
                     if entry.directives.iter().any(|d| d == "@m")

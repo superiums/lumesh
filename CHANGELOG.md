@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.15.7]
+- fix tailing '&' tokenizer
+- allow file completion if no other suggestion
+
+
 ## [0.15.6]
 - improve completion color
 - clear hint after enter

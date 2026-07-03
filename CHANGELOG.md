@@ -1,9 +1,11 @@
 # Changelog
 
+## [0.15.8]
+- fix set var in block in block
+
 ## [0.15.7]
 - fix tailing '&' tokenizer
 - allow file completion if no other suggestion
-
 
 ## [0.15.6]
 - improve completion color

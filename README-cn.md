@@ -132,14 +132,14 @@ ls -1 |> cp -r _ /tmp/
 
 
 ### ⚡ 丰富的内置模块
-- **集合操作**: `List.reduce, List.map`
-- **文件系统**: `Fs.ls, Fs.read, Fs.write`
-- **字符串处理**: `String.split, String.join`、正则模块
-- **时间操作**: `Time.now, Time.format`
-- **数据转换**: `Into`, `From`
+- **集合操作**: `list.reduce, list.map`
+- **文件系统**: `fs.ls, fs.read, fs.write`
+- **字符串处理**: `string.split, string.join`、正则模块
+- **时间操作**: `time.now, time.format`
+- **数据转换**: `into`, `from`
 - **数学计算**: 完整的数学函数库
-- **日志记录**: `Log`模块
-- **UI操作**: `Ui.pick, Ui.confirm`
+- **日志记录**: `log`模块
+- **ui操作**: `ui.pick, ui.confirm`
 
 
 ### ⚡ 函数装饰器
@@ -241,6 +241,9 @@ _由于fish无法完成一百万次的任务，我们记录了其一半任务的
 - 添加常数支持：COLOR, STYLE, MATH
 - 优化函数库执行
 - 安全加固：敲门验证
+- 重写编辑器  (v0.15.0)
+- 更丰富的自动完成特性 (v0.15.4)
+- 重写词法分析器 (v0.15.5)
 ---
 
 ![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)

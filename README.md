@@ -234,7 +234,9 @@ Recent development has emphasized:
 - Support Consts：COLOR, STYLE, MATH
 - Optimize lib execution
 - Security enhance with knock_validator
-
+- Rewrite Editor  (v0.15.0)
+- More features in completions (v0.15.4)
+- Rewrite tokenizer (v0.15.5)
 ---
 
 ![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)

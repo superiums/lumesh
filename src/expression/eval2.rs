@@ -185,8 +185,12 @@ impl Expression {
                     last = expr.eval_mut(state, env, depth + 1)?;
                 }
 
+                // 退出时清理Block内新增的局部变量，保留原有局部变量
                 if is_last_local {
-                    state.set_local_vars(last_local_vars.unwrap());
+                    // 原来是：state.set_local_vars(last_local_vars.unwrap()); // 完整恢复，丢弃所有修改
+                    // 改为：只删除 Block 内新增的 key，保留已有 key 的修改
+                    let existing_keys = last_local_vars.unwrap();
+                    state.retain_local_vars(|k, _| existing_keys.contains_key(k));
                 } else {
                     state.clear_local_var();
                     state.clear(State::IN_LOCAL);

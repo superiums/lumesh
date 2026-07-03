@@ -170,6 +170,12 @@ impl State {
     pub fn take_iter(&mut self) -> Option<(String, Option<String>, usize, BoxedIterator)> {
         self.4.take()
     }
+    pub fn retain_local_vars<F>(&mut self, f: F)
+    where
+        F: FnMut(&String, &mut Expression) -> bool,
+    {
+        self.3.retain(f);
+    }
 }
 
 pub fn is_strict() -> bool {
@@ -314,6 +320,15 @@ impl Expression {
                     return Ok(Self::None);
                 }
                 Self::SetParent(name, expr) => {
+                    // 新增：先检查 local_vars 中是否有该变量
+                    if state.contains(State::IN_LOCAL) && state.has_local_var(name) {
+                        state.set(State::IN_ASSIGN);
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                        state.clear(State::IN_ASSIGN);
+                        state.set_local_var(name.to_string(), value);
+                        return Ok(Self::None);
+                    }
+                    // 检查env
                     if env.has(name) {
                         state.set(State::IN_ASSIGN);
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
@@ -352,48 +367,11 @@ impl Expression {
 
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
-                    // dbg!("assign---->", &name, &expr.type_name());
-                    // let need_clear = match expr.as_ref() {
-                    //     Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
-                    //         let is_in_pipe = state.contains(State::IN_PIPE);
-                    //         state.set(State::IN_PIPE);
-                    //         !is_in_pipe
-                    //     }
-                    //     _ => false,
-                    // };
                     state.set(State::IN_ASSIGN);
                     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                     state.clear(State::IN_ASSIGN);
 
-                    if state.contains(State::IN_LOCAL) {
-                        // if not exists, see if strict
-                        if state.contains(State::STRICT) && !state.has_local_var(name) {
-                            return Err(RuntimeError::new(
-                                RuntimeErrorKind::UndeclaredLocalVariable(name.clone()),
-                                job.clone(),
-                                depth,
-                            ));
-                        }
-                        // changes only exists
-                        state.set_local_var(name.to_string(), value);
-                        return Ok(Self::None);
-                    } else if env.has(name) {
-                        env.define(name, value.clone());
-                    } else {
-                        if state.contains(State::STRICT) {
-                            return Err(RuntimeError::new(
-                                RuntimeErrorKind::UndeclaredVariable(name.clone()),
-                                self.clone(),
-                                depth,
-                            ));
-                        }
-
-                        env.define(name, value.clone());
-                    }
-                    // if need_clear {
-                    //     state.clear(State::IN_PIPE);
-                    // }
-                    return Ok(value);
+                    return handle_assign(name, value, job, state, env, depth);
                 }
 
                 Expression::DestructureAssign(pattern, value) => {
@@ -540,8 +518,8 @@ impl Expression {
                                 let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left + right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
-                                env.define(base, left.clone());
-                                Ok(left)
+                                // env.define(base, left.clone());
+                                return handle_assign(base, left, job, state, env, depth);
                             }
                             _ => Err(RuntimeError::common(
                                 format!(
@@ -563,8 +541,7 @@ impl Expression {
                                 let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left - right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
-                                env.define(base, left.clone());
-                                Ok(left)
+                                return handle_assign(base, left, job, state, env, depth);
                             }
                             _ => Err(RuntimeError::common(
                                 format!(
@@ -586,8 +563,7 @@ impl Expression {
                                 let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left * right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
-                                env.define(base, left.clone());
-                                Ok(left)
+                                return handle_assign(base, left, job, state, env, depth);
                             }
                             _ => Err(RuntimeError::common(
                                 format!(
@@ -609,8 +585,7 @@ impl Expression {
                                 let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left / right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
-                                env.define(base, left.clone());
-                                Ok(left)
+                                return handle_assign(base, left, job, state, env, depth);
                             }
                             _ => Err(RuntimeError::common(
                                 format!(
@@ -1747,4 +1722,43 @@ fn clamp(start_int: Option<Int>, end_int: Option<Int>, step_int: Int, len: Int) 
         (start, end) = (end.clamp(0, len), start.clamp(0, len));
     }
     (start, end)
+}
+
+fn handle_assign(
+    name: &str,
+    value: Expression,
+    job: &Expression,
+    state: &mut State,
+    env: &mut Environment,
+    depth: usize,
+) -> Result<Expression, RuntimeError> {
+    if state.contains(State::IN_LOCAL) {
+        // if not exists, see if strict
+        if state.contains(State::STRICT) && !state.has_local_var(name) {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::UndeclaredLocalVariable(name.to_string()),
+                job.clone(),
+                depth,
+            ));
+        }
+        // changes only exists
+        state.set_local_var(name.to_string(), value);
+        return Ok(Expression::None);
+    } else if env.has(name) {
+        env.define(name, value.clone());
+    } else {
+        if state.contains(State::STRICT) {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::UndeclaredVariable(name.to_string()),
+                job.clone(),
+                depth,
+            ));
+        }
+
+        env.define(name, value.clone());
+    }
+    // if need_clear {
+    //     state.clear(State::IN_PIPE);
+    // }
+    Ok(value)
 }

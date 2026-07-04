@@ -129,7 +129,7 @@ if IS_INTERACTIVE {
 
     # ## ---ai---
     # ## default AI Helper settings. following is default.
-    let system_prompt = fs.read('syntax.md')
+    let syntax = fs.read('~/.config/lumesh/syntax.md')
     set LUME_AI_CONFIG = {
     #     host: 'localhost:11434',
     #     complete_url: '/completion',
@@ -137,7 +137,9 @@ if IS_INTERACTIVE {
     #     complete_max_tokens: 10,
     #     chat_max_tokens: 100,
     #     model: '',
-         system_prompt,
+    #     hint_prompt: '',
+    #     chat_prompt: '',
+         syntax,
     }
 
     # ## ---update---

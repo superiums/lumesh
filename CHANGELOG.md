@@ -3,6 +3,9 @@
 ## [0.15.9]
 - only expand wildcard in symbol, not in string
 both in cmd arg and for iteration.
+- enhanced ai completion
+`ALT + i` to got ai hint
+`CTRL + g` to get ai generate
 
 ## [0.15.8]
 - fix set var in block in block

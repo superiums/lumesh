@@ -12,6 +12,8 @@ use super::buffer::LineBuffer;
 use super::history::History;
 use super::key::{Cmd, KeyEvent};
 use super::kring::KillRing;
+use crate::ai::{AIClient, MockAIClient};
+use std::sync::{Arc, mpsc};
 
 type HotkeyFn = Box<dyn Fn(&str) -> Option<String>>;
 
@@ -136,6 +138,8 @@ pub struct Editor {
     cont_prompt_width: usize,
     show_hint: bool,
     validator: Option<Box<dyn Validator>>,
+    ai_client: Option<Arc<MockAIClient>>,
+    is_ai_hinting: bool,
 }
 
 impl Default for Editor {
@@ -173,6 +177,75 @@ impl Editor {
             cont_prompt_width: visible_width("... "),
             show_hint: false,
             validator: None,
+            ai_client: None,
+            is_ai_hinting: false,
+        }
+    }
+    pub fn set_ai_client(&mut self, client: Arc<MockAIClient>) {
+        self.ai_client = Some(client);
+    }
+
+    fn trigger_ai_hint(&mut self) {
+        let line = self.buffer.text();
+        if line.trim().is_empty() {
+            return;
+        }
+
+        if let Some(ref ai) = self.ai_client {
+            let ai = Arc::clone(ai);
+            let prompt = line.clone();
+
+            // 在后台线程调用AI，避免阻塞UI
+            let (tx, rx) = mpsc::channel();
+            std::thread::spawn(move || {
+                let result = ai.as_ref().complete(&prompt).ok();
+                let _ = tx.send(result);
+            });
+
+            // 简单等待（有超时），或者存储 rx 供下次 render 检查
+            if let Ok(Some(hint)) = rx.recv_timeout(std::time::Duration::from_secs(3)) {
+                if !hint.is_empty() {
+                    self.current_hint = Some(hint);
+                    self.is_ai_hinting = true;
+                }
+            }
+        }
+    }
+
+    fn trigger_ai_replace(&mut self) {
+        let line = self.buffer.text();
+        if line.trim().is_empty() {
+            return;
+        }
+
+        // 显示等待状态（临时 hint）
+        self.current_hint = Some(" [AI thinking...]".to_string());
+        self.is_ai_hinting = true;
+        let _ = self.render(); // 立即渲染一次
+
+        if let Some(ref ai) = self.ai_client {
+            let ai = Arc::clone(ai);
+            let prompt = line.clone();
+
+            let (tx, rx) = mpsc::channel();
+            std::thread::spawn(move || {
+                // is_completion = false，使用 chat 模式，system_prompt 为 "You are a Lumesh script coder."
+                let result = ai.chat(false, &prompt).ok();
+                let _ = tx.send(result);
+            });
+
+            if let Ok(Some(result)) = rx.recv_timeout(std::time::Duration::from_secs(10)) {
+                let clean = result.trim().to_string();
+                if !clean.is_empty() {
+                    // 替换 buffer 内容
+                    self.buffer.set_text(&clean);
+                    self.buffer.move_to_end();
+                    // 清除 hint 状态
+                    self.is_ai_hinting = false;
+                    self.current_hint = None;
+                    self.show_hint = false;
+                }
+            }
         }
     }
 
@@ -343,10 +416,12 @@ impl Editor {
                     self.leave_completion();
                 }
                 KeyEvent::Char(' ') => {
+                    self.is_ai_hinting = false;
                     self.show_hint = true;
                     self.handle_space();
                 }
                 KeyEvent::Char(c) | KeyEvent::Shift(c) => {
+                    self.is_ai_hinting = false;
                     self.show_hint = true;
                     self.leave_completion();
                     self.buffer.insert(c);
@@ -364,11 +439,18 @@ impl Editor {
                 KeyEvent::Ctrl('s') => {
                     // May want to add Ctrl+S binding later
                 }
+                KeyEvent::Ctrl('g') => {
+                    self.trigger_ai_replace();
+                }
+                KeyEvent::Alt('i') => {
+                    self.trigger_ai_hint();
+                }
                 KeyEvent::Ctrl('l') => {
                     let _ = terminal::Clear(ClearType::All);
                     self.prompt_row = 0;
                 }
                 KeyEvent::Enter => {
+                    self.is_ai_hinting = false;
                     self.current_hint = None;
                     self.show_hint = false;
                     if matches!(self.mode, EditorMode::Multiline) {
@@ -399,6 +481,7 @@ impl Editor {
                     self.handle_backtab();
                 }
                 KeyEvent::Backspace => {
+                    self.is_ai_hinting = false;
                     self.leave_completion();
                     self.buffer.backspace();
                 }
@@ -820,6 +903,10 @@ impl Editor {
                 if let Some(ref hint) = self.current_hint.clone() {
                     let clean = strip_ansi(hint);
                     self.buffer.insert_str(&clean);
+
+                    if self.is_ai_hinting {
+                        self.current_hint = None;
+                    }
                 }
                 self.leave_completion();
             }
@@ -842,6 +929,17 @@ impl Editor {
                         }
                     };
                     self.buffer.insert_str(&word);
+
+                    // AI hint 模式：更新剩余部分而不是丢弃整个 hint
+                    if self.is_ai_hinting {
+                        let remaining = clean[word.len()..].to_string();
+                        if remaining.is_empty() {
+                            self.is_ai_hinting = false;
+                            self.current_hint = None;
+                        } else {
+                            self.current_hint = Some(remaining);
+                        }
+                    }
                 }
                 self.leave_completion();
             }
@@ -1111,17 +1209,27 @@ impl Editor {
         let cursor_col = (total_col % vis_width) as u16;
 
         // Cache and render hint at cursor position
-        self.current_hint = None;
-        if self.show_hint
-            && let Some(ref hinter) = self.hinter
-            && let Some(hint) = hinter.hint(&line, byte_cursor)
-        {
-            self.current_hint = Some(hint.clone());
+        // 如果不是 AI hint，才清空（AI hint 需要跨 render 保留）
+        if !self.is_ai_hinting {
+            self.current_hint = None;
+            if self.show_hint
+                && let Some(ref hinter) = self.hinter
+                && let Some(hint) = hinter.hint(&line, byte_cursor)
+            {
+                // hinter 有结果时覆盖 AI hint
+                // self.is_ai_hinting = false;
+                self.current_hint = Some(hint.clone());
+            }
+        }
+
+        // 统一显示 current_hint（无论来源）
+        if let Some(ref hint) = self.current_hint.clone() {
+            let display = strip_ansi(hint); // AI 返回内容可能含 ANSI，统一清除
             queue!(
                 stdout,
                 MoveTo(cursor_col, cursor_row),
                 SetForegroundColor(self.theme.hint_color),
-                Print(&hint),
+                Print(&display),
                 ResetColor
             )
             .map_err(ReadlineError::Io)?;

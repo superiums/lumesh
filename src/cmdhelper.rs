@@ -148,14 +148,14 @@ pub enum LumeCompletionType {
     Path,
     Command,
     Param,
-    AI,
+    // AI,
     None,
 }
 
 pub fn detect_completion_type(
     line: &str,
     pos: usize,
-    ai_avaluable: bool,
+    // ai_avaluable: bool,
 ) -> (LumeCompletionType, usize) {
     // Early exit for empty lines
     if line.is_empty() || pos == 0 {
@@ -171,9 +171,9 @@ pub fn detect_completion_type(
     }
 
     // Check AI completion with new trigger logic
-    if ai_avaluable && should_trigger_ai(prefix) {
-        return (LumeCompletionType::AI, pos);
-    }
+    // if ai_avaluable && should_trigger_ai(prefix) {
+    //     return (LumeCompletionType::AI, pos);
+    // }
 
     // Extract command section once and reuse
     let command_pos = find_command_pos(prefix);
@@ -261,7 +261,7 @@ fn is_after_command_word(command_section: &str) -> bool {
     }
 }
 
-fn should_trigger_ai(prefix: &str) -> bool {
-    // Trigger AI completion with double space
-    prefix.starts_with("  ") && !prefix.trim().is_empty()
-}
+// fn should_trigger_ai(prefix: &str) -> bool {
+//     // Trigger AI completion with double space
+//     prefix.starts_with("  ") && !prefix.trim().is_empty()
+// }

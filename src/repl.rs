@@ -1,4 +1,4 @@
-use crate::ai::{MockAIClient, init_ai};
+use crate::ai::init_ai;
 use crate::cmdhelper::{
     LumeCompletionType, collect_command_with_prefix, detect_completion_type, find_command_pos,
 };
@@ -25,13 +25,12 @@ const GREEN_BOLD: &str = "\x1b[1;32m";
 const RESET: &str = "\x1b[0m";
 
 struct LumeCompleter {
-    ai_client: Option<Arc<MockAIClient>>,
     param_completer: Arc<ParamCompleter>,
 }
 
 impl Completer for LumeCompleter {
     fn complete(&self, line: &str, pos: usize) -> Vec<CompletionItem> {
-        match detect_completion_type(line, pos, self.ai_client.is_some()) {
+        match detect_completion_type(line, pos) {
             (LumeCompletionType::Path, _) => complete_path(line, pos),
             (LumeCompletionType::Command, section_pos) => {
                 self.cmd_completion(line, pos, section_pos)
@@ -39,7 +38,7 @@ impl Completer for LumeCompleter {
             (LumeCompletionType::Param, section_pos) => {
                 self.param_completion(line, pos, section_pos)
             }
-            (LumeCompletionType::AI, section_pos) => self.ai_completion(line, section_pos),
+            // (LumeCompletionType::AI, section_pos) => self.ai_completion(line, section_pos),
             (LumeCompletionType::None, _) => Vec::new(),
         }
     }
@@ -154,11 +153,6 @@ impl LumeCompleter {
             items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
             return items;
         }
-        Vec::new()
-    }
-
-    fn ai_completion(&self, _line: &str, _pos: usize) -> Vec<CompletionItem> {
-        // AI completion is not handled through the tab completion path currently
         Vec::new()
     }
 }
@@ -304,10 +298,14 @@ pub fn run_repl(env: &mut Environment) {
     // =======create editor=======
     let mut editor = Editor::new();
 
-    // Set up completer
+    // ai hinter
     let ai_client = ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
+    if let Some(ref ai) = ai_client {
+        editor.set_ai_client(Arc::clone(ai));
+    }
+
+    // Set up completer
     let completer = LumeCompleter {
-        ai_client,
         param_completer: Arc::new(ParamCompleter::new(completion_dir)),
     };
     editor.set_completer(Box::new(completer));

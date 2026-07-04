@@ -297,26 +297,28 @@ impl Expression {
                 // let iterator = items.iter().cloned();
                 execute_iteration(var, index_name, iterator, size, body, state, env, depth)
             }
+            Expression::Symbol(str) if str.contains('*') => {
+                let s = expand_home(str.as_ref());
+
+                let owned_items: Vec<Expression> = glob_expand(&s)
+                    .into_iter()
+                    .map(Expression::String)
+                    .collect();
+                let size = owned_items.len();
+                let iterator = BoxedIterator::Vec(owned_items.into_iter());
+                execute_iteration(var, index_name, iterator, size, body, state, env, depth)
+            }
             Expression::String(str) => {
                 let s = expand_home(str.as_ref());
-                if s.contains('*') {
-                    let owned_items: Vec<Expression> = glob_expand(&s)
-                        .into_iter()
-                        .map(Expression::String)
-                        .collect();
-                    let size = owned_items.len();
-                    let iterator = BoxedIterator::Vec(owned_items.into_iter());
-                    execute_iteration(var, index_name, iterator, size, body, state, env, depth)
-                } else {
-                    let owned_items: Vec<Expression> = ifs_split(&s, env)
-                        .into_iter()
-                        .map(Expression::String)
-                        .collect();
-                    let size = owned_items.len();
 
-                    let iterator = BoxedIterator::Vec(owned_items.into_iter());
-                    execute_iteration(var, index_name, iterator, size, body, state, env, depth)
-                }
+                let owned_items: Vec<Expression> = ifs_split(&s, env)
+                    .into_iter()
+                    .map(Expression::String)
+                    .collect();
+                let size = owned_items.len();
+
+                let iterator = BoxedIterator::Vec(owned_items.into_iter());
+                execute_iteration(var, index_name, iterator, size, body, state, env, depth)
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::ForNonList(list_excuted),

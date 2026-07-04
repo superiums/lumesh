@@ -277,11 +277,11 @@ fn star_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, D
         }
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("*="), TokenKind::Operator),
-            map_valid_token(path_tag("**/", true), TokenKind::StringRaw), // **/ path
-            map_valid_token(path_tag("*/", true), TokenKind::StringRaw),  // */ path
-            map_valid_token(path_tag("*.", true), TokenKind::StringRaw),  // *. path
+            map_valid_token(path_tag("**/", true), TokenKind::Symbol), // **/ path as symbo, to match wildcard
+            map_valid_token(path_tag("*/", true), TokenKind::Symbol),  // */ path
+            map_valid_token(path_tag("*.", true), TokenKind::Symbol),  // *. path
             map_valid_token(operator_tag("*"), TokenKind::Operator),
-            map_valid_token(last_path_tag("*"), TokenKind::StringRaw), // `ls *` path at end
+            map_valid_token(last_path_tag("*"), TokenKind::Symbol), // `ls *` path at end
         ))(input),
     }
 }
@@ -294,9 +294,9 @@ fn tiled_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(operator_tag("~:"), TokenKind::Operator),
             // map_valid_token(operator_tag("~="), TokenKind::Operator),
-            map_valid_token(path_tag("~/", true), TokenKind::StringRaw), // ~/ path
-            map_valid_token(last_path_tag("~"), TokenKind::StringRaw),   // `ls ~` path at end
-                                                                         // map_valid_token(postfix_break_tag("~"), TokenKind::Operator), // reverse?
+            map_valid_token(path_tag("~/", true), TokenKind::Symbol), // ~/ path as symbo, to match wildcard
+            map_valid_token(last_path_tag("~"), TokenKind::StringRaw), // `ls ~` path at end
+                                                                      // map_valid_token(postfix_break_tag("~"), TokenKind::Operator), // reverse?
         ))(input),
     }
 }
@@ -308,8 +308,8 @@ fn slash_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
         } //divide
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(punctuation_tag("/="), TokenKind::Operator),
-            map_valid_token(path_tag("/", false), TokenKind::StringRaw), // /x path
-            map_valid_token(last_path_tag("/"), TokenKind::StringRaw),   // `ls /` path at end
+            map_valid_token(path_tag("/", false), TokenKind::Symbol), // /x path as symbo, to match wildcard
+            map_valid_token(last_path_tag("/"), TokenKind::StringRaw), // `ls /` path at end
             map_valid_token(postfix_break_tag("/"), TokenKind::Operator), // divide
         ))(input),
     }
@@ -332,8 +332,8 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
             map_valid_token(prefix_range_tag(".."), TokenKind::OperatorPrefix),  // ..b range
             number_literal,                                                      //.5
             map_valid_token(prefix_tag("."), TokenKind::OperatorPrefix),         //.pipemethod
-            map_valid_token(path_tag("../", true), TokenKind::StringRaw),
-            map_valid_token(path_tag("./", true), TokenKind::StringRaw),
+            map_valid_token(path_tag("../", true), TokenKind::Symbol), //path as symbo, to match wildcard
+            map_valid_token(path_tag("./", true), TokenKind::Symbol),
             // eager eat, must bellow others
             map_valid_token(punct_seq_tag(".."), TokenKind::Operator), // ..+ customOp
             map_valid_token(postfix_break_tag(".."), TokenKind::StringRaw), // parent path

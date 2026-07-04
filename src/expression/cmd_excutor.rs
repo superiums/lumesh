@@ -252,9 +252,7 @@ pub fn handle_command(
         // dbg!("     4.--->evaluated_arg:", &e_arg, e_arg.type_name());
 
         match e_arg {
-            Expression::Symbol(s) => cmd_args.push(s),
-            Expression::String(st) => {
-                let s = expand_home(&st).to_string();
+            Expression::Symbol(s) => {
                 if s.contains('*') {
                     let mut matched = false;
                     if let Ok(g) = glob(&s) {
@@ -272,17 +270,22 @@ pub fn handle_command(
                         // cmd_args.push(s);
                     }
                 } else {
-                    // 分割多参数字符串
-                    if ifs_contains(IFS_CMD, env) {
-                        let ifs = env.get("IFS");
-                        let sp = match &ifs {
-                            Some(Expression::String(fs)) => s.split_terminator(fs.as_str()),
-                            _ => s.split_terminator("\n"),
-                        };
-                        sp.for_each(|v| cmd_args.push(v.to_string()));
-                    } else {
-                        cmd_args.push(s.to_string())
-                    }
+                    cmd_args.push(s)
+                }
+            }
+            Expression::String(st) => {
+                let s = expand_home(&st).to_string();
+
+                // 分割多参数字符串
+                if ifs_contains(IFS_CMD, env) {
+                    let ifs = env.get("IFS");
+                    let sp = match &ifs {
+                        Some(Expression::String(fs)) => s.split_terminator(fs.as_str()),
+                        _ => s.split_terminator("\n"),
+                    };
+                    sp.for_each(|v| cmd_args.push(v.to_string()));
+                } else {
+                    cmd_args.push(s.to_string())
                 }
             }
             Expression::List(ls) => {

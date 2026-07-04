@@ -82,8 +82,8 @@ impl MockAIClient {
 impl AIClient for MockAIClient {
     fn complete(&self, prompt: &str) -> Result<String, Error> {
         let json_string = format!(
-            r#"{{"model": "{}", "max_tokens": {},"prompt": "{}"}}"#,
-            &self.model, self.complete_max_tokens, prompt
+            r#"{{"model": "{}", "max_tokens": {},"system_prompt": "{}","prompt": "{}"}}"#,
+            &self.model, self.complete_max_tokens, self.system_prompt, prompt
         );
 
         let completion_response = self.send_request(&self.complete_url, &json_string)?;

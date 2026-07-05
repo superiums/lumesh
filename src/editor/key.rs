@@ -18,6 +18,7 @@ pub enum KeyEvent {
     Tab,
     BackTab,
     Backspace,
+    CtrlBackspace,
     Delete,
     Escape,
     Left,
@@ -77,7 +78,13 @@ impl From<CTermKeyEvent> for KeyEvent {
                     KeyEvent::Tab
                 }
             }
-            KeyCode::Backspace => KeyEvent::Backspace,
+            KeyCode::Backspace => {
+                if ctrl {
+                    KeyEvent::CtrlBackspace
+                } else {
+                    KeyEvent::Backspace
+                }
+            }
             KeyCode::Delete => KeyEvent::Delete,
             KeyCode::Esc => KeyEvent::Escape,
             KeyCode::Left => KeyEvent::Left,

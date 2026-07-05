@@ -1,22 +1,19 @@
-use std::collections::HashMap;
-use std::io::{self, Write, stdout};
-
-use crossterm::cursor::MoveTo;
-use crossterm::event::{Event, KeyEventKind, read};
-use crossterm::queue;
-use crossterm::style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor};
-use crossterm::terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
-use unicode_width::UnicodeWidthChar;
-
 use super::buffer::LineBuffer;
 use super::history::History;
 use super::key::{Cmd, KeyEvent};
 use super::kring::KillRing;
 use crate::ai::{AIClient, MockAIClient};
+use crossterm::cursor::MoveTo;
+use crossterm::event::{Event, KeyEventKind, read};
+use crossterm::queue;
+use crossterm::style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor};
+use crossterm::terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
+use std::collections::HashMap;
+use std::io::{self, Write, stdout};
 use std::sync::{Arc, mpsc};
+use unicode_width::UnicodeWidthChar;
 
 type HotkeyFn = Box<dyn Fn(&str) -> Option<String>>;
-
 const MAX_POPUP_HEIGHT: usize = 10;
 
 #[derive(Debug, Clone)]
@@ -55,7 +52,6 @@ impl CompletionItem {
             suffix: None,
         }
     }
-
     pub fn with_display(display: String, replacement: String) -> Self {
         Self {
             display: Some(display),
@@ -63,7 +59,6 @@ impl CompletionItem {
             suffix: None,
         }
     }
-
     pub fn with(replacement: String, suffix: char) -> Self {
         Self {
             display: None,
@@ -71,7 +66,6 @@ impl CompletionItem {
             suffix: Some(suffix),
         }
     }
-
     pub fn display_text(&self) -> &str {
         self.display.as_deref().unwrap_or(&self.replacement)
     }
@@ -80,12 +74,10 @@ impl CompletionItem {
 pub trait Completer {
     fn complete(&self, line: &str, pos: usize) -> Vec<CompletionItem>;
 }
-
 pub trait Highlighter {
     fn highlight(&self, line: &str) -> String;
     fn highlight_char(&self, line: &str, pos: usize) -> bool;
 }
-
 pub trait Hinter {
     fn hint(&self, line: &str, pos: usize) -> Option<String>;
 }
@@ -181,6 +173,7 @@ impl Editor {
             is_ai_hinting: false,
         }
     }
+
     pub fn set_ai_client(&mut self, client: Arc<MockAIClient>) {
         self.ai_client = Some(client);
     }
@@ -190,19 +183,14 @@ impl Editor {
         if line.trim().is_empty() {
             return;
         }
-
         if let Some(ref ai) = self.ai_client {
             let ai = Arc::clone(ai);
             let prompt = line.clone();
-
-            // 在后台线程调用AI，避免阻塞UI
             let (tx, rx) = mpsc::channel();
             std::thread::spawn(move || {
                 let result = ai.as_ref().complete(&prompt).ok();
                 let _ = tx.send(result);
             });
-
-            // 简单等待（有超时），或者存储 rx 供下次 render 检查
             if let Ok(Some(hint)) = rx.recv_timeout(std::time::Duration::from_secs(3)) {
                 if !hint.is_empty() {
                     self.current_hint = Some(hint);
@@ -210,10 +198,9 @@ impl Editor {
                 }
             }
         } else {
-            // 显示状态（临时 hint）
             self.current_hint = Some(" [AI NOT enabled]".to_string());
             self.is_ai_hinting = true;
-            let _ = self.render(); // 立即渲染一次
+            let _ = self.render();
         }
     }
 
@@ -222,37 +209,28 @@ impl Editor {
         if line.trim().is_empty() {
             return;
         }
-
         if self.ai_client.is_some() {
-            // 显示等待状态（临时 hint）
             self.current_hint = Some(" [AI thinking...]".to_string());
             self.is_ai_hinting = true;
-            let _ = self.render(); // 立即渲染一次
+            let _ = self.render();
         } else {
-            // 显示状态（临时 hint）
             self.current_hint = Some(" [AI NOT enabled]".to_string());
             self.is_ai_hinting = true;
-            let _ = self.render(); // 立即渲染一次
+            let _ = self.render();
         }
-
         if let Some(ref ai) = self.ai_client {
             let ai = Arc::clone(ai);
             let prompt = line.clone();
-
             let (tx, rx) = mpsc::channel();
             std::thread::spawn(move || {
-                // is_completion = false，使用 chat 模式，system_prompt 为 "You are a Lumesh script coder."
                 let result = ai.chat(false, &prompt).ok();
                 let _ = tx.send(result);
             });
-
             if let Ok(Some(result)) = rx.recv_timeout(std::time::Duration::from_secs(10)) {
                 let clean = result.trim().to_string();
                 if !clean.is_empty() {
-                    // 替换 buffer 内容
                     self.buffer.set_text(&clean);
                     self.buffer.move_to_end();
-                    // 清除 hint 状态
                     self.is_ai_hinting = false;
                     self.current_hint = None;
                     self.show_hint = false;
@@ -264,32 +242,26 @@ impl Editor {
     pub fn set_theme(&mut self, theme: EditorTheme) {
         self.theme = theme;
     }
-
     pub fn set_cont_prompt(&mut self, prompt: &str) {
         self.cont_prompt = prompt.to_string();
         self.cont_prompt_width = visible_width(&self.cont_prompt);
     }
-
     pub fn cont_prompt(&self) -> &str {
         &self.cont_prompt
     }
-
     pub fn set_validator(&mut self, validator: Box<dyn Validator>) {
         self.validator = Some(validator);
     }
 
     fn should_accept(&self) -> bool {
         let text = self.buffer.text();
-
         if text.ends_with("\n\n") {
             return true;
         }
-
         let trimmed = text.trim_end();
         if trimmed.ends_with('\\') && !trimmed.ends_with("\\\\") {
             return false;
         }
-
         match self.validator {
             Some(ref validator) => validator.validate(&text) == ValidationResult::Valid,
             None => true,
@@ -299,38 +271,30 @@ impl Editor {
     pub fn set_completer(&mut self, completer: Box<dyn Completer>) {
         self.completer = Some(completer);
     }
-
     pub fn set_highlighter(&mut self, highlighter: Box<dyn Highlighter>) {
         self.highlighter = Some(highlighter);
     }
-
     pub fn set_hinter(&mut self, hinter: Box<dyn Hinter>) {
         self.hinter = Some(hinter);
     }
-
     pub fn set_abbreviations(&mut self, abbrs: HashMap<String, String>) {
         self.abbreviations = abbrs;
     }
-
     pub fn set_sudo_cmd(&mut self, cmd: &str) {
         self.sudo_cmd = cmd.to_string();
     }
-
     pub fn bind_sequence(&mut self, key: KeyEvent, cmd: Cmd) {
         self.custom_bindings.insert(key, cmd);
     }
-
     pub fn bind_hotkey_fn<F>(&mut self, key: KeyEvent, f: F)
     where
         F: Fn(&str) -> Option<String> + 'static,
     {
         self.hotkey_fns.insert(key, Box::new(f));
     }
-
     pub fn history_mut(&mut self) -> &mut History {
         &mut self.history
     }
-
     pub fn history(&self) -> &History {
         &self.history
     }
@@ -339,16 +303,13 @@ impl Editor {
         enable_raw_mode().map_err(ReadlineError::Io)?;
         let _ = write!(stdout(), "\x1b[?2004h");
         let _ = stdout().flush();
-
         let (w, h) = size().unwrap_or((80, 24));
         self.terminal_width = w;
         self.terminal_height = h;
-
         self.prompt_row = 0;
         if let Ok((_col, row)) = crossterm::cursor::position() {
             self.prompt_row = row;
         }
-
         self.prompt = prompt.to_string();
         self.prompt_width = visible_width(&self.prompt);
         self.buffer = LineBuffer::new();
@@ -357,13 +318,10 @@ impl Editor {
         self.init_search_pos = 0;
         self.current_hint = None;
         self.show_hint = false;
-
         let result = self.event_loop();
-
         if result.is_ok() {
             let _ = write!(stdout(), "\r\n");
         }
-
         let _ = write!(stdout(), "\x1b[?2004l");
         let _ = stdout().flush();
         let _ = disable_raw_mode();
@@ -373,17 +331,16 @@ impl Editor {
     fn event_loop(&mut self) -> Result<String, ReadlineError> {
         loop {
             self.render()?;
-
             let event = self.read_event()?;
 
-            // Completion mode: handle events
+            // 1. Completion mode intercepts first
             if matches!(self.mode, EditorMode::CompletionSelect { .. })
                 && self.try_completion_event(&event)
             {
                 continue;
             }
 
-            // Check hotkey function bindings first (for function/lambda values)
+            // 2. Hotkey function bindings
             if let Some(f) = self.hotkey_fns.get(&event) {
                 self.buffer.insert_str("\n");
                 let result = f(&self.buffer.text());
@@ -396,7 +353,7 @@ impl Editor {
                 continue;
             }
 
-            // Check custom bindings
+            // 3. Custom bindings
             let custom_cmd = self.custom_bindings.get(&event).cloned();
             if let Some(cmd) = custom_cmd {
                 match cmd {
@@ -404,9 +361,7 @@ impl Editor {
                         self.buffer.insert_str(s);
                         self.leave_completion();
                     }
-                    Cmd::AcceptLine => {
-                        return self.accept_line();
-                    }
+                    Cmd::AcceptLine => return self.accept_line(),
                     Cmd::Noop => {}
                     ref c => {
                         self.leave_completion();
@@ -416,9 +371,8 @@ impl Editor {
                 continue;
             }
 
-            self.show_hint = false;
-
-            match event {
+            // 4. Global events — 与模式无关，统一处理
+            match &event {
                 KeyEvent::Paste(text) => {
                     let normalized = text.replace("\r\n", "\n").replace('\r', "\n");
                     self.buffer.insert_str(&normalized);
@@ -427,20 +381,7 @@ impl Editor {
                     }
                     self.leave_completion();
                 }
-                KeyEvent::Char(' ') => {
-                    self.is_ai_hinting = false;
-                    self.show_hint = true;
-                    self.handle_space();
-                }
-                KeyEvent::Char(c) | KeyEvent::Shift(c) => {
-                    self.is_ai_hinting = false;
-                    self.show_hint = true;
-                    self.leave_completion();
-                    self.buffer.insert(c);
-                }
-                KeyEvent::Ctrl('c') => {
-                    return Err(ReadlineError::Interrupted);
-                }
+                KeyEvent::Ctrl('c') => return Err(ReadlineError::Interrupted),
                 KeyEvent::Ctrl('d') => {
                     if self.buffer.is_empty() {
                         return Err(ReadlineError::Eof);
@@ -448,13 +389,7 @@ impl Editor {
                     self.buffer.delete();
                     self.leave_completion();
                 }
-                KeyEvent::Ctrl('s') => {
-                    // May want to add Ctrl+S binding later
-                }
-                KeyEvent::Ctrl('g') => {
-                    self.trigger_ai_replace();
-                }
-                KeyEvent::AltEnter => {
+                KeyEvent::Ctrl('g') | KeyEvent::AltEnter => {
                     self.trigger_ai_replace();
                 }
                 KeyEvent::Alt('i') => {
@@ -464,107 +399,169 @@ impl Editor {
                     let _ = terminal::Clear(ClearType::All);
                     self.prompt_row = 0;
                 }
-                KeyEvent::Enter => {
-                    self.is_ai_hinting = false;
-                    self.current_hint = None;
-                    self.show_hint = false;
-                    if matches!(self.mode, EditorMode::Multiline) {
-                        if self.buffer.cursor_on_empty_line() {
-                            return self.accept_line();
-                        }
-                        let indent = self.buffer.current_line_indent();
-                        self.buffer.insert('\n');
-                        if !indent.is_empty() {
-                            self.buffer.insert_str(&indent);
-                        }
-                    } else if self.should_accept() {
-                        let _ = self.render(); //clear hint
-                        return self.accept_line();
-                    } else {
-                        let indent = self.buffer.current_line_indent();
-                        self.buffer.insert('\n');
-                        if !indent.is_empty() {
-                            self.buffer.insert_str(&indent);
-                        }
-                        self.mode = EditorMode::Multiline;
-                    }
-                }
+                // KeyEvent::Backspace => {
+                //     self.is_ai_hinting = false;
+                //     self.leave_completion();
+                //     self.buffer.backspace();
+                //     true
+                // }
+                // KeyEvent::Delete => {
+                //     self.leave_completion();
+                //     self.buffer.delete();
+                //     true
+                // }
                 KeyEvent::Tab => {
                     self.handle_tab();
                 }
                 KeyEvent::BackTab => {
                     self.handle_backtab();
                 }
-                KeyEvent::Backspace => {
-                    self.is_ai_hinting = false;
-                    self.leave_completion();
-                    self.buffer.backspace();
-                }
-                KeyEvent::Delete => {
-                    self.leave_completion();
-                    self.buffer.delete();
-                }
-                KeyEvent::Left => {
-                    self.leave_completion();
-                    self.buffer.move_left();
-                }
-                KeyEvent::Right => {
-                    self.leave_completion();
-                    self.buffer.move_right();
-                }
-                KeyEvent::Up => {
-                    self.leave_completion();
-                    if matches!(self.mode, EditorMode::Multiline) {
-                        self.move_cursor_up();
-                    } else if let Some(entry) = self.history.previous(&self.buffer.text()) {
-                        self.buffer.set_text(entry);
-                        self.buffer.move_to_end();
-                        self.set_normal_mode();
-                    }
-                }
-                KeyEvent::Down => {
-                    self.leave_completion();
-                    if matches!(self.mode, EditorMode::Multiline) {
-                        self.move_cursor_down();
-                    } else if let Some(entry) = self.history.next(&self.buffer.text()) {
-                        self.buffer.set_text(entry);
-                        self.buffer.move_to_end();
-                        self.set_normal_mode();
-                    }
-                }
-                KeyEvent::Home => {
-                    self.leave_completion();
-                    if matches!(self.mode, EditorMode::Multiline) {
-                        self.buffer.move_to_line_start();
-                    } else {
-                        self.buffer.move_to_start();
-                    }
-                }
-                KeyEvent::End => {
-                    self.leave_completion();
-                    if matches!(self.mode, EditorMode::Multiline) {
-                        self.buffer.move_to_line_end();
-                    } else {
-                        self.buffer.move_to_end();
-                    }
-                }
                 KeyEvent::Escape => {
-                    if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
-                        self.set_normal_mode();
-                    } else if matches!(self.mode, EditorMode::Multiline) {
+                    // CompletionSelect 已在步骤1处理，此处只需处理 Multiline
+                    if matches!(self.mode, EditorMode::Multiline) {
                         self.mode = EditorMode::Normal;
                     }
                 }
                 _ => {
-                    self.handle_other_events(event);
+                    // 5. 模式分发
+                    self.show_hint = false;
+                    let accepted = match self.mode.clone() {
+                        EditorMode::Multiline => self.handle_multiline_event(event)?,
+                        _ => self.handle_normal_event(event)?,
+                    };
+                    if accepted {
+                        return self.accept_line();
+                    }
                 }
-            }
+            };
         }
     }
 
+    /// Normal 模式下的按键处理。返回 true 表示接受输入。
+    fn handle_normal_event(&mut self, event: KeyEvent) -> Result<bool, ReadlineError> {
+        match event {
+            KeyEvent::Char(' ') => {
+                self.is_ai_hinting = false;
+                self.show_hint = true;
+                self.handle_space();
+            }
+            KeyEvent::Char(c) | KeyEvent::Shift(c) => {
+                self.is_ai_hinting = false;
+                self.show_hint = true;
+                self.leave_completion();
+                self.buffer.insert(c);
+            }
+            KeyEvent::Enter => {
+                self.is_ai_hinting = false;
+                self.current_hint = None;
+                self.show_hint = false;
+                if self.should_accept() {
+                    let _ = self.render(); // 清除 hint 后再接受
+                    return Ok(true);
+                } else {
+                    let indent = self.buffer.current_line_indent();
+                    self.buffer.insert('\n');
+                    if !indent.is_empty() {
+                        self.buffer.insert_str(&indent);
+                    }
+                    self.mode = EditorMode::Multiline;
+                }
+            }
+            KeyEvent::Up => {
+                self.leave_completion();
+                if let Some(entry) = self.history.previous(&self.buffer.text()) {
+                    self.buffer.set_text(entry);
+                    self.buffer.move_to_end();
+                    self.set_normal_mode();
+                }
+            }
+            KeyEvent::Down => {
+                self.leave_completion();
+                if let Some(entry) = self.history.next(&self.buffer.text()) {
+                    self.buffer.set_text(entry);
+                    self.buffer.move_to_end();
+                    self.set_normal_mode();
+                }
+            }
+            KeyEvent::Home => {
+                self.leave_completion();
+                self.buffer.move_to_start();
+            }
+            KeyEvent::End => {
+                self.leave_completion();
+                self.buffer.move_to_end();
+            }
+            // KeyEvent::Left => {
+            //     self.leave_completion();
+            //     self.buffer.move_left();
+            // }
+            // KeyEvent::Right => {
+            //     self.leave_completion();
+            //     self.buffer.move_right();
+            // }
+            _ => self.handle_other_events(event),
+        }
+        Ok(false)
+    }
+
+    /// Multiline 模式下的按键处理。返回 true 表示接受输入。
+    fn handle_multiline_event(&mut self, event: KeyEvent) -> Result<bool, ReadlineError> {
+        match event {
+            KeyEvent::Char(' ') => {
+                self.is_ai_hinting = false;
+                self.show_hint = true;
+                self.handle_space();
+            }
+            KeyEvent::Char(c) | KeyEvent::Shift(c) => {
+                self.is_ai_hinting = false;
+                self.show_hint = true;
+                self.leave_completion();
+                self.buffer.insert(c);
+            }
+            KeyEvent::Enter => {
+                self.is_ai_hinting = false;
+                self.current_hint = None;
+                self.show_hint = false;
+                if self.buffer.cursor_on_empty_line() {
+                    return Ok(true);
+                }
+                let indent = self.buffer.current_line_indent();
+                self.buffer.insert('\n');
+                if !indent.is_empty() {
+                    self.buffer.insert_str(&indent);
+                }
+            }
+            KeyEvent::Up => {
+                self.leave_completion();
+                self.move_cursor_up();
+            }
+            KeyEvent::Down => {
+                self.leave_completion();
+                self.move_cursor_down();
+            }
+            KeyEvent::Home => {
+                self.leave_completion();
+                self.buffer.move_to_line_start();
+            }
+            KeyEvent::End => {
+                self.leave_completion();
+                self.buffer.move_to_line_end();
+            }
+            // KeyEvent::Left => {
+            //     self.leave_completion();
+            //     self.buffer.move_left();
+            // }
+            // KeyEvent::Right => {
+            //     self.leave_completion();
+            //     self.buffer.move_right();
+            // }
+            _ => self.handle_other_events(event),
+        }
+        Ok(false)
+    }
+
     fn accept_line(&mut self) -> Result<String, ReadlineError> {
-        let text = self.buffer.text();
-        Ok(text)
+        Ok(self.buffer.text())
     }
 
     // ---- Completion event handling ----
@@ -578,9 +575,8 @@ impl Editor {
             } => (completions.clone(), *selected, *start_pos),
             _ => return false,
         };
-
         match event {
-            KeyEvent::Up | KeyEvent::Ctrl('p') => {
+            KeyEvent::Up | KeyEvent::Ctrl('p') | KeyEvent::BackTab => {
                 let new_sel = if selected == 0 {
                     completions.len() - 1
                 } else {
@@ -617,35 +613,12 @@ impl Editor {
                 self.set_normal_mode();
                 true
             }
-            KeyEvent::BackTab => {
-                let new_sel = if selected == 0 {
-                    completions.len() - 1
+            // 修复：移除冗余的内层 match，直接计算
+            KeyEvent::Ctrl('r') if self.is_history_completion => {
+                let new_sel = if selected + 1 >= completions.len() {
+                    0
                 } else {
-                    selected - 1
-                };
-                self.mode = EditorMode::CompletionSelect {
-                    completions,
-                    selected: new_sel,
-                    start_pos,
-                };
-                true
-            }
-            KeyEvent::Ctrl('r') | KeyEvent::Ctrl('s') if self.is_history_completion => {
-                let new_sel = match event {
-                    KeyEvent::Ctrl('r') => {
-                        if selected == 0 {
-                            completions.len() - 1
-                        } else {
-                            selected - 1
-                        }
-                    }
-                    _ => {
-                        if selected + 1 >= completions.len() {
-                            0
-                        } else {
-                            selected + 1
-                        }
-                    }
+                    selected + 1
                 };
                 self.mode = EditorMode::CompletionSelect {
                     completions,
@@ -684,7 +657,6 @@ impl Editor {
             } => (completions.clone(), *selected),
             _ => return,
         };
-
         let new_completions: Vec<CompletionItem> = if self.is_history_completion {
             let start_pos = Self::find_word_start(&line, byte_pos);
             let query = &line[start_pos..byte_pos];
@@ -693,7 +665,6 @@ impl Editor {
                 .filter(|item| fuzzy_match(query, &item.replacement))
                 .collect()
         } else {
-            // Parameter completion: filter existing completions with fuzzy match
             let query_start = self.init_search_pos.min(byte_pos);
             let query = &line[query_start..byte_pos];
             old_completions
@@ -701,7 +672,6 @@ impl Editor {
                 .filter(|item| fuzzy_match(query, &item.replacement))
                 .collect()
         };
-
         let start_pos = if line[..byte_pos].contains(['/', '\\']) {
             Self::find_path_start(&line, byte_pos)
         } else {
@@ -758,6 +728,33 @@ impl Editor {
     }
 
     fn handle_cmd(&mut self, cmd: Cmd) {
+        // 修改 buffer 的命令自动清除 AI hint
+        if self.is_ai_hinting {
+            match &cmd {
+                Cmd::Insert(_)
+                | Cmd::InsertStr(_)
+                | Cmd::InsertStrAtBeginning(_)
+                | Cmd::Backspace
+                | Cmd::Delete
+                | Cmd::DeleteWordBefore
+                | Cmd::DeleteWordAfter
+                | Cmd::DeleteToStart
+                | Cmd::DeleteToEnd
+                | Cmd::DeleteToLineStart
+                | Cmd::DeleteToLineEnd
+                | Cmd::ClearBuffer
+                | Cmd::ToggleSudo
+                | Cmd::Yank
+                | Cmd::TransposeChars
+                | Cmd::AcceptHint
+                | Cmd::AcceptHintWord(_) => {
+                    self.is_ai_hinting = false;
+                    self.current_hint = None;
+                }
+                _ => {}
+            }
+        }
+
         match cmd {
             Cmd::Insert(c) => {
                 self.leave_completion();
@@ -790,8 +787,19 @@ impl Editor {
                 self.leave_completion();
                 self.buffer.move_right();
             }
-            Cmd::MoveUp => self.leave_completion(),
-            Cmd::MoveDown => self.leave_completion(),
+            // 修复：MoveUp/MoveDown 实际移动光标（仅 Multiline 有意义）
+            Cmd::MoveUp => {
+                self.leave_completion();
+                if matches!(self.mode, EditorMode::Multiline) {
+                    self.move_cursor_up();
+                }
+            }
+            Cmd::MoveDown => {
+                self.leave_completion();
+                if matches!(self.mode, EditorMode::Multiline) {
+                    self.move_cursor_down();
+                }
+            }
             Cmd::MoveToStart => {
                 self.leave_completion();
                 self.buffer.move_to_start();
@@ -918,7 +926,6 @@ impl Editor {
                 if let Some(ref hint) = self.current_hint.clone() {
                     let clean = strip_ansi(hint);
                     self.buffer.insert_str(&clean);
-
                     if self.is_ai_hinting {
                         self.current_hint = None;
                     }
@@ -944,8 +951,6 @@ impl Editor {
                         }
                     };
                     self.buffer.insert_str(&word);
-
-                    // AI hint 模式：更新剩余部分而不是丢弃整个 hint
                     if self.is_ai_hinting {
                         let remaining = clean[word.len()..].to_string();
                         if remaining.is_empty() {
@@ -1018,29 +1023,38 @@ impl Editor {
         }
     }
 
+    /// 删除当前行的一级缩进（1 个 tab 或最多 4 个空格）。
+    /// 在 Normal 和 Multiline 模式下均有效。
     fn handle_backtab(&mut self) {
-        match &self.mode {
-            EditorMode::CompletionSelect {
-                completions,
-                selected,
-                start_pos,
-            } => {
-                let new_sel = if *selected == 0 {
-                    completions.len() - 1
-                } else {
-                    selected - 1
-                };
-                self.mode = EditorMode::CompletionSelect {
-                    completions: completions.clone(),
-                    selected: new_sel,
-                    start_pos: *start_pos,
-                };
-            }
-            EditorMode::Multiline => {
-                // delete a indent
-            }
-            _ => {}
+        let line = self.buffer.text();
+        let cursor = self.buffer.cursor();
+
+        // 找到当前行在 buffer 中的字节起始位置
+        let byte_cursor = line
+            .char_indices()
+            .nth(cursor)
+            .map(|(i, _)| i)
+            .unwrap_or(line.len());
+        let line_start_byte = line[..byte_cursor].rfind('\n').map(|i| i + 1).unwrap_or(0);
+
+        let current_line = &line[line_start_byte..];
+
+        // 计算要删除的字符数：1 个 tab 或最多 4 个空格
+        let remove_count = if current_line.starts_with('\t') {
+            1
+        } else {
+            let spaces = current_line.chars().take_while(|c| *c == ' ').count();
+            spaces.min(4)
+        };
+
+        if remove_count == 0 {
+            return;
         }
+
+        // replace_range 使用 char 索引
+        let line_start_char = line[..line_start_byte].chars().count();
+        self.buffer
+            .replace_range(line_start_char, line_start_char + remove_count, "");
     }
 
     fn default_binding(&self, event: &KeyEvent) -> Cmd {
@@ -1048,13 +1062,13 @@ impl Editor {
             KeyEvent::Ctrl(c) => match c {
                 'a' => Cmd::MoveToStart,
                 'b' => Cmd::MoveLeft,
-                'c' => Cmd::Noop,
-                'd' => Cmd::Noop,
+                'c' => Cmd::Noop, // 已在全局事件处理
+                'd' => Cmd::Noop, // 已在全局事件处理
                 'e' => Cmd::MoveToEnd,
                 'f' => Cmd::MoveRight,
                 'h' => Cmd::Backspace,
                 'k' => Cmd::DeleteToLineEnd,
-                'l' => Cmd::ClearScreen,
+                // 'l' 已在全局事件处理，此处不再重复
                 'n' => Cmd::HistoryNext,
                 'p' => Cmd::HistoryPrevious,
                 'r' => Cmd::HistorySearch,
@@ -1070,7 +1084,13 @@ impl Editor {
                 'd' => Cmd::DeleteWordAfter,
                 _ => Cmd::Noop,
             },
-            KeyEvent::Shift(c) => Cmd::Insert(*c),
+            // 导航与编辑键直接映射，统一走 handle_cmd
+            KeyEvent::Backspace => Cmd::Backspace,
+            KeyEvent::Delete => Cmd::Delete,
+            KeyEvent::Left => Cmd::MoveLeft,
+            KeyEvent::Right => Cmd::MoveRight,
+            KeyEvent::CtrlBackspace => Cmd::DeleteWordBefore,
+            // 修复：移除 Shift(c) => Cmd::Insert(*c)，已在模式分发中处理
             _ => Cmd::Noop,
         }
     }
@@ -1097,7 +1117,6 @@ impl Editor {
     fn move_cursor_up(&mut self) {
         self.buffer.move_cursor_up_line();
     }
-
     fn move_cursor_down(&mut self) {
         self.buffer.move_cursor_down_line();
     }
@@ -1130,7 +1149,6 @@ impl Editor {
 
     // ---- Rendering ----
     fn render(&mut self) -> Result<(), ReadlineError> {
-        // Auto-scroll: if in completion mode and not enough room below, clear screen
         if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
             let est_space =
                 (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + 2);
@@ -1146,7 +1164,6 @@ impl Editor {
         let line = self.buffer.text();
         let cursor = self.buffer.cursor();
 
-        // Clear previously rendered popup area (which may be above prompt_row)
         if let Some((start, end)) = self.popup_rendered {
             for row in start..=end {
                 let _ = queue!(stdout, MoveTo(0, row), Clear(ClearType::CurrentLine));
@@ -1154,7 +1171,6 @@ impl Editor {
             self.popup_rendered = None;
         }
 
-        // full clear when input has newlines or wraps beyond visible area (to avoid scrolling ghosts)
         if line.contains('\n') {
             queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
             self.prompt_row = 0;
@@ -1203,7 +1219,7 @@ impl Editor {
             }
         }
 
-        // Compute cursor position
+        // 计算光标位置
         let byte_cursor = line
             .char_indices()
             .nth(cursor)
@@ -1223,23 +1239,20 @@ impl Editor {
             self.prompt_row + cursor_row_offset as u16 + (total_col / vis_width) as u16;
         let cursor_col = (total_col % vis_width) as u16;
 
-        // Cache and render hint at cursor position
-        // 如果不是 AI hint，才清空（AI hint 需要跨 render 保留）
+        // hint 显示
         if !self.is_ai_hinting {
             self.current_hint = None;
-            if self.show_hint
-                && let Some(ref hinter) = self.hinter
-                && let Some(hint) = hinter.hint(&line, byte_cursor)
-            {
-                // hinter 有结果时覆盖 AI hint
-                // self.is_ai_hinting = false;
-                self.current_hint = Some(hint.clone());
+            if self.show_hint {
+                if let Some(ref hinter) = self.hinter {
+                    if let Some(hint) = hinter.hint(&line, byte_cursor) {
+                        self.current_hint = Some(hint);
+                    }
+                }
             }
         }
 
-        // 统一显示 current_hint（无论来源）
         if let Some(ref hint) = self.current_hint.clone() {
-            let display = strip_ansi(hint); // AI 返回内容可能含 ANSI，统一清除
+            let display = strip_ansi(hint);
             queue!(
                 stdout,
                 MoveTo(cursor_col, cursor_row),
@@ -1250,7 +1263,7 @@ impl Editor {
             .map_err(ReadlineError::Io)?;
         }
 
-        // Render completion popup
+        // 渲染补全弹窗
         let popup_data = match &self.mode {
             EditorMode::CompletionSelect {
                 completions,
@@ -1263,7 +1276,7 @@ impl Editor {
             self.render_completion_popup(&mut stdout, &completions, selected, used_rows)?;
         }
 
-        // Position cursor
+        // 定位光标
         queue!(stdout, MoveTo(cursor_col, cursor_row)).map_err(ReadlineError::Io)?;
         stdout.flush().map_err(ReadlineError::Io)?;
         Ok(())
@@ -1279,7 +1292,6 @@ impl Editor {
         let total = completions.len();
         let max_height = MAX_POPUP_HEIGHT.min(total);
         let needs_more = total > max_height;
-
         let space_below =
             (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + used_rows);
         let start_row = self.prompt_row + used_rows as u16;
@@ -1291,7 +1303,6 @@ impl Editor {
         if height == 0 {
             return Ok(());
         }
-
         let scroll_start = if selected >= height {
             selected - height + 1
         } else {
@@ -1309,9 +1320,7 @@ impl Editor {
             let display_idx = idx - scroll_start;
             let row = start_row + display_idx as u16;
             let is_selected = idx == selected;
-
             queue!(_stdout, MoveTo(0, row)).map_err(ReadlineError::Io)?;
-
             if is_selected {
                 queue!(
                     _stdout,
@@ -1327,7 +1336,6 @@ impl Editor {
                 )
                 .map_err(ReadlineError::Io)?;
             }
-
             let display_text = item.display_text();
             let display = if display_text.len() > popup_width {
                 let truncated: String = display_text
@@ -1338,7 +1346,6 @@ impl Editor {
             } else {
                 format!("{:width$}", display_text, width = popup_width)
             };
-
             queue!(_stdout, Print(&display)).map_err(ReadlineError::Io)?;
             queue!(_stdout, ResetColor).map_err(ReadlineError::Io)?;
         }
@@ -1366,7 +1373,6 @@ impl Editor {
         };
 
         self.popup_rendered = Some((start_row, last_popup_row));
-
         Ok(())
     }
 
@@ -1388,6 +1394,8 @@ impl Editor {
         }
     }
 }
+
+// ---- 工具函数 ----
 
 fn strip_ansi(s: &str) -> String {
     let mut result = String::new();

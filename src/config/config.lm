@@ -51,13 +51,13 @@ if IS_INTERACTIVE {
     #    ...
     # }
 
-    LUME_EDITOR_THEME = {
-        hint : "grey",
-        completion_bg : "black",
-        completion_fg : "dark_yellow",
-        completion_selected_bg : "red",
-        completion_selected_fg : "white"
-    }
+    # LUME_EDITOR_THEME = {
+    #     hint : "grey",
+    #     completion_bg : "black",
+    #     completion_fg : "dark_yellow",
+    #     completion_selected_bg : "red",
+    #     completion_selected_fg : "white"
+    # }
 
     # ## ---interactive---
 
@@ -76,29 +76,58 @@ if IS_INTERACTIVE {
     # set LUME_PRINT_DIRECT= false
 
     # ## sudo cmd for Alt+s
-    set LUME_SUDO_CMD = 'doas'
+    # set LUME_SUDO_CMD = 'doas'
 
     # ## key bindings
-
-    # Key format: "MODIFIER_key" (e.g., "CTRL_ALT_k", "CTRL_q", "ALT_h")
+    # Key format: "MODIFIER_key" (order CTRL_ALT_SHIFT: e.g., "CTRL_ALT_k", "CTRL_q", "ALT_h")
     # Value type:
-    #   String (single quotes) -> inserts text into current line
-    #   StringTemplate (backticks) -> executes immediately with environment access
+    #   String -> inserts text into current line
+    #   lambda/function -> executes immediately with environment access
+    #         fn receive one arg as current buffer.
 
-    let cds = (b) -> sys.cds()
-    let bookmark = '~/.cache/lume_bookmark'
-    let print_book = (b) -> print $bookmark
-    let save_bookmark = (b) -> if !b.trim().is_empty() { b+"\n" >> $bookmark; println "\t[MARKED]"}
+    # ### command manage
+    let save_bookmark = (b) -> if !b.trim().is_empty() { b.trim()+"\n" >> '~/.cache/lume_bookmark'; println "\t[MARKED]"}
     let select_bookmark = (b) -> { fs.read ~/.cache/lume_bookmark | string.lines() |    ui.pick('select bookmark:') }
-    let select_history = (b) -> { fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:')}
+    let select_history = (b) -> {
+        fs.read ~/.cache/.lume_history | string.lines() | list.filter(x -> string.contains(x, $b)) | ui.pick('filtered history:')
+    }
 
+    # ### directions
+    let fuzzy_go = (b) -> {let base = b ~: r'~|/' ? b : './'; let max = b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Goto Dir:') ?! | cd}
+    let pick_file = (b) -> {fd -t f | ui.pick('select file:')}
+    let handle_file = (b) -> handlr open -- $b
+    let edit_file = (b) -> {let e = $EDITOR ? $EDITOR : hx}
+    let search_content = (b) -> {
+        let t = ui.text 'search in filetype:' ?: none
+        let targ = t ? `--type $t` : ''
+        rg $targ --line-number --column --no-heading --smart-case '--color=never' 'fs.read' ./ | ui.pick() ?! | .split(':') | .at(0)
+    }
+
+    # ### develop
+    let git_commit = (b) -> {
+        git add -A;
+        let msg = ui.text('commit message:');
+        git commit -m $msg
+    }
+    let timestamp = "'" + time.now().to_string('%Y-%m-%d %H:%M:%S') + "'"
+
+    # ### error fix
+    let fix_typos = (b) -> b.replace('gerp', 'grep').replace('mroe', 'more').replace('les', 'less')
+
+    # ## binding
     set LUME_HOT_BINDINGS = {
         CTRL_q: 'exit',
-        ALT_b: print_book,
-        ALT_h: select_history,
+        ALT_r: select_history,
         ALT_x: select_bookmark,
         ALT_m: save_bookmark,
-        ALT_g: cds
+        ALT_g: fuzzy_go,
+        ALT_f: pick_file,
+        ALT_h: handle_file,
+        ALT_e: edit_file,
+        ALT_c: search_content,
+        CTRL_SHIFT_c: git_commit,
+        CTRL_SHIFT_e: fix_typos,
+        ALT_t: timestamp,
     }
 
 
@@ -129,7 +158,8 @@ if IS_INTERACTIVE {
 
     # ## ---ai---
     # ## default AI Helper settings. following is default.
-    let syntax = fs.read('~/.config/lumesh/syntax.md')
+    let base = fs.dir_name($SCRIPT)
+    let syntax = fs.read($base + '/syntax.md')
     set LUME_AI_CONFIG = {
     #     host: 'localhost:11434',
     #     complete_url: '/completion',

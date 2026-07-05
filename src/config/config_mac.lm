@@ -94,7 +94,7 @@ if IS_INTERACTIVE {
     let fuzzy_go = (b) -> {let base = b ~: r'~|/' ? b : './'; let max = b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Goto Dir:') ?! | cd}
     let pick_file = (b) -> {fd -t f | ui.pick('select file:')}
     let handle_file = (b) -> handlr open -- $b
-    let edit_file = (b) -> {let e = $EDITOR ? $EDITOR : hx}
+    let edit_file = (b) -> {hx $b}
     let search_content = (b) -> {
         let t = ui.text 'search in filetype:' ?: none
         let targ = t ? `--type $t` : ''
@@ -121,7 +121,7 @@ if IS_INTERACTIVE {
         ALT_g: fuzzy_go,
         ALT_f: pick_file,
         ALT_h: handle_file,
-        ALT_e: edit_file,
+        CTRL_ALT_e: edit_file,
         ALT_c: search_content,
         CTRL_SHIFT_c: git_commit,
         CTRL_SHIFT_e: fix_typos,

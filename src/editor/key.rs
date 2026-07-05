@@ -11,6 +11,9 @@ pub enum KeyEvent {
     CtrlShift(char),
     AltShift(char),
     CtrlAltShift(char),
+    AltEnter,
+    CtrlEnter,
+    ShiftEnter,
     Enter,
     Tab,
     BackTab,
@@ -54,9 +57,21 @@ impl From<CTermKeyEvent> for KeyEvent {
                 }
                 KeyEvent::Char(c)
             }
-            KeyCode::Enter => KeyEvent::Enter,
+            // KeyCode::Enter => KeyEvent::Enter,
+            KeyCode::Enter => {
+                if alt {
+                    KeyEvent::AltEnter
+                } else if ctrl {
+                    KeyEvent::CtrlEnter
+                } else if shift {
+                    KeyEvent::ShiftEnter
+                    // KeyEvent::Ctrl('m') // Ctrl+Enter 在标准终端中等同于 Ctrl+M
+                } else {
+                    KeyEvent::Enter
+                }
+            }
             KeyCode::Tab => {
-                if ev.modifiers.contains(KeyModifiers::SHIFT) {
+                if shift {
                     KeyEvent::BackTab
                 } else {
                     KeyEvent::Tab

@@ -48,9 +48,11 @@ pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
             chat_prompt: match cfg_map.as_ref().get("system_prompt") {
                 Some(h) => h.to_string(),
                 _ => String::from(
-                    "You are a Lumesh shell assistant. \
-                         Given the user's partial or natural language input, output a single executable Lumesh command. \
-                         Output ONLY the command, no explanation, no markdown, no code fences.",
+                    "You are a Lumesh shell assistant.\
+Generate one fully executable Lumesh command from the user input.\
+Follow Lumesh syntax strictly. Use `#` for comments.\
+Output ONLY the command text. No explanations, no markdown, no prose.\
+Never use code fences, backticks, or triple quotes.",
                 ),
             },
             syntax: match cfg_map.as_ref().get("syntax") {

@@ -209,6 +209,11 @@ impl Editor {
                     self.is_ai_hinting = true;
                 }
             }
+        } else {
+            // 显示状态（临时 hint）
+            self.current_hint = Some(" [AI NOT enabled]".to_string());
+            self.is_ai_hinting = true;
+            let _ = self.render(); // 立即渲染一次
         }
     }
 
@@ -218,10 +223,17 @@ impl Editor {
             return;
         }
 
-        // 显示等待状态（临时 hint）
-        self.current_hint = Some(" [AI thinking...]".to_string());
-        self.is_ai_hinting = true;
-        let _ = self.render(); // 立即渲染一次
+        if self.ai_client.is_some() {
+            // 显示等待状态（临时 hint）
+            self.current_hint = Some(" [AI thinking...]".to_string());
+            self.is_ai_hinting = true;
+            let _ = self.render(); // 立即渲染一次
+        } else {
+            // 显示状态（临时 hint）
+            self.current_hint = Some(" [AI NOT enabled]".to_string());
+            self.is_ai_hinting = true;
+            let _ = self.render(); // 立即渲染一次
+        }
 
         if let Some(ref ai) = self.ai_client {
             let ai = Arc::clone(ai);
@@ -440,6 +452,9 @@ impl Editor {
                     // May want to add Ctrl+S binding later
                 }
                 KeyEvent::Ctrl('g') => {
+                    self.trigger_ai_replace();
+                }
+                KeyEvent::AltEnter => {
                     self.trigger_ai_replace();
                 }
                 KeyEvent::Alt('i') => {

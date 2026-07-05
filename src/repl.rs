@@ -150,7 +150,7 @@ impl LumeCompleter {
                     }
                 })
                 .collect();
-            items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
+            items.sort_by_key(|a| a.replacement.len());
             return items;
         }
         Vec::new()

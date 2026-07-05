@@ -301,6 +301,17 @@ impl Editor {
 
     pub fn readline(&mut self, prompt: &str) -> Result<String, ReadlineError> {
         enable_raw_mode().map_err(ReadlineError::Io)?;
+        // 在 raw mode 下重新启用 ONLCR，使 \n 自动转换为 \r\n
+        // 这样外部程序（dbg!、fd 等）的输出也能正确换行
+        #[cfg(unix)]
+        unsafe {
+            let mut termios = std::mem::zeroed();
+            if libc::tcgetattr(libc::STDOUT_FILENO, &mut termios) == 0 {
+                termios.c_oflag |= libc::OPOST | libc::ONLCR;
+                libc::tcsetattr(libc::STDOUT_FILENO, libc::TCSANOW, &termios);
+            }
+        }
+
         let _ = write!(stdout(), "\x1b[?2004h");
         let _ = stdout().flush();
         let (w, h) = size().unwrap_or((80, 24));
@@ -342,8 +353,15 @@ impl Editor {
 
             // 2. Hotkey function bindings
             if let Some(f) = self.hotkey_fns.get(&event) {
-                self.buffer.insert_str("\n");
                 let result = f(&self.buffer.text());
+
+                // hotkey 内部命令可能禁用了 raw mode，必须恢复
+                let _ = enable_raw_mode();
+                // 命令输出可能导致终端滚动，重新查询 prompt_row
+                if let Ok((_col, row)) = crossterm::cursor::position() {
+                    self.prompt_row = row;
+                }
+
                 if let Some(text) = result {
                     self.buffer.insert_str(&text);
                     self.leave_completion();
@@ -389,7 +407,7 @@ impl Editor {
                     self.buffer.delete();
                     self.leave_completion();
                 }
-                KeyEvent::Ctrl('g') | KeyEvent::AltEnter => {
+                KeyEvent::Alt('o') | KeyEvent::AltEnter => {
                     self.trigger_ai_replace();
                 }
                 KeyEvent::Alt('i') => {

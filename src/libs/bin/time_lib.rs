@@ -49,13 +49,13 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
                 // 核心操作
         now => "get current datetime as DateTime object or formatted string", "[format_string]"
-        parse => "parse datetime string according to format", "[format_string] <datetime_string>"
-        add => "add duration to datetime", "<duration> <datetime>"
-        diff => "calculate difference between two datetimes", "<unit> <datetime1> <datetime2>"
-        timezone => "convert datetime to different timezone", "<offset_hours> <datetime>"
+        parse => "parse datetime string according to format", "<datetime_string> [format_string]"
+        add => "add duration to datetime", "<datetime> <duration>"
+        diff => "calculate difference between two datetimes", "<datetime1> <datetime2> <unit>"
+        timezone => "convert datetime to different timezone", "<datetime> <offset_hours>"
         is_leap_year => "check if a year is a leap year", "[year]"
         from_map => "create DateTime from components", "<map>"
-        to_string => "convert DateTime to string", "[format_string] <datetime>"
+        to_string => "convert DateTime to string", "<datetime> [format_string]"
     })
 }
 // Helper Functions
@@ -653,7 +653,6 @@ fn diff(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("diff", &args, 2..=3, ctx)?;
     let mut it = args.into_iter();
-    let unit_expr = it.next().unwrap();
     let dt1 = it.next().map_or(Ok(Local::now().naive_local()), |x| {
         parse_datetime_arg(x, env, ctx)
     })?;
@@ -661,8 +660,8 @@ fn diff(
         parse_datetime_arg(x, env, ctx)
     })?;
 
-    let unit = match unit_expr {
-        Expression::String(s) => s,
+    let unit = match it.next() {
+        Some(Expression::String(s)) => s,
         _ => "s".to_string(),
     };
 

@@ -48,14 +48,21 @@ impl From<CTermKeyEvent> for KeyEvent {
                 } else if alt && shift {
                     return KeyEvent::AltShift(c);
                 } else if ctrl && !alt && !shift {
-                    if c.to_ascii_uppercase().is_ascii_alphabetic() || c == ' ' {
-                        return KeyEvent::Ctrl(c);
-                    }
+                    // Kitty下不需要
+                    // 过滤掉终端已经转换过的控制字符（如 Ctrl+A → \x01）
+                    // if c.to_ascii_uppercase().is_ascii_alphabetic() || c == ' ' {
+                    return KeyEvent::Ctrl(c);
+                    // }
                 } else if alt && !ctrl {
                     return KeyEvent::Alt(c);
                 } else if shift && !ctrl && !alt {
                     return KeyEvent::Shift(c);
                 }
+                // } else if shift && !ctrl && !alt {
+                //     // Kitty 协议下 c 已经是 shift 后的字符（'A'、'!'等）
+                //     // 直接作为普通字符处理，无需区分
+                //     return KeyEvent::Char(c);
+                // }
                 KeyEvent::Char(c)
             }
             // KeyCode::Enter => KeyEvent::Enter,
@@ -78,6 +85,7 @@ impl From<CTermKeyEvent> for KeyEvent {
                     KeyEvent::Tab
                 }
             }
+            KeyCode::BackTab => KeyEvent::BackTab,
             KeyCode::Backspace => {
                 if ctrl {
                     KeyEvent::CtrlBackspace

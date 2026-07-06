@@ -5,6 +5,10 @@ use super::kring::KillRing;
 use crate::ai::{AIClient, MockAIClient};
 use crossterm::cursor::MoveTo;
 use crossterm::event::{Event, KeyEventKind, read};
+use crossterm::event::{
+    KeyboardEnhancementFlags, PopKeyboardEnhancementFlags, PushKeyboardEnhancementFlags,
+};
+use crossterm::execute;
 use crossterm::queue;
 use crossterm::style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor};
 use crossterm::terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
@@ -312,6 +316,16 @@ impl Editor {
             }
         }
 
+        // 在进入 raw mode 后启用  Kitty Keyboard Protocol
+        let _ = execute!(
+            std::io::stdout(),
+            PushKeyboardEnhancementFlags(
+                KeyboardEnhancementFlags::DISAMBIGUATE_ESCAPE_CODES
+                    | KeyboardEnhancementFlags::REPORT_ALL_KEYS_AS_ESCAPE_CODES
+                    | KeyboardEnhancementFlags::REPORT_EVENT_TYPES
+            )
+        );
+
         let _ = write!(stdout(), "\x1b[?2004h");
         let _ = stdout().flush();
         let (w, h) = size().unwrap_or((80, 24));
@@ -336,6 +350,9 @@ impl Editor {
         let _ = write!(stdout(), "\x1b[?2004l");
         let _ = stdout().flush();
         let _ = disable_raw_mode();
+        // 退出时恢复  Kitty Keyboard Protocol 之前的状态
+        let _ = execute!(std::io::stdout(), PopKeyboardEnhancementFlags);
+
         result
     }
 
@@ -363,6 +380,7 @@ impl Editor {
                 }
 
                 if let Some(text) = result {
+                    self.buffer.delete_to_line_start();
                     self.buffer.insert_str(&text);
                     self.leave_completion();
                 } else {
@@ -463,11 +481,17 @@ impl Editor {
                 self.show_hint = true;
                 self.handle_space();
             }
-            KeyEvent::Char(c) | KeyEvent::Shift(c) => {
+            KeyEvent::Char(c) => {
                 self.is_ai_hinting = false;
                 self.show_hint = true;
                 self.leave_completion();
                 self.buffer.insert(c);
+            }
+            KeyEvent::Shift(c) => {
+                self.is_ai_hinting = false;
+                self.show_hint = true;
+                self.leave_completion();
+                self.buffer.insert(shift_char(c));
             }
             KeyEvent::Enter => {
                 self.is_ai_hinting = false;
@@ -1414,6 +1438,33 @@ impl Editor {
 }
 
 // ---- 工具函数 ----
+fn shift_char(c: char) -> char {
+    match c {
+        '1' => '!',
+        '2' => '@',
+        '3' => '#',
+        '4' => '$',
+        '5' => '%',
+        '6' => '^',
+        '7' => '&',
+        '8' => '*',
+        '9' => '(',
+        '0' => ')',
+        '-' => '_',
+        '=' => '+',
+        '[' => '{',
+        ']' => '}',
+        '\\' => '|',
+        ';' => ':',
+        '\'' => '"',
+        ',' => '<',
+        '.' => '>',
+        '/' => '?',
+        '`' => '~',
+        c if c.is_ascii_lowercase() => c.to_ascii_uppercase(),
+        c => c,
+    }
+}
 
 fn strip_ansi(s: &str) -> String {
     let mut result = String::new();

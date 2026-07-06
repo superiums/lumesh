@@ -1527,7 +1527,15 @@ fn parse_map_inner<'a>(
     let (input, pairs) = separated_list0(
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
         tuple((
-            parse_symbol_string,
+            alt((
+                parse_symbol_string,
+                map(kind(TokenKind::StringRaw), |t| {
+                    t.to_str(input.str).to_string()
+                }),
+                map(kind(TokenKind::StringLiteral), |t| {
+                    t.to_str(input.str).to_string()
+                }),
+            )),
             opt(preceded(
                 terminated(text(":"), opt(kind(TokenKind::LineBreak))),
                 cut(alt((

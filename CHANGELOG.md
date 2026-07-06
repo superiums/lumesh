@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.16.1]
+- update hotkeys bindings
+- Kitty Keyboard Protocol
+- allow string as map key
+- fix local fn lookup
+
 ## [0.16.0]
 - update configs
 

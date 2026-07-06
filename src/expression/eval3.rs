@@ -450,7 +450,7 @@ impl Expression {
                         }
                     }
                 }
-                match env.get(name) {
+                match self.handle_variable(name, true, state, env, depth).ok() {
                     Some(expr) => Ok(expr),
                     None => Ok(self.clone()),
                 }

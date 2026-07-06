@@ -383,8 +383,8 @@ impl Editor {
                     self.buffer.delete_to_line_start();
                     self.buffer.insert_str(&text);
                     self.leave_completion();
-                } else {
-                    return self.accept_line();
+                    // } else {
+                    //     return self.accept_line();
                 }
                 continue;
             }
@@ -487,12 +487,6 @@ impl Editor {
                 self.leave_completion();
                 self.buffer.insert(c);
             }
-            KeyEvent::Shift(c) => {
-                self.is_ai_hinting = false;
-                self.show_hint = true;
-                self.leave_completion();
-                self.buffer.insert(shift_char(c));
-            }
             KeyEvent::Enter => {
                 self.is_ai_hinting = false;
                 self.current_hint = None;
@@ -554,7 +548,7 @@ impl Editor {
                 self.show_hint = true;
                 self.handle_space();
             }
-            KeyEvent::Char(c) | KeyEvent::Shift(c) => {
+            KeyEvent::Char(c) => {
                 self.is_ai_hinting = false;
                 self.show_hint = true;
                 self.leave_completion();
@@ -644,7 +638,7 @@ impl Editor {
                 };
                 true
             }
-            KeyEvent::Enter | KeyEvent::Char(' ') | KeyEvent::Shift(' ') => {
+            KeyEvent::Enter | KeyEvent::Char(' ') => {
                 if let Some(item) = completions.get(selected) {
                     self.apply_completion(item, start_pos);
                 }
@@ -669,7 +663,7 @@ impl Editor {
                 };
                 true
             }
-            KeyEvent::Char(c) | KeyEvent::Shift(c) => {
+            KeyEvent::Char(c) => {
                 self.buffer.insert(*c);
                 self.refresh_completions();
                 true
@@ -1132,7 +1126,6 @@ impl Editor {
             KeyEvent::Left => Cmd::MoveLeft,
             KeyEvent::Right => Cmd::MoveRight,
             KeyEvent::CtrlBackspace => Cmd::DeleteWordBefore,
-            // 修复：移除 Shift(c) => Cmd::Insert(*c)，已在模式分发中处理
             _ => Cmd::Noop,
         }
     }
@@ -1438,33 +1431,6 @@ impl Editor {
 }
 
 // ---- 工具函数 ----
-fn shift_char(c: char) -> char {
-    match c {
-        '1' => '!',
-        '2' => '@',
-        '3' => '#',
-        '4' => '$',
-        '5' => '%',
-        '6' => '^',
-        '7' => '&',
-        '8' => '*',
-        '9' => '(',
-        '0' => ')',
-        '-' => '_',
-        '=' => '+',
-        '[' => '{',
-        ']' => '}',
-        '\\' => '|',
-        ';' => ':',
-        '\'' => '"',
-        ',' => '<',
-        '.' => '>',
-        '/' => '?',
-        '`' => '~',
-        c if c.is_ascii_lowercase() => c.to_ascii_uppercase(),
-        c => c,
-    }
-}
 
 fn strip_ansi(s: &str) -> String {
     let mut result = String::new();

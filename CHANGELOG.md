@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.16.2]
+- fix always execute buffer while user cancel hotkey func
+- fix modifiers map which leading a fake ESC
+- fix CapsLock recognize
+- 
+
 ## [0.16.1]
 - update hotkeys bindings
 - Kitty Keyboard Protocol

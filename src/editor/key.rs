@@ -30,6 +30,7 @@ pub enum KeyEvent {
     PageUp,
     PageDown,
     F(u8),
+    None,
 }
 
 impl From<CTermKeyEvent> for KeyEvent {
@@ -56,14 +57,22 @@ impl From<CTermKeyEvent> for KeyEvent {
                 } else if alt && !ctrl {
                     return KeyEvent::Alt(c);
                 } else if shift && !ctrl && !alt {
-                    return KeyEvent::Shift(c);
+                    return KeyEvent::Char(shift_char(
+                        c,
+                        ev.state == crossterm::event::KeyEventState::CAPS_LOCK,
+                    ));
+                    // return KeyEvent::Shift(c);
                 }
                 // } else if shift && !ctrl && !alt {
                 //     // Kitty 协议下 c 已经是 shift 后的字符（'A'、'!'等）
                 //     // 直接作为普通字符处理，无需区分
                 //     return KeyEvent::Char(c);
                 // }
-                KeyEvent::Char(c)
+                if ev.state == crossterm::event::KeyEventState::CAPS_LOCK {
+                    KeyEvent::Char(c.to_ascii_uppercase())
+                } else {
+                    KeyEvent::Char(c)
+                }
             }
             // KeyCode::Enter => KeyEvent::Enter,
             KeyCode::Enter => {
@@ -104,6 +113,8 @@ impl From<CTermKeyEvent> for KeyEvent {
             KeyCode::PageUp => KeyEvent::PageUp,
             KeyCode::PageDown => KeyEvent::PageDown,
             KeyCode::F(n) => KeyEvent::F(n),
+            KeyCode::Modifier(_) => KeyEvent::None,
+            KeyCode::Media(_) => KeyEvent::None,
             _ => KeyEvent::Escape,
         }
     }
@@ -144,4 +155,32 @@ pub enum Cmd {
     ClearBuffer,
     ToggleSudo,
     Noop,
+}
+
+fn shift_char(c: char, is_cap: bool) -> char {
+    match c {
+        '1' => '!',
+        '2' => '@',
+        '3' => '#',
+        '4' => '$',
+        '5' => '%',
+        '6' => '^',
+        '7' => '&',
+        '8' => '*',
+        '9' => '(',
+        '0' => ')',
+        '-' => '_',
+        '=' => '+',
+        '[' => '{',
+        ']' => '}',
+        '\\' => '|',
+        ';' => ':',
+        '\'' => '"',
+        ',' => '<',
+        '.' => '>',
+        '/' => '?',
+        '`' => '~',
+        c if is_cap => c,
+        c => c.to_ascii_uppercase(),
+    }
 }

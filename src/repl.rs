@@ -384,7 +384,7 @@ pub fn run_repl(env: &mut Environment) {
             if let Some((mod_str, key_char)) = key_str.rsplit_once('_')
                 && let Some(ch) = key_char.chars().next()
             {
-                let key = parse_hot_key(mod_str.trim_matches(['\'', '"']), ch);
+                let key = parse_hot_key(mod_str.trim_matches(['\'', '"']), ch.to_ascii_lowercase());
                 match v {
                     Expression::String(s) => {
                         // String value: insert directly into buffer

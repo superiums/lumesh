@@ -126,7 +126,7 @@ data |^ interactive      # PTY 管道
 结构化管道：
 ```bash
 ls -l | .to_table() | where(size > 5K)
-Fs.ls -l | where(size > 5K) | select(name,size,modified)
+fs.ls -l | where(size > 5K) | select(name,size,modified)
 ls -1 |> cp -r _ /tmp/
 ```
 
@@ -170,7 +170,13 @@ ma::method()
 ### 安装方式
 
 **方式一：使用安装脚本**
-- [下载install.sh](https://github.com/superiums/lumesh/releases/latest)
+- 运行
+```bash
+curl -L https://github.com/superiums/lumesh/releases/latest/download/install.sh | bash
+
+```
+
+- 或 [下载install.sh](https://github.com/superiums/lumesh/releases/latest)
   然后运行 `bash ./install.sh`
   
 **方式二：下载预编译版本**

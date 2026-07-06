@@ -93,10 +93,10 @@ if IS_INTERACTIVE {
     }
 
     # ### directions
-    let fuzzy_go = (b) -> {let base = b ~: r'~|/' ? b : './'; let max = b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | cd}
+    let fuzzy_go = (b) -> {let base = b ~: r'~|/' ? b : './'; let max = b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | 'cd ' + _}
     let pick_file = (b) -> {fd -t f | ui.pick('select file:')}
     let handle_file = (b) -> { if $b {handlr open -- $b}else{print 'pick a file first'}}
-    let edit_file = (b) -> {if $b {let e = sys.has('EDITOR') ? $EDITOR : 'vi'; $e $b}else{print 'pick a file first'}}
+    let edit_file = (b) -> {if $b {let e = sys.has('EDITOR') ? $EDITOR : 'hx'; $e $b}else{print 'pick a file first'}}
     let search_content = (b) -> {
         let t = $b ? $b : ui.text 'search in filetype:' ?: 'md'
         rg --type $t --line-number --column --no-heading --smart-case '--color=never' 'fs.read' ./ | ui.pick() ?! | .split(':') | .at(0)
@@ -126,9 +126,9 @@ if IS_INTERACTIVE {
             fix_typos
         }
 
-        let ex = { ui.pick $m.keys() 'Fuzzy Execute' | $m.at() }
+        let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
         ex($b)
-    }?: e -> eprint e
+    } #?: e -> eprint e.msg
 
     # ## binding
     set LUME_HOT_BINDINGS = {

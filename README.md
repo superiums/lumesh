@@ -162,7 +162,12 @@ Built-in local AI assistant, supports command completion and smart suggestions.
 ### Installation Methods
 
 **method 1: use install script**
-- [download install.sh](https://github.com/superiums/lumesh/releases/latest)
+- run
+```bash
+curl -L https://github.com/superiums/lumesh/releases/latest/download/install.sh | bash
+
+```
+- or [download install.sh](https://github.com/superiums/lumesh/releases/latest)
  and run `bash ./install.sh`
 
 **Method 2: Download Precompiled Version**

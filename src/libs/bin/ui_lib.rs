@@ -13,9 +13,8 @@ use crate::{
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
-use inquire::list_option::ListOption;
 use inquire::{Confirm, CustomType, MultiSelect, Password, PasswordDisplayMode, Select, Text};
-
+use inquire::{list_option::ListOption, validator::Validation};
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         int, float, text, passwd, confirm, pick, multi_pick,
@@ -38,6 +37,38 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         joiny => "join two widgets vertically","<widget1> <widget2>"
         join_flow => "join widgets with flow layout","<max_width> <widgets...>"
     })
+}
+
+macro_rules! apply_select_cfg {
+    ($ans:ident, $cfgs:expr, $fns:expr, $ctx:expr) => {
+        if let Some(m) = &$cfgs {
+            if let Some(v) = cfg_get_usize(m, "page_size", $ctx)? {
+                $ans = $ans.with_page_size(v);
+            }
+            if let Some(v) = cfg_get_usize(m, "starting_cursor", $ctx)? {
+                $ans = $ans.with_starting_cursor(v);
+            }
+            if let Some(v) = cfg_get_bool(m, "vim_mode") {
+                $ans = $ans.with_vim_mode(v);
+            }
+            if let Some(v) = cfg_get_bool(m, "reset_cursor") {
+                $ans = $ans.with_reset_cursor(v);
+            }
+            if let Some(false) = cfg_get_bool(m, "filter_input_enabled") {
+                $ans = $ans.without_filtering();
+            }
+            if let Some(v) = cfg_get_str(m, "help_message") {
+                $ans = $ans.with_help_message(v);
+            }
+            if let Some(v) = cfg_get_str(m, "starting_filter_input") {
+                $ans = $ans.with_starting_filter_input(v);
+            }
+
+            if let Some(ref f) = $fns.scorer {
+                $ans = $ans.with_scorer(f.as_ref());
+            }
+        }
+    };
 }
 
 fn int(
@@ -208,7 +239,7 @@ fn selector_wrapper(
     };
 
     match multi {
-        true => multi_select_wrapper(&msg, options, cfgs, ctx),
+        true => multi_select_wrapper(&msg, options, cfgs, env, ctx),
         false => single_select_wrapper(&msg, options, cfgs, env, ctx),
     }
 }
@@ -220,93 +251,15 @@ fn single_select_wrapper(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    // 1. 在函数顶层作用域声明，确保生命周期覆盖 ans.prompt()
-    // formatter: Fn(ListOption<&T>) -> String
-    let formatter_fn: Option<Box<dyn Fn(ListOption<&Expression>) -> String>> =
-        if let Some(func) = cfg_get_lambda(&cfgs, "formatter", ctx)? {
-            let call = make_caller(func, env);
-            Some(Box::new(move |i: ListOption<&Expression>| {
-                match call(vec![Expression::Integer(i.index as i64), i.value.clone()]) {
-                    Some(Expression::String(s)) => s,
-                    _ => format!("Option {}: '{}'", i.index + 1, i.value),
-                }
-            }))
-        } else {
-            None
-        };
-
-    // scorer: Fn(&str, &T, &str, usize) -> Option<i64>
-    let scorer_fn: Option<Box<dyn Fn(&str, &Expression, &str, usize) -> Option<i64>>> =
-        if let Some(func) = cfg_get_lambda(&cfgs, "scorer", ctx)? {
-            let call = make_caller(func, env);
-            Some(Box::new(
-                move |input: &str, opt: &Expression, _: &str, _: usize| match call(vec![
-                    Expression::String(input.to_string()),
-                    opt.clone(),
-                ]) {
-                    Some(Expression::Integer(n)) => Some(n),
-                    _ => None,
-                },
-            ))
-        } else {
-            None
-        };
-
-    // sorter: Fn(usize, &(usize, i64), usize, &(usize, i64)) -> Ordering
-    let sorter_fn: Option<Box<dyn Fn(&mut [(usize, i64)])>> =
-        if let Some(func) = cfg_get_lambda(&cfgs, "sorter", ctx)? {
-            let call = make_caller(func, env);
-            Some(Box::new(move |items: &mut [(usize, i64)]| {
-                items.sort_by(|a, b| {
-                    match call(vec![Expression::Integer(a.1), Expression::Integer(b.1)]) {
-                        Some(Expression::Integer(n)) if n > 0 => std::cmp::Ordering::Greater,
-                        Some(Expression::Integer(0)) => std::cmp::Ordering::Equal,
-                        _ => std::cmp::Ordering::Less,
-                    }
-                });
-            }))
-        } else {
-            None
-        };
-
+    let fns = build_select_fns(&cfgs, env, ctx)?;
     let mut ans = Select::new(msg, options);
-
-    if let Some(m) = &cfgs {
-        // 注意：用 & 借用，不 move
-        if let Some(v) = cfg_get_usize(m, "page_size", ctx)? {
-            ans = ans.with_page_size(v);
-        }
-        if let Some(v) = cfg_get_usize(m, "starting_cursor", ctx)? {
-            ans = ans.with_starting_cursor(v);
-        }
-        if let Some(v) = cfg_get_bool(m, "vim_mode") {
-            ans = ans.with_vim_mode(v);
-        }
-        if let Some(v) = cfg_get_bool(m, "reset_cursor") {
-            ans = ans.with_reset_cursor(v);
-        }
-        if let Some(false) = cfg_get_bool(m, "filter_input_enabled") {
-            ans = ans.without_filtering();
-        }
-        if let Some(v) = cfg_get_str(m, "help_message") {
-            ans = ans.with_help_message(v);
-        }
-        if let Some(v) = cfg_get_str(m, "starting_filter_input") {
-            ans = ans.with_starting_filter_input(v);
-        }
-
-        //
-        if let Some(ref f) = formatter_fn {
-            ans = ans.with_formatter(f.as_ref());
-        }
-        if let Some(ref f) = scorer_fn {
-            ans = ans.with_scorer(f.as_ref());
-        }
-        if let Some(ref f) = sorter_fn {
-            ans = ans.with_sorter(f.as_ref());
-        }
+    apply_select_cfg!(ans, cfgs, fns, ctx);
+    if let Some(ref f) = fns.formatter {
+        ans = ans.with_formatter(f.as_ref());
     }
-
+    if let Some(ref f) = fns.sorter {
+        ans = ans.with_sorter(f.as_ref());
+    }
     ans.prompt()
         .map_err(|e| RuntimeError::common(format!("ui.pick: {e}").into(), ctx.clone(), 0))
 }
@@ -315,56 +268,47 @@ fn multi_select_wrapper(
     msg: &str,
     options: Vec<Expression>,
     cfgs: Option<Rc<BTreeMap<String, Expression>>>,
+    env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
+    let fns = build_select_fns(&cfgs, env, ctx)?;
     let mut ans = MultiSelect::new(msg, options);
-    if let Some(m) = cfgs {
-        let page_size = m.get("page_size");
-        if let Some(ps) = page_size {
-            match ps {
-                Expression::Integer(size) => {
-                    ans = ans.with_page_size(*size as usize);
-                }
-                _ => {
-                    return Err(RuntimeError::common(
-                        "page_size should be an Integer".into(),
-                        ctx.clone(),
-                        0,
-                    ));
-                }
-            }
+    apply_select_cfg!(ans, cfgs, fns, ctx);
+
+    if let Some(m) = &cfgs {
+        if let Some(true) = cfg_get_bool(m, "all_selected_by_default") {
+            ans = ans.with_all_selected_by_default();
         }
-        let starting_cursor = m.get("starting_cursor");
-        if let Some(c) = starting_cursor {
-            match c {
-                Expression::Integer(c) => {
-                    ans = ans.with_starting_cursor(*c as usize);
-                }
-                _ => {
-                    return Err(RuntimeError::common(
-                        "starting_cursor should be an Integer".into(),
-                        ctx.clone(),
-                        0,
-                    ));
-                }
-            }
+        if let Some(v) = cfg_get_bool(m, "keep_filter") {
+            ans = ans.with_keep_filter(v);
         }
-        // let help = m.get("help");
-        // if let Some(h) = help {
-        //     if let Expression::String(h_msg) = h {
-        //         ans = ans.with_help_message(h_msg.as_str());
-        //     }
-        // }
+
+        // validator 只属于 MultiSelect，直接传具体闭包，不经过 Box<dyn ...>
+        if let Some(func) = cfg_get_lambda(&cfgs, "validator", ctx)? {
+            let call = make_caller(func, env); // Clone + 'static
+            ans = ans.with_validator(move |input: &[ListOption<&Expression>]| {
+                let args = vec![Expression::from(
+                    input
+                        .iter()
+                        .map(|item| item.value.clone())
+                        .collect::<Vec<_>>(),
+                )];
+                match call(args) {
+                    Some(Expression::Boolean(true)) => Ok(Validation::Valid),
+                    Some(Expression::Boolean(false)) => {
+                        Ok(Validation::Invalid("Invalid selection".into()))
+                    }
+                    Some(Expression::String(msg)) => Ok(Validation::Invalid(msg.into())),
+                    _ => Ok(Validation::Valid),
+                }
+            });
+        }
     }
-    match ans.prompt() {
-        Ok(choice) => Ok(Expression::from(choice)),
-        Err(e) => Err(RuntimeError::common(
-            format!("ui.pick: {e}").into(),
-            ctx.clone(),
-            0,
-        )),
-    }
+    ans.prompt()
+        .map(Expression::from)
+        .map_err(|e| RuntimeError::common(format!("ui.pick: {e}").into(), ctx.clone(), 0))
 }
+
 fn extract_options(
     expr: Expression,
     env: &mut Environment,
@@ -725,7 +669,7 @@ fn cfg_get_lambda(
 fn make_caller(
     func: Expression,
     env: &Environment,
-) -> impl Fn(Vec<Expression>) -> Option<Expression> {
+) -> impl Fn(Vec<Expression>) -> Option<Expression> + 'static + Clone {
     use std::cell::RefCell;
     let env_cell = RefCell::new(env.clone());
     move |args: Vec<Expression>| {
@@ -764,4 +708,60 @@ fn cfg_get_str<'a>(m: &'a BTreeMap<String, Expression>, key: &str) -> Option<&'a
         Some(Expression::String(s)) => Some(s.as_str()),
         _ => None,
     }
+}
+
+struct SelectFns {
+    formatter: Option<Box<dyn Fn(ListOption<&Expression>) -> String>>,
+    scorer: Option<Box<dyn Fn(&str, &Expression, &str, usize) -> Option<i64>>>,
+    sorter: Option<Box<dyn Fn(&mut [(usize, i64)])>>,
+}
+
+fn build_select_fns(
+    cfgs: &Option<Rc<BTreeMap<String, Expression>>>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<SelectFns, RuntimeError> {
+    Ok(SelectFns {
+        formatter: if let Some(func) = cfg_get_lambda(cfgs, "formatter", ctx)? {
+            let call = make_caller(func, env);
+            Some(Box::new(move |i: ListOption<&Expression>| {
+                match call(vec![Expression::Integer(i.index as i64), i.value.clone()]) {
+                    Some(Expression::String(s)) => s,
+                    _ => format!("Option {}: '{}'", i.index + 1, i.value),
+                }
+            }))
+        } else {
+            None
+        },
+
+        scorer: if let Some(func) = cfg_get_lambda(cfgs, "scorer", ctx)? {
+            let call = make_caller(func, env);
+            Some(Box::new(
+                move |input: &str, opt: &Expression, _: &str, _: usize| match call(vec![
+                    Expression::String(input.to_string()),
+                    opt.clone(),
+                ]) {
+                    Some(Expression::Integer(n)) => Some(n),
+                    _ => None,
+                },
+            ))
+        } else {
+            None
+        },
+
+        sorter: if let Some(func) = cfg_get_lambda(cfgs, "sorter", ctx)? {
+            let call = make_caller(func, env);
+            Some(Box::new(move |items: &mut [(usize, i64)]| {
+                items.sort_by(|a, b| {
+                    match call(vec![Expression::Integer(a.1), Expression::Integer(b.1)]) {
+                        Some(Expression::Integer(n)) if n > 0 => std::cmp::Ordering::Greater,
+                        Some(Expression::Integer(0)) => std::cmp::Ordering::Equal,
+                        _ => std::cmp::Ordering::Less,
+                    }
+                });
+            }))
+        } else {
+            None
+        },
+    })
 }

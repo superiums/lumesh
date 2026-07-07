@@ -344,6 +344,7 @@ fn cd(
     );
 
     let current = current_dir.to_string_lossy();
+    let dir_new = path.to_string_lossy();
     env.define("LWD", Expression::String(current.to_string()));
     if let Some(Expression::List(paths)) = env.get("PATH_SESSION") {
         if !paths.iter().any(|p| {
@@ -354,13 +355,14 @@ fn cd(
             }
         }) {
             let mut pn = paths.as_ref().clone();
-            pn.push(Expression::String(current.to_string()));
+            pn.push(Expression::String(dir_new.to_string()));
             env.define("PATH_SESSION", Expression::from(pn));
         }
     } else {
-        let mut pn = Vec::with_capacity(10);
-        pn.push(Expression::String(current.to_string()));
-        env.define("PATH_SESSION", Expression::from(pn));
+        env.define(
+            "PATH_SESSION",
+            Expression::from(vec![Expression::String(dir_new.to_string())]),
+        );
     }
 
     Ok(Expression::None)

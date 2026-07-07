@@ -13,6 +13,7 @@ use crate::{
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
+use inquire::list_option::ListOption;
 use inquire::{Confirm, CustomType, MultiSelect, Password, PasswordDisplayMode, Select, Text};
 
 pub fn regist_lazy() -> LazyModule {
@@ -208,7 +209,7 @@ fn selector_wrapper(
 
     match multi {
         true => multi_select_wrapper(&msg, options, cfgs, ctx),
-        false => single_select_wrapper(&msg, options, cfgs, ctx),
+        false => single_select_wrapper(&msg, options, cfgs, env, ctx),
     }
 }
 
@@ -216,57 +217,100 @@ fn single_select_wrapper(
     msg: &str,
     options: Vec<Expression>,
     cfgs: Option<Rc<BTreeMap<String, Expression>>>,
+    env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
+    // 1. 在函数顶层作用域声明，确保生命周期覆盖 ans.prompt()
+    // formatter: Fn(ListOption<&T>) -> String
+    let formatter_fn: Option<Box<dyn Fn(ListOption<&Expression>) -> String>> =
+        if let Some(func) = cfg_get_lambda(&cfgs, "formatter", ctx)? {
+            let call = make_caller(func, env);
+            Some(Box::new(move |i: ListOption<&Expression>| {
+                match call(vec![Expression::Integer(i.index as i64), i.value.clone()]) {
+                    Some(Expression::String(s)) => s,
+                    _ => format!("Option {}: '{}'", i.index + 1, i.value),
+                }
+            }))
+        } else {
+            None
+        };
+
+    // scorer: Fn(&str, &T, &str, usize) -> Option<i64>
+    let scorer_fn: Option<Box<dyn Fn(&str, &Expression, &str, usize) -> Option<i64>>> =
+        if let Some(func) = cfg_get_lambda(&cfgs, "scorer", ctx)? {
+            let call = make_caller(func, env);
+            Some(Box::new(
+                move |input: &str, opt: &Expression, _: &str, _: usize| match call(vec![
+                    Expression::String(input.to_string()),
+                    opt.clone(),
+                ]) {
+                    Some(Expression::Integer(n)) => Some(n),
+                    _ => None,
+                },
+            ))
+        } else {
+            None
+        };
+
+    // sorter: Fn(usize, &(usize, i64), usize, &(usize, i64)) -> Ordering
+    let sorter_fn: Option<Box<dyn Fn(&mut [(usize, i64)])>> =
+        if let Some(func) = cfg_get_lambda(&cfgs, "sorter", ctx)? {
+            let call = make_caller(func, env);
+            Some(Box::new(move |items: &mut [(usize, i64)]| {
+                items.sort_by(|a, b| {
+                    match call(vec![Expression::Integer(a.1), Expression::Integer(b.1)]) {
+                        Some(Expression::Integer(n)) if n > 0 => std::cmp::Ordering::Greater,
+                        Some(Expression::Integer(0)) => std::cmp::Ordering::Equal,
+                        _ => std::cmp::Ordering::Less,
+                    }
+                });
+            }))
+        } else {
+            None
+        };
+
     let mut ans = Select::new(msg, options);
-    if let Some(m) = cfgs {
-        let page_size = m.get("page_size");
-        if let Some(ps) = page_size {
-            match ps {
-                Expression::Integer(size) => {
-                    ans = ans.with_page_size(*size as usize);
-                }
-                _ => {
-                    return Err(RuntimeError::common(
-                        "page_size should be an Integer".into(),
-                        ctx.clone(),
-                        0,
-                    ));
-                }
-            }
+
+    if let Some(m) = &cfgs {
+        // 注意：用 & 借用，不 move
+        if let Some(v) = cfg_get_usize(m, "page_size", ctx)? {
+            ans = ans.with_page_size(v);
         }
-        let starting_cursor = m.get("starting_cursor");
-        if let Some(c) = starting_cursor {
-            match c {
-                Expression::Integer(c) => {
-                    ans = ans.with_starting_cursor(*c as usize);
-                }
-                _ => {
-                    return Err(RuntimeError::common(
-                        "starting_cursor should be an Integer".into(),
-                        ctx.clone(),
-                        0,
-                    ));
-                }
-            }
+        if let Some(v) = cfg_get_usize(m, "starting_cursor", ctx)? {
+            ans = ans.with_starting_cursor(v);
         }
-        // let help = m.get("help");
-        // if let Some(h) = help {
-        //     if let Expression::String(h_msg) = h {
-        //         let hh: Cow<str> = Cow::Borrowed(h_msg); // 使用借用
-        //         ans = ans.with_help_message(&hh);
-        //     }
-        // }
+        if let Some(v) = cfg_get_bool(m, "vim_mode") {
+            ans = ans.with_vim_mode(v);
+        }
+        if let Some(v) = cfg_get_bool(m, "reset_cursor") {
+            ans = ans.with_reset_cursor(v);
+        }
+        if let Some(false) = cfg_get_bool(m, "filter_input_enabled") {
+            ans = ans.without_filtering();
+        }
+        if let Some(v) = cfg_get_str(m, "help_message") {
+            ans = ans.with_help_message(v);
+        }
+        if let Some(v) = cfg_get_str(m, "starting_filter_input") {
+            ans = ans.with_starting_filter_input(v);
+        }
+
+        //
+        if let Some(ref f) = formatter_fn {
+            ans = ans.with_formatter(f.as_ref());
+        }
+        if let Some(ref f) = scorer_fn {
+            ans = ans.with_scorer(f.as_ref());
+        }
+        if let Some(ref f) = sorter_fn {
+            ans = ans.with_sorter(f.as_ref());
+        }
     }
-    match ans.prompt() {
-        Ok(choice) => Ok(choice),
-        Err(e) => Err(RuntimeError::common(
-            format!("ui.pick: {e}").into(),
-            ctx.clone(),
-            0,
-        )),
-    }
+
+    ans.prompt()
+        .map_err(|e| RuntimeError::common(format!("ui.pick: {e}").into(), ctx.clone(), 0))
 }
+
 fn multi_select_wrapper(
     msg: &str,
     options: Vec<Expression>,
@@ -654,4 +698,70 @@ fn join_flow(
     }
 
     Ok(result_rows.join("\n").into())
+}
+
+// 辅助函数
+fn cfg_get_lambda(
+    cfgs: &Option<Rc<BTreeMap<String, Expression>>>,
+    key: &str,
+    ctx: &Expression,
+) -> Result<Option<Expression>, RuntimeError> {
+    match cfgs {
+        Some(m) => match m.get(key) {
+            None => Ok(None),
+            Some(expr @ (Expression::Lambda(..) | Expression::Function(..))) => {
+                Ok(Some(expr.clone()))
+            }
+            _ => Err(RuntimeError::common(
+                format!("{key} should be a lambda").into(),
+                ctx.clone(),
+                0,
+            )),
+        },
+        _ => Ok(None),
+    }
+}
+
+fn make_caller(
+    func: Expression,
+    env: &Environment,
+) -> impl Fn(Vec<Expression>) -> Option<Expression> {
+    use std::cell::RefCell;
+    let env_cell = RefCell::new(env.clone());
+    move |args: Vec<Expression>| {
+        let mut state = crate::eval::State::new();
+        let mut env_ref = env_cell.borrow_mut();
+        func.eval_apply(&func, &args, &mut state, &mut *env_ref, 0)
+            .ok()
+    }
+}
+
+fn cfg_get_usize(
+    m: &BTreeMap<String, Expression>,
+    key: &str,
+    ctx: &Expression,
+) -> Result<Option<usize>, RuntimeError> {
+    match m.get(key) {
+        None => Ok(None),
+        Some(Expression::Integer(n)) => Ok(Some(*n as usize)),
+        _ => Err(RuntimeError::common(
+            format!("{key} should be an Integer").into(),
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+
+fn cfg_get_bool(m: &BTreeMap<String, Expression>, key: &str) -> Option<bool> {
+    match m.get(key) {
+        Some(v) => Some(v.is_truthy()),
+        None => None,
+    }
+}
+
+fn cfg_get_str<'a>(m: &'a BTreeMap<String, Expression>, key: &str) -> Option<&'a str> {
+    match m.get(key) {
+        Some(Expression::String(s)) => Some(s.as_str()),
+        _ => None,
+    }
 }

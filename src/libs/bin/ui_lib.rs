@@ -20,7 +20,7 @@ use inquire::{
 use inquire::{list_option::ListOption, validator::Validation};
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
-        int, float, text, passwd, confirm, pick, multi_pick, date_pick,
+        int, float, text, passwd, confirm, pick, multi_pick, date_pick, editor,
         widget, joinx, joiny, join_flow,
     })
 }
@@ -35,6 +35,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         pick => "select one from list/string", "<list|items...> [msg|cfg_map]"
         multi_pick => "select multi from list/string", "<list|items...> [msg|cfg_map]"
         date_pick => "pick a date from calendar", "[msg|cfg_map]"
+        editor => "open editor for multiline text input", "[msg|cfg_map]"
 
         widget => "create a text widget","<content> <title> [width] [height]"
         joinx => "join two widgets horizontally","<widget1> <widget2>"
@@ -929,4 +930,153 @@ fn cfg_get_weekday(
             0,
         )),
     }
+}
+
+///editor
+///
+fn editor(
+    args: Vec<Expression>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("editor", &args, 0..=1, ctx)?;
+
+    let cfgs = if args.is_empty() {
+        None
+    } else {
+        Some(extract_cfg(args.into_iter().next().unwrap(), ctx)?)
+    };
+
+    let msg = match &cfgs {
+        None => "edit:".to_string(),
+        Some(m) => m
+            .get("msg")
+            .map(|v| v.to_string())
+            .unwrap_or("edit:".to_string()),
+    };
+
+    editor_wrapper(&msg, cfgs, env, ctx)
+}
+
+fn editor_wrapper(
+    msg: &str,
+    cfgs: Option<Rc<BTreeMap<String, Expression>>>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    use inquire::Editor;
+    use inquire::validator::Validation;
+    use std::ffi::OsStr;
+
+    // 1. formatter 在顶层声明（生命周期覆盖 ans.prompt()）
+    //    StringFormatter<'a> = &'a dyn Fn(&str) -> String，需要 HRTB
+    let formatter_fn: Option<Box<dyn for<'s> Fn(&'s str) -> String>> =
+        if let Some(func) = cfg_get_lambda(&cfgs, "formatter", ctx)? {
+            let call = make_caller(func, env);
+            // 显式类型标注强制 HRTB 推导
+            let f: Box<dyn for<'s> Fn(&'s str) -> String> =
+                Box::new(
+                    move |s: &str| match call(vec![Expression::String(s.to_string())]) {
+                        Some(Expression::String(r)) => r,
+                        _ => s.to_string(),
+                    },
+                );
+            Some(f)
+        } else {
+            None
+        };
+
+    // 2. editor_command / editor_command_args：
+    //    owned String 在顶层声明，确保 &OsStr 引用在 ans.prompt() 前有效
+    let editor_cmd_str: Option<String> = cfgs.as_ref().and_then(|m| {
+        if let Some(Expression::String(s)) = m.get("editor_command") {
+            Some(s.clone())
+        } else {
+            None
+        }
+    });
+    let editor_args_strs: Vec<String> = cfgs
+        .as_ref()
+        .and_then(|m| m.get("editor_command_args"))
+        .and_then(|v| {
+            if let Expression::List(list) = v {
+                Some(
+                    list.iter()
+                        .filter_map(|e| {
+                            if let Expression::String(s) = e {
+                                Some(s.clone())
+                            } else {
+                                None
+                            }
+                        })
+                        .collect(),
+                )
+            } else {
+                None
+            }
+        })
+        .unwrap_or_default();
+    // 必须在 editor_args_strs 之后声明，确保借用有效
+    let editor_args_refs: Vec<&OsStr> = editor_args_strs
+        .iter()
+        .map(|s| OsStr::new(s.as_str()))
+        .collect();
+
+    let mut ans = Editor::new(msg);
+
+    if let Some(m) = &cfgs {
+        if let Some(v) = cfg_get_str(m, "help_message") {
+            ans = ans.with_help_message(v);
+        }
+        if let Some(v) = cfg_get_str(m, "predefined_text") {
+            ans = ans.with_predefined_text(v);
+        }
+        if let Some(v) = cfg_get_str(m, "file_extension") {
+            ans = ans.with_file_extension(v);
+        }
+
+        if let Some(ref cmd) = editor_cmd_str {
+            ans = ans.with_editor_command(OsStr::new(cmd.as_str()));
+            if !editor_args_refs.is_empty() {
+                ans = ans.with_args(&editor_args_refs);
+            }
+        }
+
+        if let Some(ref f) = formatter_fn {
+            ans = ans.with_formatter(f.as_ref());
+        }
+    }
+
+    // 3. validators：接受单个 lambda 或 lambda 列表
+    //    StringValidator blanket impl: Fn(&str) -> Result<Validation, CustomUserError> + Clone
+    //    直接传具体闭包（不用 Box<dyn StringValidator>，原因同 MultiSelect validator）
+    let validator_lambdas: Vec<Expression> = cfgs
+        .as_ref()
+        .and_then(|m| m.get("validators"))
+        .map(|v| match v {
+            Expression::List(list) => list
+                .iter()
+                .filter(|e| matches!(e, Expression::Lambda(..) | Expression::Function(..)))
+                .cloned()
+                .collect(),
+            expr @ (Expression::Lambda(..) | Expression::Function(..)) => vec![expr.clone()],
+            _ => vec![],
+        })
+        .unwrap_or_default();
+
+    for func in validator_lambdas {
+        let call = make_caller(func, env); // Clone + 'static
+        ans = ans.with_validator(move |input: &str| {
+            match call(vec![Expression::String(input.to_string())]) {
+                Some(Expression::Boolean(true)) => Ok(Validation::Valid),
+                Some(Expression::Boolean(false)) => Ok(Validation::Invalid("Invalid input".into())),
+                Some(Expression::String(msg)) => Ok(Validation::Invalid(msg.into())),
+                _ => Ok(Validation::Valid),
+            }
+        });
+    }
+
+    ans.prompt()
+        .map(Expression::String)
+        .map_err(|e| RuntimeError::common(format!("ui.editor: {e}").into(), ctx.clone(), 0))
 }

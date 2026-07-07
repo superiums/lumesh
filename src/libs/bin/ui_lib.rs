@@ -13,11 +13,14 @@ use crate::{
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
-use inquire::{Confirm, CustomType, MultiSelect, Password, PasswordDisplayMode, Select, Text};
+use chrono::{NaiveDate, Weekday};
+use inquire::{
+    Confirm, CustomType, DateSelect, MultiSelect, Password, PasswordDisplayMode, Select, Text,
+};
 use inquire::{list_option::ListOption, validator::Validation};
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
-        int, float, text, passwd, confirm, pick, multi_pick,
+        int, float, text, passwd, confirm, pick, multi_pick, date_pick,
         widget, joinx, joiny, join_flow,
     })
 }
@@ -31,11 +34,13 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         confirm => "ask user to confirm", "<msg>"
         pick => "select one from list/string", "<list|items...> [msg|cfg_map]"
         multi_pick => "select multi from list/string", "<list|items...> [msg|cfg_map]"
+        date_pick => "pick a date from calendar", "[msg|cfg_map]"
 
         widget => "create a text widget","<content> <title> [width] [height]"
         joinx => "join two widgets horizontally","<widget1> <widget2>"
         joiny => "join two widgets vertically","<widget1> <widget2>"
         join_flow => "join widgets with flow layout","<max_width> <widgets...>"
+
     })
 }
 
@@ -764,4 +769,164 @@ fn build_select_fns(
             None
         },
     })
+}
+
+/// data pick
+/// 关键设计说明：
+///
+/// cfg key	类型	说明
+/// msg	String	提示语
+/// starting_date	DateTime / "YYYY-MM-DD"	初始光标日期
+/// min_date / max_date	DateTime / "YYYY-MM-DD"	可选范围
+/// week_start	Integer 0-6 或 "Mon" 等	每周起始日
+/// vim_mode	Boolean	hjkl 导航
+/// help_message	String	底部帮助文字
+/// formatter	Lambda |dt| ...	接收 DateTime，返回 String
+fn date_pick(
+    args: Vec<Expression>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("date_pick", &args, 0..=1, ctx)?;
+
+    let cfgs = if args.is_empty() {
+        None
+    } else {
+        Some(extract_cfg(args.into_iter().next().unwrap(), ctx)?)
+    };
+
+    let msg = match &cfgs {
+        None => "select a date:".to_string(),
+        Some(m) => m
+            .get("msg")
+            .map(|v| v.to_string())
+            .unwrap_or("select a date:".to_string()),
+    };
+
+    date_select_wrapper(&msg, cfgs, env, ctx)
+}
+
+fn date_select_wrapper(
+    msg: &str,
+    cfgs: Option<Rc<BTreeMap<String, Expression>>>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    // formatter 需在顶层声明，生命周期覆盖 ans.prompt()
+    // DateFormatter<'a> = &'a dyn Fn(NaiveDate) -> String，NaiveDate 是 owned，无 HRTB 问题
+    let formatter_fn: Option<Box<dyn Fn(NaiveDate) -> String>> =
+        if let Some(func) = cfg_get_lambda(&cfgs, "formatter", ctx)? {
+            let call = make_caller(func, env);
+            Some(Box::new(move |date: NaiveDate| {
+                let dt = date.and_hms_opt(0, 0, 0).unwrap();
+                match call(vec![Expression::DateTime(dt)]) {
+                    Some(Expression::String(s)) => s,
+                    _ => date.format("%Y-%m-%d").to_string(),
+                }
+            }))
+        } else {
+            None
+        };
+
+    let mut ans = DateSelect::new(msg);
+
+    if let Some(m) = &cfgs {
+        if let Some(v) = cfg_get_naive_date(m, "starting_date", ctx)? {
+            ans = ans.with_starting_date(v);
+        }
+        if let Some(v) = cfg_get_naive_date(m, "min_date", ctx)? {
+            ans = ans.with_min_date(v);
+        }
+        if let Some(v) = cfg_get_naive_date(m, "max_date", ctx)? {
+            ans = ans.with_max_date(v);
+        }
+        if let Some(v) = cfg_get_weekday(m, "week_start", ctx)? {
+            ans = ans.with_week_start(v);
+        }
+        if let Some(v) = cfg_get_str(m, "help_message") {
+            ans = ans.with_help_message(v);
+        }
+        if let Some(ref f) = formatter_fn {
+            ans = ans.with_formatter(f.as_ref());
+        }
+    }
+
+    // validator：NaiveDate 是 owned，无 HRTB，直接传具体闭包
+    if let Some(func) = cfg_get_lambda(&cfgs, "validator", ctx)? {
+        let call = make_caller(func, env); // Clone + 'static
+        ans = ans.with_validator(move |date: NaiveDate| {
+            let dt = date.and_hms_opt(0, 0, 0).unwrap();
+            match call(vec![Expression::DateTime(dt)]) {
+                Some(Expression::Boolean(true)) => Ok(Validation::Valid),
+                Some(Expression::Boolean(false)) => Ok(Validation::Invalid("Invalid date".into())),
+                Some(Expression::String(msg)) => Ok(Validation::Invalid(msg.into())),
+                _ => Ok(Validation::Valid),
+            }
+        });
+    }
+
+    ans.prompt()
+        .map(|date| Expression::DateTime(date.and_hms_opt(0, 0, 0).unwrap()))
+        .map_err(|e| RuntimeError::common(format!("ui.date_pick: {e}").into(), ctx.clone(), 0))
+}
+
+fn cfg_get_naive_date(
+    m: &BTreeMap<String, Expression>,
+    key: &str,
+    ctx: &Expression,
+) -> Result<Option<NaiveDate>, RuntimeError> {
+    match m.get(key) {
+        None => Ok(None),
+        Some(Expression::DateTime(dt)) => Ok(Some(dt.date())),
+        Some(Expression::String(s)) => {
+            NaiveDate::parse_from_str(s, "%Y-%m-%d")
+                .map(Some)
+                .map_err(|_| {
+                    RuntimeError::common(
+                        format!("{key} should be a date string YYYY-MM-DD or DateTime").into(),
+                        ctx.clone(),
+                        0,
+                    )
+                })
+        }
+        _ => Err(RuntimeError::common(
+            format!("{key} should be a date string or DateTime").into(),
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+
+fn cfg_get_weekday(
+    m: &BTreeMap<String, Expression>,
+    key: &str,
+    ctx: &Expression,
+) -> Result<Option<Weekday>, RuntimeError> {
+    match m.get(key) {
+        None => Ok(None),
+        Some(Expression::Integer(n)) => Ok(Some(match n % 7 {
+            0 => Weekday::Mon,
+            1 => Weekday::Tue,
+            2 => Weekday::Wed,
+            3 => Weekday::Thu,
+            4 => Weekday::Fri,
+            5 => Weekday::Sat,
+            _ => Weekday::Sun,
+        })),
+        Some(Expression::String(s)) => {
+            use std::str::FromStr;
+            Weekday::from_str(s).map(Some).map_err(|_| {
+                RuntimeError::common(
+                    format!("{key} should be weekday name (Mon/Tue/...) or integer 0-6").into(),
+                    ctx.clone(),
+                    0,
+                )
+            })
+        }
+        _ => Err(RuntimeError::common(
+            format!("{key} should be a weekday").into(),
+            ctx.clone(),
+            0,
+        )),
+    }
 }

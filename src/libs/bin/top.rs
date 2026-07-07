@@ -349,7 +349,7 @@ fn cd(
     if let Some(Expression::List(paths)) = env.get("PATH_SESSION") {
         if !paths.iter().any(|p| {
             if let Expression::String(ps) = p {
-                ps.as_str() == current.as_ref()
+                ps.as_str() == dir_new.as_ref()
             } else {
                 false
             }

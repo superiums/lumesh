@@ -1,18 +1,24 @@
 # Changelog
 
 ## [0.16.2]
+
 - fix always execute buffer while user cancel hotkey func
 - fix modifiers map which leading a fake ESC
 - fix CapsLock recognize
-- 
+- fix PATH_SESSEION write
+- support more cfg in ui.pick/multi_pick
+- add ui.editor/date_pick
+- fix module call tokenizer
 
 ## [0.16.1]
+
 - update hotkeys bindings
 - Kitty Keyboard Protocol
 - allow string as map key
 - fix local fn lookup
 
 ## [0.16.0]
+
 - update configs
 
 more useful hotkey binding examples
@@ -27,8 +33,9 @@ more useful hotkey binding examples
 `ALT + Enter` or `ALT + o` to get ai generate
 
 ## [0.15.9]
+
 - only expand wildcard in symbol, not in string
-both in cmd arg and for iteration.
+  both in cmd arg and for iteration.
 - enhanced ai completion
 
 `ALT + i` to got ai hint
@@ -36,17 +43,20 @@ both in cmd arg and for iteration.
 ~~`CTRL + g` to get ai generate~~
 
 ## [0.15.8]
+
 - fix set var in block in block
 
 ## [0.15.7]
+
 - fix tailing '&' tokenizer
 - allow file completion if no other suggestion
 
 ## [0.15.6]
+
 - improve completion color
 - clear hint after enter
 - remove theme from completer
-- fix `ls --` syntax highlight. unify highlight. protect input - 
+- fix `ls --` syntax highlight. unify highlight. protect input -
 - Create rustfmt.toml
 - format code as 2024
 - fix regex.match recog as keyword
@@ -56,11 +66,13 @@ both in cmd arg and for iteration.
 - improve symbo for CFM, improve ctx:Start
 
 ## [0.15.5]
+
 - restructor tokenizer with dispatch.
 - update add condition for completions.
 - add +and! as condition for completion. rename @n to @i
 
 ## [0.15.4]
+
 - rewrite exec col for comletion
 - clean completions
 - add more completions
@@ -78,6 +90,7 @@ both in cmd arg and for iteration.
 - fix alias excuting
 
 ## [0.15.3]
+
 - upgrade dependencies
 - clean unused dependencies
 - fix bare symbo receive stdout in pipe
@@ -86,6 +99,7 @@ both in cmd arg and for iteration.
 - fix path completion
 
 ## [0.15.2]
+
 - multiline mode for editor
 - validate for editor
 - fix hint postion
@@ -95,16 +109,18 @@ both in cmd arg and for iteration.
 - fix terminal build on windows
 
 ## [0.15.1]
+
 - editor theme
 - editor buffer optimized
 - custom hotkey fn binding
-with friendly hotkey define
+  with friendly hotkey define
 
 - fix raw mode print postion
 
 ## [0.15.0]
+
 - migrate from rustyline to crossterm
-whole editor rewrited.
+  whole editor rewrited.
 
 - path completion
 - add completion suffix
@@ -112,17 +128,19 @@ whole editor rewrited.
 - fix ctrl+c signal
 
 ## [0.14.3]
+
 - improved quotes:
   - '' keeps raw string
   - "" Normal escape, ANSI escape and Unicode escape
   - `` All escape and var insert
   - invalide escape now keeps as raw string insteadof report error
   - test unit updated for above changes
-  
+
 ## [0.14.2]
+
 - Fix following bugs:
-  - String * 0 → None (should be "")
-  - String * negative → None (should error)
+  - String \* 0 → None (should be "")
+  - String \* negative → None (should error)
   - String - i64::MIN → panic in -n as usize
   - Regex truthiness uses .is_empty() (inverted logic)
   - BSet/HMap/Map::partial_cmp compares only by length
@@ -132,8 +150,8 @@ whole editor rewrited.
   - Float % Integer returns None instead of error
 - more unit test
 
-
 ## [0.14.1]
+
 - add `grep`, `find`, `find_last`, `filter` to table.
 - more flexable param for `into.table`
 - optimize `fs.ls`
@@ -141,8 +159,9 @@ whole editor rewrited.
 - report noliberr for undefined fn
 
 ## [0.14.0]
+
 - introduce `table` expression
-builtin lib `table` also was added.
+  builtin lib `table` also was added.
 - optimize libs: `into` and `from`
 - allow regex split in `into.table()`
 

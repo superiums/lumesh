@@ -79,74 +79,7 @@ if IS_INTERACTIVE {
     # set LUME_SUDO_CMD = 'doas'
 
     # ## key bindings
-    # Key format: "MODIFIER_key" (order CTRL_ALT_SHIFT: e.g., "CTRL_ALT_k", "CTRL_q", "ALT_h")
-    # Value type:
-    #   String -> inserts text into current line
-    #   lambda/function -> executes immediately with environment access
-    #         fn receive one arg as current buffer.
-
-    # ### command manage
-    let save_bookmark = (b) -> if !b.trim().is_empty() { b.trim()+"\n" >> '~/.cache/lume_bookmark'; println "\t[MARKED]"}
-    let select_bookmark = (b) -> { fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') }
-    let select_history = (b) -> {
-        fs.read ~/.cache/.lume_history | string.lines() | list.filter(x -> string.contains(x, $b)) | ui.pick('filtered history:')
-    }
-
-    # ### directions
-    let fuzzy_go = (b) -> {let base = b ~: r'~|/' ? b : './'; let max = b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | 'cd ' + _}
-    let pick_file = (b) -> {fd -t f | ui.pick('select file:')}
-    let handle_file = (b) -> { if $b {handlr open -- $b}else{print 'pick a file first'}}
-    let edit_file = (b) -> {if $b {let e = sys.has('EDITOR') ? $EDITOR : 'hx'; $e $b}else{print 'pick a file first'}}
-    let search_content = (b) -> {
-        let t = $b ? $b : ui.text 'search in filetype:' ?: 'md'
-        rg --type $t --line-number --column --no-heading --smart-case '--color=never' 'fs.read' ./ | ui.pick() ?! | .split(':') | .at(0)
-    }
-
-    # ### develop
-    let git_commit = (b) -> {
-        git add -A;
-        ui.text('commit message:') ?! | git commit -m _
-    }
-    let timestamp = "'" + time.now().to_string('%Y-%m-%d %H:%M:%S') + "'"
-
-    # ### error fix
-    let fix_typos = (b) -> $b.replace('gerp', 'grep').replace('mroe', 'more').replace('les', 'less')
-
-    # ### menu
-    fn menu(b){
-        let m = {
-            save_bookmark,
-            select_bookmark,
-            fuzzy_go,
-            pick_file,
-            handle_file,
-            edit_file,
-            search_content,
-            git_commit,
-            fix_typos
-        }
-
-        let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
-        ex($b)
-    } #?: e -> eprint e.msg
-
-    # ## binding
-    set LUME_HOT_BINDINGS = {
-        CTRL_q: 'exit',
-        ALT_r: select_history,
-        ALT_x: select_bookmark,
-        ALT_m: save_bookmark,
-        ALT_g: fuzzy_go,
-        CTRL_SHIFT_f: pick_file,
-        CTRL_SHIFT_H: handle_file,
-        CTRL_SHIFT_e: edit_file,
-        CTRL_ALT_SHIFT_c: search_content,
-        CTRL_SHIFT_a: git_commit,
-        ALT_e: fix_typos,
-        CTRL_SHIFT_t: timestamp,
-        'CTRL_/': menu,
-    }
-
+    include bindings.lm
 
     # ## abbreviations
     set LUME_ABBREVIATIONS = {

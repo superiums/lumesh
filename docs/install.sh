@@ -227,8 +227,10 @@ download_data() {
     $sudo_cmd tar -xzf "$temp_data" -C "$DOC_DIR"
     if [ -d "$DOC_DIR/lumesh/examples" ]; then
         cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"
+        cp -f "$DOC_DIR/lumesh/examples/bindings.lm" "$CONFIG_DIR/"
+        cp -f "$DOC_DIR/lumesh/examples/syntax.md" "$CONFIG_DIR/"
+        cp -f "$DOC_DIR/lumesh/examples/lib.md" "$CONFIG_DIR/"
         cp -f $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true
-        cp -f $DOC_DIR/lumesh/examples/*.md "$CONFIG_DIR/" 2>/dev/null || true
     fi
     rm "$temp_data"
     echo -e "${GREEN}Data extracted to: $DOC_DIR${NC}"

@@ -78,7 +78,7 @@ install_data() {
     if [ -d "$DOC_DIR/lumesh/examples" ]; then
         $sudo_cmd mkdir -p "$CONFIG_DIR"
         $sudo_cmd cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/" 2>/dev/null || true
-        for f in "$DOC_DIR"/lumesh/examples/prompt*.lm; do
+        for f in "$DOC_DIR"/lumesh/examples/* ; do
             [ -f "$f" ] && $sudo_cmd cp -f "$f" "$CONFIG_DIR/" 2>/dev/null || true
         done
     fi

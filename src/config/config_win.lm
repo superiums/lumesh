@@ -79,15 +79,17 @@ if IS_INTERACTIVE {
     #   lambda/function -> executes immediately with environment access
     #         fn receive one arg as current buffer.
 
-    # ### command manage
-    let save_bookmark = (b) -> if !b.trim().is_empty() { b.trim()+"\n" >> '~/.cache/lume_bookmark'; println "\t[MARKED]"}
-    let select_bookmark = (b) -> { fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') }
+    # ### bookmark manage
+    let save_bookmark = (b) -> if !$b.trim().is_empty() { $b.trim()+"\n" >> '~/.cache/lume_bookmark'; println "\t[MARKED]"}
+    let select_bookmark = (b) -> { fs.read ~/.cache/lume_bookmark | .lines() | ui.pick('select bookmark:') }
+    let save_pathmark = (b) -> if !fs.read(~/.cache/lume_pathmark).lines().contains(cwd()) ?: true { cwd()+"\n" >> '~/.cache/lume_pathmark'; println "\t[MARKED]"}
+    let select_pathmark = (b) -> { fs.read ~/.cache/lume_pathmark | .lines() | ui.pick('select pathmark:') | 'cd ' + _ }
     let select_history = (b) -> {
-        fs.read ~/.cache/.lume_history | string.lines() | list.filter(x -> string.contains(x, $b)) | ui.pick('filtered history:')
+        fs.read ~/.cache/.lume_history | .lines() | .filter(x -> string.contains(x, $b)) | ui.pick('filtered history:')
     }
 
     # ### directions
-    let fuzzy_go = (b) -> {let base = b ~: r'~|/' ? b : './'; let max = b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | 'cd ' + _}
+    let fuzzy_go = (b) -> {let base = $b ~: r'~|/' ? $b : './'; let max = $b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | 'cd ' + _}
     let pick_file = (b) -> {fd -t f | ui.pick('select file:')}
     let handle_file = (b) -> { if $b {handlr open -- $b}else{print 'pick a file first'}}
     let edit_file = (b) -> {if $b {let e = sys.has('EDITOR') ? $EDITOR : 'notepad'; $e $b}else{print 'pick a file first'}}
@@ -111,6 +113,7 @@ if IS_INTERACTIVE {
         let m = {
             save_bookmark,
             select_bookmark,
+            save_pathmark,
             fuzzy_go,
             pick_file,
             handle_file,
@@ -131,6 +134,7 @@ if IS_INTERACTIVE {
         ALT_x: select_bookmark,
         ALT_m: save_bookmark,
         ALT_g: fuzzy_go,
+        CTRL_SHIFT_G: select_pathmark,
         CTRL_SHIFT_f: pick_file,
         CTRL_SHIFT_H: handle_file,
         CTRL_SHIFT_e: edit_file,
@@ -140,7 +144,6 @@ if IS_INTERACTIVE {
         CTRL_SHIFT_t: timestamp,
         'CTRL_/': menu,
     }
-
 
 
     # ## abbreviations

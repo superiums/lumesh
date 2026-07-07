@@ -325,7 +325,7 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
             map_valid_token(prefix_range_tag("..="), TokenKind::OperatorInfix),
             map_valid_token(prefix_range_tag(".."), TokenKind::OperatorInfix), //a..b range
             map_valid_token(postfix_break_tag(".."), TokenKind::OperatorPostfix), //a.. range
-            map_valid_token(punctuation_tag("."), TokenKind::OperatorPostfix), //call
+            map_valid_token(alpha_followed_tag("."), TokenKind::OperatorPostfix), //call
         ))(input),
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
             map_valid_token(prefix_range_tag("..="), TokenKind::OperatorPrefix), // ..=b range
@@ -551,8 +551,8 @@ fn try_map_or_symbol(
 /// Requires Word context (preceded by identifier) and followed by identifier.
 fn colon_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
-        Ctx::Word => alt((
-            map_valid_token(prefix_tag("::"), TokenKind::OperatorInfix),
+        Ctx::Letter => alt((
+            map_valid_token(alpha_followed_tag("::"), TokenKind::OperatorInfix),
             map_valid_token(punctuation_tag(":="), TokenKind::Operator),
             map_valid_token(operator_tag(":"), TokenKind::Operator), //{k:v} a?b:c
         ))(input),
@@ -1110,6 +1110,14 @@ fn space_followed_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationR
         input
             .strip_prefix(keyword)
             .filter(|(rest, _)| rest.starts_with(char::is_whitespace))
+            .ok_or(NOT_FOUND)
+    }
+}
+fn alpha_followed_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| rest.starts_with(|x| char::is_ascii_alphabetic(&x)))
             .ok_or(NOT_FOUND)
     }
 }

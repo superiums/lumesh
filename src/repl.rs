@@ -13,7 +13,7 @@ use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_mer
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{PathBuf, is_separator};
 use std::rc::Rc;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
@@ -150,6 +150,20 @@ impl LumeCompleter {
                     }
                 })
                 .collect();
+
+            // empty param completion, try path
+            if items.is_empty() && current_token.contains(is_separator) {
+                let entries = list_path_entries(current_token, false);
+                items = entries
+                    .into_iter()
+                    .map(|(name, full_path)| CompletionItem {
+                        display: Some(name),
+                        replacement: full_path,
+                        suffix: None,
+                    })
+                    .collect();
+            }
+
             items.sort_by_key(|a| a.replacement.len());
             return items;
         }

@@ -21,8 +21,10 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
     let mut result = String::new();
     let mut is_colored = false;
 
+    let mut is_cmd_ctx = true;
     for (token, diagnostic) in tokens.iter().zip(&diagnostics) {
-        match (token.kind, token.range.to_str(line)) {
+        let tk = token.range.to_str(line);
+        match (token.kind, tk) {
             (TokenKind::ValueSymbol, b) => {
                 result.push_str(
                     theme
@@ -86,17 +88,26 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                 is_colored = true;
                 result.push_str(s);
             }
-            (TokenKind::IntegerLiteral | TokenKind::FloatLiteral, l) => {
+            (TokenKind::IntegerLiteral, s) => {
                 if let Diagnostic::InvalidNumber(e) = diagnostic {
                     result.push_str(get_color("number_error", theme));
                     result.push_str(e.to_str(line));
                     is_colored = true;
                 } else {
-                    if is_colored {
-                        result.push_str(get_color("reset", theme));
-                        is_colored = false;
-                    }
-                    result.push_str(l);
+                    result.push_str(get_color("integer_literal", theme));
+                    is_colored = true;
+                    result.push_str(s);
+                }
+            }
+            (TokenKind::FloatLiteral, s) => {
+                if let Diagnostic::InvalidNumber(e) = diagnostic {
+                    result.push_str(get_color("number_error", theme));
+                    result.push_str(e.to_str(line));
+                    is_colored = true;
+                } else {
+                    result.push_str(get_color("float_literal", theme));
+                    is_colored = true;
+                    result.push_str(s);
                 }
             }
             (TokenKind::Symbol, l) => {
@@ -105,21 +116,21 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                     result.push_str(e.to_str(line));
                     is_colored = true;
                 } else {
-                    if is_top_or_se(l) {
-                        result.push_str(get_color("builtin_cmd", theme));
-                        is_colored = true;
-                    } else if is_lib(l) {
-                        result.push_str(get_color("builtin_lib", theme));
-                        is_colored = true;
-                    } else if is_valid_command(l) {
-                        result.push_str(get_color("command_valid", theme));
-                        is_colored = true;
-                    } else if is_colored {
-                        result.push_str(get_color("reset", theme));
-                        is_colored = false;
+                    if is_cmd_ctx {
+                        if is_top_or_se(l) {
+                            result.push_str(get_color("builtin_cmd", theme));
+                        } else if is_lib(l) {
+                            result.push_str(get_color("builtin_lib", theme));
+                        } else if is_valid_command(l) {
+                            result.push_str(get_color("command_valid", theme));
+                        } else {
+                            result.push_str(get_color("warning", theme));
+                        }
+                    } else {
+                        result.push_str(get_color("symbol", theme));
                     }
-
                     result.push_str(l);
+                    is_colored = true;
                 }
             }
             (TokenKind::Whitespace, w) => {
@@ -148,6 +159,12 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                 is_colored = true;
                 result.push_str(s);
             }
+        }
+
+        // 非空白才更新
+        if token.kind != TokenKind::Whitespace {
+            is_cmd_ctx = matches!(token.kind, TokenKind::ModeTip | TokenKind::LineBreak)
+                || matches!(tk, "|" | "{" | "[" | "(");
         }
     }
 
@@ -245,7 +262,7 @@ pub fn get_dark_theme() -> HashMap<String, String> {
 
         // 错误和警告
         // String::from("error") => "\x1b[38;5;196m".to_string(),             // 亮红色
-        // String::from("warning") => "\x1b[38;5;214m".to_string(),           // 橙黄色
+        String::from("warning") => "\x1b[38;5;214m".to_string(),           // 橙黄色
         // String::from("info") => "\x1b[38;5;117m".to_string(),              // 信息蓝
 
         // 特殊语法元素
@@ -312,7 +329,7 @@ pub fn get_ayu_dark_theme() -> HashMap<String, String> {
 
         // 错误和警告
         // String::from("error") => "\x1b[38;5;196m".to_string(),             // 亮红色
-        // String::from("warning") => "\x1b[38;5;214m".to_string(),           // 橙黄色
+        String::from("warning") => "\x1b[38;5;214m".to_string(),           // 橙黄色
         // String::from("info") => "\x1b[38;5;117m".to_string(),              // 信息蓝
 
         // 特殊语法元素

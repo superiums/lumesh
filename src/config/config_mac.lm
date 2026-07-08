@@ -176,6 +176,7 @@ if IS_INTERACTIVE {
     alias fhead = fs.head()
     alias ftail = fs.tail()
     alias doc = open https://lumesh.codeberg.page
+    alias config = vi about.info().prelude
 
     # ## ---ai---
     # ## default AI Helper settings. following is default.

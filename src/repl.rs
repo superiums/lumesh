@@ -241,10 +241,6 @@ pub fn run_repl(env: &mut Environment) {
         }
     };
 
-    // ai config
-    let ai_config = env.get("LUME_AI_CONFIG");
-    env.undefine("LUME_AI_CONFIG");
-
     // theme
     let theme_base = env.get("LUME_THEME");
     env.undefine("LUME_THEME");
@@ -297,6 +293,10 @@ pub fn run_repl(env: &mut Environment) {
 
     // =======create editor=======
     let mut editor = Editor::new();
+
+    // ai config
+    let ai_config = env.get("LUME_AI_CONFIG");
+    env.undefine("LUME_AI_CONFIG");
 
     // ai hinter
     let ai_client = ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));

@@ -180,6 +180,7 @@ if IS_INTERACTIVE {
     alias basename = fs.base_name()
     alias dirname = fs.dir_name()
     alias doc = explorer https://lumesh.codeberg.page
+    alias config = vi about.info().prelude
 
     # ## ---ai---
     # ## default AI Helper settings. following is default.

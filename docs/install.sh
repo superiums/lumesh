@@ -229,7 +229,7 @@ download_data() {
         cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"
         cp -f "$DOC_DIR/lumesh/examples/bindings.lm" "$CONFIG_DIR/"
         cp -f "$DOC_DIR/lumesh/examples/syntax.md" "$CONFIG_DIR/"
-        cp -f "$DOC_DIR/lumesh/examples/lib.md" "$CONFIG_DIR/"
+        cp -f "$DOC_DIR/lumesh/examples/libs.md" "$CONFIG_DIR/"
         cp -f $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true
     fi
     rm "$temp_data"

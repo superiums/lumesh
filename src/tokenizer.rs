@@ -637,6 +637,26 @@ fn path_tag(punct: &str, alone_ok: bool) -> impl '_ + Fn(Input<'_>) -> Tokenizat
             return Err(NOT_FOUND);
         }
 
+        // let mut chars = input.chars();
+        // let mut places = 0;
+
+        // while let Some(c) = chars.next() {
+        //     if c == '\\' {
+        //         if let Some(next_c) = chars.next() {
+        //             if matches!(&next_c, ' ' | '"' | '\'') {
+        //                 places += c.len_utf8() + next_c.len_utf8();
+        //                 continue;
+        //             }
+        //             places += next_c.len_utf8();
+        //         }
+        //     } else if c.is_ascii_whitespace() {
+        //         break;
+        //     } else if is_path_delimiter(c) {  // 直接传 char，不需要 b as char
+        //         break;
+        //     }
+        //     places += c.len_utf8();  // c 是真正的 char，len_utf8() 结果正确
+        // }
+
         let bytes = input.as_ref().as_bytes();
         let prefix_len = punct.len();
         let mut i = prefix_len;
@@ -648,7 +668,13 @@ fn path_tag(punct: &str, alone_ok: bool) -> impl '_ + Fn(Input<'_>) -> Tokenizat
             if b == b'\\' {
                 i += 1; // skip backslash
                 if i < bytes.len() {
-                    i += 1; // skip escaped byte
+                    let char_len = match bytes[i] {
+                        0x00..=0x7F => 1,
+                        0xC0..=0xDF => 2,
+                        0xE0..=0xEF => 3, // 中文字符落在此区间
+                        _ => 4,
+                    };
+                    i += char_len; // skip escaped byte
                     continue;
                 }
                 // backslash at end of input — treat as literal, stop
@@ -656,12 +682,18 @@ fn path_tag(punct: &str, alone_ok: bool) -> impl '_ + Fn(Input<'_>) -> Tokenizat
             }
 
             // delimiter — stop scanning
-            if is_path_delimiter(b as char) {
+            if b < 0x80 && is_path_delimiter(b as char) {
                 break;
             }
 
             // skip multi-byte UTF-8: advance by char length
-            i += (b as char).len_utf8();
+            let char_len = match b {
+                0x00..=0x7F => 1,
+                0xC0..=0xDF => 2,
+                0xE0..=0xEF => 3, // 中文字符落在此区间
+                _ => 4,
+            };
+            i += char_len;
         }
 
         // need at least 1 byte of content beyond the prefix

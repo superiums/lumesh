@@ -320,6 +320,48 @@ impl Expression {
                 let iterator = BoxedIterator::Vec(owned_items.into_iter());
                 execute_iteration(var, index_name, iterator, size, body, state, env, depth)
             }
+            Expression::Map(map) => {
+                let items = map
+                    .keys()
+                    .map(|k| Expression::from(k.clone()))
+                    .collect::<Vec<_>>();
+                let size = items.len();
+                let iterator = BoxedIterator::Vec(items.into_iter());
+                execute_iteration(var, index_name, iterator, size, body, state, env, depth)
+            }
+            Expression::HMap(map) => {
+                let items = map
+                    .keys()
+                    .map(|k| Expression::from(k.clone()))
+                    .collect::<Vec<_>>();
+                let size = items.len();
+                let iterator = BoxedIterator::Vec(items.into_iter());
+                execute_iteration(var, index_name, iterator, size, body, state, env, depth)
+            }
+            Expression::Table(table) => {
+                use std::collections::BTreeMap;
+
+                let rows: Vec<Expression> = table
+                    .rows()
+                    .iter()
+                    .map(|row| {
+                        let map: BTreeMap<String, Expression> = table
+                            .headers()
+                            .iter()
+                            .enumerate()
+                            .map(|(i, header)| {
+                                let value = row.get(i).cloned().unwrap_or(Expression::None);
+                                (header.clone(), value)
+                            })
+                            .collect();
+                        Expression::from(map)
+                    })
+                    .collect();
+                let size = table.row_count();
+
+                let iterator = BoxedIterator::Vec(rows.into_iter());
+                execute_iteration(var, index_name, iterator, size, body, state, env, depth)
+            }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::ForNonList(list_excuted),
                 self.clone(),
@@ -746,7 +788,7 @@ impl Expression {
     }
 }
 
-fn glob_expand(s: &str) -> Vec<String> {
+pub fn glob_expand(s: &str) -> Vec<String> {
     let mut elist = vec![];
     if let Ok(g) = glob(s) {
         for p in g.flatten() {

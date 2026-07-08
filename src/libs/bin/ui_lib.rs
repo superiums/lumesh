@@ -1,12 +1,13 @@
 use crate::{
     Environment, Expression, RuntimeError,
+    expression::eval2::{glob_expand, ifs_split},
     libs::{
         BuiltinInfo,
         helper::{check_args_len, check_exact_args_len, get_integer_ref, get_string_ref},
         lazy_module::LazyModule,
     },
     reg_info, reg_lazy,
-    runtime::{IFS_PCK, ifs_contains},
+    utils::expand_home,
 };
 
 // Refactored ui_module
@@ -28,8 +29,7 @@ pub fn regist_lazy() -> LazyModule {
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         int => "read an int from input", "<msg>"
-        float => "read a float from input", "<msg>"
-        text => "read a text input ", "<msg>"
+        float => "read a float from input", "<msg> [decimal_places]"        text => "read a text input ", "<msg>"
         passwd => "read a passwd input", "<msg> [confirm?]"
         confirm => "ask user to confirm", "<msg>"
         pick => "select one from list/string", "<list|items...> [msg|cfg_map]"
@@ -105,16 +105,44 @@ fn float(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("float", &args, 1, ctx)?;
+    check_args_len("float", &args, 1..=2, ctx)?; // Allow 1-2 arguments
     let msg = get_string_ref(&args[0], ctx)?;
 
+    // Get decimal places from second argument, default to 2
+    let decimal_places = if args.len() == 2 {
+        match &args[1] {
+            Expression::Integer(n) => *n as usize,
+            _ => {
+                return Err(RuntimeError::common(
+                    "decimal places must be an integer".into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        }
+    } else {
+        2 // Default to 2 decimal places
+    };
+
+    // Create dynamic format string
+    let aformatter = &|i| format!("{:.*}", decimal_places, i);
+    let hmsg = format!("with {} digits of precision", decimal_places);
     let amount = CustomType::<f64>::new(msg.as_str())
-        .with_formatter(&|i| format!("${i:.2}"))
+        .with_formatter(aformatter)
         .with_error_message("Please type a valid number")
-        .with_help_message("Type the amount using a decimal point as a separator");
+        .with_help_message(&hmsg);
 
     match amount.prompt() {
-        Ok(s) => Ok(Expression::Float(s)),
+        Ok(s) => {
+            // 四舍五入到指定小数位
+            let rounded = if decimal_places > 0 {
+                let factor = 10_f64.powi(decimal_places as i32);
+                (s * factor).round() / factor
+            } else {
+                s.round()
+            };
+            Ok(Expression::Float(rounded))
+        }
         Err(e) => Err(RuntimeError::common(
             format!("ui.float: {e}").into(),
             ctx.clone(),
@@ -324,19 +352,60 @@ fn extract_options(
         Expression::List(list) => Ok(list.as_ref().clone()),
         Expression::BSet(bset) => Ok(bset.iter().cloned().collect()),
         Expression::Range(range, step) => Ok(range.step_by(step).map(Expression::from).collect()),
-        Expression::String(str) => {
-            let ifs = env.get("IFS");
-            let delimiter = match (ifs_contains(IFS_PCK, env), &ifs) {
-                (true, Some(Expression::String(fs))) => fs,
-                _ => "\n",
-            };
-            Ok(str
-                .split_terminator(delimiter)
-                .map(|line| Expression::String(line.to_string()))
-                .collect::<Vec<_>>())
+        Expression::Symbol(str) if str.contains('*') => {
+            let s = expand_home(str.as_ref());
+
+            let owned_items: Vec<Expression> = glob_expand(&s)
+                .into_iter()
+                .map(Expression::String)
+                .collect();
+            Ok(owned_items)
         }
+        Expression::String(str) => {
+            let s = expand_home(str.as_ref());
+
+            let owned_items: Vec<Expression> = ifs_split(&s, env)
+                .into_iter()
+                .map(Expression::String)
+                .collect();
+            Ok(owned_items)
+        }
+        Expression::Map(map) => Ok(map
+            .keys()
+            .map(|k| Expression::from(k.clone()))
+            .collect::<Vec<_>>()),
+        Expression::HMap(map) => Ok(map
+            .keys()
+            .map(|k| Expression::from(k.clone()))
+            .collect::<Vec<_>>()),
+        Expression::Table(table) => {
+            use std::collections::BTreeMap;
+
+            let rows: Vec<Expression> = table
+                .rows()
+                .iter()
+                .map(|row| {
+                    let map: BTreeMap<String, Expression> = table
+                        .headers()
+                        .iter()
+                        .enumerate()
+                        .map(|(i, header)| {
+                            let value = row.get(i).cloned().unwrap_or(Expression::None);
+                            (header.clone(), value)
+                        })
+                        .collect();
+                    Expression::from(map)
+                })
+                .collect();
+            Ok(rows)
+        }
+        // Expression::Table(table) => Ok(table
+        //     .rows()
+        //     .iter()
+        //     .map(|row| Expression::from(row))
+        //     .collect::<Vec<_>>()),
         _ => Err(RuntimeError::common(
-            "pick requires a list/set/range/string as options".into(),
+            "pick requires a list/set/range/table/glob/string as options".into(),
             ctx.clone(),
             0,
         )),
@@ -733,7 +802,7 @@ fn build_select_fns(
             Some(Box::new(move |i: ListOption<&Expression>| {
                 match call(vec![Expression::Integer(i.index as i64), i.value.clone()]) {
                     Some(Expression::String(s)) => s,
-                    _ => format!("Option {}: '{}'", i.index + 1, i.value),
+                    _ => format!("[Option {}]: {}", i.index + 1, i.value),
                 }
             }))
         } else {

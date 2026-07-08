@@ -69,6 +69,7 @@ impl Ctx {
 fn parse_token_dispatch(
     input: Input<'_>,
     ctx: Ctx,
+    last_ctx: Ctx,
     is_cfm: bool,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
     let first = match input.chars().next() {
@@ -144,7 +145,7 @@ fn parse_token_dispatch(
 
         '0'..='9' => number_literal(input),
 
-        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx, first, is_cfm), // keyword / value_symbol / string / symbol
+        'a'..='z' | 'A'..='Z' => alpha_dispatch(input, ctx, last_ctx, first, is_cfm), // keyword / value_symbol / string / symbol
 
         c if !c.is_ascii() => m!(non_ascii, TokenKind::StringRaw),
 
@@ -487,6 +488,7 @@ fn underscore_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (To
 fn alpha_dispatch(
     input: Input<'_>,
     ctx: Ctx,
+    last_ctx: Ctx,
     first: char,
     is_cfm: bool,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
@@ -500,7 +502,7 @@ fn alpha_dispatch(
 
     // H{ M{ S{ map/set literals
     if matches!(ctx, Ctx::Space | Ctx::Start) && matches!(&first, 'H' | 'M' | 'S') {
-        return try_map_or_symbol(input, ctx, first, is_cfm);
+        return try_map_or_symbol(input, ctx, last_ctx, first, is_cfm);
     }
 
     #[cfg(windows)]
@@ -508,7 +510,7 @@ fn alpha_dispatch(
         return Ok(r);
     }
 
-    // keyword should only in ctx::Start/Space, not in ctx::OPen, like `regex.match`
+    // keyword should only in ctx::Start/Space, not in ctx::Open, like `regex.match`
     if ctx == Ctx::Start || ctx == Ctx::Space {
         if let Ok(r) = map_valid_token(any_keyword, TokenKind::Keyword)(input) {
             return Ok(r);
@@ -520,7 +522,7 @@ fn alpha_dispatch(
         time_literal,
         map_valid_token(protocols, TokenKind::StringRaw),
         map_valid_token(
-            |input| symbol(input, is_cfm, ctx == Ctx::Space),
+            |input| symbol(input, is_cfm, ctx, last_ctx),
             TokenKind::Symbol,
         ),
     ))(input)
@@ -529,6 +531,7 @@ fn alpha_dispatch(
 fn try_map_or_symbol(
     input: Input<'_>,
     ctx: Ctx,
+    last_ctx: Ctx,
     first: char,
     is_cfm: bool,
 ) -> TokenizationResult<'_, (Token, Diagnostic)> {
@@ -541,7 +544,7 @@ fn try_map_or_symbol(
         )(input)
     } else {
         map_valid_token(
-            |input| symbol(input, is_cfm, ctx == Ctx::Space),
+            |input| symbol(input, is_cfm, ctx, last_ctx),
             TokenKind::Symbol,
         )(input)
     }
@@ -1009,11 +1012,18 @@ fn value_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 
-fn symbol(input: Input<'_>, is_cfm: bool, is_space_ctx: bool) -> TokenizationResult<'_> {
-    let len = input
-        .chars()
-        .take_while(|&c| is_symbol_char(c, is_cfm, is_space_ctx))
-        .count();
+fn symbol(input: Input<'_>, is_cfm: bool, ctx: Ctx, last_ctx: Ctx) -> TokenizationResult<'_> {
+    let len = if is_cfm {
+        let is_param_ctx = ctx == Ctx::Space && last_ctx == Ctx::Letter;
+        let is_cmd_ctx = ctx == Ctx::Start || last_ctx == Ctx::Start && ctx == Ctx::Space;
+
+        input
+            .chars()
+            .take_while(|&c| is_symbol_char_cfm(c, is_param_ctx, is_cmd_ctx))
+            .count()
+    } else {
+        input.chars().take_while(|&c| is_symbol_char(c)).count()
+    };
 
     if len == 0 {
         return Err(NOT_FOUND);
@@ -1238,31 +1248,45 @@ fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
 /// Checks whether the character is allowed in a symbol.
 /// Symbol chars: alphanumeric, `_`, `~`, `?`, `&`, `#`, `$`, `-`, `/`, `\`
 /// Excluded (cause operator/punctuation parsing instead): `+`, `=`, `<`, `>`, `*`, `%`, `^`, `|`, `:`, `@`, `!`, `.`, `,`, `;`, `(`, `)`, `[`, `]`, `{`, `}`, `'`, `"`, backtick, whitespace
-fn is_symbol_char(c: char, is_cfm: bool, is_space_ctx: bool) -> bool {
+fn is_symbol_char(c: char) -> bool {
     if c.is_ascii_whitespace() {
         return false;
-    }
-    if is_cfm {
-        // eat `.` only on space_ctx, for 'git tag v0.0.1'
-        // eat `:` only on space_ctx, for 'cut -d:'
-        if is_space_ctx {
-            return matches!(
-                c,
-                'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\' | '=' | '+' | '.' | ':'
-            );
-        }
-        // eat `=` for `dd if=/dev`
-        // eat `+` for `cmd arg+`
-        return matches!(
-            c,
-            'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\' | '=' | '+'
-        );
     }
     // allow `a-b` as symbo
     matches!(
         c,
         'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\'
     )
+}
+fn is_symbol_char_cfm(c: char, is_param_ctx: bool, is_cmd_ctx: bool) -> bool {
+    if c.is_ascii_whitespace() {
+        return false;
+    }
+
+    if is_cmd_ctx {
+        // never eat `=`, leave it to env sign
+        // never eat `+`, for binary plus
+        // never eat `.` for bultin lib call
+        return matches!(
+            c,
+            'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\'
+        );
+    }
+    if is_param_ctx {
+        // eat `.` only on space_ctx, for 'git tag v0.0.1'
+        // eat `:` only on space_ctx, for 'cut -d:'
+        // eat `+` for `cmd arg+`
+        // eat `=` for `dd if=/dev`
+        return matches!(
+            c,
+            'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\' | '=' | '+' | '.' | ':'
+        );
+    }
+    // other ? same to cfm off
+    return matches!(
+        c,
+        'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\'
+    );
 }
 
 /// Main tokenization entry point.
@@ -1278,6 +1302,7 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
     let mut tokens = Vec::new();
     let mut diagnostics = Vec::new();
     let mut ctx = Ctx::Start;
+    let mut last_ctx = Ctx::Start;
     let mut input = input;
 
     // skip multiline mode prefix `:`
@@ -1291,9 +1316,10 @@ pub(crate) fn parse_tokens(input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
 
     // tokenize one by one with context tracking
     loop {
-        match parse_token_dispatch(input, ctx, is_cfm) {
+        match parse_token_dispatch(input, ctx, last_ctx, is_cfm) {
             Err(_) => break,
             Ok((new_input, (token, diagnostic))) => {
+                last_ctx = ctx;
                 ctx = Ctx::after_token(&token, input.as_original_str());
                 input = new_input;
                 tokens.push(token);

@@ -153,7 +153,7 @@ pub enum Cmd {
     AcceptHint,
     AcceptHintWord(u8),
     ClearBuffer,
-    ToggleSudo,
+    ToggleSudo(String),
     Noop,
 }
 

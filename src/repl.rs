@@ -362,14 +362,14 @@ pub fn run_repl(env: &mut Environment) {
 
     // Set up key bindings
     // Ctrl+J: accept full hint
-    editor.bind_sequence(KeyEvent::Ctrl('j'), Cmd::AcceptHint);
+    // editor.bind_sequence(KeyEvent::Ctrl('j'), Cmd::AcceptHint);
     // Alt+J: accept one word from hint
-    editor.bind_sequence(KeyEvent::Alt('j'), Cmd::AcceptHintWord(0));
+    // editor.bind_sequence(KeyEvent::Alt('j'), Cmd::AcceptHintWord(0));
     // Ctrl+O: clear buffer
     editor.bind_sequence(KeyEvent::Ctrl('o'), Cmd::ClearBuffer);
     // Alt+S: toggle sudo/pkexec prefix
-    editor.set_sudo_cmd(&hotkey_sudo);
-    editor.bind_sequence(KeyEvent::Alt('s'), Cmd::ToggleSudo);
+    // editor.set_sudo_cmd(&hotkey_sudo);
+    editor.bind_sequence(KeyEvent::Alt('s'), Cmd::ToggleSudo(hotkey_sudo));
 
     // Set up validator for multiline input
     struct LumeValidator;

@@ -19,7 +19,8 @@ repository = "https://codeberg.org/santo/lumesh"
 default = ["cli"]
 cli = ["clap"]
 runner = []
-help = ["cli"]
+# help = ["cli"]
+ai-https = ["dep:ureq", "dep:serde"]   # 新增
 
 [[bin]]
 name = "lume"
@@ -32,6 +33,9 @@ path = "src/runner.rs"
 required-features = ["runner"]
 
 [dependencies]
+# ...原有依赖不变...
+ureq  = { version = "^3.3.0", features = ["json"], optional = true }
+serde = { version = "^1.0",   features = ["derive"], optional = true }
 clap = { version = "4.6.1", features = ["derive"], optional = true }
 textwrap = "0.16.2"
 nom = "7.0"
@@ -54,6 +58,8 @@ inquire = {version= "0.9.4",features=["date","editor"]}
 tabled = "0.21.0"
 serde_json = "1.0.144"
 unicode-width = "0.2.0"
+# native-tls = "0.2.18"
+
 
 [target.'cfg(unix)'.dependencies]
 nix = { version = "0.31.3", features = ["term", "ioctl", "signal"] }

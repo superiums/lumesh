@@ -118,7 +118,6 @@ pub struct Editor {
     custom_bindings: HashMap<KeyEvent, Cmd>,
     hotkey_fns: HashMap<KeyEvent, HotkeyFn>,
     abbreviations: HashMap<String, String>,
-    sudo_cmd: String,
     is_history_completion: bool,
     init_search_pos: usize,
     mode: EditorMode,
@@ -157,7 +156,6 @@ impl Editor {
             custom_bindings: HashMap::new(),
             hotkey_fns: HashMap::new(),
             abbreviations: HashMap::new(),
-            sudo_cmd: "sudo".to_string(),
             is_history_completion: false,
             init_search_pos: 0,
             mode: EditorMode::Normal,
@@ -187,6 +185,13 @@ impl Editor {
         if line.trim().is_empty() {
             return;
         }
+
+        if self.ai_client.is_some() {
+            self.show_ai_temp_hint(" [AI Hinting...]".to_string());
+        } else {
+            self.show_ai_temp_hint(" [AI Disabled]".to_string());
+        }
+
         if let Some(ref ai) = self.ai_client {
             let ai = Arc::clone(ai);
             let prompt = line.clone();
@@ -195,16 +200,25 @@ impl Editor {
                 let result = ai.as_ref().complete(&prompt).ok();
                 let _ = tx.send(result);
             });
-            if let Ok(Some(hint)) = rx.recv_timeout(std::time::Duration::from_secs(3)) {
-                if !hint.is_empty() {
-                    self.current_hint = Some(hint);
-                    self.is_ai_hinting = true;
+
+            match rx.recv_timeout(std::time::Duration::from_secs(10)) {
+                Ok(Some(hint)) => {
+                    if !hint.is_empty() {
+                        self.current_hint = Some(hint);
+                        self.is_ai_hinting = true;
+                    } else {
+                        self.show_ai_temp_hint(" [AI Answer Blank]".to_string());
+                    }
+                }
+                Ok(_) => {
+                    self.show_ai_temp_hint(" [AI No Answer]".to_string());
+                }
+                Err(e) => {
+                    self.show_ai_temp_hint(" [AI Err]".to_string() + &e.to_string());
                 }
             }
         } else {
-            self.current_hint = Some(" [AI NOT enabled]".to_string());
-            self.is_ai_hinting = true;
-            let _ = self.render();
+            self.show_ai_temp_hint(" [AI Disabled]".to_string());
         }
     }
 
@@ -214,13 +228,9 @@ impl Editor {
             return;
         }
         if self.ai_client.is_some() {
-            self.current_hint = Some(" [AI thinking...]".to_string());
-            self.is_ai_hinting = true;
-            let _ = self.render();
+            self.show_ai_temp_hint(" [AI Thinking...]".to_string());
         } else {
-            self.current_hint = Some(" [AI NOT enabled]".to_string());
-            self.is_ai_hinting = true;
-            let _ = self.render();
+            self.show_ai_temp_hint(" [AI Disabled]".to_string());
         }
         if let Some(ref ai) = self.ai_client {
             let ai = Arc::clone(ai);
@@ -230,19 +240,32 @@ impl Editor {
                 let result = ai.chat(false, &prompt).ok();
                 let _ = tx.send(result);
             });
-            if let Ok(Some(result)) = rx.recv_timeout(std::time::Duration::from_secs(10)) {
-                let clean = result.trim().to_string();
-                if !clean.is_empty() {
-                    self.buffer.set_text(&clean);
-                    self.buffer.move_to_end();
-                    self.is_ai_hinting = false;
-                    self.current_hint = None;
-                    self.show_hint = false;
+            match rx.recv_timeout(std::time::Duration::from_secs(20)) {
+                Ok(Some(result)) => {
+                    let clean = result.trim().to_string();
+                    if !clean.is_empty() {
+                        self.buffer.set_text(&clean);
+                        self.buffer.move_to_end();
+                        self.is_ai_hinting = false;
+                        self.current_hint = None;
+                        self.show_hint = false;
+                    }
+                }
+                Ok(_) => {
+                    self.show_ai_temp_hint(" [AI No Answer]".to_string());
+                }
+                Err(e) => {
+                    self.show_ai_temp_hint(" [AI Err]".to_string() + &e.to_string());
                 }
             }
         }
     }
 
+    fn show_ai_temp_hint(&mut self, msg: String) {
+        self.current_hint = Some(msg);
+        self.is_ai_hinting = true;
+        let _ = self.render();
+    }
     pub fn set_theme(&mut self, theme: EditorTheme) {
         self.theme = theme;
     }
@@ -284,9 +307,7 @@ impl Editor {
     pub fn set_abbreviations(&mut self, abbrs: HashMap<String, String>) {
         self.abbreviations = abbrs;
     }
-    pub fn set_sudo_cmd(&mut self, cmd: &str) {
-        self.sudo_cmd = cmd.to_string();
-    }
+
     pub fn bind_sequence(&mut self, key: KeyEvent, cmd: Cmd) {
         self.custom_bindings.insert(key, cmd);
     }
@@ -458,6 +479,7 @@ impl Editor {
                         self.mode = EditorMode::Normal;
                     }
                 }
+                KeyEvent::None => {}
                 _ => {
                     // 5. 模式分发
                     self.show_hint = false;
@@ -785,11 +807,12 @@ impl Editor {
                 | Cmd::DeleteToLineStart
                 | Cmd::DeleteToLineEnd
                 | Cmd::ClearBuffer
-                | Cmd::ToggleSudo
-                | Cmd::Yank
+                // | Cmd::ToggleSudo(_)
                 | Cmd::TransposeChars
-                | Cmd::AcceptHint
-                | Cmd::AcceptHintWord(_) => {
+                // | Cmd::Yank
+                // | Cmd::AcceptHint
+                // | Cmd::AcceptHintWord(_)
+                 => {
                     self.is_ai_hinting = false;
                     self.current_hint = None;
                 }
@@ -965,9 +988,8 @@ impl Editor {
                 if let Some(ref hint) = self.current_hint.clone() {
                     let clean = strip_ansi(hint);
                     self.buffer.insert_str(&clean);
-                    if self.is_ai_hinting {
-                        self.current_hint = None;
-                    }
+
+                    self.current_hint = None;
                 }
                 self.leave_completion();
             }
@@ -990,14 +1012,15 @@ impl Editor {
                         }
                     };
                     self.buffer.insert_str(&word);
-                    if self.is_ai_hinting {
-                        let remaining = clean[word.len()..].to_string();
-                        if remaining.is_empty() {
+                    let remaining = clean[word.len()..].to_string();
+                    if remaining.is_empty() {
+                        self.current_hint = None;
+                        if self.is_ai_hinting {
                             self.is_ai_hinting = false;
-                            self.current_hint = None;
-                        } else {
-                            self.current_hint = Some(remaining);
                         }
+                    } else {
+                        self.current_hint = Some(remaining);
+                        self.is_ai_hinting = true; //借助它来避免在render中被清理
                     }
                 }
                 self.leave_completion();
@@ -1006,14 +1029,14 @@ impl Editor {
                 self.buffer.set_text("");
                 self.leave_completion();
             }
-            Cmd::ToggleSudo => {
+            Cmd::ToggleSudo(sudo_cmd) => {
+                let sudo_cmd = sudo_cmd + " ";
                 let text = self.buffer.text();
-                let prefix = format!("{} ", self.sudo_cmd);
-                if text.starts_with(&prefix) {
-                    let new_text = text[prefix.len()..].to_string();
+                if text.starts_with(&sudo_cmd) {
+                    let new_text = text[sudo_cmd.len()..].to_string();
                     self.buffer.set_text(&new_text);
                 } else {
-                    let new_text = format!("{}{}", prefix, text);
+                    let new_text = format!("{}{}", sudo_cmd, text);
                     self.buffer.set_text(&new_text);
                 }
                 self.buffer.move_to_end();
@@ -1104,8 +1127,9 @@ impl Editor {
                 'c' => Cmd::Noop, // 已在全局事件处理
                 'd' => Cmd::Noop, // 已在全局事件处理
                 'e' => Cmd::MoveToEnd,
-                'f' => Cmd::MoveRight,
+                // 'f' => Cmd::MoveRight,
                 'h' => Cmd::Backspace,
+                'f' => Cmd::AcceptHint,
                 'k' => Cmd::DeleteToLineEnd,
                 // 'l' 已在全局事件处理，此处不再重复
                 'n' => Cmd::HistoryNext,
@@ -1119,8 +1143,10 @@ impl Editor {
             },
             KeyEvent::Alt(c) => match c {
                 'b' => Cmd::MoveWordLeft,
-                'f' => Cmd::MoveWordRight,
+                // 'f' => Cmd::MoveWordRight,
                 'd' => Cmd::DeleteWordAfter,
+                // 's' => Cmd::ToggleSudo,
+                'f' => Cmd::AcceptHintWord(0),
                 _ => Cmd::Noop,
             },
             // 导航与编辑键直接映射，统一走 handle_cmd
@@ -1279,8 +1305,8 @@ impl Editor {
 
         // hint 显示
         if !self.is_ai_hinting {
-            self.current_hint = None;
             if self.show_hint {
+                self.current_hint = None;
                 if let Some(ref hinter) = self.hinter {
                     if let Some(hint) = hinter.hint(&line, byte_cursor) {
                         self.current_hint = Some(hint);

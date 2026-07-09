@@ -676,8 +676,15 @@ impl Editor {
             _ => false,
         }
     }
-
     fn refresh_completions(&mut self) {
+        // 确认当前处于补全模式，否则不处理
+        if !matches!(self.mode, EditorMode::CompletionSelect { .. }) {
+            return;
+        }
+        if self.is_history_completion {
+            return self.handle_cmd(Cmd::HistorySearch);
+        }
+
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
         let byte_pos = line
@@ -685,39 +692,38 @@ impl Editor {
             .nth(pos)
             .map(|(i, _)| i)
             .unwrap_or(line.len());
-        let (old_completions, old_sel) = match &self.mode {
-            EditorMode::CompletionSelect {
-                completions,
-                selected,
-                ..
-            } => (completions.clone(), *selected),
-            _ => return,
+
+        let Some(ref completer) = self.completer else {
+            return;
         };
-        let new_completions: Vec<CompletionItem> = if self.is_history_completion {
-            let start_pos = Self::find_word_start(&line, byte_pos);
-            let query = &line[start_pos..byte_pos];
-            old_completions
-                .into_iter()
-                .filter(|item| fuzzy_match(query, &item.replacement))
-                .collect()
-        } else {
-            let query_start = self.init_search_pos.min(byte_pos);
-            let query = &line[query_start..byte_pos];
-            old_completions
-                .into_iter()
-                .filter(|item| fuzzy_match(query, &item.replacement))
-                .collect()
-        };
-        let start_pos = if line[..byte_pos].contains(['/', '\\']) {
-            Self::find_path_start(&line, byte_pos)
-        } else {
-            Self::find_word_start(&line, byte_pos)
-        };
+
+        // 直接重新查询，不依赖旧列表
+        let new_completions = completer.complete(&line, byte_pos);
+
         if new_completions.is_empty() {
             self.set_normal_mode();
         } else {
             let count = new_completions.len();
-            let current_sel = old_sel.min(count.saturating_sub(1));
+            // 保持选中项不越界，但不强行保留旧选中
+            let current_sel = match &self.mode {
+                EditorMode::CompletionSelect { selected, .. } => {
+                    (*selected).min(count.saturating_sub(1))
+                }
+                _ => 0,
+            };
+
+            let start_pos = if line[..byte_pos].starts_with('-') {
+                Self::find_word_start(&line, byte_pos)
+            } else if line[..byte_pos].contains(['/', '\\'])
+                || new_completions
+                    .get(current_sel)
+                    .is_some_and(|c| c.replacement.starts_with("."))
+            {
+                Self::find_path_start(&line, byte_pos)
+            } else {
+                Self::find_word_start(&line, byte_pos)
+            };
+
             self.mode = EditorMode::CompletionSelect {
                 completions: new_completions,
                 selected: current_sel,
@@ -929,10 +935,7 @@ impl Editor {
                 let all: Vec<String> = self.history.entries();
                 let completions: Vec<CompletionItem> = all
                     .iter()
-                    .filter(|e| {
-                        e.to_ascii_lowercase()
-                            .starts_with(&query.to_ascii_lowercase())
-                    })
+                    .filter(|e| fuzzy_match(query, e))
                     .map(|s| CompletionItem::with_display(s.clone(), s.clone()))
                     .collect();
                 if !completions.is_empty() {
@@ -1482,13 +1485,6 @@ fn visible_width(s: &str) -> usize {
     width
 }
 
-#[derive(Debug)]
-pub enum ReadlineError {
-    Interrupted,
-    Eof,
-    Io(io::Error),
-}
-
 fn fuzzy_match(query: &str, candidate: &str) -> bool {
     if query.is_empty() {
         return true;
@@ -1501,6 +1497,13 @@ fn fuzzy_match(query: &str, candidate: &str) -> bool {
         }
     }
     qi == q.len()
+}
+
+#[derive(Debug)]
+pub enum ReadlineError {
+    Interrupted,
+    Eof,
+    Io(io::Error),
 }
 
 impl std::fmt::Display for ReadlineError {

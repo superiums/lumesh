@@ -18,7 +18,6 @@ ls,,s,size, , ,116,Print size of files
 ls,, ,author, , ,117,Print author
 ls,,B,ignore-backups, , ,118,Ignore files ending with ~
 ls,, ,block-size, ,@f @r,119,Set block size
-ls,, ,color,never always auto,@f,120,Use colors
 ls,,D,dired, , ,121,Generate dired output
 ls,, ,dereference-command-line-symlink-to-dir, , ,122,
 ls,, ,format,across commas horizontal long single-column verbose vertical,@f @r,123,List format
@@ -35,9 +34,7 @@ ls,, ,quoting-style,literal locale shell shell-always c escape,@f @r,133,Select 
 ls,, ,scontext, , ,134,Display only security context and file name
 ls,, ,si, , ,135,Human readable sizes, powers of 1000
 ls,, ,show-control-chars, , ,136,Non-graphic characters printed as-is
-ls,, ,sort,,@f @r,137,Sort criteria
 ls,,T,tabsize,1 2 3 4 5 6 7 8 9 10 11 12,@f @r,138,Assume tab stops at each COLS
-ls,, ,time,,@f @r,139,Show time type
 ls,, ,time-style,full-iso long-iso iso locale,@f @r,140,Select time style
 ls,,w,width, ,@f @r,141,Assume screen width
 ls,,Z,context, , ,142,Display security context so it fits on most displays

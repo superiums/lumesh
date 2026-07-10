@@ -17,9 +17,8 @@ repository = "https://codeberg.org/santo/lumesh"
 
 [features]
 default = ["cli"]
-cli = ["clap"]
+cli = ["dep:clap"]
 runner = []
-# help = ["cli"]
 ai-https = ["dep:ureq", "dep:serde"]   # 新增
 ai-tls   = ["dep:native-tls"]          # native-tls 方案（更轻量）
 

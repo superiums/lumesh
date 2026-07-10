@@ -54,10 +54,10 @@ jobs:
 
             **Binary variants:**
             - `lume-*`: interactive shell.
-              for windows/macos: ai on HTTPS via system TLS (`ai-tls`, default)
-              for linux: ai on HTTP only, use `lume-*-ai-https` instead,
-                or build on your machine to link to sysmtem TLS to get a lighter version.
-                (install libssl-dev first and build with feature `ai-tls`)
+              for windows/macos: AI on HTTPS via system TLS (`ai-tls`, default)
+              for linux/freebsd: AI on HTTP only.
+                if AI on HTTPS needed, download `lume-*-ai-https` instead,
+                or build on your machine to link to sysmtem TLS to get a lighter version. (install libssl-dev first and build with feature `ai-tls`)
             - `lume-*-ai-https`: interactive shell, HTTPS via ureq (`ai-https`)
             - `lume-se-*`: script engine only, no interactive shell, no AI
 
@@ -167,7 +167,8 @@ jobs:
           command: build
           targets: ${{ matrix.target }}
           profile: release
-          features: ${{ !contains(matrix.target, 'linux') && 'cli,ai-tls' || 'cli' }}
+          # use ai-tils feature only on mac/win, not on linux/freebsd
+          features: (${{ contains(matrix.target, 'apple') || contains(matrix.target, 'windows')) && 'cli,ai-tls' || 'cli' }}
           bin: lume
           build-std: true
           toolchain: nightly

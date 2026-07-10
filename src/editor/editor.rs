@@ -987,30 +987,32 @@ impl Editor {
             Cmd::AcceptHint => {
                 if let Some(ref hint) = self.current_hint.clone() {
                     let clean = strip_ansi(hint);
-                    self.buffer.insert_str(&clean);
-
-                    self.current_hint = None;
+                    let mut it = clean
+                        // .trim_start()
+                        .split_terminator('\0');
+                    let trimmed = it.next().unwrap_or(&clean);
+                    self.buffer.insert_str(trimmed);
+                    // display params hint or None
+                    self.current_hint = it.next().map(|x| format!("\0{}", x));
                 }
                 self.leave_completion();
             }
-            Cmd::AcceptHintWord(mode) => {
+            Cmd::AcceptHintWord => {
                 if let Some(ref hint) = self.current_hint.clone() {
                     let clean = strip_ansi(hint);
-                    let word = match mode {
-                        1 => {
-                            let pos = clean.find(['<', '[']);
-                            let end = pos.unwrap_or(clean.len());
-                            clean[..end].to_string()
-                        }
-                        _ => {
-                            let trimmed = clean.trim_start();
-                            let pos = trimmed.find(|c: char| c.is_ascii_whitespace() || c == '/');
-                            let end = pos.map_or(trimmed.len(), |x| {
-                                x + if clean.starts_with(' ') { 2 } else { 1 }
-                            });
-                            clean[..end].to_string()
-                        }
+                    let word = {
+                        let trimmed = clean
+                            .trim_start()
+                            .split_terminator('\0')
+                            .next()
+                            .unwrap_or(clean.trim_start());
+                        let pos = trimmed.find(|c: char| c.is_ascii_whitespace() || c == '/');
+                        let end = pos.map_or(trimmed.len(), |x| {
+                            x + if clean.starts_with(' ') { 2 } else { 1 }
+                        });
+                        clean[..end].to_string()
                     };
+
                     self.buffer.insert_str(&word);
                     let remaining = clean[word.len()..].to_string();
                     if remaining.is_empty() {
@@ -1146,7 +1148,7 @@ impl Editor {
                 // 'f' => Cmd::MoveWordRight,
                 'd' => Cmd::DeleteWordAfter,
                 // 's' => Cmd::ToggleSudo,
-                'f' => Cmd::AcceptHintWord(0),
+                'f' => Cmd::AcceptHintWord,
                 _ => Cmd::Noop,
             },
             // 导航与编辑键直接映射，统一走 handle_cmd

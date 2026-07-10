@@ -151,7 +151,7 @@ pub enum Cmd {
     TransposeChars,
     ClearScreen,
     AcceptHint,
-    AcceptHintWord(u8),
+    AcceptHintWord,
     ClearBuffer,
     ToggleSudo(String),
     Noop,

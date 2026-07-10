@@ -540,9 +540,9 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
                             .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
                             .map(|(f, info)| {
                                 let tip = if func.trim_end().ends_with('(') {
-                                    format!("{f}({})", info.hint.replace(' ', ","))
+                                    format!("{f}(\0{})", info.hint.replace(' ', ","))
                                 } else {
-                                    format!("{f} {}", info.hint)
+                                    format!("{f} \0{}", info.hint)
                                 };
                                 (tip, f.len())
                             })
@@ -560,9 +560,9 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
                             .filter(|(f, _)| f.starts_with(segment.trim_matches(ends)))
                             .map(|(f, info)| {
                                 let tip = if segment.trim_end().ends_with('(') {
-                                    format!("{f}({})", info.hint.replace(' ', ","))
+                                    format!("{f}(\0{})", info.hint.replace(' ', ","))
                                 } else {
-                                    format!("{f} {}", info.hint)
+                                    format!("{f} \0{}", info.hint)
                                 };
                                 (tip, f.len())
                             })

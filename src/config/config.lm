@@ -184,11 +184,11 @@ if IS_INTERACTIVE {
     let syntax = fs.read($base + '/syntax.md')
     set LUME_AI_CONFIG = {
     #     host: 'localhost:11434',
-    #     complete_url: '/completion',
+    #     api_key: '',
+    #     model: '',
     #     chat_url: '/v1/chat/completions',
     #     complete_max_tokens: 10,
     #     chat_max_tokens: 100,
-    #     model: '',
     #     hint_prompt: '',
     #     chat_prompt: '',
          syntax,

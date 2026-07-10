@@ -73,7 +73,7 @@ jobs:
           cp LICENSE tmp/doc/
           cp docs/INS_README.md tmp/doc/
           cp docs/RULE.md tmp/doc/
-          cp docs/install_github.sh tmp/install.sh
+          cp docs/install.sh tmp/install.sh
 
       - name: Create compressed files
         run: |
@@ -164,7 +164,7 @@ jobs:
         with:
           command: exec
           targets: ${{ matrix.target }}
-          args: sh -c "${{ matrix.ssl_install }}"
+          args: -- sh -c "${{ matrix.ssl_install }}"
 
       - name: Build Release (ai-tls)
         uses: zijiren233/cargo-cross@v1
@@ -208,47 +208,47 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             asset_name: lume-x86_64-linux-gnu-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: x86_64-unknown-linux-musl
             asset_name: lume-x86_64-linux-musl-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: x86_64-apple-darwin
             asset_name: lume-x86_64-apple-darwin-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: x86_64-pc-windows-gnu
             asset_name: lume-x86_64-pc-windows-gnu-ai-https.exe
-            binary_name: lume-ai-https.exe
+            binary_name: lume.exe
 
           - target: aarch64-unknown-linux-gnu
             asset_name: lume-aarch64-linux-gnu-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: aarch64-unknown-linux-musl
             asset_name: lume-aarch64-linux-musl-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: x86_64-unknown-freebsd
             asset_name: lume-x86_64-freebsd-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: aarch64-linux-android
             asset_name: lume-aarch64-linux-android-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: aarch64-apple-darwin
             asset_name: lume-aarch64-apple-darwin-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: loongarch64-unknown-linux-gnu
             asset_name: lume-loongarch64-linux-gnu-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
           - target: loongarch64-unknown-linux-musl
             asset_name: lume-loongarch64-linux-musl-ai-https
-            binary_name: lume-ai-https
+            binary_name: lume
 
     runs-on: ubuntu-latest
     steps:
@@ -268,14 +268,14 @@ jobs:
           toolchain: nightly
 
       - name: Rename binary
-        run: cp target/${{ matrix.target }}/release/${{ matrix.binary_name }} ${{ matrix.asset_name }}
+        run: cp target/${{ matrix.target }}/release/${{ matrix.binary_name }} ${{ matrix.asset_name }}-ai-https
 
       - name: Upload binary
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: ${{ matrix.asset_name }}
+          files: ${{ matrix.asset_name }}-ai-https
 
   # ── lume-se (script engine, no CLI, no AI) ────────────────────────────────────
   build_se:

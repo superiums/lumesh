@@ -53,7 +53,11 @@ jobs:
             - doc: help docs.
 
             **Binary variants:**
-            - `lume-*`: interactive shell, HTTPS via system TLS (`ai-tls`, default)
+            - `lume-*`: interactive shell.
+              for windows/macos: ai on HTTPS via system TLS (`ai-tls`, default)
+              for linux: ai on HTTP only, use `lume-*-ai-https` instead,
+                or build on your machine to link to sysmtem TLS to get a lighter version.
+                (install libssl-dev first and build with feature `ai-tls`)
             - `lume-*-ai-https`: interactive shell, HTTPS via ureq (`ai-https`)
             - `lume-se-*`: script engine only, no interactive shell, no AI
 
@@ -92,7 +96,6 @@ jobs:
 
   # ── lume (default: cli + ai-tls) ─────────────────────────────────────────────
   build:
-    name: Build lume (ai-tls)
     needs: [create_release]
     strategy:
       matrix:
@@ -112,67 +115,59 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             asset_name: lume-x86_64-linux-gnu
             binary_name: lume
-            ssl_install: "apt-get update -qq && apt-get install -y libssl-dev pkg-config"
+
           - target: x86_64-unknown-linux-musl
             asset_name: lume-x86_64-linux-musl
             binary_name: lume
-            ssl_install: "apk add --no-cache openssl-dev pkgconfig"
+
           - target: x86_64-apple-darwin
             asset_name: lume-x86_64-apple-darwin
             binary_name: lume
-            ssl_install: ""
+
           - target: x86_64-pc-windows-gnu
             asset_name: lume-x86_64-pc-windows-gnu.exe
             binary_name: lume.exe
-            ssl_install: ""
+
           - target: aarch64-unknown-linux-gnu
             asset_name: lume-aarch64-linux-gnu
             binary_name: lume
-            ssl_install: "apt-get update -qq && apt-get install -y libssl-dev pkg-config"
+
           - target: aarch64-unknown-linux-musl
             asset_name: lume-aarch64-linux-musl
             binary_name: lume
-            ssl_install: "apk add --no-cache openssl-dev pkgconfig"
+
           - target: x86_64-unknown-freebsd
             asset_name: lume-x86_64-freebsd
             binary_name: lume
-            ssl_install: ""
+
           - target: aarch64-linux-android
             asset_name: lume-aarch64-linux-android
             binary_name: lume
-            ssl_install: ""
+
           - target: aarch64-apple-darwin
             asset_name: lume-aarch64-apple-darwin
             binary_name: lume
-            ssl_install: ""
+
           - target: loongarch64-unknown-linux-gnu
             asset_name: lume-loongarch64-linux-gnu
             binary_name: lume
-            ssl_install: "apt-get update -qq && apt-get install -y libssl-dev pkg-config"
+
           - target: loongarch64-unknown-linux-musl
             asset_name: lume-loongarch64-linux-musl
             binary_name: lume
-            ssl_install: "apk add --no-cache openssl-dev pkgconfig"
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install SSL dependencies
-        if: matrix.ssl_install != ''
-        uses: zijiren233/cargo-cross@v1
-        with:
-          command: exec
-          targets: ${{ matrix.target }}
-          args: -- sh -c "${{ matrix.ssl_install }}"
-
-      - name: Build Release (ai-tls)
+      - name: Build Release
         uses: zijiren233/cargo-cross@v1
         with:
           command: build
           targets: ${{ matrix.target }}
           profile: release
-          features: cli,ai-tls
+          features: ${{ !contains(matrix.target, 'linux') && 'cli,ai-tls' || 'cli' }}
           bin: lume
           build-std: true
           toolchain: nightly

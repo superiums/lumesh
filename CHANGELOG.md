@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.16.4]
+- use \0 to protect param hint from accept
+
+## [0.16.3]
+- built with ai-tls as default, ai-https as additional
+- sperate ai https
+- fix bare modify-key handle; ai https
+- give up secondary completion filter
+- rm duplicate in ls completion
+- colors aware of ctx
+- enhance param and cmd aware while recognize symbol
+- fix utf8 path
+- allow path completion on unkown cmd
+- support table/map in ui.pick/for; custom decimal in ui.float
+- add config alias
+
 ## [0.16.2]
 
 - fix always execute buffer while user cancel hotkey func

@@ -168,7 +168,7 @@ jobs:
           targets: ${{ matrix.target }}
           profile: release
           # use ai-tils feature only on mac/win, not on linux/freebsd
-          features: (${{ contains(matrix.target, 'apple') || contains(matrix.target, 'windows')) && 'cli,ai-tls' || 'cli' }}
+          features: ${{ (contains(matrix.target, 'apple') || contains(matrix.target, 'windows')) && 'cli,ai-tls' || 'cli' }}
           bin: lume
           build-std: true
           toolchain: nightly

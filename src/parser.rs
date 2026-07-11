@@ -1527,44 +1527,71 @@ fn parse_map_inner<'a>(
     let (input, pairs) = separated_list0(
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
         tuple((
-            alt((
-                parse_symbol_string,
-                map(kind(TokenKind::StringRaw), |t| {
-                    t.to_str(input.str).to_string()
-                }),
-                map(kind(TokenKind::StringLiteral), |t| {
-                    t.to_str(input.str).to_string()
-                }),
-            )),
+            |inp| {
+                alt((
+                    parse_symbol_string,
+                    map(kind(TokenKind::StringRaw), |t| {
+                        t.to_str(input.str).to_string()
+                    }),
+                    map(kind(TokenKind::StringLiteral), |t| {
+                        t.to_str(input.str).to_string()
+                    }),
+                ))(inp)
+                .map_err(|_| {
+                    SyntaxErrorKind::expected(
+                        inp.get_str_slice(),
+                        "a key",
+                        None,
+                        Some("add a symbol/string as key"),
+                    )
+                })
+            },
             opt(preceded(
                 terminated(text(":"), opt(kind(TokenKind::LineBreak))),
-                cut(alt((
-                    parse_literal,
-                    parse_variable,
-                    parse_symbol,
-                    parse_list,
-                    parse_map,
-                    parse_hashmap,
-                    parse_bset,
-                ))),
+                cut(|inp| {
+                    alt((
+                        parse_literal,
+                        parse_variable,
+                        parse_symbol,
+                        parse_list,
+                        parse_bmap,
+                        parse_hashmap,
+                        parse_map,
+                        parse_bset,
+                    ))(inp)
+                    .map_err(|_| {
+                        SyntaxErrorKind::failure(
+                            inp.get_str_slice(),
+                            "a value",
+                            None,
+                            Some("add a value for this item"),
+                        )
+                    })
+                }),
             )),
         )),
-    )(input)
-    .map_err(|_| {
-        SyntaxErrorKind::failure(
-            input.get_str_slice(),
-            "some value",
-            None,
-            Some("add some value for this item"),
-        )
-    })?;
+    )(input)?;
+
     // dbg!(&input, &pairs);
     let (input, comma) = opt(text(","))(input)?;
-    if pairs.is_empty() || comma.is_none() && pairs.len() < 2 && pairs[0].1.is_none() {
+    if tag == "{"
+        && (pairs.is_empty() || comma.is_none() && pairs.len() < 2 && pairs[0].1.is_none())
+    {
         return Err(nom::Err::Error(SyntaxErrorKind::NoExpression)); //return err and try parse_block
     }
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
-    let (input, _) = text_close("}")(input)?;
+
+    // 确认是map上下文后，把 Error 转为 Failure，防止回退到 parse_block
+    // 错误位置指向当前 input（缺少逗号的地方），而非 k3
+    let (input, _) = text_close("}")(input).map_err(|_| {
+        SyntaxErrorKind::failure(
+            input.get_str_slice(), // ← 当前位置，即 k3 前（v2 后）
+            if comma.is_some() { "`}`" } else { "`}` or `,`" },
+            input.first().map(|t| t.text(input).to_string()),
+            Some("missing comma between map entries?"),
+        )
+    })?;
+
     Ok((input, pairs))
 }
 

@@ -20,7 +20,6 @@ use std::sync::{Arc, Mutex};
 
 use crossterm::style::Color;
 
-const DEFAULT: &str = "";
 const GREEN_BOLD: &str = "\x1b[1;32m";
 const RESET: &str = "\x1b[0m";
 
@@ -325,14 +324,16 @@ pub fn run_repl(env: &mut Environment) {
     editor.set_completer(Box::new(completer));
 
     // Set up highlighter
-    let hl_theme = theme_merged.clone();
-    editor.set_highlighter(Box::new(LumeHighlighter { theme: hl_theme }));
+    // let hl_theme = theme_merged.clone();
+    editor.set_highlighter(Box::new(LumeHighlighter {
+        theme: theme_merged,
+    }));
 
     // Set up hinter (hint from command history)
-    let hint_theme = theme_merged.clone();
+    // let hint_theme = theme_merged.clone();
     editor.set_hinter(Box::new(LumeHinter {
         hinter: Some(Box::new(move |line: &str, pos: usize| {
-            hint_for_line(line, pos, &hint_theme)
+            hint_for_line(line, pos)
         })),
     }));
 
@@ -519,7 +520,7 @@ pub fn run_repl(env: &mut Environment) {
     }
 }
 
-fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Option<String> {
+fn hint_for_line(line: &str, pos: usize) -> Option<String> {
     let prefix = &line[..pos];
     let p = find_command_pos(prefix);
     let segment = &prefix[p..];
@@ -575,12 +576,13 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
             }),
         };
         if !matches.is_empty() {
-            let hint_color = theme.get("hint").map_or(DEFAULT, |c| c.as_str());
+            // let hint_color = theme.get("hint").map_or(DEFAULT, |c| c.as_str());
             let matches: Vec<_> = matches.iter().filter(|(_, l)| *l > 0).collect();
             if let Some((matched, _)) = matches.first() {
                 let suffix = &matched[hint_pos..];
                 if !suffix.is_empty() {
-                    return Some(format!("{hint_color}{suffix}{RESET}"));
+                    // return Some(format!("{hint_color}{suffix}{RESET}"));
+                    return Some(suffix.to_string());
                 }
             }
         }
@@ -591,8 +593,9 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
     if let Some(matched) = matches.first() {
         let suffix = &matched[segment.len()..];
         if !suffix.is_empty() {
-            let hint_color = theme.get("hint").map_or(DEFAULT, |c| c.as_str());
-            return Some(format!("{hint_color}{suffix}{RESET}"));
+            return Some(suffix.to_string());
+            //     let hint_color = theme.get("hint").map_or(DEFAULT, |c| c.as_str());
+            //     return Some(format!("{hint_color}{suffix}{RESET}"));
         }
     }
 

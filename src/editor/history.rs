@@ -101,6 +101,14 @@ impl History {
         self.index.is_some()
     }
 
+    pub fn search_hint(&mut self, current_line: &str) -> Option<String> {
+        self.entries
+            .iter()
+            .rev()
+            .find(|en| en.starts_with(current_line))
+            .map(|s| s.trim_start_matches(current_line).to_string())
+    }
+
     pub fn start_search(&mut self, current_line: &str) {
         self.saved_line = current_line.to_string();
         self.search_query = current_line.to_string();

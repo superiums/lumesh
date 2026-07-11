@@ -1318,11 +1318,17 @@ impl Editor {
         // hint 显示
         if !self.is_ai_hinting {
             if self.show_hint {
-                self.current_hint = None;
                 if let Some(ref hinter) = self.hinter {
                     if let Some(hint) = hinter.hint(&line, byte_cursor) {
+                        // 命令和参数hint
                         self.current_hint = Some(hint);
-                    }
+                    } else if let Some(hint) = self.history.search_hint(&line) {
+                        // 历史命令hint
+                        self.current_hint = Some(hint);
+                    } else {
+                        // 清空
+                        self.current_hint = None;
+                    };
                 }
             }
         }

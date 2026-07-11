@@ -483,7 +483,7 @@ impl Editor {
                 _ => {
                     // 5. 模式分发
                     self.show_hint = false;
-                    let accepted = match self.mode.clone() {
+                    let accepted = match self.mode {
                         EditorMode::Multiline => self.handle_multiline_event(event)?,
                         _ => self.handle_normal_event(event)?,
                     };
@@ -575,6 +575,10 @@ impl Editor {
                 self.show_hint = true;
                 self.leave_completion();
                 self.buffer.insert(c);
+            }
+            KeyEvent::Escape => {
+                self.leave_completion();
+                self.buffer.move_to_end();
             }
             KeyEvent::Enter => {
                 self.is_ai_hinting = false;
@@ -793,8 +797,8 @@ impl Editor {
 
     fn handle_cmd(&mut self, cmd: Cmd) {
         // 修改 buffer 的命令自动清除 AI hint
-        if self.is_ai_hinting {
-            match &cmd {
+        // if self.is_ai_hinting {
+        match &cmd {
                 Cmd::Insert(_)
                 | Cmd::InsertStr(_)
                 | Cmd::InsertStrAtBeginning(_)
@@ -809,6 +813,12 @@ impl Editor {
                 | Cmd::ClearBuffer
                 // | Cmd::ToggleSudo(_)
                 | Cmd::TransposeChars
+                | Cmd::MoveLeft
+                | Cmd::MoveRight
+                | Cmd::MoveWordLeft
+                | Cmd::MoveWordRight
+                | Cmd::MoveToStart
+                | Cmd::MoveToEnd
                 // | Cmd::Yank
                 // | Cmd::AcceptHint
                 // | Cmd::AcceptHintWord(_)
@@ -818,7 +828,7 @@ impl Editor {
                 }
                 _ => {}
             }
-        }
+        // }
 
         match cmd {
             Cmd::Insert(c) => {

@@ -78,6 +78,7 @@ pub enum Expression {
     ),
     Return(Rc<Self>),
     Break(Rc<Self>),
+    Continue,
     Sequence(Vec<Expression>), // 表达式序列
     Block(Rc<Vec<Self>>),
     Quote(Rc<Self>),

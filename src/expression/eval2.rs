@@ -53,7 +53,17 @@ impl Expression {
                             depth: _,
                         }) => {
                             return Ok(v);
-                        } // 捕获函数体内的return
+                        }
+                        Err(RuntimeError {
+                            kind: RuntimeErrorKind::EarlyContinue,
+                            ..
+                        }) => {
+                            // 重新求值条件，继续下一次迭代
+                            condition_result =
+                                cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy();
+                            last = Ok(Expression::None);
+                        }
+                        // 捕获函数体内的return
                         Err(e) => return Err(e),
                     }
                 }
@@ -71,7 +81,12 @@ impl Expression {
                             depth: _,
                         }) => {
                             return Ok(v);
-                        } // 捕获函数体内的return
+                        }
+                        Err(RuntimeError {
+                            kind: RuntimeErrorKind::EarlyContinue,
+                            ..
+                        }) => {} // 继续下一次
+                        // 捕获函数体内的return
                         Err(e) => return Err(e),
                     }
                 }
@@ -218,7 +233,11 @@ impl Expression {
                     depth,
                 ))
             }
-
+            Self::Continue => Err(RuntimeError::new(
+                RuntimeErrorKind::EarlyContinue,
+                Expression::None,
+                depth,
+            )),
             Self::Catch(body, typ, deeling) => {
                 // dbg!(&typ, &deeling);
                 let result = body.as_ref().eval_mut(state, env, depth + 1);
@@ -860,6 +879,12 @@ where
                     break;
                 }
                 Err(RuntimeError {
+                    kind: RuntimeErrorKind::EarlyContinue,
+                    ..
+                }) => {
+                    continue; // Rust 的 continue，跳到下一次迭代
+                }
+                Err(RuntimeError {
                     kind: RuntimeErrorKind::IteratorExhausted(_),
                     ..
                 }) => break, // 循环正常结束
@@ -893,6 +918,12 @@ where
                     kind: RuntimeErrorKind::EarlyBreak(_v),
                     ..
                 }) => break,
+                Err(RuntimeError {
+                    kind: RuntimeErrorKind::EarlyContinue,
+                    ..
+                }) => {
+                    continue; // Rust 的 continue，跳到下一次迭代
+                }
                 Err(RuntimeError {
                     kind: RuntimeErrorKind::IteratorExhausted(_),
                     ..

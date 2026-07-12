@@ -543,7 +543,9 @@ impl Expression {
                     expr.fmt_display_indent(f, 0)
                 }
             }
-
+            Self::Continue => {
+                writeln!(f, "{}continue", idt(i))
+            }
             Self::Range(range, step) => {
                 write!(f, "{}{}..{}", idt(i), range.start, range.end)?;
                 if *step != 1 {
@@ -938,6 +940,9 @@ impl Expression {
                 writeln!(f, "{}Break", prefix)?;
                 expr.fmt_indent(f, indent + 1)
             }
+            Self::Continue => {
+                writeln!(f, "{}Continue", prefix)
+            }
             Self::Catch(body, ctyp, deel) => {
                 writeln!(f, "{}Catch〈{:?}〉", prefix, ctyp)?;
                 body.fmt_indent(f, indent + 1)?;
@@ -1012,6 +1017,7 @@ impl Expression {
             Self::Function(..) => "Function".into(),
             Self::Return(_) => "Return".into(),
             Self::Break(_) => "Break".into(),
+            Self::Continue => "Continue".into(),
             Self::Block(_) => "Block".into(),
             Self::Sequence(_) => "Sequence".into(),
             Self::Quote(_) => "Quote".into(),

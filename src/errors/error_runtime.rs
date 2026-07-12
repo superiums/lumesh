@@ -87,6 +87,8 @@ pub enum RuntimeErrorKind {
     EarlyReturn(Expression),
     #[error("illegal break outside loop")]
     EarlyBreak(Expression),
+    #[error("illegal continue outside loop")]
+    EarlyContinue,
     #[error("overflowed when: `{0}`")]
     Overflow(String),
     #[error("wildcard not matched: `{0}`")]

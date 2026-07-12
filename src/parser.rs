@@ -922,6 +922,7 @@ fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
         "while" => parse_while_flow(input),
         "loop" => parse_loop_flow(input),
         "break" => parse_break(input),
+        "continue" => parse_continue(input),
         "return" => parse_return(input),
         _ => Err(nom::Err::Error(SyntaxErrorKind::NoExpression)),
     }
@@ -1262,7 +1263,10 @@ fn parse_break(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
         Expression::Break(Rc::new(expr.unwrap_or(Expression::None))),
     ))
 }
-
+fn parse_continue(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("continue")(input)?;
+    Ok((input, Expression::Continue))
+}
 // fn parse_command_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
 //     // 如果第二个token为operator,则不是命令。如 a = 3,
 //     // dbg!(input.len());

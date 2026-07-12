@@ -609,6 +609,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         space_brace_followed_tag("while"),
         space_brace_followed_tag("loop"),
         postfix_break_tag("break"),
+        postfix_break_tag("continue"),
         postfix_break_tag("return"),
         space_followed_tag("del"),
         space_followed_tag("use"),

@@ -2019,16 +2019,21 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
     //     // dbg!("---break prefix---");
     //     return Err(nom::Err::Error(SyntaxErrorKind::NoExpression));
     // }
-    SyntaxErrorKind::empty_back(input)?;
-    let (input, statement) = alt((
-        parse_fn_declare,    // 函数声明（仅语句级）这里的作用是允许函数嵌套
-        parse_use_statement, //允许语句中间按需use
+    // SyntaxErrorKind::empty_back(input)?;
+
+    let keyword = input
+        .first()
+        .map(|t| t.text(input))
+        .ok_or_else(|| nom::Err::Error(SyntaxErrorKind::NoExpression))?;
+    match keyword {
+        "fn" => parse_fn_declare(input), // 函数声明（仅语句级）这里的作用是允许函数嵌套
+        "use" => parse_use_statement(input), //允许语句中间按需use
         // 1.声明语句
-        parse_lets,
-        parse_set,
-        parse_alias,
-        parse_export,
-        parse_del,
+        "let" => parse_lets(input),
+        "set" => parse_set(input),
+        "alias" => parse_alias(input),
+        "export" => parse_export(input),
+        "del" => parse_del(input),
         // 2.控制流语句
         // parse_control_flow,
         // 3.运算语句: !3, 1+2, must before flat_call,
@@ -2043,14 +2048,8 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         // parse_command_call,
         // 便捷控制台打印
         // 5.单语句： 字面量和单独的symbol：[2,3] 4 "5" ls x
-        parse_single_expr,
-        // 块语句 {}
-        // parse_block,
-    ))(input)?;
-    // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
-    // dbg!(&input, &statement, &statement.type_name());
-    // dbg!(&statement, &statement.type_name());
-    Ok((input, statement))
+        _ => parse_single_expr(input),
+    }
 }
 ///命令或数学运算。
 // ///语句开始，等号后，括号中：应匹配 cmd call，match compute.
@@ -2165,7 +2164,6 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
 }
 
 // IF语句解析（支持else if链）
-// TOTO 允许无{} ?
 fn parse_if_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("if")(input)?;
     let (input, cond) = cut(parse_expr)(input)?;
@@ -2423,7 +2421,35 @@ fn parse_set(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
 }
 fn parse_lets(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("let")(input)?;
-    alt((parse_destructure_assign, parse_lazy_assign, parse_declare))(input)
+    let keyword = input
+        .first()
+        .map(|t| t.text(input))
+        .ok_or_else(|| nom::Err::Error(SyntaxErrorKind::NoExpression))?;
+    let (input, pattern) = match keyword {
+        "[" => parse_array_destructure(input)?,
+        "{" => parse_map_destructure(input)?,
+        _ => return alt((parse_lazy_assign, parse_declare))(input),
+    };
+
+    let (input, exprs) = preceded(
+        text("="),
+        cut(|input| {
+            parse_expr(input).map_err(|e| match e {
+                nom::Err::Error(_) => SyntaxErrorKind::failure(
+                    input.get_str_slice(),
+                    "a value expression",
+                    input.first().map(|t| t.text(input).to_string()),
+                    Some("check grammar after `=`"),
+                ),
+                // nom::Err::Failure(f) => nom::Err::Failure(f),
+                other => other,
+            })
+        }),
+    )(input)?;
+    Ok((
+        input,
+        Expression::DestructureAssign(pattern, Rc::new(exprs)),
+    ))
 }
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -2488,15 +2514,6 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     };
 }
 
-fn parse_destructure_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // let (input, _) = text("let")(input)?;
-    let (input, pattern) = alt((parse_array_destructure, parse_map_destructure))(input)?;
-    let (input, exprs) = preceded(text("="), cut(parse_expr))(input)?;
-    Ok((
-        input,
-        Expression::DestructureAssign(pattern, Rc::new(exprs)),
-    ))
-}
 fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("del")(input)?;
     let (input, symbol) = cut(parse_symbol_string)(input).map_err(|_| {

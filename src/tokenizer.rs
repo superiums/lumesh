@@ -422,12 +422,13 @@ fn percent_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token
             punctuation_tag("%"),
             TokenKind::OperatorPostfix,
         ),))(input), //5%
-        Ctx::Letter | Ctx::Word => {
-            map_valid_token(punctuation_tag("%"), TokenKind::Operator)(input)
-        } //a%b
+        Ctx::Letter | Ctx::Word => alt((
+            map_valid_token(punctuation_tag("%{"), TokenKind::Punctuation),
+            map_valid_token(punctuation_tag("%"), TokenKind::Operator),
+        ))(input), //a%b
 
         Ctx::Start | Ctx::Space | Ctx::Open => alt((
-            map_valid_token(punctuation_tag("%{"), TokenKind::Operator),
+            map_valid_token(punctuation_tag("%{"), TokenKind::Punctuation),
             map_valid_token(punctuation_tag("%"), TokenKind::Operator),
         ))(input),
     }

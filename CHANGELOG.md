@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.16.5]
+- **add `continue`**
+- trace map with no value; trace unclosed list; update op-test
+- dispatch statements/desctructure assign
+- fix match failure
+- allow linebreak on group/match arrow
+- forward lookup for lambda/map to improve efficience.
+- fix `%{ }`
+- optimize err tracer while parsing bset/match/map/for
+- **histroy hint**
+- clean color theme for hint
+- esc to move to end in multiline mode; clear hint while move 
+- detailed tracer for map parser
+- update ai config
+
+**Break Changes**
+- **only allow one value while declare**
+
 ## [0.16.4]
 - use \0 to protect param hint from accept
 

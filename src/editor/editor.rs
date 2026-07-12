@@ -473,12 +473,6 @@ impl Editor {
                 KeyEvent::BackTab => {
                     self.handle_backtab();
                 }
-                KeyEvent::Escape => {
-                    // CompletionSelect 已在步骤1处理，此处只需处理 Multiline
-                    if matches!(self.mode, EditorMode::Multiline) {
-                        self.mode = EditorMode::Normal;
-                    }
-                }
                 KeyEvent::None => {}
                 _ => {
                     // 5. 模式分发

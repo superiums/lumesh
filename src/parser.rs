@@ -2574,7 +2574,7 @@ fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synt
         )),
     )(input)
     .map_err(|_| {
-        SyntaxErrorKind::failure(
+        SyntaxErrorKind::expected(
             input.get_str_slice(),
             "match pattern",
             input.first().map(|t| t.text(input).to_string()),

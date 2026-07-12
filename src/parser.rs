@@ -1493,28 +1493,46 @@ fn parse_set_inner<'a>(input: Tokens<'a>) -> IResult<Tokens<'a>, Vec<Expression>
     let (input, _) = terminated(text("S{"), opt(kind(TokenKind::LineBreak)))(input)?;
     let (input, pairs) = separated_list0(
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
-        cut(alt((
-            parse_literal,
-            parse_variable,
-            parse_symbol,
-            parse_list,
-            parse_map,
-            parse_hashmap,
-            parse_bset,
-        ))),
-    )(input)
-    .map_err(|_| {
+        |inp| {
+            alt((
+                parse_literal,
+                parse_variable,
+                parse_symbol,
+                parse_list,
+                parse_bmap,
+                parse_hashmap,
+                parse_map,
+                parse_bset,
+            ))(inp)
+            .map_err(|e| match e {
+                // Failure 来自内部 cut（如未闭合的列表），直接透传保留具体错误
+                nom::Err::Failure(inner) => nom::Err::Failure(inner),
+                // Error 表示完全没识别出任何元素（如遇到 `}`），转为 Error 而非 Failure
+                // 这样 separated_list0 才能回退，允许末尾逗号
+                _ => SyntaxErrorKind::expected(
+                    inp.get_str_slice(),
+                    "a value",
+                    None,
+                    Some("add a value for this item"),
+                ),
+            })
+        },
+    )(input)?;
+
+    let (input, comma) = opt(text(","))(input)?;
+    let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
+    let (input, _) = text_close("}")(input).map_err(|_| {
         SyntaxErrorKind::failure(
             input.get_str_slice(),
-            "some value",
-            None,
-            Some("add some value for this item"),
+            if comma.is_some() { "`}`" } else { "`}` or `,`" },
+            input.first().map(|t| t.text(input).to_string()),
+            if comma.is_some() {
+                Some("unclosed Set?")
+            } else {
+                Some("missing comma between items?")
+            },
         )
     })?;
-
-    let (input, _) = opt(text(","))(input)?;
-    let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
-    let (input, _) = text_close("}")(input)?;
     Ok((input, pairs))
 }
 
@@ -1588,7 +1606,11 @@ fn parse_map_inner<'a>(
             input.get_str_slice(), // ← 当前位置，即 k3 前（v2 后）
             if comma.is_some() { "`}`" } else { "`}` or `,`" },
             input.first().map(|t| t.text(input).to_string()),
-            Some("missing comma between map entries?"),
+            if comma.is_some() {
+                Some("unclosed Map?")
+            } else {
+                Some("missing comma between map entries?")
+            },
         )
     })?;
 
@@ -2084,9 +2106,23 @@ fn parse_loop_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxE
 fn parse_for_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("for")(input)?;
     let (input, pat_ind) = opt(terminated(parse_symbol_string, text(",")))(input)?;
-    let (input, pat_var) = cut(parse_symbol_string)(input)?;
+    let (input, pat_var) = cut(parse_symbol_string)(input).map_err(|_| {
+        SyntaxErrorKind::failure(
+            input.get_str_slice(),
+            "loop variable",
+            input.first().map(|t| t.text(input).to_string()),
+            Some("add a variable name"),
+        )
+    })?;
     let (input, _) = cut(text("in"))(input)?;
-    let (input, iterable) = cut(parse_expr)(input)?;
+    let (input, iterable) = cut(parse_expr)(input).map_err(|_| {
+        SyntaxErrorKind::failure(
+            input.get_str_slice(),
+            "loop target",
+            input.first().map(|t| t.text(input).to_string()),
+            Some("add a iterable expression"),
+        )
+    })?;
     let (input, body) = cut(parse_block)(input)?;
 
     Ok((
@@ -2104,7 +2140,24 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     // 解析多个匹配分支
     let (input, expr_map) = cut(separated_list1(
         kind(TokenKind::LineBreak),
-        separated_pair(parse_pattern, cut(text("=>")), cut(parse_expr)),
+        separated_pair(
+            parse_pattern,
+            cut(text("=>")),
+            cut(|inp| {
+                parse_expr(inp).map_err(|e| match e {
+                    // Failure 是内部已有具体位置信息的错误，直接透传保留
+                    // nom::Err::Failure(inner) => nom::Err::Failure(inner),
+                    // Error 表示完全没识别出表达式，此时才用上下文消息
+                    nom::Err::Error(_) => SyntaxErrorKind::failure(
+                        inp.get_str_slice(),
+                        "invalid arm action",
+                        inp.first().map(|t| t.text(inp).to_string()),
+                        Some("check grammar of this arm action"),
+                    ),
+                    other => other,
+                })
+            }),
+        ),
     ))(input)?;
     // let (input, _) = opt(text(","))(input)?;
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
@@ -2394,7 +2447,15 @@ fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synt
             parse_integer,
             parse_float,
         )),
-    )(input)?;
+    )(input)
+    .map_err(|_| {
+        SyntaxErrorKind::failure(
+            input.get_str_slice(),
+            "match pattern",
+            input.first().map(|t| t.text(input).to_string()),
+            Some("add a string/symbol/regex/number/range/time"),
+        )
+    })?;
     Ok((input, pat))
 }
 // only used for match arm

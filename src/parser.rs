@@ -995,7 +995,7 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
                 map(kind(TokenKind::LineBreak), |_| {}),
             ))),
         ),
-        text_close("]"),
+        cut(text_close("]")),
     )(input)
 }
 
@@ -1633,13 +1633,17 @@ fn parse_map_inner<'a>(
                         parse_map,
                         parse_bset,
                     ))(inp)
-                    .map_err(|_| {
-                        SyntaxErrorKind::failure(
+                    .map_err(|e| match e {
+                        // Failure 来自内部 cut（如未闭合的列表），直接透传保留具体错误
+                        nom::Err::Failure(inner) => nom::Err::Failure(inner),
+                        // Error 表示完全没识别出任何元素（如遇到 `}`），转为 Error 而非 Failure
+                        // 这样 separated_list0 才能回退，允许末尾逗号
+                        _ => SyntaxErrorKind::failure(
                             inp.get_str_slice(),
                             "a value",
                             None,
                             Some("add a value for this item"),
-                        )
+                        ),
                     })
                 }),
             )),

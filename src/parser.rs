@@ -2453,73 +2453,39 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     .map_err(|_| {
         SyntaxErrorKind::failure(
             input.get_str_slice(),
-            "symbol list",
+            "comma separated var name",
             None,
-            Some("try: `let x, y = 1, 2`"),
+            Some("try: `let x, y = 1`"),
         )
     })?;
 
     // 解析等号和多表达式
-    let (input, exprs) = opt(preceded(
+    let (input, value_expr) = opt(preceded(
         text("="),
-        cut(separated_list0(text(","), parse_expr)),
+        cut(|input| {
+            parse_expr(input).map_err(|e| match e {
+                nom::Err::Error(_) => SyntaxErrorKind::failure(
+                    input.get_str_slice(),
+                    "a value expression",
+                    input.first().map(|t| t.text(input).to_string()),
+                    Some("check grammar after `=`"),
+                ),
+                // nom::Err::Failure(f) => nom::Err::Failure(f),
+                other => other,
+            })
+        }),
     ))(input)?;
 
     // 构建右侧表达式
-    let assignments = match exprs {
-        Some(e) if e.len() == 1 && symbols.len() == 1 => {
-            // 如果是单独的symbol，则包装为命令
-            // let last = match &e[0] {
-            //     Expression::Symbol(s) => {
-            //         Expression::Command(Rc::new(Expression::Symbol(s.to_owned())), vec![])
-            //     }
-            //     other => other.clone(),
-            // };
-            // 如果是命令, 则包装为字符串，命令应当明确用()包裹
-            // let last = match &e[0] {
-            //     Expression::Command(s, v) => Expression::Symbol(
-            //         s.to_string()
-            //             + " "
-            //             + v.iter()
-            //                 .map(|e| e.to_string())
-            //                 .collect::<Vec<String>>()
-            //                 .join(" ")
-            //                 .as_str(),
-            //     ),
-            //     other => other.clone(),
-            // };
-            let last = e[0].clone();
-            return Ok((
-                input,
-                Expression::Declare(symbols[0].clone(), Rc::new(last)),
-            ));
-        }
-        Some(e) if e.len() == 1 => (0..symbols.len())
-            .map(|i| Expression::Declare(symbols[i].clone(), Rc::new(e[0].clone())))
-            .collect(),
-        Some(e) if e.len() == symbols.len() => (0..symbols.len())
-            .map(|i| Expression::Declare(symbols[i].clone(), Rc::new(e[i].clone())))
-            .collect(),
-        Some(e) => {
-            return Err(SyntaxErrorKind::failure(
-                input.get_str_slice(),
-                "matching values count",
-                Some(format!(
-                    "{} variables but {} values",
-                    symbols.len(),
-                    e.len()
-                )),
-                Some("ensure each variable has a corresponding value"),
-            ));
-        }
-        None => {
-            return Ok((
-                input,
-                Expression::Declare(symbols[0].clone(), Rc::new(Expression::None)),
-            ));
-        }
+    let value = value_expr.map_or(Rc::new(Expression::None), |v| Rc::new(v));
+    return if symbols.len() == 1 {
+        Ok((input, Expression::Declare(symbols[0].clone(), value)))
+    } else {
+        let assignments = (0..symbols.len())
+            .map(|i| Expression::Declare(symbols[i].clone(), value.clone()))
+            .collect();
+        Ok((input, Expression::Sequence(assignments)))
     };
-    Ok((input, Expression::Sequence(assignments)))
 }
 
 fn parse_destructure_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {

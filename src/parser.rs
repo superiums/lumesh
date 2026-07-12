@@ -957,7 +957,7 @@ fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
 // -- 分组 --
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     delimited(
-        text("("),
+        terminated(text("("), opt(kind(TokenKind::LineBreak))),
         map(
             |inp| {
                 parse_expr(inp).map_err(|e| match e {
@@ -975,7 +975,7 @@ fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
         // map(alt((parse_math, parse_command_call)), |e| {
         //     Expression::Group(Box::new(e))
         // }),
-        cut(text_close(")")),
+        cut(preceded(opt(kind(TokenKind::LineBreak)), text_close(")"))),
     )(input)
 }
 
@@ -2267,7 +2267,7 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
         kind(TokenKind::LineBreak),
         separated_pair(
             parse_pattern,
-            cut(text("=>")),
+            cut(terminated(text("=>"), opt(kind(TokenKind::LineBreak)))),
             cut(|inp| {
                 parse_expr(inp).map_err(|e| match e {
                     // Failure 是内部已有具体位置信息的错误，直接透传保留

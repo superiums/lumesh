@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.16.6]
+- fix `+` in cfm
+- fix `ls -1`
+
 ## [0.16.5]
 - **add `continue`**
 - trace map with no value; trace unclosed list; update op-test

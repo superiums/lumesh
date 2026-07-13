@@ -820,9 +820,9 @@ impl PrattParser {
                         // eprintln!("invalid conditional ?: {:?}", rhs);
                         return Err(SyntaxErrorKind::failure(
                             input.get_str_slice(),
-                            "a:b",
+                            "conditional values after `?`",
                             Some(rhs.to_string()),
-                            "add true_value:false_value after '?'".into(),
+                            "add something like `t:f`".into(),
                         ));
                     }
                 };

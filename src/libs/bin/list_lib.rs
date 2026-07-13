@@ -115,28 +115,56 @@ fn max(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    math_lib::max(args, env, ctx)
+    if args.len() == 1 {
+        let mut it = args.into_iter();
+        let arr = it.next().unwrap();
+        let list = get_list_ref(&arr, ctx)?;
+        math_lib::max(list.as_ref().clone(), env, ctx)
+    } else {
+        math_lib::max(args, env, ctx)
+    }
 }
 fn min(
     args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    math_lib::min(args, env, ctx)
+    if args.len() == 1 {
+        let mut it = args.into_iter();
+        let arr = it.next().unwrap();
+        let list = get_list_ref(&arr, ctx)?;
+        math_lib::min(list.as_ref().clone(), env, ctx)
+    } else {
+        math_lib::min(args, env, ctx)
+    }
 }
 fn sum(
     args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    math_lib::sum(args, env, ctx)
+    if args.len() == 1 {
+        let mut it = args.into_iter();
+        let arr = it.next().unwrap();
+        let list = get_list_ref(&arr, ctx)?;
+        math_lib::sum(list.as_ref().clone(), env, ctx)
+    } else {
+        math_lib::sum(args, env, ctx)
+    }
 }
 fn average(
     args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    math_lib::average(args, env, ctx)
+    if args.len() == 1 {
+        let mut it = args.into_iter();
+        let arr = it.next().unwrap();
+        let list = get_list_ref(&arr, ctx)?;
+        math_lib::average(list.as_ref().clone(), env, ctx)
+    } else {
+        math_lib::average(args, env, ctx)
+    }
 }
 
 // ---from top---

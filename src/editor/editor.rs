@@ -1133,9 +1133,9 @@ impl Editor {
                 'c' => Cmd::Noop, // 已在全局事件处理
                 'd' => Cmd::Noop, // 已在全局事件处理
                 'e' => Cmd::MoveToEnd,
-                // 'f' => Cmd::MoveRight,
+                'f' => Cmd::MoveRight,
                 'h' => Cmd::Backspace,
-                'f' => Cmd::AcceptHint,
+                'j' => Cmd::AcceptHint,
                 'k' => Cmd::DeleteToLineEnd,
                 // 'l' 已在全局事件处理，此处不再重复
                 'n' => Cmd::HistoryNext,
@@ -1149,10 +1149,10 @@ impl Editor {
             },
             KeyEvent::Alt(c) => match c {
                 'b' => Cmd::MoveWordLeft,
-                // 'f' => Cmd::MoveWordRight,
+                'f' => Cmd::MoveWordRight,
                 'd' => Cmd::DeleteWordAfter,
                 // 's' => Cmd::ToggleSudo,
-                'f' => Cmd::AcceptHintWord,
+                'j' => Cmd::AcceptHintWord,
                 _ => Cmd::Noop,
             },
             // 导航与编辑键直接映射，统一走 handle_cmd

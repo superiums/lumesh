@@ -22,6 +22,8 @@
 
 **Write scripts like JavaScript, call commands like Bash, run at light speed.**
 
+![lume demo](assets/demo.gif)
+
 Lumesh is a modern shell and scripting language implemented in Rust, designed specifically as a Bash replacement.
 It maintains full compatibility with external command calling habits while providing modern programming language syntax and structured data processing capabilities.
 

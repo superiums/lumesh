@@ -3,7 +3,7 @@ print "--- 循环求和For ---"
 let start=time.stamp_ms();
 let sum=0;
 for i in 0..count {
-    sum += i
+    set sum = sum + i
 };
 let end=time.stamp_ms();
 print "从 1 到 "count" 的总和是: " sum;
@@ -31,7 +31,7 @@ print "--- 循环+条件判断 ---"
 let start=time.stamp_ms();
 let sum=0; for i in 0..1000000 {
     if i % 2 == 0 {
-        sum += i
+        set sum = sum + i
     }
 };
 let end=time.stamp_ms();
@@ -46,7 +46,7 @@ print "--- 内存使用情况 ---"
 initial_memory = (grep VmRSS /proc/self/status)
 let start=time.stamp_ms();
 let sum=0; for i in 0..1000001 {
-    sum += i
+    set sum = sum + i
 };
 let end=time.stamp_ms();
 final_memory = (grep VmRSS /proc/self/status)
@@ -220,3 +220,22 @@ print "所需时间: " end - start "毫秒";
 所需时间:  173 毫秒
 --- cpu性能 ---
 所需时间:  160 毫秒
+
+# -------- v0.16.5 ---------
+--- 循环求和For ---
+从 1 到  1000000  的总和是:  499999500000
+所需时间:  255 毫秒
+--- 循环求和While ---
+从 1 到  1000000  的总和是:  499999500000
+所需时间:  339 毫秒
+--- 循环+条件判断 ---
+从 1 到  1000000  的偶数和是:  249999500000
+所需时间:  301 毫秒
+--- 内存使用情况 ---
+从 1 到  1000000  的总和是: 500000500000
+初始内存使用: VmRSS:	    2560 kB kB
+结束时内存使用: VmRSS:	    2652 kB kB
+内存使用变化: VmRSS:	    2652 kB kB
+所需时间:  225 毫秒
+--- cpu性能 ---
+所需时间:  124 毫秒

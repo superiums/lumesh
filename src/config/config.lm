@@ -193,6 +193,7 @@ if IS_INTERACTIVE {
     #     chat_prompt: '',
          syntax,
     }
+    del syntax
 
     # ## ---update---
     # uncomment this if you have lman installed.

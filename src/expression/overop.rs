@@ -362,6 +362,11 @@ impl Sub for Expression {
                 Ok(Self::from(new_map))
             }
 
+            (Self::DateTime(a), Self::DateTime(b)) => {
+                let d = a - b;
+                Ok(Self::from(d.num_milliseconds()))
+            }
+
             // 其他情况
             (n, m) => Err(RuntimeErrorKind::CommandFailed2(
                 "-".into(),

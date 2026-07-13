@@ -374,7 +374,13 @@ impl PrattParser {
                     // }
                     "-" | "+" if min_prec == PREC_CMD_ARG => {
                         let input = input.skip_n(1);
-                        let (input, arg) = cut(parse_symbol_string)(input)?;
+                        // ls -1 need parse_integer
+                        let (input, arg) = cut(alt((
+                            parse_symbol_string,
+                            map(kind(TokenKind::IntegerLiteral), |t| {
+                                t.to_str(input.str).to_string()
+                            }),
+                        )))(input)?;
                         Ok((input, Expression::String(format!("{}{}", op, arg))))
                     }
                     "!" | "-" => {

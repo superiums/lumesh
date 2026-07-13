@@ -237,6 +237,7 @@ fn plus_dispatch(
     match ctx {
         Ctx::Space if is_cfm => alt((
             map_valid_token(punctuation_tag("+="), TokenKind::Operator),
+            map_valid_token(space_followed_tag("+"), TokenKind::Operator),
             map_valid_token(whole_word("+"), TokenKind::Symbol), //important for `chmod +x`
         ))(input),
         _ => alt((

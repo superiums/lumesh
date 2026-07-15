@@ -253,6 +253,7 @@ pub fn handle_command(
 
         match e_arg {
             Expression::Symbol(s) => {
+                let s = expand_home(&s);
                 if s.contains('*') {
                     let mut matched = false;
                     if let Ok(g) = glob(&s) {
@@ -270,7 +271,7 @@ pub fn handle_command(
                         // cmd_args.push(s);
                     }
                 } else {
-                    cmd_args.push(s)
+                    cmd_args.push(s.into())
                 }
             }
             Expression::String(st) => {

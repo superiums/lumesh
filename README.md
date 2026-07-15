@@ -1,4 +1,4 @@
-English | [简体中文)(README-cn.md)
+English | [简体中文](README-cn.md)
 
 # Lumesh — Your Next Default Shell
 
@@ -20,7 +20,9 @@ English | [简体中文)(README-cn.md)
       ┗┛┗┻┛┗┗┗  Lightweight · Ultimate · Modern · Efficient
 ```
 
-> **Write scripts like JavaScript, call commands like Bash, run like light.**
+> **Write like JavaScript, works like Bash, runs like light.**
+
+![lumesh logo](/assets/logo.svg)
 
 ---
 
@@ -136,7 +138,7 @@ fn deploy() { ... }
 | Structured Pipeline |  √    | —    | —     | —     |
 | AI Assistance | ✅√   | —    | —     | —     |
 
-| ![Memory Comparison](assets/mem_chart.png) | ![Speed Comparison](assets/time_chart.png) |
+| ![Memory Comparison](assets/mem_chart.svg) | ![Speed Comparison](assets/time_chart.svg) |
 | --------------------------------- | ---------------------------------- |
 
 > From v0.10.1, loop performance improved by about 2x; from v0.11.0, memory usage decreased by about 0.8 MB.

@@ -1,0 +1,261 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <!-- 蓝色辉光滤镜 -->
+    <filter id="glowBlue" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- 青色辉光 -->
+    <filter id="glowCyan" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- 强辉光 -->
+    <filter id="glowStrong" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- 渐变 -->
+    <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="50%" stop-color="#0088ff"/>
+      <stop offset="100%" stop-color="#0044cc"/>
+    </linearGradient>
+    <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00ffcc"/>
+      <stop offset="100%" stop-color="#00aaff"/>
+    </linearGradient>
+    <linearGradient id="gradBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#ff00aa"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#0d1530"/>
+    </linearGradient>
+    <!-- 剪裁路径 -->
+    <clipPath id="screenClip">
+      <rect x="0" y="0" width="260" height="180" rx="4"/>
+    </clipPath>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="800" height="500" fill="url(#bgGrad)"/>
+
+  <!-- 背景装饰粒子 -->
+  <g opacity="0.3">
+    <circle cx="100" cy="80" r="1.5" fill="#00d4ff">
+      <animate attributeName="cy" from="80" to="60" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" from="0.3" to="0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="250" cy="420" r="1" fill="#00ffcc">
+      <animate attributeName="cy" from="420" to="400" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+      <animate attributeName="opacity" from="0.3" to="0" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+    <circle cx="500" cy="60" r="1.5" fill="#0088ff">
+      <animate attributeName="cy" from="60" to="40" dur="3.5s" repeatCount="indefinite" begin="1s"/>
+      <animate attributeName="opacity" from="0.3" to="0" dur="3.5s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+    <circle cx="650" cy="350" r="1" fill="#00d4ff">
+      <animate attributeName="cy" from="350" to="330" dur="2s" repeatCount="indefinite" begin="0.8s"/>
+      <animate attributeName="opacity" from="0.3" to="0" dur="2s" repeatCount="indefinite" begin="0.8s"/>
+    </circle>
+    <circle cx="400" cy="450" r="1.5" fill="#ff00aa">
+      <animate attributeName="cy" from="450" to="430" dur="2.8s" repeatCount="indefinite" begin="1.5s"/>
+      <animate attributeName="opacity" from="0.3" to="0" dur="2.8s" repeatCount="indefinite" begin="1.5s"/>
+    </circle>
+  </g>
+
+  <!-- 背景网格 -->
+  <g stroke="#1a2540" stroke-width="0.5" opacity="0.5">
+    <line x1="0" y1="100" x2="800" y2="100"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="0" y1="400" x2="800" y2="400"/>
+    <line x1="100" y1="0" x2="100" y2="500"/>
+    <line x1="200" y1="0" x2="200" y2="500"/>
+    <line x1="300" y1="0" x2="300" y2="500"/>
+    <line x1="400" y1="0" x2="400" y2="500"/>
+    <line x1="500" y1="0" x2="500" y2="500"/>
+    <line x1="600" y1="0" x2="600" y2="500"/>
+    <line x1="700" y1="0" x2="700" y2="500"/>
+  </g>
+
+  <!-- ============ 立体终端主体 ============ -->
+  <g transform="translate(140, 80)">
+    <!-- 投影 -->
+    <g transform="translate(12, 18)">
+      <rect x="0" y="0" width="260" height="200" rx="8" fill="#000" opacity="0.4"/>
+    </g>
+
+    <!-- 终端基座/斜面 -->
+    <g transform="skewX(-5)">
+      <rect x="-8" y="192" width="278" height="16" rx="3" fill="#0a1628" opacity="0.8"/>
+    </g>
+
+    <!-- 终端外壳 - 带3D摇摆动画 -->
+    <g>
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        values="0 130 100; 15 130 100; 0 130 100; -10 130 100; 0 130 100"
+        keyTimes="0; 0.25; 0.5; 0.75; 1"
+        dur="8s"
+        repeatCount="indefinite"
+        calcMode="spline"
+        keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+      />
+      <!-- 终端正面 -->
+      <rect x="0" y="0" width="260" height="200" rx="8" fill="#0d1525" stroke="url(#gradBlue)" stroke-width="2" filter="url(#glowBlue)"/>
+
+      <!-- 顶部标题栏 -->
+      <rect x="0" y="0" width="260" height="32" rx="8" fill="#111b2e"/>
+      <rect x="0" y="16" width="260" height="16" fill="#111b2e"/>
+
+      <!-- 标题栏按钮 -->
+      <circle cx="22" cy="16" r="6" fill="#ff5f57"/>
+      <circle cx="42" cy="16" r="6" fill="#ffbd2e"/>
+      <circle cx="62" cy="16" r="6" fill="#28c840"/>
+
+      <!-- 标题文字 -->
+      <text x="130" y="21" font-family="monospace" font-size="11" fill="#5a7aa0" text-anchor="middle">Lume Terminal</text>
+
+      <!-- 屏幕区域 -->
+      <g clip-path="url(#screenClip)" transform="translate(12, 38)">
+        <rect x="0" y="0" width="236" height="150" fill="#060c18"/>
+
+        <!-- 屏幕扫描线效果 -->
+        <rect x="0" y="0" width="236" height="2" fill="#00d4ff" opacity="0.15">
+          <animate attributeName="y" from="0" to="150" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" from="0.15" to="0" dur="2s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- 命令行提示符 -->
+        <text x="10" y="25" font-family="monospace" font-size="12" fill="#00ffcc" filter="url(#glowCyan)">&gt;_ lume -m</text>
+
+        <!-- 打字机效果 - L -->
+        <text x="10" y="50" font-family="monospace" font-size="11" fill="#00d4ff" opacity="0">
+          ls -lh | where(size>3M)
+          <animate attributeName="opacity" from="0" to="1" dur="1s" fill="freeze" begin="6.5s"/>
+        </text>
+
+        <!-- 进度条背景 -->
+        <rect x="10" y="70" width="216" height="4" rx="2" fill="#1a2540"/>
+        <!-- 进度条填充 -->
+        <rect x="10" y="70" width="0" height="4" rx="2" fill="url(#gradBar)">
+          <animate attributeName="width" from="0" to="216" dur="2s" fill="freeze" begin="1.5s"/>
+        </rect>
+
+        <!-- 完成提示 -->
+        <text x="10" y="90" font-family="monospace" font-size="11" fill="#28c840" opacity="0">
+          &#10003; Ready
+          <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="3.5s"/>
+        </text>
+
+        <!-- 闪烁光标 -->
+        <rect x="12" y="100" width="2" height="13" fill="#00ffcc">
+          <animate attributeName="opacity" from="1" to="0" dur="0.8s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- 速度线效果 1 -->
+        <line x1="-20" y1="110" x2="100" y2="110" stroke="#00d4ff" stroke-width="0.5" opacity="0.4">
+          <animate attributeName="x1" from="-40" to="280" dur="1.5s" repeatCount="indefinite" begin="2s"/>
+          <animate attributeName="x2" from="40" to="300" dur="1.5s" repeatCount="indefinite" begin="2s"/>
+          <animate attributeName="opacity" from="0.4" to="0" dur="1.5s" repeatCount="indefinite" begin="2s"/>
+        </line>
+        <!-- 速度线效果 2 -->
+        <line x1="300" y1="125" x2="200" y2="125" stroke="#00ffcc" stroke-width="0.5" opacity="0.3">
+          <animate attributeName="x1" from="280" to="-40" dur="1.2s" repeatCount="indefinite" begin="2.5s"/>
+          <animate attributeName="x2" from="200" to="-80" dur="1.2s" repeatCount="indefinite" begin="2.5s"/>
+          <animate attributeName="opacity" from="0.3" to="0" dur="1.2s" repeatCount="indefinite" begin="2.5s"/>
+        </line>
+        <!-- 速度线效果 3 -->
+        <line x1="-20" y1="140" x2="80" y2="140" stroke="#0088ff" stroke-width="0.5" opacity="0.3">
+          <animate attributeName="x1" from="-40" to="280" dur="1s" repeatCount="indefinite" begin="3s"/>
+          <animate attributeName="x2" from="40" to="300" dur="1s" repeatCount="indefinite" begin="3s"/>
+          <animate attributeName="opacity" from="0.3" to="0" dur="1s" repeatCount="indefinite" begin="3s"/>
+        </line>
+      </g>
+
+      <!-- 屏幕边框高光 -->
+      <rect x="12" y="38" width="236" height="1" fill="url(#gradCyan)" opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- ============ 右侧 LUME 大字 ============ -->
+  <g transform="translate(470, 80)" filter="url(#glowStrong)">
+    <!-- L -->
+    <g>
+      <rect x="0" y="0" width="12" height="120" fill="url(#gradBlue)" rx="2"/>
+      <rect x="0" y="108" width="50" height="12" fill="url(#gradBlue)" rx="2"/>
+      <!-- L 速度线装饰 -->
+      <line x1="-10" y1="30" x2="70" y2="30" stroke="#00d4ff" stroke-width="0.5" opacity="0">
+        <animate attributeName="x1" from="-20" to="80" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" from="0.5" to="0" dur="1.5s" repeatCount="indefinite"/>
+      </line>
+    </g>
+
+    <!-- U -->
+    <g transform="translate(65, 0)">
+      <rect x="0" y="0" width="12" height="108" fill="url(#gradBlue)" rx="2"/>
+      <rect x="38" y="0" width="12" height="108" fill="url(#gradBlue)" rx="2"/>
+      <rect x="0" y="108" width="50" height="12" fill="url(#gradBlue)" rx="2"/>
+    </g>
+
+    <!-- M -->
+    <g transform="translate(130, 0)">
+      <rect x="0" y="0" width="12" height="120" fill="url(#gradBlue)" rx="2"/>
+      <rect x="38" y="0" width="12" height="120" fill="url(#gradBlue)" rx="2"/>
+      <polygon points="6,0 25,50 44,0" fill="url(#gradBlue)"/>
+      <rect x="6" y="50" width="38" height="70" fill="url(#gradBlue)" opacity="0.3"/>
+    </g>
+
+    <!-- E -->
+    <g transform="translate(195, 0)">
+      <rect x="0" y="0" width="12" height="120" fill="url(#gradBlue)" rx="2"/>
+      <rect x="0" y="0" width="50" height="12" fill="url(#gradBlue)" rx="2"/>
+      <rect x="0" y="54" width="35" height="12" fill="url(#gradBlue)" rx="2"/>
+      <rect x="0" y="108" width="50" height="12" fill="url(#gradBlue)" rx="2"/>
+    </g>
+  </g>
+
+  <!-- LUME 下方标语 -->
+  <g transform="translate(470, 215)">
+    <text x="0" y="0" font-family="monospace" font-size="11" fill="#5a7aa0" letter-spacing="6">LUME</text>
+    <text x="0" y="20" font-family="monospace" font-size="9" fill="#3a5570" letter-spacing="2">FAST . SECURE . MODERN</text>
+  </g>
+
+  <!-- 底部标语 -->
+  <g transform="translate(400, 470)" filter="url(#glowCyan)">
+    <text x="0" y="0" font-family="monospace" font-size="13" fill="#00d4ff" text-anchor="middle" letter-spacing="1.5" opacity="0">
+      Write like JavaScript, works like Bash, runs like Light
+      <animate attributeName="opacity" from="0" to="1" dur="5s" fill="freeze" begin="7s"/>
+    </text>
+    <!-- 底部装饰线 -->
+    <line x1="-200" y1="15" x2="200" y2="15" stroke="url(#gradCyan)" stroke-width="0.5" opacity="0.5"/>
+  </g>
+
+  <!-- 左下角装饰 -->
+  <g transform="translate(50, 440)" opacity="0.2">
+    <text font-family="monospace" font-size="12" fill="#93CF51">
+      &gt; www.lumesh.cc.cd
+      <animate attributeName="opacity" from="0.7" to="1" dur="5s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- 右上角版本号 -->
+  <g transform="translate(700, 30)" opacity="0.8">
+    <text font-family="monospace" font-size="10" fill="#3a5570" text-anchor="end">v0.16.6</text>
+  </g>
+</svg>

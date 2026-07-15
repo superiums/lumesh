@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.7]
+- expand ~ in sybmo of cmd
+- cfm mode - takes whole word
+- +prefix in normal mode
+- fix fd in config
+- update doc domain
+
 ## [0.16.6]
 - fix `+` in cfm
 - fix `ls -1`

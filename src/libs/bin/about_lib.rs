@@ -32,7 +32,7 @@ fn info(
     let info = hash_map! {
         String::from("author") => Expression::String("Santo; Superiums; Adam McDaniel".to_string()),
         String::from("git") => Expression::String("https://codeberg.org/santo/lumesh".to_string()),
-        String::from("homepage") => Expression::String("https://lumesh.codeberg.page".to_string()),
+        String::from("homepage") => Expression::String("https://www.lumesh.cc.cd".to_string()),
         String::from("version") => Expression::String(VERSION.to_string()),
         String::from("bin") => bin(vec![], env, ctx)?,
 

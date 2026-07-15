@@ -175,7 +175,7 @@ if IS_INTERACTIVE {
     alias fcp = fs.cp()
     alias fhead = fs.head()
     alias ftail = fs.tail()
-    alias doc = xdg-open https://lumesh.codeberg.page
+    alias doc = xdg-open https://www.lumesh.cc.cd
     alias config = vi about.info().prelude
 
     # ## ---ai---

@@ -7,7 +7,7 @@ license = "MIT"
 description = "a lighting shell ⚡ bash alternative"
 readme = "README.md"
 documentation = "https://docs.rs/lumesh"
-homepage = "https://lumesh.codeberg.page"
+homepage = "https://www.lumesh.cc.cd"
 repository = "https://codeberg.org/santo/lumesh"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

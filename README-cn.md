@@ -8,7 +8,7 @@
 
 [Codeberg](https://codeberg.org/santo/lumesh)
 | [GitHub](https://github.com/superiums/lumesh)
-| [文档](https://lumesh.codeberg.page/)
+| [文档](https://www.lumesh.cc.cd/zh-cn)
 | [DeepWiki](https://deepwiki.com/superiums/lumesh)
 | [发布页 1](https://github.com/superiums/lumesh/releases)
 | [发布页 2](https://codeberg.org/santo/lumesh/releases)
@@ -20,72 +20,145 @@
       ┗┛┗┻┛┗┗┗  Lightweight · Ultimate · Modern · Efficient
 ```
 
-**像写 JS 一样编写脚本，像 Bash 一样调用命令，像光一样运行。**
-
-![lume demo](assets/demo.gif)
-
-Lumesh 是用 Rust 实现的现代 Shell 与脚本语言，专为替代 Bash 而生。
-它完全兼容外部命令调用习惯，同时提供现代编程语言的语法体验和结构化数据处理能力。
+> **像写 JS 一样编写脚本，像 Bash 一样调用命令，像光一样运行。**
 
 ---
 
-## 为什么要从 Bash 迁移到 Lumesh？
-
-你是否在 Bash 中遇到过这些问题？
+## 你还在忍受 Bash 的这些痛苦吗？
 
 ```bash
 # Bash：字符串比较要加引号，否则报错
 if [ "$var" = "hello" ]; then ...
 
-# Bash：数组操作反直觉
-arr=(1 2 3)
-echo ${arr[@]}
+# Bash：数组？关联数组？语法像在解谜
+declare -A map
+map["key"]="value"
+for k in "${!map[@]}"; do echo "$k: ${map[$k]}"; done
 
 # Bash：错误处理几乎靠 set -e，一旦出错整个脚本崩溃
 set -e
 some_command || echo "failed"
 
-# Bash：没有结构化数据，处理 JSON/表格要靠 awk/jq
-ls -l | awk '{print $5, $9}'
+# Bash：想处理一个 JSON 列表？先装 jq，再写一堆管道，再祈祷不出错  [header-1](#header-1)
+result=$(cat data.json | jq -r '.[] | select(.age > 18) | .name' 2>/dev/null) || echo "failed"  
+  
 ```
+**Bash 诞生于 1989 年。它从未为现代开发者设计。**
 
-**Lumesh 让这些问题通通消失：**
+你每天都在和它的历史包袱搏斗：
+- 字符串和数组的语法陷阱让人抓狂
+- 错误处理要么全退出，要么全忽略，没有中间地带
+- 结构化数据处理完全依赖外部工具
+- 脚本一长就变成无法维护的"shell 意大利面"
+
+**是时候换一个为现代人设计的 shell 了。**
+
+## 认识 Lumesh —— 你的下一个 Shell
+![lume demo](assets/demo.gif)
+
+Lumesh 是用 Rust 编写的现代 shell 和脚本语言，完全兼容外部命令，同时带来类似js的编程能力。
+
+不需要抛弃你已有的知识。 ls、git、grep、curl——所有命令照常运行。你只是获得了更好的一切。
+
+---
+## 对比一下，感受差距
+
+### 错误处理：从噩梦到优雅
 
 ```bash
-# lumesh：自然的条件判断
-if var == "hello" { ... }
-
-# lumesh：列表操作直观
-let arr = [1, 2, 3]
-arr | list.map(x -> x * 2)
-
-# lumesh：7种错误处理操作符，精细控制
-some_command ?.          # 忽略错误，继续执行
-some_command ?: "默认值"  # 出错时使用默认值
-some_command ?!          # 出错时终止整个管道
-
-# lumesh：内置结构化数据处理
-fs.ls -lh | where(size > 5K) | select(name, size, modified)
+# Bash 的方式：脆弱、啰嗦
+if ! command_that_might_fail 2>/dev/null; then
+    echo "failed" >&2
+    exit 1
+fi
 ```
+
+```bash
+# Lumesh 的方式：7 种精准的错误操作符
+command ?.          # 忽略错误，继续执行
+command ?: handler  # 出错时使用默认值/处理函数
+command ?!          # 出错时终止整个管道
+command ?~          # 将错误转为布尔值 false
+```
+
+### 数据处理：告别 awk/sed/jq 的组合拳
+
+```bash
+# 过滤大文件，只保留 5K 以上的条目，只显示名称和大小
+fs.ls -lh | where(size > 5K) | select(name, size, modified)
+
+# 对列表做 map/filter，就像写 JavaScript
+1...100 | list.filter(x -> x % 2 == 0) | list.map(x -> x * 2)
+
+# 批量操作：把当前目录所有文件复制到 /tmp/
+ls -1 |> cp -r _ /tmp/
+```
+
+### 变量和数据结构：终于像个正常语言了
+
+```bash
+# 解构赋值
+let user = {name: "Lume", age: 3}
+let {name, age} = user
+
+# 范围和链式调用
+"hello world".split(' ').join('-')   # => "hello-world"
+
+# 类型丰富：List、Map、Set、Range，全部原生支持
+let scores = [95, 87, 72, 88]
+let avg = scores | list.foldl((a, b) -> a + b) | _ / scores.len()
+```
+
+### 模块化脚本：写大项目不再是灾难
+
+```bash
+use my_utils as utils
+utils::send_report(data)
+
+@retry(3)           # 装饰器：失败自动重试 3 次
+@log_time           # 装饰器：自动记录执行时间
+fn deploy() { ... }
+```
+
+---
+
+## 性能：不只是更好用，还更快
+
+| 对比项目           | lume  | bash | dash  | fish  |
+| ------------------ | ----- | ---- | ----- | ----- |
+| 速度（百万次循环） | ★★★★★ | ★★★  | ★★★★  | 无法完成  |
+| 语法友好度         | ★★★★★ | ★★   | ★     | ★★★★  |
+| 错误提示质量       | ★★★★★ | ★    | ★     | ★★★   |
+| 错误处理能力       | ★★★★★ | ★    | ★     | ★     |
+| 内置函数库         | ★★★★★ | —    | —     | ★     |
+| 交互体验           | ★★★★★ | ★★   | ★     | ★★★★★ |
+| 二进制体积         | ★★★★  | ★★★  | ★★★★★ | ★★    |
+| 结构化管道         |  √    | —    | —     | —     |
+| AI 辅助            | ✅√   | —    | —     | —     |
+
+| ![内存对比](assets/mem_chart.png) | ![速度对比](assets/time_chart.png) |
+| --------------------------------- | ---------------------------------- |
+
+> 从 v0.10.1 起，循环性能提升约 2 倍；从 v0.11.0 起，内存占用下降约 0.8 MB。
 
 ---
 
 ## Bash vs Lumesh 语法速查
 
-| 场景 | Bash | Lumesh |
-|------|------|--------|
-| 变量赋值 | `name="Alice"` | `let name = "Alice"` |
-| 字符串插值 | `echo "Hello $name"` | `` echo `Hello {name}` `` |
-| 条件判断 | `if [ "$a" -gt 1 ]; then;do ... done` | `if a > 1 { ... }` |
-| 循环 | `for i in $(seq 1 10); do ... done` | `for i in 1..10 { ... }` |
-| 函数定义 | `myfunc() { ... }` | `fn myfunc() { ... }` |
-| 数组 | `arr=(1 2 3)` | `let arr = [1, 2, 3]` |
-| 字典/Map | 需借助 `declare -A` | `let m = {a: 1, b: 2}` |
-| 解构赋值 | 不支持 | `let {name, age} = user` |
-| 错误忽略 | `command 2>/dev/null \|\| true` | `command ?.` |
-| 管道结构化数据 | 不支持（需 jq/awk） | 原生支持 |
-| 链式调用 | 不支持 | `"hello".split(' ').join(',')` |
-| 模块导入 | 不支持 | `use mylib as lib` |
+| 场景           | Bash                                  | Lumesh                         |
+| -------------- | ------------------------------------- | ------------------------------ |
+| 变量赋值       | `name="Alice"`                        | `let name = "Alice"`           |
+| 字符串插值     | `echo "Hello $name"`                  | `` echo `Hello {name}` ``      |
+| 条件判断       | `if [ "$a" -gt 1 ]; then;do ... done` | `if a > 1 { ... }`             |
+| 循环           | `for i in $(seq 1 10); do ... done`   | `for i in 1..10 { ... }`       |
+| 函数定义       | `myfunc() { ... }`                    | `fn myfunc() { ... }`          |
+| 数组           | `arr=(1 2 3)`                         | `let arr = [1, 2, 3]`          |
+| 字典/Map       | 需借助 `declare -A`                   | `let m = {a: 1, b: 2}`         |
+| 解构赋值       | 不支持                                | `let {name, age} = user`       |
+| 错误忽略       | `command 2>/dev/null \|\| true`       | `command ?.`                   |
+| 管道结构化数据 | 不支持（需 jq/awk）                   | 原生支持                       |
+| 链式调用       | 不支持                                | `"hello".split(' ').join(',')` |
+| 模块导入       | 不支持                                | `use mylib as lib`             |
 
 ---
 
@@ -94,6 +167,7 @@ fs.ls -lh | where(size > 5K) | select(name, size, modified)
 ### 第一步：安装 Lumesh
 
 **方式一：使用安装脚本（推荐）**
+
 ```bash
 # 下载并运行安装脚本
 curl -LO https://github.com/superiums/lumesh/releases/latest/download/install.sh
@@ -101,6 +175,7 @@ bash ./install.sh
 ```
 
 **方式二：下载预编译二进制**
+
 - [GitHub 发布页](https://github.com/superiums/lumesh/releases)
 - [Codeberg 发布页](https://codeberg.org/santo/lumesh/releases)
 
@@ -120,12 +195,14 @@ lume
 ```
 
 你会立刻获得：
-- **语法高亮**：命令、变量、字符串实时着色
-- **智能补全**：路径、命令、参数（含 fish 风格参数提示）自动补全
+
+- **语法高亮**：命令、变量、字符串输入时实时高亮，错误一眼看出
+- **智能补全**：路径、命令、参数（含 fish 风格参数提示）自动补全，甚至 AI 辅助补全（`ALT+i`）
 - **现代快捷键**：`Ctrl+/` 命令菜单、`Alt+g` 快速目录跳转、`CTRL_SHIFT_f` 快速选中文件...
-- **AI 辅助**：内置本地 AI 命令建议
+- **AI 辅助**：让AI帮你写代码（`ALT+Enter`）
 
 你可以尝试：
+
 - `help` 命令，了解内置命令
 - `help doc`，查看在线文档
 - 执行常规三方命令
@@ -136,6 +213,7 @@ lume
 ### 第三步：将 Lumesh 设为默认 Shell
 
 在lume中执行
+
 ```bash
 use lman
 lman::chsh()
@@ -150,13 +228,16 @@ lman::chsh()
 Lumesh 使用 `.lm` 作为脚本扩展名。迁移 Bash 脚本时，主要改动集中在：
 
 **1. Shebang 行**
+
 ```bash
 #!/usr/bin/env lumesh
 ```
+
 > `lumesh` 可选择链接到`lume`或`lume-se`
 > `lume-se` 是无交互的轻量脚本执行器，适合 CI/CD 和自动化场景。
 
 **2. 变量声明加 `let`**
+
 ```bash
 # Bash
 NAME="world"
@@ -166,6 +247,7 @@ let NAME = "world"
 ```
 
 **3. 条件与循环语法**
+
 ```bash
 # Bash
 for f in *.txt; do
@@ -181,6 +263,7 @@ for f in *.txt {
 **4. 命令调用无需改动**
 
 Lumesh 的 CFM（命令优先模式）让你像在 Bash 中一样直接调用外部命令：
+
 ```bash
 git status
 docker ps -a
@@ -190,112 +273,40 @@ chmod +x ./script.lm
 
 ---
 
-## 语法特性一览
-
-### ⚡ 结构化管道（Bash 没有的能力）
-```bash
-# 列出链接文件
-fs.ls -l | where(type == 'symlink') | select(name, modified)
-
-# 批量复制
-ls -1 |> cp -r _ /tmp/backup/
-```
-
-### ⚡ 强大的错误处理
-```bash
-command ?.          # 忽略错误
-command ?: "默认"   # 出错返回默认值
-command ?+          # 错误信息打印到标准输出
-command ??          # 错误信息打印到标准错误
-command ?>          # 覆盖输出（数据通道）
-command ?!          # 出错立即终止管道
-command ?~          # 将错误转为布尔值 false
-```
-
-### ⚡ 现代语法
-```bash
-# 直接数学运算
-10 - -6 / 3
-
-# 解构赋值
-let {name, age} = {name: "Lumesh", age: 3}
-let [a, b, *rest] = [1, 2, 3, 4, 5]
-
-# 箭头函数与高阶函数
-let evens = 1...20 | list.filter(x -> x % 2 == 0)
-let doubled = evens | .map(x -> x * 2)
-
-# 链式调用
-"hello world".split(' ').map(s -> s.to_upper()).join('-')
-```
-
 ### ⚡ 丰富的内置模块（无需安装第三方工具）
-| 模块 | 功能 |
-|------|------|
-| `list` | map、filter、reduce、sort、unique… |
-| `string` | split、join、trim、replace、pad… |
-| `fs` | ls、read、write、copy、move… |
-| `map` | 映射操作 |
-| `table` | 表格操作 |
-| `regex` | 正则匹配、替换、提取 |
-| `time` | 时间格式化、计算、时区 |
-| `math` | 完整数学函数库 |
-| `into` / `from` | 数据类型转换 |
-| `ui` | 交互式选择、确认对话框 |
-| `log` | 结构化日志输出 |
-| ... | 使用`help libs`查看更多 |
+
+| 模块            | 功能                               |
+| --------------- | ---------------------------------- |
+| `list`          | map、filter、reduce、sort、unique… |
+| `string`        | split、join、trim、replace、pad…   |
+| `fs`            | ls、read、write、copy、move…       |
+| `map`           | 映射操作                           |
+| `table`         | 表格操作                           |
+| `regex`         | 正则匹配、替换、提取               |
+| `time`          | 时间格式化、计算、时区             |
+| `math`          | 完整数学函数库                     |
+| `into` / `from` | 数据类型转换                       |
+| `ui`            | 交互式选择、确认对话框             |
+| `log`           | 结构化日志输出                     |
+| ...             | 使用`help libs`查看更多            |
 
 **常数模块**
+
 - `COLOR`
 - `MATH`
 - `STYLE`
 
-### ⚡ 函数装饰器
-```bash
-@log_time
-@retry(3)
-fn deploy() {
-  # 部署逻辑
-}
-```
-
-### ⚡ 模块化编程
-```bash
-use ./utils as u
-
-u::my_function()
-```
 
 ---
 
-## 特能对比
-
-| 对比项目 | lume | bash | dash | fish |
-|----------|------|------|------|------|
-| 速度（百万次循环） | ★★★★★ | ★★★ | ★★★★ | ★ |
-| 语法友好度 | ★★★★★ | ★★ | ★ | ★★★★ |
-| 错误提示质量 | ★★★★★ | ★ | ★ | ★★★ |
-| 错误处理能力 | ★★★★★ | ★ | ★ | ★ |
-| 内置函数库 | ★★★★★ | — | — | ★ |
-| 交互体验 | ★★★★★ | ★★ | ★ | ★★★★★ |
-| 二进制体积 | ★★★★ | ★★★ | ★★★★★ | ★★ |
-| 结构化管道 |  √  | — | — | — |
-| AI 辅助 | ✅√  | — | — | — |
-
-| ![内存对比](assets/mem_chart.png) | ![速度对比](assets/time_chart.png) |
-|---|---|
-
-> 从 v0.10.1 起，循环性能提升约 2 倍；从 v0.11.0 起，内存占用下降约 0.8 MB。
-
----
 
 ## 多个二进制，按需选择
 
-| 二进制 | 大小 | 适用场景 |
-|--------|------|----------|
-| `lume` | ~3.9 MB | 日常交互式 Shell，含 REPL、补全、高亮 + 本地http协议的AI辅助 |
-| `lume-se` | ~2.7 MB | 脚本执行、CI/CD、嵌入式，快速启动 |
-| `lume-ai-https` | ~5.4 MB | 交互Shell + 在线https协议的AI辅助 |
+| 二进制          | 大小    | 适用场景                                                     |
+| --------------- | ------- | ------------------------------------------------------------ |
+| `lume`          | ~3.9 MB | 日常交互式 Shell，含 REPL、补全、高亮 + 本地http协议的AI辅助 |
+| `lume-se`       | ~2.7 MB | 脚本执行、CI/CD、嵌入式，快速启动                            |
+| `lume-ai-https` | ~5.4 MB | 交互Shell + 在线https协议的AI辅助                            |
 
 ---
 
@@ -307,11 +318,11 @@ u::my_function()
 ---
 
 ## 最灵活的快捷键支持
+
 - 用户可将自定义快捷键绑定到自定义函数
 - 该函数可以读取并修改当前输入的命令行
 - 这意味着你可以尽情发挥，完成任何你想要的功能
-- 
-**比如**
+- **比如**
 - 自动修正输入错误
 - 保存/调用 历史目录/书签命令
 - 调用`ui`模块，制作菜单/对话框，进行快速跳转

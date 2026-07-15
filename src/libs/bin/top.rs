@@ -97,11 +97,11 @@ fn help(
         false => match args[0].to_string().as_str() {
             "doc" => {
                 if cfg!(target_os = "macos") {
-                    parse_and_eval("open https://lumesh.codeberg.page", env);
+                    parse_and_eval("open https://www.lumesh.cc.cd", env);
                 } else if cfg!(windows) {
-                    parse_and_eval("start https://lumesh.codeberg.page", env);
+                    parse_and_eval("start https://www.lumesh.cc.cd", env);
                 } else {
-                    parse_and_eval("xdg-open https://lumesh.codeberg.page", env);
+                    parse_and_eval("xdg-open https://www.lumesh.cc.cd", env);
                 }
             }
             "libs" => {
@@ -241,7 +241,7 @@ fn help(
             );
             let _ = writeln!(
                 &mut s,
-                "help doc                : visit document on https://lumesh.codeberg.page"
+                "help doc                : visit document on https://www.lumesh.cc.cd"
             );
         }
     }

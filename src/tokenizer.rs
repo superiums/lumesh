@@ -107,7 +107,7 @@ fn parse_token_dispatch(
 
         '.' => dot_dispatch(input, ctx), // context-aware: method call/range/path/customop
 
-        '-' => minus_dispatch(input, ctx), // context-aware: negative vs flag vs operator
+        '-' => minus_dispatch(input, ctx, is_cfm), // context-aware: negative vs flag vs operator
 
         '(' | ')' | '[' | ']' | '{' | '}' | ',' => paren_dispatch(input, ctx, first),
 
@@ -240,6 +240,11 @@ fn plus_dispatch(
             map_valid_token(space_followed_tag("+"), TokenKind::Operator),
             map_valid_token(whole_word("+"), TokenKind::Symbol), //important for `chmod +x`
         ))(input),
+        Ctx::Space => alt((
+            map_valid_token(punctuation_tag("+="), TokenKind::Operator),
+            map_valid_token(space_followed_tag("+"), TokenKind::Operator),
+            map_valid_token(operator_tag("+"), TokenKind::OperatorPrefix), //important for `chmod +x`
+        ))(input),
         _ => alt((
             map_valid_token(punctuation_tag("+="), TokenKind::Operator),
             map_valid_token(punctuation_tag("+"), TokenKind::Operator),
@@ -349,7 +354,11 @@ fn dot_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Di
 /// - Start/Space: prefix `-` when followed by literal/number/paren/letter (parser distinguishes negation vs flag);
 ///   `argument_symbol` only for `--` style flags; `number_literal` for bare digits
 /// - Open: prefix `-` when followed by literal/number/paren/letter
-fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, Diagnostic)> {
+fn minus_dispatch(
+    input: Input<'_>,
+    ctx: Ctx,
+    is_cfm: bool,
+) -> TokenizationResult<'_, (Token, Diagnostic)> {
     match ctx {
         Ctx::Letter | Ctx::Word | Ctx::Number => alt((
             map_valid_token(punctuation_tag("-="), TokenKind::Operator),
@@ -358,6 +367,16 @@ fn minus_dispatch(input: Input<'_>, ctx: Ctx) -> TokenizationResult<'_, (Token, 
                                                                         // map_valid_token(symbol, TokenKind::Symbol),
         ))(input),
         Ctx::Start => alt((map_valid_token(prefix_minus_tag, TokenKind::OperatorPrefix),))(input),
+        Ctx::Space if is_cfm => alt((
+            map_valid_token(punctuation_tag("-="), TokenKind::Operator),
+            map_valid_token(punctuation_tag("->"), TokenKind::Operator),
+            // bare `-` as operator (e.g. `- ` followed by space)
+            map_valid_token(space_followed_tag("-"), TokenKind::Operator),
+            // must after '- ' to exclude it
+            map_valid_token(postfix_break_tag("-"), TokenKind::StringRaw), //ls | cat -
+            // `--flag`/`-s`  → argument symbol
+            map_valid_token(whole_word("-"), TokenKind::StringRaw),
+        ))(input),
         Ctx::Space => alt((
             map_valid_token(punctuation_tag("-="), TokenKind::Operator),
             map_valid_token(punctuation_tag("->"), TokenKind::Operator),

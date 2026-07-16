@@ -29,7 +29,8 @@ pub fn regist_lazy() -> LazyModule {
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         int => "read an int from input", "<msg>"
-        float => "read a float from input", "<msg> [decimal_places]"        text => "read a text input ", "<msg>"
+        float => "read a float from input", "<msg> [decimal_places]"
+        text => "read a text input ", "<msg> [initValue]"
         passwd => "read a passwd input", "<msg> [confirm?]"
         confirm => "ask user to confirm", "<msg>"
         pick => "select one from list/string", "<list|items...> [msg|cfg_map]"
@@ -156,10 +157,16 @@ fn text(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("text", &args, 1, ctx)?;
+    check_args_len("text", &args, 1..=2, ctx)?;
     let msg = get_string_ref(&args[0], ctx)?;
 
-    let ans = Text::new(msg.as_str());
+    let ans = if args.len() > 1 {
+        let init = get_string_ref(&args[1], ctx)?;
+        Text::new(msg.as_str()).with_initial_value(init)
+    } else {
+        Text::new(msg.as_str())
+    };
+
     match ans.prompt() {
         Ok(s) => Ok(Expression::String(s)),
         Err(e) => Err(RuntimeError::common(

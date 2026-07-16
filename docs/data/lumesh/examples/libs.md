@@ -1,209 +1,632 @@
-## Built-in Modules Detail
-the following module is structured as:
-```
-### module_name
-group description
-- method => "description", "params"
-```
+## Functions for LIBS
 
-### top method
-calling without module_name.
+USEAGE:
+`<module-name>.<func-name>(arg1,arg2)`
+`about.bin()`
+`string.red('x')`
+`string.red x`
+NOTE:
 
-- exit => "exit the shell", "[status]"
-- cd => "change current directory", "[path]"
-- cwd => "print current working directory", ""
+- if arg is lambda expression, use square call method only.
+- NEVER use lib name as var name.
 
-env control
-- set => "define a variable in root environment", "<var> <val>"
-- unset => "undefine a variable in root environment", "<var>"
+### Top level Functions
 
-I/O operations
-- symof => "get type of data symbol", "<value>"
-- tap => "print and return result", "<args>..."
-- print => "print arguments without newline", "<args>..."
-- pprint => "pretty print", "<list>|<map>"
-- println => "print arguments with newline", "<args>..."
-- printf => "print formatted string with vars", "<template> <args>..."
-- eprint => "print to stderr without newline", "<args>..."
-- eprintln => "print to stderr with newline", "<args>..."
-- debug => "print debug representation", "<args>..."
-- ddebug => "pretty debug", "<args>..."
-- read => "get user input", "[prompt]"
-- throw => "return a runtime error", "<msg>"
+usage:
+`cd /opt`
+`cd(/opt)`
 
-Data manipulation
-- get => "get value from nested map/list/range using dot notation path", "<map|list|range> <path>"
-- typeof => "get data type", "<value>"
-- len => "get length of expression", "<collection>"
-- rev => "reverse sequence", "<string|list|bytes>"
-- flatten => "flatten nested structure", "<collection>"
-- where => "filter rows by condition", "<list[map]> <condition> "
-- select => "select columns from list of maps", "<table> <columns...>"
-- sortby => "sort a table by column", "<table> <col>"
-- not => "logic not", "<boolean1>..."
+assert <condition> [message]
+cd [path]
+cwd
+current working directory
 
-Execution control
-- repeat => "evaluate without env change", "<expr>"
-- eval => "evaluate expression in current env", "<expr>"
-- exec => "execute expression in new env", "<expr>"
-- eval_str => "evaluate string in current env", "<expr>"
-- exec_str => "execute string in new env", "<string>"
-- include => "evaluate file in current env", "<path>"
-- import => "evaluate file in new env", "<path>"
+ddebug <args>...
+pretty debug
+debug <args>...
+eprint <args>...
+eprintln <args>...
+eval <expr>
+evaluate expression in current env
+eval_str <expr>
+evaluate string in current env
+exec <expr>
+execute expression in new env
+exec_str <string>
+execute string in new env
+exit [status]
+flatten <collection>
+format <template> <args>...
+formatted string with vars
+get <map|list|range> <path>
+get value from nested map/list/range using dot notation path
+help [module]
+import <path>
+evaluate file in new env
+include <path>
+evaluate file in current env
+len <collection>
+not <boolean1>...
+pprint <list>|<map>
+pretty print
+print <args>...
+println <args>...
+read [prompt]
+get user input
+repeat <expr> <n>
+rev <string|list|bytes>
+select <table> <columns...>
+select columns from list of maps
+set_root <var> <val>
+define a variable in root environment
+sortby <table> <col>
+symof <value>
+get type of data symbol
+tap <args>...
+print and return result
+throw <msg>
+return a runtime error
+typeof <value>
+get type of data value
+unset_root <var>
+when <condition> <execute>
+where <table> <condition>
+filter rows by condition
 
-env
-- set_root => "define a variable in root environment", "<var> <val>"
-- unset_root => "undefine a variable in root environment", "<var>"
-- getvar => "get a variable value", "<var>"
+### about
 
-Help system
-- help => "display help", "[module]"
+bin
+info
+prelude
+version
 
-### string
-转换
-- to_int => "convert a float or string to an int", "<value>"
-- to_float => "convert an int or string to a float", "<value>"
-- to_filesize => "parse a string representing a file size into bytes", "<size_str>"
-- to_time => "convert a string to a datetime", "<datetime_str> [datetime_template]"
-- to_table => "convert third-party command output to a table", "<command_output>"
+### boolean
 
-基础检查
-- is_empty => "is this string empty?", "<string>"
-- is_whitespace => "is this string whitespace?", "<string>"
-- is_alpha => "is this string alphabetic?", "<string>"
-- is_alphanumeric => "is this string alphanumeric?", "<string>"
-- is_numeric => "is this string numeric?", "<string>"
-- is_lower => "is this string lowercase?", "<string>"
-- is_upper => "is this string uppercase?", "<string>"
-- is_title => "is this string title case?", "<string>"
-- len => "get length of string", "<string>"
+and <boolean1>...
+not <boolean1>...
+or <boolean1>...
 
-子串检查
-- starts_with => "check if a string starts with a given substring", "<string> <substring>"
-- ends_with => "check if a string ends with a given substring", "<string> <substring>"
-- contains => "check if a string contains a given substring", "<string> <substring>"
+### console
 
-分割操作
-- split => "split a string on a given character", "<string> [delimiter]"
-- split_at => "split a string at a given index", "<string> <index>"
-- chars => "split a string into characters", "<string>"
-- words => "split a string into words", "<string>"
-- words_quoted => "split a string into words,quoted as one", "<string>"
-- lines => "split a string into lines", "<string>"
-- paragraphs => "split a string into paragraphs", "<string>"
-- concat => "concat strings", "<string>..."
+clear
+cursor_down <n>
+cursor_hide
+cursor_left <n>
+cursor_restore
+cursor_right <n>
+cursor_save
+cursor_show
+cursor_to <x> <y>
+cursor_up <n>
+flush
+height
+keys
+mode_normal
+mode_raw
+read_key
+read_line [prompt]
+read_password [prompt]
+screen_alternate
+screen_normal
+title <string>
+width
+write <text> <x> <y>
 
-修改操作
-- insert => "insert chars to a string", "<string> <index> <string>"
-- repeat => "repeat string specified number of times", "<string> <count>"
-- replace => "replace all instances of a substring", "<string> <old> <new>"
-- substring => "get substring from start to end indices", "<string> <start> <end>"
-- remove_prefix => "remove prefix if present", "<string> <prefix>"
-- remove_suffix => "remove suffix if present", "<string> <suffix>"
-- trim => "trim whitespace from a string", "<string>"
-- trim_start => "trim whitespace from the start", "<string>"
-- trim_end => "trim whitespace from the end", "<string>"
-- to_lower => "convert a string to lowercase", "<string>"
-- to_upper => "convert a string to uppercase", "<string>"
-- to_title => "convert a string to title case", "<string>"
+### filesize
 
-高级操作
-- caesar => "encrypt a string using a caesar cipher", "<string> <shift>"
-- max_len => "get max length of lines", "<string>"
-- grep => "find lines which contains the substring", "<string> <substring>"
-- strip => "remove all ANSI escape codes from string", "<string>"
+b <filesize>
+get bytes of a filesize
+from <size_str|byte_int>
+gb <filesize>
+kb <filesize>
+mb <filesize>
+tb <filesize>
+to_string <filesize>
 
-格式化
-- pad_start => "pad string to specified length at start", "<string> <length> [pad_char]"
-- pad_end => "pad string to specified length at end", "<string> <length> [pad_char]"
-- center => "center string by padding both ends", "<string> <length> [pad_char]"
-- wrap => "wrap text to fit in specific number of columns", "<string> <width>"
+### from
 
-样式
-- href => "create terminal hyperlink", "<url> <text>"
-- bold => "apply bold styling", "<string>"
-- dim => "apply dim styling", "<string>"
-- italic => "apply italic styling", "<string>"
-- underline => "apply underline styling", "<string>"
-- blink => "apply blinking effect", "<string>"
-- invert => "invert foreground/background colors", "<string>"
-- strike => "apply strikethrough styling", "<string>"
+cmd <cmd_output_string> [headers|header...]
+csv <csv_string>
+jq <query_string> <json_data>
+json <json_string>
+script <script_string>
+toml <toml_string>
 
-标准颜色
-- black => "apply black foreground", "<string>"
-- red => "apply red foreground", "<string>"
-- green => "apply green foreground", "<string>"
-- yellow => "apply yellow foreground", "<string>"
-- blue => "apply blue foreground", "<string>"
-- magenta => "apply magenta foreground", "<string>"
-- cyan => "apply cyan foreground", "<string>"
-- white => "apply white foreground", "<string>"
+### fs
 
-高级颜色
-- clr => "apply color using 256-color code", "<string> <color_spec>"
-- clr_bg => "apply background color using 256-color code", "<string> <color_spec>"
-- color => "apply true color using RGB values or color_name", "<string> <hex_color|color_name|r,g,b>"
-- color_bg => "apply True Color background using RGB values or color_name", "<string> <hex_color|color_name|r,g,b>"
-- colors => "list all color_name for True Color", "[skip_colorized?]"
+abs <path>
+append <content> <file>
+base_name <path> [split_ext?]
+canon <path>
+cp <source> <destination>
+dir_name <path>
+dirs
+exists <path>
+glob <pattern>
+head <file> [n]
+is_dir <path>
+is_file <path>
+join <path>...
+ls [-l|a|h|t| L|c|u|m|p] [path]
+mkdir <path>
+mv <source> <destination>
+parent <path>
+read <file>
+rm <path>
+rmdir <path>
+tail <file> [n]
+tree [path]
+write [content] <file>
+
+### hmap
+
+at <map> <key>
+difference <map1> <map2>
+filter <map> <predicate_fn>
+find <map> <predicate_fn>
+flatten <map>
+from_items <items>
+get <map|list|range> <path>
+has <map> <key>
+insert <map> <key> <value>
+intersect <map1> <map2>
+items <map>
+keys <map>
+len <map>
+map <map> <key_fn> <val_fn>
+merge <map1> <map2> [<map3> ...]
+remove <map> <key>
+set <map> <key> <value>
+to_bmap <map>
+union <map1> <map2>
+values <map>
+
+### into
+
+boolean <value>
+csv <expr>
+filesize <size_str>
+float <value>
+highlighted <script_string>
+int <value>
+json <expr>
+str <value>
+striped <string>
+table <command_output> [regex|headers...]
+time <datetime_str> [datetime_template]
+toml <expr>
 
 ### list
-数学统计
-- max => "get max value in an array or multi args", "<num1> <num2> ... | <array>"
-- min => "get min value in an array or multi args", "<num1> <num2> ... | <array>"
-- sum => "sum a list of numbers", "<num1> <num2> ... | <array>"
-- average => "get the average of a list of numbers", "<num1> <num2> ... | <array>"
 
-读取操作
-- get => "get value from nested map/list/range using dot notation path", "<map|list|range> <path>"
-- len => "get length of list", "<list>"
-- insert => "insert item into list", "<list> <index> <value>"
-- rev => "reverse sequence", "<list>"
-- flatten => "flatten nested structure", "<collection>"
-- is_empty => "is this list empty?", "<list>"
+all <list> <fn>
+any <list> <fn>
+append <list> <element>
+at <list> <index>
+average <num1> <num2> ... | <array>
+chunk <list> <size>
+concat <list1|item1> <list2|item2> ...
+contains <list> <item>
+drop <list> <count>
+filter <list> <fn>
+filter_map <list> <fn>
+find <list> <item|fn> [skip_n]
+find_last <list> <item|fn> [skip_n]
+first <list>
+flatten <collection>
+foldl <list> <fn> <init>
+foldr <list> <fn> <init>
+from <range|item...>
+get <map|list|range> <path>
+get value via dot sperated path
+group <list> <key_fn|key>
+insert <list> <index> <value>
+is_empty <list>
+items <list>
+join <list> <separator>
+last <list>
+len <list>
+map <list> <fn>
+max <num1> <num2> ... | <array>
+min <num1> <num2> ... | <array>
+prepend <list> <element>
+remove <list> <item> [all?]
+remove_at <list> <index> [count]
+rev <list>
+set <list> <index> <value>
+sort <string|list> [key_fn|key_list|keys...]
+split_at <list> <index>
+sum <num1> <num2> ... | <array>
+take <list> <count>
+to_hmap <list> [key_fn] [val_fn]
+to_map <list> [key_fn] [val_fn]
+to_set <list>
+transpose <matrix>
+unique <list>
+unzip <list_of_pairs>
+zip <list1> <list2>
 
-- first => "get the first element of a list", "<list>"
-- last => "get the last element of a list", "<list>"
-- at => "get the nth element of a list", "<list> <index>"
-- take => "take the first n elements of a list", "<list> <count>"
-- drop => "drop the first n elements of a list", "<list> <count>"
-查找操作
-- contains => "check if list contains an item", "<list> <item>"
-- find => "find first index of matching element", "<list> <item|fn> [skip_n]"
-- find_last => "find last index of item", "<list> <item|fn> [skip_n]"
+### log
 
-修改操作
-- append => "append an element to a list", "<list> <element>"
-- prepend => "prepend an element to a list", "<list> <element>"
-- unique => "remove duplicates from a list while preserving order", "<list>"
-- split_at => "split a list at a given index", "<list> <index>"
-- splice => "change contents by removing/adding elements", "<start> <deleteCount> [items...] <list>"
-- sort => "sort a string/list, optionally with a key function or key_list", "<string|list> [key_fn|key_list|keys...]"
-- group => "group list elements by key function", "<list> <key_fn|key>"
-- remove_at => "remove n elements starting from index", "<list> <index> [count]"
-- remove => "remove first matching element", "<list> <item> [all?]"
-- set => "set element at existing index", "<list> <index> <value>"
-创建操作
-- concat => "concatenate multiple lists into one", "<list1|item1> <list2|item2> ..."
-- from => "create a list from a range", "<range|item...>"
+debug <message>
+disable
+echo <message>
+enabled <level>
+error <message>
+get_level
+info <message>
+set_level <level>
+trace <message>
+warn <message>
 
-遍历操作
-- map => "apply function for each element", "<list> <fn>"
-- items => "iterate over index-value pairs", "<list>"
-- filter => "filter elements by condition", "<list> <fn>"
-- filter_map => "filter and map in one pass", "<list> <fn>"
-- any => "test if any element passes condition", "<list> <fn>"
-- all => "test if all elements pass condition", "<list> <fn>"
+### map
 
-转换操作
-- join => "join string list with separator", "<list> <separator>"
-- to_map => "convert list to btreeMap using key function", "<list> [key_fn] [val_fn]"
-- to_hmap => "convert list to hashMap using key function", "<list> [key_fn] [val_fn]"
-- to_set => "convert list to btreeSet", "<list>"
+at <map> <key>
+difference <map1> <map2>
+filter <map> <predicate_fn>
+find <map> <predicate_fn>
+flatten <map>
+from_items <items>
+get <map|list|range> <path>
+has <map> <key>
+insert <map> <key> <value>
+intersect <map1> <map2>
+items <map>
+keys <map>
+len <map>
+map <map> <key_fn> <val_fn>
+merge <map1> <map2> [<map3> ...]
+remove <map> <key>
+set <map> <key> <value>
+to_hmap <map>
+union <map1> <map2>
+values <map>
 
-结构操作
-- transpose => "transpose matrix (list of lists)", "<matrix>"
-- chunk => "split list into chunks of size n", "<list> <size>"
-- foldl => "fold list from left with function", "<list> <fn> <init>"
-- foldr => "fold list from right with function", "<list> <fn> <init>"
-- zip => "zip two lists into list of pairs", "<list1> <list2>"
-- unzip => "unzip list of pairs into two lists", "<list_of_pairs>"
+### math
+
+abs <number>
+acos <value>
+acosh <value>
+asin <value>
+asinh <value>
+atan <value>
+atanh <value>
+average <num1> <num2> ... | <array>
+bit_and <int1> <int2>
+bit_not <integer>
+bit_or <int1> <int2>
+bit_shl <integer> <shift_bits>
+bit_shr <integer> <shift_bits>
+bit_xor <int1> <int2>
+cbrt <number>
+ceil <number>
+clamp <value> <min> <max>
+cos <radians>
+cosh <value>
+cospi <value>
+eq <number_base> <number>
+exp <exponent>
+exp2 <exponent>
+floor <number>
+ge <number_base> <number>
+gt <number_base> <number>
+is_odd <integer>
+le <number_base> <number>
+ln <number>
+log <base> <number>
+log10 <number>
+log2 <number>
+lt <number_base> <number>
+max <num1> <num2> ... | <array>
+min <num1> <num2> ... | <array>
+ne <number_base> <number>
+pow <exponent> <base>
+round <number>
+sin <radians>
+sinh <value>
+sinpi <value>
+sqrt <number>
+sum <num1> <num2> ... | <array>
+tan <radians>
+tanh <value>
+tanpi <value>
+to_str <number>
+trunc <number>
+
+### rand
+
+alpha [length]
+alphanum [length]
+choose <list>
+int [min] [max]
+ratio <probability>
+shuffle <list>
+
+### regex
+
+capture <pattern> <text>
+get first capture groups as [full,group1,...]
+capture_name <pattern> <text>
+get capture groups with names
+captures <pattern> <text>
+find <pattern> <text>
+find_all <pattern> <text>
+match <pattern> <text>
+replace <text> <pattern> <replacement>
+split <pattern> <text>
+
+### set
+
+add <set> <item>
+contains <set> <item>
+difference <set1> <set2>
+filter <set> <predicate_fn>
+find <set> <predicate_fn>
+first <set>
+from_items <items>
+intersect <set1> <set2>
+is_empty <set>
+is_subset <set1> <set2>
+is_superset <set1> <set2>
+items <set>
+last <set>
+len <set>
+map <set> <fn>
+remove <set> <item>
+to_list <set>
+union <set1> <set2>
+
+### string
+
+black <string>
+blink <string>
+blue <string>
+bold <string>
+caesar <string> <shift>
+center <string> <length> [pad_char]
+chars <string>
+clr <string> <color_spec>
+clr_bg <string> <color_spec>
+color <string> <hex_color|color_name|r,g,b>
+color_bg <string> <hex_color|color_name|r,g,b>
+colors [skip_colorized?]
+concat <string>...
+contains <string> <substring>
+cyan <string>
+dim <string>
+ends_with <string> <substring>
+green <string>
+grep <string> <substring>
+href <url> <text>
+insert <string> <index> <string>
+invert <string>
+is_alpha <string>
+is_alphanumeric <string>
+is_empty <string>
+is_lower <string>
+is_numeric <string>
+is_title <string>
+is_upper <string>
+is_whitespace <string>
+italic <string>
+len <string>
+lines <string>
+magenta <string>
+max_len <string>
+pad_end <string> <length> [pad_char]
+pad_start <string> <length> [pad_char]
+paragraphs <string>
+red <string>
+remove_prefix <string> <prefix>
+remove_suffix <string> <suffix>
+repeat <string> <count>
+replace <string> <old> <new>
+split <string> [delimiter]
+split_at <string> <index>
+starts_with <string> <substring>
+strike <string>
+strip <string>
+substring <string> <start> <end>
+to_filesize <size_str>
+to_float <value>
+to_int <value>
+to_lower <string>
+to_table <command_output>
+to_time <datetime_str> [datetime_template]
+to_title <string>
+to_upper <string>
+trim <string>
+trim_end <string>
+trim_start <string>
+underline <string>
+white <string>
+words <string>
+words_quoted <string>
+wrap <string> <width>
+yellow <string>
+
+### sys
+
+cds
+defined <var>
+discard <arg>
+ecodes_lm
+ecodes_rt
+env [var]
+has <var>
+info
+max_runtime [int]
+max_syntax [int]
+max_usemode [int]
+modes
+print_tty <arg>
+quote <expr>
+set_cfm <boolean>
+set_pdm <boolean>
+set_strict <boolean>
+vars
+
+### table
+
+append <table> <list|set>
+at <table> <index> <to_map?>
+filter <list> <cell|fn>
+find <list> <cell|fn> [start_index]
+find_last <list> <cell|fn> [start_index]
+first <table> <to_map?>
+getcol <table> <header|index>
+grep <table> <string>
+header_len <table>
+headers <table>
+last <table> <to_map?>
+len <table>
+rows <table> <to_map?>
+select <table> <cols...>
+sortby <table> <col>
+
+### time
+
+add <datetime> <duration>
+day [datetime]
+diff <datetime1> <datetime2> <unit>
+display [datetime]
+fmt <format_string> [datetime]
+from_map <map>
+hour [datetime]
+is_leap_year [year]
+minute [datetime]
+month [datetime]
+now [format_string]
+parse <datetime_string> [format_string]
+second [datetime]
+seconds [datetime]
+sleep <duration>
+stamp [datetime]
+stamp_ms [datetime]
+timezone <datetime> <offset_hours>
+to_string <datetime> [format_string]
+weekday [datetime]
+year [datetime]
+
+### ui
+
+confirm <msg>
+date_pick [msg|cfg_map]
+editor [msg|cfg_map]
+float <msg> [decimal_places]
+int <msg>
+join_flow <max_width> <widgets...>
+joinx <widget1> <widget2>
+joiny <widget1> <widget2>
+multi_pick <list|items...> [msg|cfg_map]
+passwd <msg> [confirm?]
+pick <list|items...> [msg|cfg_map]
+text <msg> [initValue]
+widget <content> <title> [width] [height]
+
+## CONSTS
+
+### COLOR
+
+#### 8bit color
+
+| foreground | foreground light | background | background light |
+| ---------- | ---------------- | ---------- | ---------------- |
+| MAGENTA    | LIGHT_MAGENTA    | BG_MAGENTA | BG_LIGHT_MAGENTA |
+| CYAN       | LIGHT_CYAN       | BG_CYAN    | BG_LIGHT_CYAN    |
+
+...
+
+usage：
+
+```
+COLOR.RED + 'lume' + COLOR.RESET
+# same as
+string.red('lume')
+```
+
+#### 256bit color
+
+| foreground | background |
+| ---------- | ---------- |
+| FG_1       | BG_1       |
+| FG_2       | BG_2       |
+| ...        | ...        |
+| FG_256     | BG_256     |
+
+usage：
+
+```
+COLOR.FG_50 + 'lume' + COLOR.RESET
+# same as
+string.clr('lume',50)
+```
+
+#### true color
+
+- by name
+
+| foreground      | background      |
+| --------------- | --------------- |
+| aliceblue       | BG_aliceblue    |
+| BG_antiquewhite | BG_antiquewhite |
+| ...             | ...             |
+| yellowgreen     | BG_yellowgreen  |
+
+to list the avaluable colors, use：
+
+```
+string.colors(false)
+```
+
+usage：
+
+```
+COLOR.green + 'lume' + COLOR.RESET
+# same as
+string.color('lume','green')
+```
+
+- by hex code
+
+| foreground | background |
+| ---------- | ---------- |
+| FGX_000000 | BGX_000000 |
+| FGX_000001 | BGX_000001 |
+| ...        | ...        |
+| FGX_ffffff | BGX_ffffff |
+
+usage：
+
+```
+COLOR.FGX_aaff22 + 'lume'
+# same as
+string.color('lume','#aaff22')
+```
+
+### MATH
+
+MATH.E
+MATH.PHI
+MATH.PI
+
+### STYLE
+
+STYLE.BLINK
+STYLE.BOLD
+STYLE.DIM
+STYLE.HIDDEN
+STYLE.ITALIC
+STYLE.NORMAL
+STYLE.RESET
+STYLE.RESET_BLINK
+STYLE.RESET_BOLD
+STYLE.RESET_DIM
+STYLE.RESET_HIDDEN
+STYLE.RESET_ITALIC
+STYLE.RESET_NORMAL
+STYLE.RESET_REVERSE
+STYLE.RESET_STRIKE
+STYLE.RESET_UNDERLINE
+STYLE.REVERSE
+STYLE.STRIKE
+STYLE.UNDERLINE

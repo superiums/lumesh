@@ -157,7 +157,7 @@ pub enum Cmd {
     Noop,
 }
 
-fn shift_char(c: char, is_cap: bool) -> char {
+pub fn shift_char(c: char, is_cap: bool) -> char {
     match c {
         '1' => '!',
         '2' => '@',

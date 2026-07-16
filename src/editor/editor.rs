@@ -3,6 +3,7 @@ use super::history::History;
 use super::key::{Cmd, KeyEvent};
 use super::kring::KillRing;
 use crate::ai::{AIClient, MockAIClient};
+use crate::editor::key::shift_char;
 use crossterm::cursor::MoveTo;
 use crossterm::event::{Event, KeyEventKind, read};
 use crossterm::event::{
@@ -496,6 +497,14 @@ impl Editor {
                 self.is_ai_hinting = false;
                 self.show_hint = true;
                 self.handle_space();
+            }
+            KeyEvent::Shift(c) => {
+                // only for third part raw mdoe, such as inquire
+                let c = shift_char(c, false);
+                self.is_ai_hinting = false;
+                self.show_hint = true;
+                self.leave_completion();
+                self.buffer.insert(c);
             }
             KeyEvent::Char(c) => {
                 self.is_ai_hinting = false;

@@ -11,8 +11,9 @@ use crate::{
     parse, reg_info, reg_lazy,
 };
 use regex_lite::Regex;
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::OnceLock};
 use tinyjson::JsonValue;
+static SELECT_RE: OnceLock<Regex> = OnceLock::new();
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -432,8 +433,8 @@ fn apply_jq_step(step: &JqStep, json_value: &JsonValue) -> JsonValue {
 // 应用select函数
 fn apply_select_function(condition: &str, json_value: &JsonValue) -> JsonValue {
     // 简化版条件解析：只支持数字比较
-    let re = Regex::new(r"\.(\w+)\s*([><=!]+)\s*(\d+)").unwrap();
-
+    let re =
+        SELECT_RE.get_or_init(|| Regex::new(r"\.(\w+)\s*(>=|<=|==|!=|>|<|=)\s*(\d+)").unwrap());
     if let Some(caps) = re.captures(condition) {
         let field = caps.get(1).unwrap().as_str();
         let op = caps.get(2).unwrap().as_str();

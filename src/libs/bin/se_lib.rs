@@ -1,4 +1,9 @@
-use std::collections::{BTreeMap, HashMap};
+use std::{
+    collections::{BTreeMap, HashMap},
+    sync::OnceLock,
+};
+
+use regex_lite::Regex;
 
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind,
@@ -11,6 +16,7 @@ use crate::{
     },
     reg_info,
 };
+static FORMAT_RE: OnceLock<Regex> = OnceLock::new();
 
 pub fn regist_se() -> HashMap<&'static str, SelfExpandFunc> {
     let mut module: HashMap<&'static str, SelfExpandFunc> = HashMap::new();
@@ -222,11 +228,9 @@ fn format(
     check_args_len("format", args, 1.., ctx)?;
     let template_expr = args[0].eval_mut(state, env, 0)?;
     let template = get_string_arg(template_expr, ctx)?;
-
-    // named arg
-    let pat = regex_lite::Regex::new(r#"\{(\w+)\}"#).unwrap();
+    let re = FORMAT_RE.get_or_init(|| Regex::new(r#"\{(\w+)\}"#).unwrap());
     let mut result = template.clone();
-    for (full, [var]) in pat.captures_iter(&template).map(|m| m.extract()) {
+    for (full, [var]) in re.captures_iter(&template).map(|m| m.extract()) {
         let value = ctx.handle_variable(var, false, state, env, 0)?;
         result = result.replace(full, &value.to_string());
     }

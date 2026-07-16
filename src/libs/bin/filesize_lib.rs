@@ -1,10 +1,14 @@
+use regex_lite::Regex;
+
 use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
     expression::FileSize,
     libs::{BuiltinInfo, helper::check_exact_args_len, lazy_module::LazyModule},
     reg_info, reg_lazy,
 };
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::OnceLock};
+
+static FSIZE_RE: OnceLock<Regex> = OnceLock::new();
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -34,7 +38,7 @@ fn from(
     let s = match args.pop().unwrap() {
         Expression::String(s) => {
             // 使用正则表达式来匹配数字和单位
-            let re = regex_lite::Regex::new(r"(\d+)([KMGT]*)B?").unwrap();
+            let re = FSIZE_RE.get_or_init(|| Regex::new(r"(\d+)([KMGT]?)B?").unwrap());
 
             if let Some(caps) = re.captures(&s) {
                 // 提取数字部分并转换为u64

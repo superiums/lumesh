@@ -1,3 +1,5 @@
+use regex_lite::Regex;
+
 use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
     libs::{
@@ -11,12 +13,13 @@ use crate::{
     },
     reg_info, reg_lazy,
 };
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::OnceLock};
 
 use crate::libs::bin::into_lib::{
     filesize as to_filesize, float as to_float, int as to_int, striped as strip, table as to_table,
     time as to_time,
 };
+static QUOTED_RE: OnceLock<Regex> = OnceLock::new();
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -365,8 +368,8 @@ fn words_quoted(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("words_quoted", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
-
-    let re = regex_lite::Regex::new(r#""((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+)"#).unwrap();
+    let re = QUOTED_RE
+        .get_or_init(|| Regex::new(r#""((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+)"#).unwrap());
     let words = re
         .captures_iter(text)
         .filter_map(|cap| {

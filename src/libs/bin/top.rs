@@ -92,7 +92,9 @@ fn help(
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let mut s = std::io::stdout().lock();
+    use std::fmt::Write as FmtWrite;
+    let mut s = String::new();
+
     match args.is_empty() {
         false => match args[0].to_string().as_str() {
             "doc" => {
@@ -103,19 +105,11 @@ fn help(
                 } else {
                     parse_and_eval("xdg-open https://www.lumesh.cc.cd", env);
                 }
+                return Ok(Expression::None);
             }
             "libs" => {
                 writeln!(s, "Builtin Library List\n").unwrap();
                 LIBS_INFO.with(|h| {
-                    // let _ = pprint(
-                    //     &[Expression::from(
-                    //         h.keys()
-                    //             .map(|k| Expression::String(k.to_string()))
-                    //             .collect::<Vec<_>>(),
-                    //     )],
-                    //     env,
-                    //     _ctx,
-                    // );
                     for (i, lib) in h.keys().enumerate() {
                         if lib.is_empty() {
                             continue;
@@ -126,18 +120,6 @@ fn help(
                         }
                     }
                 });
-                // let m = super::get_builtin_map()
-                //     .iter()
-                //     .filter_map(|item| match item.1 {
-                //         Expression::HMap(second) => {
-                //             let mut s_keys = second.keys().cloned().collect::<Vec<_>>();
-                //             s_keys.sort();
-                //             Some((item.0.clone(), Expression::from(s_keys)))
-                //         }
-                //         _ => None,
-                //     })
-                //     .collect::<HashMap<String, Expression>>();
-                // pretty_printer(&Expression::from(m))?;
                 writeln!(
                     s,
                     "\n\nhelp <lib>              : list functions of the lib."
@@ -177,77 +159,100 @@ fn help(
             name => match name.split_once(".") {
                 Some((name, func)) => {
                     LIBS_INFO.with(|h| match h.get(&name) {
-                            Some(map) => match map.get(func) {
-                                Some(info) => {
-                                    writeln!(s, "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                    writeln!(s, "\t{}\n", info.descr).unwrap();
-                                }
-                                _ => {
-                                    writeln!(s, "no function named `{func}` in `{name}`\n")
-                                        .unwrap();
-                                }
-                            },
-                            _ => {
-                                writeln!(s, "no lib named `{name}`\n").unwrap();
+                        Some(map) => match map.get(func) {
+                            Some(info) => {
+                                writeln!(
+                                    s,
+                                    "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
+                                    info.hint
+                                )
+                                .unwrap();
+                                writeln!(s, "\t{}\n", info.descr).unwrap();
                             }
-                        });
+                            _ => {
+                                writeln!(s, "no function named `{func}` in `{name}`\n").unwrap();
+                            }
+                        },
+                        _ => {
+                            writeln!(s, "no lib named `{name}`\n").unwrap();
+                        }
+                    });
                 }
                 _ => {
                     LIBS_INFO.with(|h| match h.get(&name) {
-                            Some(map) => {
-                                writeln!(s, "Functions for lib {name}\n").unwrap();
-                                for (func, info) in map {
-                                    writeln!(s, "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                    writeln!(s, "\t{}\n", info.descr).unwrap();
-                                }
+                        Some(map) => {
+                            writeln!(s, "Functions for lib {name}\n").unwrap();
+                            for (func, info) in map {
+                                writeln!(
+                                    s,
+                                    "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
+                                    info.hint
+                                )
+                                .unwrap();
+                                writeln!(s, "\t{}\n", info.descr).unwrap();
                             }
-                            _ => {
-                                LIBS_INFO.with(|h| if let Some(map) = h.get("") { match map.get(name) {
-                                    Some(info) => {
-                                        writeln!(s, "\x1b[92m\x1b[1m{name}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                        writeln!(s, "\t{}\n", info.descr).unwrap();
-                                    }
-                                    _ => {
-                                        writeln!(s, "no function named `{name}` in top\n")
+                        }
+                        _ => {
+                            LIBS_INFO.with(|h| {
+                                if let Some(map) = h.get("") {
+                                    match map.get(name) {
+                                        Some(info) => {
+                                            writeln!(
+                                                s,
+                                                "\x1b[92m\x1b[1m{name}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
+                                                info.hint
+                                            )
                                             .unwrap();
+                                            writeln!(s, "\t{}\n", info.descr).unwrap();
+                                        }
+                                        _ => {
+                                            writeln!(
+                                                s,
+                                                "no function named `{name}` in top\n"
+                                            )
+                                            .unwrap();
+                                        }
                                     }
-                                } });
-                                 writeln!(s, "no lib named `{name}`\n").unwrap();
-                            }
-                        });
+                                }
+                            });
+                            writeln!(s, "no lib named `{name}`\n").unwrap();
+                        }
+                    });
                 }
             },
         },
         true => {
-            let _ = writeln!(s, "\n\x1b[92m\x1b[1mWelcome to Lumesh help center");
-            let _ = writeln!(&mut s, "=============================\x1b[m\x1b[0m\n");
-            let _ = writeln!(&mut s, "version: \x1b[92m{}\x1b[m\x1b[0m\n", VERSION);
-            let _ = writeln!(&mut s, "help libs               : list libs.");
-            let _ = writeln!(
-                &mut s,
-                "help <lib>              : list functions of the lib."
-            );
-            let _ = writeln!(
-                &mut s,
+            writeln!(s, "\n\x1b[92m\x1b[1mWelcome to Lumesh help center").unwrap();
+            writeln!(s, "=============================\x1b[m\x1b[0m\n").unwrap();
+            writeln!(s, "version: \x1b[92m{}\x1b[m\x1b[0m\n", VERSION).unwrap();
+            writeln!(s, "help libs               : list libs.").unwrap();
+            writeln!(s, "help <lib>              : list functions of the lib.").unwrap();
+            writeln!(
+                s,
                 "help tops               : list functions of the top level."
-            );
-            let _ = writeln!(
-                &mut s,
+            )
+            .unwrap();
+            writeln!(
+                s,
                 "help <lib>.<func>       : see the detail of the function."
-            );
-            let _ = writeln!(
-                &mut s,
+            )
+            .unwrap();
+            writeln!(
+                s,
                 "help <func>             : see the detail of top functions."
-            );
-            let _ = writeln!(
-                &mut s,
+            )
+            .unwrap();
+            writeln!(
+                s,
                 "help doc                : visit document on https://www.lumesh.cc.cd"
-            );
+            )
+            .unwrap();
         }
     }
-    let _ = s.flush();
-    Ok(Expression::None)
+
+    Ok(Expression::String(s))
 }
+
 fn import(
     args: Vec<Expression>,
     env: &mut Environment,

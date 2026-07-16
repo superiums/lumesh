@@ -1,7 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use crate::{
-    Environment, Expression, RuntimeError,
+    Environment, Expression, RuntimeError, RuntimeErrorKind,
     eval::State,
     libs::{
         BuiltinInfo, SelfExpandFunc,
@@ -17,6 +17,8 @@ pub fn regist_se() -> HashMap<&'static str, SelfExpandFunc> {
     module.insert("format", format);
     module.insert("where", r#where);
     module.insert("repeat", repeat);
+    module.insert("assert", assert);
+    module.insert("when", when);
     module.insert("debug", debug);
     module.insert("ddebug", ddebug);
     module.insert("typeof", r#typeof);
@@ -27,13 +29,15 @@ pub fn regist_se() -> HashMap<&'static str, SelfExpandFunc> {
 
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-      // IO
-      format => "print formatted string with vars", "<template> <args>..."
+      // debug
+      when => "conditional execute", "<condition> <execute>"
+      assert => "assert condition is true, throw error if false", "<condition> [message]"
       debug => "print debug representation", "<args>..."
       ddebug => "print pretty debug", "<args>..."
+      typeof => "get type of data value", "<value>"
 
       // Data manipulation
-      typeof => "get type of data value", "<value>"
+      format => "print formatted string with vars", "<template> <args>..."
       where => "filter rows by condition", "<table> <condition> "
 
       // Execution control
@@ -113,6 +117,49 @@ fn repeat(
     }
 }
 
+fn assert(
+    args: &[Expression],
+    env: &mut Environment,
+    state: &mut State,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("assert", &args, 1..=2, ctx)?;
+
+    let condition = args[0].eval_with_assign(state, env)?;
+    let is_true = condition.is_truthy();
+
+    if !is_true {
+        let message = if args.len() > 1 {
+            args[1].eval_with_assign(state, env)?.to_string()
+        } else {
+            "assertion failed".to_string()
+        };
+
+        return Err(RuntimeError::new(
+            RuntimeErrorKind::CustomError(message.into()),
+            ctx.clone(),
+            0,
+        ));
+    }
+
+    Ok(Expression::None)
+}
+
+fn when(
+    args: &[Expression],
+    env: &mut Environment,
+    state: &mut State,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("when", &args, 2, ctx)?;
+
+    if args[0].eval_with_assign(state, env)?.is_truthy() {
+        return args[1].eval_with_assign(state, env);
+    }
+
+    Ok(Expression::None)
+}
+
 // args lazy
 fn debug(
     args: &[Expression],
@@ -120,14 +167,17 @@ fn debug(
     state: &mut State,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
+    let mut results = Vec::new();
     for x in args.iter() {
-        println!("{x:?}");
-        println!("-->");
+        let expr_repr = format!("{x:?}");
         let y = x.eval_with_assign(state, env)?;
-        println!("{y:?}");
-        println!()
+        let mut map = BTreeMap::new();
+        map.insert("expr".to_string(), Expression::String(expr_repr));
+        map.insert("type".to_string(), Expression::String(y.type_name()));
+        map.insert("value".to_string(), y);
+        results.push(Expression::from(map));
     }
-    Ok(Expression::None)
+    Ok(Expression::from(results))
 }
 
 // args lazy
@@ -137,14 +187,17 @@ fn ddebug(
     state: &mut State,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
+    let mut results = Vec::new();
     for x in args.iter() {
-        println!("{x:#}");
-        println!("-->");
+        let expr_repr = format!("{x:#}");
         let y = x.eval_with_assign(state, env)?;
-        println!("{y:#}");
-        println!()
+        let mut map = BTreeMap::new();
+        map.insert("expr".to_string(), Expression::String(expr_repr));
+        map.insert("type".to_string(), Expression::String(y.type_name()));
+        map.insert("value".to_string(), y);
+        results.push(Expression::from(map));
     }
-    Ok(Expression::None)
+    Ok(Expression::from(results))
 }
 
 // arg lazy
@@ -184,8 +237,8 @@ fn format(
         result = result.replacen("{}", &arg.eval_mut(state, env, 0)?.to_string(), 1);
     }
 
-    println!("{}", result);
-    Ok(Expression::None)
+    // println!("{}", result);
+    Ok(Expression::String(result))
 }
 
 // lazy arg

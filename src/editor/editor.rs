@@ -405,8 +405,9 @@ impl Editor {
                     self.buffer.delete_to_line_start();
                     self.buffer.insert_str(&text);
                     self.leave_completion();
-                    // } else {
-                    //     return self.accept_line();
+                    if &text == "\n" {
+                        return self.accept_line();
+                    }
                 }
                 continue;
             }

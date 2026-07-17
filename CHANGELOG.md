@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.16.8]
+- use static regex
+- update ai skills
+- fix strip ansi
+- return expr insteadof print in help/format/debug/ddebug; add -when
+- compaty 3rd with shift+char
+- add initvalue for ui.text
+- **introduce slash commands**
+
 ## [0.16.7]
 - expand ~ in sybmo of cmd
 - cfm mode - takes whole word

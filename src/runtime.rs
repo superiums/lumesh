@@ -142,13 +142,6 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
 }
 
 pub fn init_config(env: &mut Environment) {
-    const INTRO_PRELUDE: &str = if cfg!(target_os = "macos") {
-        include_str!("config/config_mac.lm")
-    } else if cfg!(windows) {
-        include_str!("config/config_win.lm")
-    } else {
-        include_str!("config/config.lm")
-    };
     let profile = match env.get("LUME_PROFILE") {
         Some(p) => PathBuf::from(p.to_string()),
         _ => match dirs::config_dir() {
@@ -173,6 +166,14 @@ pub fn init_config(env: &mut Environment) {
         );
 
         let response = read_user_input(prompt);
+
+        const INTRO_PRELUDE: &str = if cfg!(target_os = "macos") {
+            include_str!("config/config_mac.lm")
+        } else if cfg!(windows) {
+            include_str!("config/config_win.lm")
+        } else {
+            include_str!("config/config.lm")
+        };
 
         if response.is_empty() || response.to_lowercase() == "y" {
             if let Err(e) = write(&profile, INTRO_PRELUDE) {

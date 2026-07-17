@@ -376,7 +376,10 @@ pub fn run_repl(env: &mut Environment) {
     struct LumeValidator;
     impl Validator for LumeValidator {
         fn validate(&self, input: &str) -> ValidationResult {
-            if check(input) {
+            if input.starts_with("/") {
+                // slash command
+                ValidationResult::Valid
+            } else if check(input) {
                 ValidationResult::Valid
             } else {
                 ValidationResult::Incomplete
@@ -457,6 +460,15 @@ pub fn run_repl(env: &mut Environment) {
     env.undefine("LUME_PROMPT_SETTINGS");
     env.undefine("LUME_PROMPT_TEMPLATE");
 
+    // --------slash bindings-------
+    let slash_bindings = if let Some(Expression::Map(m)) = env.get("LUME_SLASH_BINDINGS") {
+        Some(m)
+    } else {
+        None
+    };
+    let slash_menu = env.get("LUME_SLASH_MENU");
+    env.undefine("LUME_SLASH_BINDINGS");
+    env.undefine("LUME_SLASH_MENU");
     // =======main loop=======
     loop {
         let prompt = pe.get_prompt();
@@ -497,16 +509,71 @@ pub fn run_repl(env: &mut Environment) {
             continue;
         }
 
-        if full_input == "history" {
-            for (i, entry) in editor.history().iter().enumerate() {
-                println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
+        // slash command:
+        if let Some(rest) = full_input.strip_prefix('/') {
+            if rest.is_empty() {
+                // menu
+                match &slash_menu {
+                    Some(Expression::Lambda(..)) | Some(Expression::Function(..)) => {
+                        let _x = slash_menu
+                            .clone()
+                            .unwrap()
+                            .apply(vec![])
+                            .eval(&mut shared_env.lock().unwrap());
+                    }
+                    None => {
+                        eprintln!("LUME_SLASH_MENU is not defined")
+                    }
+                    _ => {
+                        eprintln!("LUME_SLASH_MENU is not appliable")
+                    }
+                };
+            } else if let Some(query) = rest.strip_prefix(' ') {
+                // quick jump
+                if let Some(cd_cmd) = editor.history().search_fuzzy_one(query) {
+                    if parse_and_eval(&cd_cmd, &mut shared_env.lock().unwrap()) {
+                        editor.history_mut().add(cd_cmd);
+                    }
+                }
+            } else if rest == "history" {
+                // history
+                for (i, entry) in editor.history().iter().enumerate() {
+                    println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
+                }
+            } else if rest == "hist" {
+                // history
+                let hist = editor
+                    .history()
+                    .entries_by_weight()
+                    .iter()
+                    .map(|(h, _)| Expression::String(h.to_string()))
+                    .collect::<Vec<_>>();
+                let mut forked_env = shared_env.lock().unwrap().fork();
+                forked_env.define("HISTORY", Expression::from(hist));
+                let cmd = format!("$HISTORY | ui.pick('select history') | eval_str()");
+                parse_and_eval(&cmd, &mut forked_env);
+            } else if rest == "cds" {
+                let cmd = "ui.pick $PATH_SESSION 'cd to:' ?! | cd _";
+                parse_and_eval(&cmd, &mut shared_env.lock().unwrap());
+            } else {
+                // slash bindings
+                let (key, arg) = rest.split_once(' ').unwrap_or((rest, ""));
+                if let Some(r) = slash_bindings.clone().and_then(|m| {
+                    m.as_ref()
+                        .get(key)
+                        .and_then(|exp| Some(exp.apply(vec![Expression::String(arg.to_string())])))
+                }) {
+                    let _ = r.eval(&mut shared_env.lock().unwrap());
+                } else {
+                    eprintln!("\x1b[31mundefined slash cmd\x1b[0m");
+                }
             }
-            continue;
+        } else {
+            // normal
+            if parse_and_eval(&full_input, &mut shared_env.lock().unwrap()) {
+                editor.history_mut().add(full_input);
+            }
         }
-
-        parse_and_eval(&full_input, &mut shared_env.lock().unwrap());
-
-        editor.history_mut().add(full_input);
 
         // 检查命令执行期间是否收到 SIGINT（Ctrl+C）
         if childman::check_and_clear_sigint() {

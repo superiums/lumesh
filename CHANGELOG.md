@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.16.9]
+- more clever history
+- add `/q`
+- fix profile param for cli
+
 ## [0.16.8]
 - use static regex
 - update ai skills

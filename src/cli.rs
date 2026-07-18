@@ -32,7 +32,7 @@ use std::vec;
 )]
 struct Cli {
     /// config file
-    #[arg(short = 'p', long, num_args = 0..1)]
+    #[arg(short = 'p', long, num_args = 1)]
     profile: Option<String>,
 
     /// strict mode

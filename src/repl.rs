@@ -450,6 +450,9 @@ pub fn run_repl(env: &mut Environment) {
 
     // =======load history=======
     let _ = editor.history_mut().load_from_file(&history_file);
+    editor
+        .history_mut()
+        .set_current_dir(get_current_path_string(&mut shared_env.lock().unwrap()));
 
     // =======prompt=======
     let pe = get_prompt_engine(

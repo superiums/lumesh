@@ -1,78 +1,78 @@
-    # ### cmdmark manage
-    let save_cmdmark = (b) -> {if !$b {b = ui.text('mark cmd:')}; $b.trim()+"\n" >> '~/.cache/lumesh/cmdmark'; println "\t[MARKED]"}
-    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark | .lines() | ui.pick('select cmdmark:') }
-    let save_dirmark = (b) -> if !fs.read(~/.cache/lumesh/dirmark).lines().contains(cwd()) ?: true { cwd()+"\n" >> '~/.cache/lumesh/dirmark'; println "\t[MARKED]"}
-    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark | .lines() | ui.pick('select dirmark:') | 'cd ' + _ }
-    let timestamp = "'" + time.now().to_string('%Y-%m-%d %H:%M:%S') + "'"
-    let fix_typos = (b) -> $b.replace('gerp', 'grep').replace('mroe', 'more').replace('les', 'less')
+# ### cmdmark manage
+let save_cmdmark = (b) -> {if !$b {b = ui.text('mark cmd:')}; $b.trim()+"\n" >> '~/.cache/lumesh/cmdmark'; println "\t[MARKED]"}
+let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark ?! | .lines() | ui.pick('select cmdmark:') }
+let save_dirmark = (b) -> if !fs.read(~/.cache/lumesh/dirmark).lines().contains(cwd()) ?: true { cwd()+"\n" >> '~/.cache/lumesh/dirmark'; println "\t[MARKED]"}
+let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark ?! | .lines() | ui.pick('select dirmark:') | 'cd ' + _ }
+let timestamp = "'" + time.now().to_string('%Y-%m-%d %H:%M:%S') + "'"
+let fix_typos = (b) -> $b.replace('gerp', 'grep').replace('mroe', 'more').replace('les', 'less')
 
-    # ### menu
-    fn menu(b){
-        let m = {
-            save_cmdmark,
-            select_cmdmark,
-            save_dirmark,
-            fix_typos
-        }
-
-        let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
-        ex($b)
-    } #?: e -> eprint e.msg
-
-    # ## binding
-    set LUME_HOT_BINDINGS = {
-        CTRL_q: 'exit',
-        ALT_m: save_cmdmark,
-        CTRL_SHIFT_M: select_cmdmark,
-        CTRL_SHIFT_D: select_dirmark,
-        ALT_e: fix_typos,
-        CTRL_SHIFT_t: timestamp,
-        'CTRL_/': menu,
+# ### menu
+fn menu(b){
+    let m = {
+        save_cmdmark,
+        select_cmdmark,
+        save_dirmark,
+        fix_typos
     }
 
-    # ### functions for slash bindings
-    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark | .lines() | ui.pick('select cmdmark:') | eval_str() }
-    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark | .lines() | ui.pick('select dirmark:') | cd _ }
-    let fuzzy_go = (b) -> {let base = $b ~: r'~|/' ? $b : './'; let max = $b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | cd _}
-    let open_file = (b) -> {fd -t file | ui.pick('select file:') | handlr open -- _}
-    let edit_file = (b) -> {let e = sys.has('EDITOR') ? $EDITOR : 'hx'; fd -t file | ui.pick('edit file:') | $e _}
-    let search_content = (b) -> {
-        let t = len($b)>0 ? $b : ui.text 'search in filetype:' ?: 'all'
-        ui.text 'search:' | rg -t $t --line-number --column --no-heading --smart-case --color=never -- _ | ui.pick 'select' ?! | .split(':') | .at(0) | handlr open -- _
-    }
-    let git_commit = (b) -> {
-        git add -A;
-        ui.text('commit message:') ?! | git commit -m _
-    }
+    let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
+    ex($b)
+} #?: e -> eprint e.msg
 
-    # ## use `/key arg`to execute; `/hist`,`/history`,`/cds`,`/q` already builtin, never use these keys
-    set LUME_SLASH_BINDINGS = {
-        sm: save_cmdmark,
-        sd: save_dirmark,
-        m: select_cmdmark,
-        d: select_dirmark,
-        g: fuzzy_go,
-        o: open_file,
-        e: edit_file,
-        sc: search_content,
-        cm: git_commit,
-    }
+# ## binding
+set LUME_HOT_BINDINGS = {
+    CTRL_q: 'exit',
+    ALT_m: save_cmdmark,
+    CTRL_SHIFT_M: select_cmdmark,
+    CTRL_SHIFT_D: select_dirmark,
+    ALT_e: fix_typos,
+    CTRL_SHIFT_t: timestamp,
+    'CTRL_/': menu,
+}
 
-    # ## use `/` to execute menu
-    # `/ query` for fuzzy jump already builtin
-    fn LUME_SLASH_MENU(){
-        let m = {
-            save_cmdmark,
-            save_dirmark,
-            select_cmdmark,
-            select_dirmark,
-            fuzzy_go,
-            open_file,
-            edit_file,
-            search_content,
-            git_commit,
-        }
-        let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
-        if ex {ex('')}
-    } ?: e -> print e.msg
+# ### functions for slash bindings
+let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark ?! | .lines() | ui.pick('select cmdmark:') | eval_str() }
+let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark ?! | .lines() | ui.pick('select dirmark:') | cd _ }
+let fuzzy_go = (b) -> {let base = $b ~: r'~|/' ? $b : './'; let max = $b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | cd _}
+let open_file = (b) -> {fd -t file | ui.pick('select file:') ?! | handlr open -- _}
+let edit_file = (b) -> {let e = sys.has('EDITOR') ? $EDITOR : 'hx'; fd -t file | ui.pick('edit file:') | $e _}
+let search_content = (b) -> {
+    let t = len($b)>0 ? $b : ui.text 'search in filetype:' ?: 'all'
+    ui.text 'search:' | rg -t $t --line-number --column --no-heading --smart-case --color=never -- _ | ui.pick 'select' ?! | .split(':') | .at(0) | handlr open -- _
+}
+let git_commit = (b) -> {
+    git add -A;
+    ui.text('commit message:') ?! | git commit -m _
+}
+
+# ## use `/key arg`to execute; `/hist`,`/history`,`/cds`,`/q` already builtin, never use these keys
+set LUME_SLASH_BINDINGS = {
+    sm: save_cmdmark,
+    sd: save_dirmark,
+    m: select_cmdmark,
+    d: select_dirmark,
+    g: fuzzy_go,
+    o: open_file,
+    e: edit_file,
+    sc: search_content,
+    cm: git_commit,
+}
+
+# ## use `/` to execute menu
+# `/ query` for fuzzy jump already builtin
+fn LUME_SLASH_MENU(){
+    let m = {
+        save_cmdmark,
+        save_dirmark,
+        select_cmdmark,
+        select_dirmark,
+        fuzzy_go,
+        open_file,
+        edit_file,
+        search_content,
+        git_commit,
+    }
+    let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
+    if ex {ex('')}
+} ?: e -> print e.msg
 

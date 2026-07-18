@@ -81,9 +81,9 @@ if IS_INTERACTIVE {
 
     # ### cmdmark manage
     let save_cmdmark = (b) -> {if !$b {b = ui.text('mark cmd:')}; $b.trim()+"\n" >> '~/.cache/lumesh/cmdmark'; println "\t[MARKED]"}
-    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark | .lines() | ui.pick('select cmdmark:') }
+    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark ?! | .lines() | ui.pick('select cmdmark:') }
     let save_dirmark = (b) -> if !fs.read(~/.cache/lumesh/dirmark).lines().contains(cwd()) ?: true { cwd()+"\n" >> '~/.cache/lumesh/dirmark'; println "\t[MARKED]"}
-    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark | .lines() | ui.pick('select dirmark:') | 'cd ' + _ }
+    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark ?! | .lines() | ui.pick('select dirmark:') | 'cd ' + _ }
     let timestamp = "'" + time.now().to_string('%Y-%m-%d %H:%M:%S') + "'"
     let fix_typos = (b) -> $b.replace('gerp', 'grep').replace('mroe', 'more').replace('les', 'less')
 
@@ -112,14 +112,14 @@ if IS_INTERACTIVE {
     }
 
     # ### functions for slash bindings
-    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark | .lines() | ui.pick('select cmdmark:') | eval_str() }
-    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark | .lines() | ui.pick('select dirmark:') | cd _ }
+    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark ?! | .lines() | ui.pick('select cmdmark:') | eval_str() }
+    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark ?! | .lines() | ui.pick('select dirmark:') | cd _ }
     let fuzzy_go = (b) -> {let base = $b ~: r'~|/' ? $b : './'; let max = $b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | cd _}
-    let open_file = (b) -> {fd -t file | ui.pick('select file:') | handlr open -- _}
-    let edit_file = (b) -> {let e = sys.has('EDITOR') ? $EDITOR : 'hx'; fd -t file | ui.pick('edit file:') | $e _}
+    let open_file = (b) -> {fd -t file | ui.pick('select file:') ?! |start 'edit' _}
+    let edit_file = (b) -> {let e = sys.has('EDITOR') ? $EDITOR : 'notepad'; fd -t file | ui.pick('edit file:') | $e _}
     let search_content = (b) -> {
         let t = len($b)>0 ? $b : ui.text 'search in filetype:' ?: 'all'
-        ui.text 'search:' | rg -t $t --line-number --column --no-heading --smart-case --color=never -- _ | ui.pick 'select' ?! | .split(':') | .at(0) | handlr open -- _
+        ui.text 'search:' | rg -t $t --line-number --column --no-heading --smart-case --color=never -- _ | ui.pick 'select' ?! | .split(':') | .at(0) | start 'edit' _
     }
     let git_commit = (b) -> {
         git add -A;

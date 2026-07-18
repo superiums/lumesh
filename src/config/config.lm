@@ -86,13 +86,10 @@ if IS_INTERACTIVE {
     #         fn receive one arg as current buffer.
 
     # ### cmdmark manage
-    let save_cmdmark = (b) -> {if !$b {b = ui.text('mark cmd:')}; $b.trim()+"\n" >> '~/.cache/lume_cmdmark'; println "\t[MARKED]"}
-    let select_cmdmark = (b) -> { fs.read ~/.cache/lume_cmdmark | .lines() | ui.pick('select cmdmark:') }
-    let save_dirmark = (b) -> if !fs.read(~/.cache/lume_dirmark).lines().contains(cwd()) ?: true { cwd()+"\n" >> '~/.cache/lume_dirmark'; println "\t[MARKED]"}
-    let select_dirmark = (b) -> { fs.read ~/.cache/lume_dirmark | .lines() | ui.pick('select dirmark:') | cd _; return "\n" }
-    let select_history = (b) -> {
-        fs.read ~/.cache/.lume_history | .lines() | .filter(x -> string.contains(x, $b)) | ui.pick('filtered history:')
-    }
+    let save_cmdmark = (b) -> {if !$b {b = ui.text('mark cmd:')}; $b.trim()+"\n" >> '~/.cache/lumesh/cmdmark'; println "\t[MARKED]"}
+    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark | .lines() | ui.pick('select cmdmark:') }
+    let save_dirmark = (b) -> if !fs.read(~/.cache/lumesh/dirmark).lines().contains(cwd()) ?: true { cwd()+"\n" >> '~/.cache/lumesh/dirmark'; println "\t[MARKED]"}
+    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark | .lines() | ui.pick('select dirmark:') | 'cd ' + _ }
     let timestamp = "'" + time.now().to_string('%Y-%m-%d %H:%M:%S') + "'"
     let fix_typos = (b) -> $b.replace('gerp', 'grep').replace('mroe', 'more').replace('les', 'less')
 
@@ -107,12 +104,11 @@ if IS_INTERACTIVE {
 
         let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
         ex($b)
-    } ?: e -> eprint e.msg
+    } #?: e -> eprint e.msg
 
     # ## binding
     set LUME_HOT_BINDINGS = {
         CTRL_q: 'exit',
-        ALT_r: select_history,
         ALT_m: save_cmdmark,
         CTRL_SHIFT_M: select_cmdmark,
         CTRL_SHIFT_D: select_dirmark,
@@ -122,21 +118,21 @@ if IS_INTERACTIVE {
     }
 
     # ### functions for slash bindings
-    let select_cmdmark = (b) -> { fs.read ~/.cache/lume_cmdmark | .lines() | ui.pick('select cmdmark:') | eval_str() }
-    let select_dirmark = (b) -> { fs.read ~/.cache/lume_dirmark | .lines() | ui.pick('select dirmark:') | cd _ }
+    let select_cmdmark = (b) -> { fs.read ~/.cache/lumesh/cmdmark | .lines() | ui.pick('select cmdmark:') | eval_str() }
+    let select_dirmark = (b) -> { fs.read ~/.cache/lumesh/dirmark | .lines() | ui.pick('select dirmark:') | cd _ }
     let fuzzy_go = (b) -> {let base = $b ~: r'~|/' ? $b : './'; let max = $b == '/' ? 2 : 5; fd -t d --max-depth $max . $base | ui.pick('Fuzzy Go:') ?! | cd _}
-    let open_file = (b) -> {fd -t file | ui.pick('select file:') | xdg-open -- _}
-    let edit_file = (b) -> {let e = sys.has('EDITOR') ? $EDITOR : 'vi'; fd -t file | ui.pick('edit file:') | $e _}
+    let open_file = (b) -> {fd -t file | ui.pick('select file:') | handlr open -- _}
+    let edit_file = (b) -> {let e = sys.has('EDITOR') ? $EDITOR : 'hx'; fd -t file | ui.pick('edit file:') | $e _}
     let search_content = (b) -> {
         let t = len($b)>0 ? $b : ui.text 'search in filetype:' ?: 'all'
-        ui.text 'search:' | rg -t $t --line-number --column --no-heading --smart-case --color=never -- _ | ui.pick 'select' ?! | .split(':') | .at(0) | xdg-open -- _
+        ui.text 'search:' | rg -t $t --line-number --column --no-heading --smart-case --color=never -- _ | ui.pick 'select' ?! | .split(':') | .at(0) | handlr open -- _
     }
     let git_commit = (b) -> {
         git add -A;
         ui.text('commit message:') ?! | git commit -m _
     }
 
-    # ## use `/key arg`+enter to execute; `/hist`,`/history`,`/cds` already builtin
+    # ## use `/key arg`to execute; `/hist`,`/history`,`/cds`,`/q` already builtin, never use these keys
     set LUME_SLASH_BINDINGS = {
         sm: save_cmdmark,
         sd: save_dirmark,
@@ -149,8 +145,8 @@ if IS_INTERACTIVE {
         cm: git_commit,
     }
 
-    # ## use `/`+enter to execute
-    # `/ query<enter>` for fuzzy jump already builtin
+    # ## use `/` to execute menu
+    # `/ query` for fuzzy jump already builtin
     fn LUME_SLASH_MENU(){
         let m = {
             save_cmdmark,
@@ -164,8 +160,9 @@ if IS_INTERACTIVE {
             git_commit,
         }
         let ex = { ui.pick $m.keys() 'Fuzzy Execute' ?! | $m.at() }
-        ex('')
-    } #?: e -> print e.msg
+        if ex {ex('')}
+    } ?: e -> print e.msg
+
 
     # ## abbreviations
     set LUME_ABBREVIATIONS = {

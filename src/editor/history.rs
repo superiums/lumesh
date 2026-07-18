@@ -1,27 +1,43 @@
 // src/history.rs
-use std::fs::File;
+use std::collections::{HashMap, HashSet};
+use std::fs::{File, OpenOptions};
 use std::io::{self, BufRead, BufReader, Write};
 use std::path::Path;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Clone, Debug)]
 pub struct HistoryEntry {
     pub command: String,
     pub weight: u32,
+    pub last_path: String,
+    pub last_order: u64,
+    pub is_multi_dir: bool, // 是否在多个目录下运行过
 }
 
 impl HistoryEntry {
-    fn new(command: String) -> Self {
-        Self { command, weight: 1 }
+    fn new(command: String, path: String, order: u64) -> Self {
+        Self {
+            command,
+            weight: 1,
+            last_path: path,
+            last_order: order,
+            is_multi_dir: false,
+        }
     }
 }
 
 pub struct History {
-    entries: Vec<HistoryEntry>,
+    entries: Vec<HistoryEntry>, // 按时间顺序（用于 Up/Down 导航）
     max_entries: usize,
+    global_order: u64,
+    log_path: Option<String>,
+    current_dir: String, // 当前目录缓存，供搜索和 add 使用
+    // ── 导航状态 ──
     index: Option<usize>,
     saved_line: String,
+    // ── 搜索状态 ──
     search_query: String,
-    search_matches: Vec<usize>, // indices into entries, sorted by weight desc
+    search_matches: Vec<usize>,
     search_index: usize,
 }
 
@@ -36,6 +52,9 @@ impl History {
         Self {
             entries: Vec::new(),
             max_entries: 1000,
+            global_order: 0,
+            log_path: None,
+            current_dir: String::new(),
             index: None,
             saved_line: String::new(),
             search_query: String::new(),
@@ -44,23 +63,85 @@ impl History {
         }
     }
 
+    /// 更新当前目录缓存。
+    /// 在每次命令执行后（parse_and_eval 之后）调用，确保 add 使用最新路径。
+    pub fn set_current_dir(&mut self, path: String) {
+        self.current_dir = path;
+    }
+
+    pub fn current_dir(&self) -> &str {
+        &self.current_dir
+    }
+
+    /// 添加一条历史记录，使用 self.current_dir 作为执行路径。
+    /// 调用前须先调用 set_current_dir。
     pub fn add(&mut self, entry: String) {
         if entry.trim().is_empty() {
             return;
         }
+        self.global_order += 1;
+        let order = self.global_order;
+        let path = self.current_dir.clone();
+
+        // 1. 追加到日志文件（崩溃安全）
+        if self.log_path.is_some() {
+            if let Err(e) = self.append_log_entry(&entry, &path, order) {
+                eprintln!("Failed to append history log: {e}");
+            }
+        }
+
+        // 2. 更新内存索引
         if let Some(pos) = self.entries.iter().position(|e| e.command == entry) {
-            // 权重 +1，移到末尾（保持时间顺序用于 Up/Down 导航）
             let mut e = self.entries.remove(pos);
             e.weight += 1;
+            if path != e.last_path {
+                e.is_multi_dir = true; // 路径变化：标记为多目录命令
+            }
+            e.last_path = path;
+            e.last_order = order;
             self.entries.push(e);
         } else {
-            self.entries.push(HistoryEntry::new(entry));
+            self.entries.push(HistoryEntry::new(entry, path, order));
         }
+
         if self.entries.len() > self.max_entries {
             self.entries.remove(0);
         }
         self.index = None;
         self.saved_line.clear();
+    }
+
+    fn append_log_entry(&self, cmd: &str, path: &str, order: u64) -> io::Result<()> {
+        let log_path = self.log_path.as_ref().unwrap();
+        let ts = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
+        let mut file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(log_path)?;
+        writeln!(
+            file,
+            "{}\t{}\t{}\t{}",
+            order,
+            ts,
+            escape_field(path),
+            escape_field(cmd)
+        )?;
+        Ok(())
+    }
+
+    // ── 复合评分（用于多结果排序）────────────────────────────────
+
+    /// 本目录专属命令获得 1_000_000 加权，使其排在全局命令之前。
+    fn dir_score(&self, entry: &HistoryEntry) -> u64 {
+        let local_boost = if !entry.is_multi_dir && entry.last_path == self.current_dir {
+            1_000_000u64
+        } else {
+            0u64
+        };
+        local_boost + entry.weight as u64
     }
 
     // ── 导航（按时间顺序，不受权重影响）──────────────────────────
@@ -100,7 +181,7 @@ impl History {
         if self.saved_line.is_empty() {
             None
         } else {
-            Some(self.saved_line.as_str())
+            Some(&self.saved_line)
         }
     }
 
@@ -115,45 +196,100 @@ impl History {
         self.index.is_some()
     }
 
-    // ── Hint（按权重选最优前缀匹配）─────────────────────────────
+    // ── Hint（两阶段：本目录专属优先，再全局）───────────────────
 
     pub fn search_hint(&self, current_line: &str) -> Option<String> {
         if current_line.is_empty() {
             return None;
         }
+        // 阶段1：本目录专属命令（!is_multi_dir && last_path == current_dir）
+        let local = self
+            .entries
+            .iter()
+            .filter(|e| {
+                !e.is_multi_dir
+                    && e.last_path == self.current_dir
+                    && e.command.starts_with(current_line)
+            })
+            .max_by_key(|e| e.weight);
+
+        if let Some(e) = local {
+            return Some(e.command.trim_start_matches(current_line).to_string());
+        }
+
+        // 阶段2：全局命令（按权重）
         self.entries
             .iter()
-            .filter(|e| e.command.starts_with(current_line))
+            .filter(|e| e.is_multi_dir && e.command.starts_with(current_line))
             .max_by_key(|e| e.weight)
             .map(|e| e.command.trim_start_matches(current_line).to_string())
     }
 
-    // ── Fuzzy 搜索（按权重排序）──────────────────────────────────
+    // ── Fuzzy 搜索（两阶段：本目录专属优先，再全局）─────────────
+
     pub fn search_fuzzy_one_cd(&self, query: &str) -> Option<String> {
+        // 阶段1：本目录专属 cd 命令
+        let local = self
+            .entries
+            .iter()
+            .filter(|e| {
+                !e.is_multi_dir
+                    && e.last_path == self.current_dir
+                    && e.command.starts_with("cd ")
+                    && fuzzy_match(query, &e.command)
+            })
+            .max_by_key(|e| e.weight)
+            .map(|e| e.command.clone());
+
+        if local.is_some() {
+            return local;
+        }
+
+        // 阶段2：全局 cd 命令
         self.entries
             .iter()
-            .filter(|e| e.command.starts_with("cd ") && fuzzy_match(query, &e.command))
+            .filter(|e| {
+                e.command.starts_with("cd ") && e.is_multi_dir && fuzzy_match(query, &e.command)
+            })
             .max_by_key(|e| e.weight)
             .map(|e| e.command.clone())
     }
+
     pub fn search_fuzzy_one(&self, query: &str) -> Option<String> {
+        // 阶段1：本目录专属命令
+        let local = self
+            .entries
+            .iter()
+            .filter(|e| {
+                !e.is_multi_dir && e.last_path == self.current_dir && fuzzy_match(query, &e.command)
+            })
+            .max_by_key(|e| e.weight)
+            .map(|e| e.command.clone());
+
+        if local.is_some() {
+            return local;
+        }
+
+        // 阶段2：全局命令
         self.entries
             .iter()
-            .filter(|e| fuzzy_match(query, &e.command))
+            .filter(|e| e.is_multi_dir && fuzzy_match(query, &e.command))
             .max_by_key(|e| e.weight)
             .map(|e| e.command.clone())
     }
+
+    /// 多结果 fuzzy 搜索：使用 dir_score 排序（本目录专属命令排前）
     pub fn search_fuzzy(&self, query: &str) -> Vec<String> {
         let mut matched: Vec<&HistoryEntry> = self
             .entries
             .iter()
             .filter(|e| fuzzy_match(query, &e.command))
             .collect();
-        matched.sort_by(|a, b| b.weight.cmp(&a.weight));
+        matched.sort_by(|a, b| self.dir_score(b).cmp(&self.dir_score(a)));
         matched.into_iter().map(|e| e.command.clone()).collect()
     }
 
-    // ── 搜索（内部：按权重降序排列 search_matches）───────────────
+    // ── Ctrl+R 搜索（按 dir_score 排序）─────────────────────────
 
     fn build_matches(&self, query: &str) -> Vec<usize> {
         let mut matches: Vec<usize> = self
@@ -163,11 +299,9 @@ impl History {
             .filter(|(_, e)| e.command.contains(query))
             .map(|(i, _)| i)
             .collect();
-        // 权重降序；权重相同则保持时间倒序（index 大的更新）
         matches.sort_by(|&a, &b| {
-            self.entries[b]
-                .weight
-                .cmp(&self.entries[a].weight)
+            self.dir_score(&self.entries[b])
+                .cmp(&self.dir_score(&self.entries[a]))
                 .then(b.cmp(&a))
         });
         matches
@@ -182,7 +316,7 @@ impl History {
             return;
         }
         self.search_matches = self.build_matches(&self.search_query);
-        self.search_index = 0; // 0 = 权重最高的匹配
+        self.search_index = 0;
     }
 
     pub fn search_current_match(&self) -> Option<&str> {
@@ -223,7 +357,6 @@ impl History {
         }
     }
 
-    /// 向下翻（权重次高）
     pub fn search_next(&mut self) -> Option<&str> {
         if self.search_matches.is_empty() || self.search_index + 1 >= self.search_matches.len() {
             return None;
@@ -234,7 +367,6 @@ impl History {
         Some(self.entries[i].command.as_str())
     }
 
-    /// 向上翻（权重更高）
     pub fn search_prev(&mut self) -> Option<&str> {
         if self.search_matches.is_empty() || self.search_index == 0 {
             return None;
@@ -277,7 +409,6 @@ impl History {
         self.search_index
     }
 
-    /// 返回当前搜索结果（已按权重排序）
     pub fn search_entries(&self) -> Vec<String> {
         self.search_matches
             .iter()
@@ -289,45 +420,162 @@ impl History {
         !self.search_query.is_empty() || !self.saved_line.is_empty()
     }
 
-    // ── 文件 I/O（格式：`weight\tcommand`，向后兼容旧格式）──────
+    // ── 文件 I/O ──────────────────────────────────────────────────
 
+    /// 保存索引文件（退出时调用）。
+    /// 格式：`weight\torder\tpath\tmulti\tcommand`
     pub fn save_to_file(&self, path: &str) -> io::Result<()> {
         let mut file = File::create(path)?;
         for entry in &self.entries {
             writeln!(
                 file,
-                "{}\t{}",
+                "{}\t{}\t{}\t{}\t{}",
                 entry.weight,
-                escape_newlines(&entry.command)
+                entry.last_order,
+                escape_field(&entry.last_path),
+                if entry.is_multi_dir { 1 } else { 0 },
+                escape_field(&entry.command)
             )?;
         }
         Ok(())
     }
 
+    /// 加载历史记录（启动时调用）。
+    /// 日志文件路径自动派生为 `{path}.log`。
+    /// 调用后建议立即调用 set_current_dir 初始化当前目录。
     pub fn load_from_file(&mut self, path: &str) -> io::Result<()> {
-        if !Path::new(path).exists() {
-            File::create(path)?;
-            return Ok(());
+        let log_path = format!("{}.log", path);
+        self.log_path = Some(log_path.clone());
+
+        if Path::new(path).exists() {
+            self.load_index(path)?;
+        } else if Path::new(&log_path).exists() {
+            self.rebuild_from_log(&log_path)?;
+        } else {
+            File::create(&log_path)?;
         }
+        Ok(())
+    }
+
+    /// 从索引文件加载。
+    /// 支持新格式（5字段）、旧4字段格式、旧2字段格式、纯命令格式。
+    fn load_index(&mut self, path: &str) -> io::Result<()> {
         let file = File::open(path)?;
         let reader = BufReader::new(file);
         self.entries.clear();
+        self.global_order = 0;
+
         for line in reader.lines() {
             let line = line?;
             if line.is_empty() {
                 continue;
             }
-            // 新格式：`weight\tcommand`；旧格式：直接是命令
-            let entry = if let Some((w, cmd)) = line.split_once('\t') {
-                let weight = w.parse::<u32>().unwrap_or(1);
-                HistoryEntry {
-                    command: unescape_newlines(cmd),
-                    weight,
-                }
-            } else {
-                HistoryEntry::new(unescape_newlines(&line))
+            // splitn(5) 确保 command 字段中的 \t 不被分割
+            let parts: Vec<&str> = line.splitn(5, '\t').collect();
+            let entry = match parts.as_slice() {
+                // 新格式：weight\torder\tpath\tmulti\tcommand
+                [w, o, p, m, cmd] => HistoryEntry {
+                    command: unescape_field(cmd),
+                    weight: w.parse().unwrap_or(1),
+                    last_order: o.parse().unwrap_or(0),
+                    last_path: unescape_field(p),
+                    is_multi_dir: *m == "1",
+                },
+                // 旧4字段格式：weight\torder\tpath\tcommand
+                [w, o, p, cmd] => HistoryEntry {
+                    command: unescape_field(cmd),
+                    weight: w.parse().unwrap_or(1),
+                    last_order: o.parse().unwrap_or(0),
+                    last_path: unescape_field(p),
+                    is_multi_dir: false,
+                },
+                // 旧2字段格式：weight\tcommand
+                [w, cmd] => HistoryEntry {
+                    command: unescape_field(cmd),
+                    weight: w.parse().unwrap_or(1),
+                    last_order: 0,
+                    last_path: String::new(),
+                    is_multi_dir: false,
+                },
+                // 纯命令格式
+                [cmd] => HistoryEntry {
+                    command: unescape_field(cmd),
+                    weight: 1,
+                    last_order: 0,
+                    last_path: String::new(),
+                    is_multi_dir: false,
+                },
+                _ => continue,
             };
+            if entry.last_order > self.global_order {
+                self.global_order = entry.last_order;
+            }
             self.entries.push(entry);
+        }
+        Ok(())
+    }
+
+    /// 从日志文件重建索引（索引丢失时的恢复路径）。
+    /// 日志格式：`order\ttimestamp\tpath\tcommand`
+    fn rebuild_from_log(&mut self, log_path: &str) -> io::Result<()> {
+        let file = File::open(log_path)?;
+        let reader = BufReader::new(file);
+        self.entries.clear();
+        self.global_order = 0;
+
+        let mut agg: HashMap<String, (u32, String, u64)> = HashMap::new();
+        let mut path_sets: HashMap<String, HashSet<String>> = HashMap::new();
+        let mut ordered_cmds: Vec<String> = Vec::new();
+
+        for line in reader.lines() {
+            let line = line?;
+            if line.is_empty() {
+                continue;
+            }
+            let parts: Vec<&str> = line.splitn(4, '\t').collect();
+            if parts.len() < 4 {
+                continue;
+            }
+            let order = parts[0].parse::<u64>().unwrap_or(0);
+            let path = unescape_field(parts[2]);
+            let cmd = unescape_field(parts[3]);
+
+            if order > self.global_order {
+                self.global_order = order;
+            }
+
+            // 记录该命令出现过的所有目录（用于计算 is_multi_dir）
+            path_sets
+                .entry(cmd.clone())
+                .or_default()
+                .insert(path.clone());
+
+            if let Some(e) = agg.get_mut(&cmd) {
+                e.0 += 1;
+                e.1 = path;
+                e.2 = order;
+            } else {
+                ordered_cmds.push(cmd.clone());
+                agg.insert(cmd, (1, path, order));
+            }
+        }
+
+        for cmd in ordered_cmds {
+            if let Some((weight, last_path, last_order)) = agg.remove(&cmd) {
+                let is_multi_dir = path_sets.get(&cmd).map_or(false, |s| s.len() > 1);
+                self.entries.push(HistoryEntry {
+                    command: cmd,
+                    weight,
+                    last_path,
+                    last_order,
+                    is_multi_dir,
+                });
+            }
+        }
+
+        if self.entries.len() > self.max_entries {
+            let drain = self.entries.len() - self.max_entries;
+            self.entries.drain(0..drain);
         }
         Ok(())
     }
@@ -350,33 +598,51 @@ impl History {
         self.entries.get(i).map(|e| e.command.as_str())
     }
 
-    /// 返回所有命令（时间顺序），供 editor 的 HistorySearch 使用
     pub fn entries(&self) -> Vec<String> {
         self.entries.iter().map(|e| e.command.clone()).collect()
     }
 
-    /// 返回按权重排序的命令列表（供 UI 展示）
-    pub fn entries_by_weight(&self) -> Vec<(String, u32)> {
+    pub fn cmdstr_by_weight(&self) -> Vec<String> {
         let mut sorted: Vec<&HistoryEntry> = self.entries.iter().collect();
-        sorted.sort_by(|a, b| b.weight.cmp(&a.weight).then(a.command.cmp(&b.command)));
+        sorted.sort_by(|a, b| {
+            self.dir_score(b)
+                .cmp(&self.dir_score(a))
+                .then(a.command.cmp(&b.command))
+        });
+        sorted.iter().map(|e| e.command.clone()).collect()
+    }
+
+    pub fn entries_by_weight(&self) -> Vec<&HistoryEntry> {
+        let mut sorted: Vec<&HistoryEntry> = self.entries.iter().collect();
+        sorted.sort_by(|a, b| {
+            self.dir_score(b)
+                .cmp(&self.dir_score(a))
+                .then(a.command.cmp(&b.command))
+        });
         sorted
-            .iter()
-            .map(|e| (e.command.clone(), e.weight))
-            .collect()
+    }
+
+    pub fn global_order(&self) -> u64 {
+        self.global_order
     }
 }
 
-fn escape_newlines(s: &str) -> String {
-    s.replace('\\', "\\\\").replace('\n', "\\n")
+// ── 字段转义（制表符分隔格式）────────────────────────────────────
+
+fn escape_field(s: &str) -> String {
+    s.replace('\\', "\\\\")
+        .replace('\n', "\\n")
+        .replace('\t', "\\t")
 }
 
-fn unescape_newlines(s: &str) -> String {
-    let mut result = String::new();
+fn unescape_field(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
     let mut chars = s.chars();
     while let Some(c) = chars.next() {
         if c == '\\' {
             match chars.next() {
                 Some('n') => result.push('\n'),
+                Some('t') => result.push('\t'),
                 Some('\\') => result.push('\\'),
                 Some(c) => {
                     result.push('\\');
@@ -391,7 +657,6 @@ fn unescape_newlines(s: &str) -> String {
     result
 }
 
-/// 简单 fuzzy match：query 的每个字符按序出现在 target 中
 fn fuzzy_match(query: &str, target: &str) -> bool {
     if query.is_empty() {
         return true;

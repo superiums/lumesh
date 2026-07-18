@@ -15,14 +15,25 @@ pub fn expand_home(path: &'_ str) -> Cow<'_, str> {
 pub fn get_std_cwd() -> PathBuf {
     std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
 }
-pub fn get_current_path(_env: &mut Environment) -> PathBuf {
+pub fn get_current_path(env: &mut Environment) -> PathBuf {
     // for compaty of hot key binding, cwd was changed in another env
-    get_std_cwd()
-
-    // env.get("PWD").map_or(get_std_cwd(), |v| match v {
-    //     Expression::String(s) => PathBuf::from(s),
-    //     s => PathBuf::from(s.to_string()),
-    // })
+    // use slash cmd insteadof key binding
+    // get_std_cwd()
+    env.get("PWD").map_or(get_std_cwd(), |v| match v {
+        Expression::String(s) => PathBuf::from(s),
+        s => PathBuf::from(s.to_string()),
+    })
+}
+pub fn get_current_path_string(env: &mut Environment) -> String {
+    env.get("PWD").map_or(
+        std::env::current_dir()
+            .map(|p| p.to_string_lossy().into_owned())
+            .unwrap_or_default(),
+        |v| match v {
+            Expression::String(s) => s,
+            s => s.to_string(),
+        },
+    )
 }
 
 pub fn join_current_path(path: &str, env: &mut Environment) -> PathBuf {

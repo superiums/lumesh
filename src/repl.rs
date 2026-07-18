@@ -10,6 +10,7 @@ use crate::editor::{
 use crate::expression::alias::get_alias_completion;
 use crate::libs::{LIBS_INFO, is_lib};
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
+use crate::utils::get_current_path_string;
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
 use std::collections::HashMap;
@@ -233,13 +234,11 @@ pub fn run_repl(env: &mut Environment) {
         Some(hf) => hf.to_string(),
         _ => {
             let c_dir = match dirs::cache_dir() {
-                Some(c) => c,
-                _ => PathBuf::new(),
+                Some(c) => c.join("lumesh"),
+                _ => PathBuf::new().join("lumesh"),
             };
-            #[cfg(unix)]
-            let path = c_dir.join(".lume_history");
-            #[cfg(windows)]
-            let path = c_dir.join("lume_history.log");
+
+            let path = c_dir.join("history");
             if !c_dir.exists()
                 && let Err(e) = std::fs::create_dir_all(&c_dir)
             {
@@ -533,8 +532,13 @@ pub fn run_repl(env: &mut Environment) {
                 if let Some(cd_cmd) = editor.history().search_fuzzy_one(query) {
                     if parse_and_eval(&cd_cmd, &mut shared_env.lock().unwrap()) {
                         editor.history_mut().add(cd_cmd);
+                        // update current dir in history
+                        let cwd = get_current_path_string(&mut shared_env.lock().unwrap());
+                        editor.history_mut().set_current_dir(cwd);
                     }
                 }
+            } else if rest == "q" {
+                break;
             } else if rest == "history" {
                 // history
                 for (i, entry) in editor.history().iter().enumerate() {
@@ -544,9 +548,9 @@ pub fn run_repl(env: &mut Environment) {
                 // history
                 let hist = editor
                     .history()
-                    .entries_by_weight()
+                    .cmdstr_by_weight()
                     .iter()
-                    .map(|(h, _)| Expression::String(h.to_string()))
+                    .map(|h| Expression::String(h.to_string()))
                     .collect::<Vec<_>>();
                 let mut forked_env = shared_env.lock().unwrap().fork();
                 forked_env.define("HISTORY", Expression::from(hist));
@@ -571,7 +575,13 @@ pub fn run_repl(env: &mut Environment) {
         } else {
             // normal
             if parse_and_eval(&full_input, &mut shared_env.lock().unwrap()) {
+                let changing = full_input.starts_with("cd ");
                 editor.history_mut().add(full_input);
+                // update current dir in history
+                if changing {
+                    let cwd = get_current_path_string(&mut shared_env.lock().unwrap());
+                    editor.history_mut().set_current_dir(cwd);
+                }
             }
         }
 

@@ -17,7 +17,7 @@ use crate::{
         pretty_printer,
     },
     parse_and_eval, reg_all, reg_info,
-    utils::{abs_script, canon, get_current_path},
+    utils::{abs_script, canon, get_current_path_string},
 };
 
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
@@ -336,7 +336,7 @@ fn cd(
     };
     let path = canon(&p, env)?;
     // before cd
-    let current_dir = get_current_path(env);
+    let current = get_current_path_string(env);
     // cd
     std::env::set_current_dir(&path).map_err(|io_err| {
         RuntimeError::from_io_error(io_err, "set_current_dir".into(), ctx.clone(), 0)
@@ -348,7 +348,7 @@ fn cd(
         Expression::String(path.to_string_lossy().to_string()),
     );
 
-    let current = current_dir.to_string_lossy();
+    // let current = current_dir.to_string_lossy();
     let dir_new = path.to_string_lossy();
     env.define("LWD", Expression::String(current.to_string()));
     if let Some(Expression::List(paths)) = env.get("PATH_SESSION") {
@@ -378,8 +378,8 @@ fn cwd(
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let path = get_current_path(env);
-    Ok(Expression::String(path.to_string_lossy().into_owned()))
+    let path = get_current_path_string(env);
+    Ok(Expression::String(path))
 }
 
 fn symof(

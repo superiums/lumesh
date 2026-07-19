@@ -1530,12 +1530,152 @@ fn parse_time(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
     let (input, r) = parse_string_common(input, TokenKind::Time, false, false)?;
     Ok((input, Expression::TimeDef(r.into())))
 }
-#[inline]
-fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, r) = parse_string_common(input, TokenKind::StringTemplate, true, true)?;
-    Ok((input, Expression::StringTemplate(r.into())))
+// #[inline]
+// fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     let (input, r) = parse_string_common(input, TokenKind::StringTemplate, true, true)?;
+//     Ok((input, Expression::StringTemplate(r.into())))
+// }
+/// 将模板字符串内容分解为表达式片段列表
+/// 从 start 位置开始，找到匹配的 '}' 的字节位置
+fn find_matching_brace(s: &str, start: usize) -> Option<usize> {
+    let mut depth = 1usize;
+    let mut i = start;
+    for ch in s[start..].chars() {
+        match ch {
+            '{' => depth += 1,
+            '}' => {
+                depth -= 1;
+                if depth == 0 {
+                    return Some(i);
+                }
+            }
+            _ => {}
+        }
+        i += ch.len_utf8();
+    }
+    None
+}
+/// 从 start（'{' 之后的位置）解析花括号内的表达式
+/// prefix 用于解析失败时还原原始文本（"$" 或 ""）
+fn parse_brace_segment(template: &str, start: usize, prefix: &str) -> Option<(Expression, usize)> {
+    let end = find_matching_brace(template, start)?;
+    let inner = &template[start..end];
+    let expr = match parse_script(inner) {
+        Ok(expr) => expr,
+        Err(_) => Expression::String(format!("{prefix}{{{inner}}}")),
+    };
+    Some((expr, end + 1)) // end + 1 跳过 '}'
+}
+/// 将模板字符串内容分解为表达式片段列表
+/// 支持三种插值语法：
+///   $var      — 简单变量查找（直接 env.get，不走 parse）
+///   {expr}    — 表达式求值（parse + eval）
+///   ${expr}   — 同上，bash 风格别名
+fn split_template_segments(template: &str) -> Vec<Expression> {
+    let mut segments: Vec<Expression> = Vec::new();
+    let mut literal = String::new();
+    let mut i = 0usize;
+
+    while i < template.len() {
+        let c = match template[i..].chars().next() {
+            Some(c) => c,
+            None => break,
+        };
+        let char_len = c.len_utf8();
+
+        match c {
+            '\\' => {
+                // 转义：\{ \$ 输出字面量，其余保留反斜杠
+                if let Some(next) = template[i + char_len..].chars().next() {
+                    match next {
+                        '{' | '$' => {
+                            literal.push(next);
+                            i += char_len + next.len_utf8();
+                        }
+                        _ => {
+                            literal.push('\\');
+                            i += char_len;
+                        }
+                    }
+                } else {
+                    literal.push('\\');
+                    i += char_len;
+                }
+            }
+            '$' => {
+                let rest = &template[i + char_len..];
+                if let Some(next) = rest.chars().next() {
+                    if next == '{' {
+                        // ${expr} — start 跳过 '$' 和 '{'
+                        let start = i + char_len + next.len_utf8();
+                        if let Some((expr, next_i)) = parse_brace_segment(template, start, "$") {
+                            if !literal.is_empty() {
+                                segments.push(Expression::String(std::mem::take(&mut literal)));
+                            }
+                            segments.push(expr);
+                            i = next_i;
+                        } else {
+                            literal.push('$');
+                            i += char_len;
+                        }
+                    } else if next.is_alphanumeric() || next == '_' {
+                        // $var 形式：直接作为 Variable，不走 parse
+                        if !literal.is_empty() {
+                            segments.push(Expression::String(std::mem::take(&mut literal)));
+                        }
+                        let var_start = i + char_len;
+                        let mut var_end = var_start;
+                        for ch in template[var_start..].chars() {
+                            if ch.is_alphanumeric() || ch == '_' || ch == '.' || ch == '-' {
+                                var_end += ch.len_utf8();
+                            } else {
+                                break;
+                            }
+                        }
+                        segments.push(Expression::Variable(
+                            template[var_start..var_end].to_string(),
+                        ));
+                        i = var_end;
+                    } else {
+                        literal.push('$');
+                        i += char_len;
+                    }
+                }
+            }
+            '{' => {
+                // {expr} — start 跳过 '{'
+                let start = i + char_len;
+                if let Some((expr, next_i)) = parse_brace_segment(template, start, "") {
+                    if !literal.is_empty() {
+                        segments.push(Expression::String(std::mem::take(&mut literal)));
+                    }
+                    segments.push(expr);
+                    i = next_i;
+                } else {
+                    // 无匹配 '}'，作为字面量
+                    literal.push('{');
+                    i += char_len;
+                }
+            }
+            _ => {
+                literal.push(c);
+                i += char_len;
+            }
+        }
+    }
+
+    if !literal.is_empty() {
+        segments.push(Expression::String(literal));
+    }
+    segments
 }
 
+#[inline]
+fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, raw) = parse_string_common(input, TokenKind::StringTemplate, true, false)?;
+    let segments = split_template_segments(&raw);
+    Ok((input, Expression::StringTemplate(segments)))
+}
 // -- 字面量解析 --
 #[inline]
 fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {

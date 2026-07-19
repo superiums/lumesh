@@ -65,7 +65,17 @@ impl Expression {
             Self::Integer(it) => write!(f, "{}{it}", idt(i)),
             Self::Float(n) => write!(f, "{}{n}", idt(i)),
             Self::String(s) => write!(f, "{}{s}", idt(i)),
-            Self::StringTemplate(s) => write!(f, "{}`{s}`", idt(i)),
+            Self::StringTemplate(segments) => {
+                write!(f, "{}`", idt(i))?;
+                for seg in segments.iter() {
+                    match seg {
+                        Self::String(s) => write!(f, "{s}")?,
+                        Self::Variable(v) => write!(f, "${v}")?,
+                        other => write!(f, "${{{other}}}")?,
+                    }
+                }
+                write!(f, "`")
+            }
             Self::Boolean(b) => write!(f, "{}{}", idt(i), if *b { "true" } else { "false" }),
             Self::Bytes(b) => write!(f, "{}b\"{}\"", idt(i), String::from_utf8_lossy(b)),
             Self::DateTime(n) => write!(f, "{}{}", idt(i), n.format("%Y-%m-%d %H:%M:%S")),
@@ -653,7 +663,17 @@ impl Expression {
             Self::Blank => write!(f, "{}_", prefix),
 
             // 字符串相关
-            Self::StringTemplate(s) => write!(f, "{}StringTemplate〈`{s}`〉", prefix),
+            Self::StringTemplate(segments) => {
+                write!(f, "{}StringTemplate〈`", prefix)?;
+                for seg in segments.iter() {
+                    match seg {
+                        Self::String(s) => write!(f, "{s}")?,
+                        Self::Variable(v) => write!(f, "${v}")?,
+                        other => write!(f, "${{{other}}}")?,
+                    }
+                }
+                write!(f, "`〉")
+            }
             Self::Bytes(b) => write!(f, "{}Bytes〈{:?}〉", prefix, String::from_utf8_lossy(b)),
             Self::RegexDef(s) => write!(f, "{}RegexDef〈{s:?}〉", prefix),
             Self::Regex(s) => write!(f, "{}Regex〈{:?}〉", prefix, s.regex.as_str()),

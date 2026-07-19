@@ -14,7 +14,6 @@ pub mod eval3;
 pub mod from;
 pub mod overop;
 pub mod pty;
-pub mod render;
 pub mod table;
 pub mod terminal;
 
@@ -36,7 +35,7 @@ pub enum Expression {
     Float(f64),
     Bytes(Vec<u8>), // 这个保持值类型，因为Rc<Vec>反而增加复杂度
     String(String),
-    StringTemplate(String),
+    StringTemplate(Vec<Self>),
     RegexDef(String),
     TimeDef(String),
     Regex(LumeRegex),

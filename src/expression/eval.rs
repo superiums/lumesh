@@ -1,6 +1,6 @@
 use crate::expression::eval2::ifs_split;
 use crate::expression::eval3::prepare_args;
-use crate::expression::render::render_template;
+
 use crate::expression::{BoxedIterator, LumeRegex, alias};
 use crate::libs::{get_builtin_via_expr, handle_color, handle_math, handle_style, time_parse};
 use crate::utils::abs;
@@ -265,8 +265,13 @@ impl Expression {
                         return job.handle_variable(name, true, state, env, depth);
                     }
                 }
-                Self::StringTemplate(template) => {
-                    return render_template(template, state, env, depth, self);
+                Self::StringTemplate(segments) => {
+                    let mut result = String::new();
+                    for seg in segments.iter() {
+                        let val = seg.eval_mut(state, env, depth + 1)?;
+                        result.push_str(&val.to_string());
+                    }
+                    return Ok(Expression::String(result));
                 }
                 Self::Variable(name) => return job.handle_variable(name, false, state, env, depth),
                 // {

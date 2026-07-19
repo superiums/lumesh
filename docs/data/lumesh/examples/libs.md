@@ -19,59 +19,59 @@ usage:
 assert <condition> [message]
 cd [path]
 cwd
-current working directory
+  current working directory
 
 ddebug <args>...
-pretty debug
+  pretty debug
 debug <args>...
 eprint <args>...
 eprintln <args>...
 eval <expr>
-evaluate expression in current env
+  evaluate expression in current env
 eval_str <expr>
-evaluate string in current env
+  evaluate string in current env
 exec <expr>
-execute expression in new env
+  execute expression in new env
 exec_str <string>
-execute string in new env
+  execute string in new env
 exit [status]
 flatten <collection>
 format <template> <args>...
-formatted string with vars
+  formatted string with vars
 get <map|list|range> <path>
-get value from nested map/list/range using dot notation path
+  get value from nested map/list/range using dot notation path
 help [module]
 import <path>
-evaluate file in new env
+  evaluate file in new env
 include <path>
-evaluate file in current env
+  evaluate file in current env
 len <collection>
 not <boolean1>...
 pprint <list>|<map>
-pretty print
+  pretty print
 print <args>...
 println <args>...
 read [prompt]
-get user input
+  get user input
 repeat <expr> <n>
 rev <string|list|bytes>
 select <table> <columns...>
-select columns from list of maps
+  select columns from list of maps
 set_root <var> <val>
-define a variable in root environment
+  define a variable in root environment
 sortby <table> <col>
 symof <value>
-get type of data symbol
+  get type of data symbol
 tap <args>...
-print and return result
+  print and return result
 throw <msg>
-return a runtime error
+  return a runtime error
 typeof <value>
-get type of data value
+  get type of data value
 unset_root <var>
 when <condition> <execute>
 where <table> <condition>
-filter rows by condition
+  filter rows by condition
 
 ### about
 
@@ -115,7 +115,7 @@ write <text> <x> <y>
 ### filesize
 
 b <filesize>
-get bytes of a filesize
+  get bytes of a filesize
 from <size_str|byte_int>
 gb <filesize>
 kb <filesize>
@@ -217,7 +217,7 @@ foldl <list> <fn> <init>
 foldr <list> <fn> <init>
 from <range|item...>
 get <map|list|range> <path>
-get value via dot sperated path
+  get value via dot sperated path
 group <list> <key_fn|key>
 insert <list> <index> <value>
 is_empty <list>
@@ -344,9 +344,9 @@ shuffle <list>
 ### regex
 
 capture <pattern> <text>
-get first capture groups as [full,group1,...]
+  get first capture groups as [full,group1,...]
 capture_name <pattern> <text>
-get capture groups with names
+  get capture groups with names
 captures <pattern> <text>
 find <pattern> <text>
 find_all <pattern> <text>
@@ -448,11 +448,14 @@ yellow <string>
 
 cds
 defined <var>
+  test if var was defined in current env
 discard <arg>
 ecodes_lm
 ecodes_rt
 env [var]
+  show root env vars
 has <var>
+  test if var was defined in current/parent env
 info
 max_runtime [int]
 max_syntax [int]
@@ -464,6 +467,7 @@ set_cfm <boolean>
 set_pdm <boolean>
 set_strict <boolean>
 vars
+  list vars
 
 ### table
 
@@ -510,17 +514,24 @@ year [datetime]
 ### ui
 
 confirm <msg>
+  show confirm dialog
 date_pick [msg|cfg_map]
 editor [msg|cfg_map]
+  long text input
 float <msg> [decimal_places]
+  float input
 int <msg>
+  int input
 join_flow <max_width> <widgets...>
 joinx <widget1> <widget2>
 joiny <widget1> <widget2>
 multi_pick <list|items...> [msg|cfg_map]
+  show multiple select dialog
 passwd <msg> [confirm?]
 pick <list|items...> [msg|cfg_map]
+  show select dialog
 text <msg> [initValue]
+  text input box
 widget <content> <title> [width] [height]
 
 ## CONSTS

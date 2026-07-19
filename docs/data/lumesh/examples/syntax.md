@@ -12,12 +12,17 @@ Lumesh is a modern shell and scripting language with JavaScript-like syntax and 
 - `$var` or `var` - Variable access
 - `$argv` - script args
 - `let {name, age:renamed_age} = user` or `let [a, b, *rest] = [1, 2,3,4]` - Destructuring
-  NOTE:
-- NEVER use lib name as a var name, eg: `list` `string`
+
+NOTE:
+  - NEVER use lib name as a var name, eg: `list` `string`
+  - vars has implicit type, changed while assign.
+  - type annotation not supported!
 
 ### Data Structures
 
 - String: `'raw'`,`"escaped\n"`,`` `templated, ${age>18 ? "Mr.":"Dear"} $name !` ``
+Note: use '' insteadof "" if no escape needed.
+
 - List: `[1, 2, [3,4]]` or `1...5`
 - Set: `S{a,b,c}`
 - Range: `1..11` or `1..=10`, `_` for unclosed: `1.._` `_..10`
@@ -48,6 +53,7 @@ Structure Related:
 - Decorators: `@decorator
 fn my_func() { ... }`
 - Module import: `use module as alias; alias::function()`
+- the last expression of a block was returned implicitly, so `return` keyword was optional on last line
 
 ### Pipelines
 
@@ -118,7 +124,14 @@ fn my_func() { ... }`
 - Arithmetic: `+`, `-`, `*`, `/`, `%`
 - Comparison: `==`, `!=`, `<`, `>`, `<=`, `>=`
 - Logical: `&&`, `||`, `!`
-- String concatenation: `+`
+  NOTE: `&&` and `||` is pure logic operator which compute the boolean value.
+  if you need 'success and execute' or 'fail and execute' flow control(like in bash), just use error cather instead:
+  + `a; b` or `if a ?~ {b}` works like `a && b` of bash
+  + `a ?: b` or `if !(a ?~) {b}` works like `a || b` of bash
+
+- String concatenate: `+`
+- Variable interpolation: `` `a is $a or {a}` ``,`` `a-b={a-b}` ``, use `\{` if need the raw `{`
+- String format: `format('a is {a} b={}',b)`
 - contains test for string/list/set/range/map, regex supported: `~:`, `!~:`
 
 ### Math Compute
@@ -167,3 +180,4 @@ When providing completions or suggestions:
 3. Use error handling operators appropriately
 4. Suggest built-in module functions when applicable
 5. Keep completions concise and practical
+6. Use `ui` lib instead of `read` while need interactive with user

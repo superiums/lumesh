@@ -436,7 +436,7 @@ fn print(
     // } else {
     let _ = writeln!(&mut stdout);
     // }
-    let _ = stdout.flush();
+    // let _ = stdout.flush();
     Ok(Expression::None)
 }
 fn println(
@@ -449,7 +449,7 @@ fn println(
         let s = format!("{x}");
         let _ = writeln!(&mut stdout, "{s}");
     }
-    let _ = stdout.flush();
+    // let _ = stdout.flush();
     Ok(Expression::None)
 }
 pub fn pprint(
@@ -477,7 +477,7 @@ fn eprint(
             let _ = writeln!(&mut stderr, "{s}");
         }
     }
-    let _ = stderr.flush();
+    // let _ = stderr.flush();
     Ok(Expression::None)
 }
 fn eprintln(
@@ -490,7 +490,7 @@ fn eprintln(
         let s = format!("\x1b[38;5;9m{x}\x1b[m\x1b[0m");
         let _ = writeln!(&mut stderr, "{s}");
     }
-    let _ = stderr.flush();
+    // let _ = stderr.flush();
     Ok(Expression::None)
 }
 

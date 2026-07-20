@@ -19,7 +19,7 @@ use super::fs_ls::ls;
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
-        dirs, ls, glob, tree, abs, canon,
+        ls, glob, tree, abs, canon,
         // modify
         mkdir, rmdir, mv, cp, rm,
         // check
@@ -33,7 +33,6 @@ pub fn regist_lazy() -> LazyModule {
 
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-        dirs => "get system directories", ""
         ls => "list directory contents", "[-l|a|h|t| L|c|u|m|p] [path]"
         glob => "match files with pattern", "<pattern>"
         tree => "get directory tree as nested map", "[path]"
@@ -149,41 +148,6 @@ fn copy_path(src: &Path, dst: &Path, ctx: &Expression) -> Result<(), RuntimeErro
     Ok(())
 }
 
-// System Directory Functions
-fn dirs(
-    _args: Vec<Expression>,
-    _env: &mut Environment,
-    _ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    let mut dir_tree = BTreeMap::<String, String>::new();
-
-    if let Some(home_dir) = dirs::home_dir() {
-        dir_tree.insert("home".into(), home_dir.to_string_lossy().into());
-    }
-    if let Some(config_dir) = dirs::config_dir() {
-        dir_tree.insert("config".into(), config_dir.to_string_lossy().into());
-    }
-    if let Some(cache_dir) = dirs::cache_dir() {
-        dir_tree.insert("cache".into(), cache_dir.to_string_lossy().into());
-    }
-    if let Some(data_dir) = dirs::data_dir() {
-        dir_tree.insert("data".into(), data_dir.to_string_lossy().into());
-    }
-    if let Some(picture_dir) = dirs::picture_dir() {
-        dir_tree.insert("pic".into(), picture_dir.to_string_lossy().into());
-    }
-    if let Some(desktop_dir) = dirs::desktop_dir() {
-        dir_tree.insert("desk".into(), desktop_dir.to_string_lossy().into());
-    }
-    if let Some(document_dir) = dirs::document_dir() {
-        dir_tree.insert("docs".into(), document_dir.to_string_lossy().into());
-    }
-    if let Some(download_dir) = dirs::download_dir() {
-        dir_tree.insert("down".into(), download_dir.to_string_lossy().into());
-    }
-
-    Ok(Expression::from(dir_tree))
-}
 // Directory Tree Functions
 fn tree(
     args: Vec<Expression>,

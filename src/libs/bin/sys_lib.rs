@@ -1,13 +1,13 @@
-use std::{fs::OpenOptions, io::Write, rc::Rc};
+use std::rc::Rc;
 
 use common_macros::hash_map;
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_exact_args_len, get_integer_ref, get_string_ref};
+use crate::libs::helper::{check_exact_args_len, get_integer_ref};
 use crate::{
     CFM_ENABLED, Environment, Expression, Int, LmError, MAX_RUNTIME_RECURSION,
     MAX_SYNTAX_RECURSION, MAX_USEMODE_RECURSION, PRINT_DIRECT, RuntimeError, STRICT_ENABLED,
-    parse_and_eval, set_cfm_enabled, set_print_direct, set_strict_enabled,
+    set_cfm_enabled, set_print_direct, set_strict_enabled,
 };
 use std::collections::BTreeMap;
 
@@ -16,10 +16,10 @@ use crate::{reg_info, reg_lazy};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
-        env, vars, has, defined,
+        dirs, env, vars, has, defined,
         quote, ecodes_rt, ecodes_lm,
-        print_tty, discard,
-        info,modes,cds,
+
+        info,modes,
         // throw,
         max_syntax,
         max_runtime,
@@ -31,6 +31,7 @@ pub fn regist_lazy() -> LazyModule {
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
+        dirs => "get system directories", ""
         env => "get root environment map/var value", "[var]"
         vars => "get defined variables in current enviroment", ""
         has => "check if a variable is defined in current environment", "<var>"
@@ -40,12 +41,9 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         ecodes_rt => "display runtime error codes", ""
         ecodes_lm => "display Lmerror codes", ""
         // throw => "return a runtime error", "<msg>"
-        print_tty => "print control sequence to tty", "<arg>"
-        discard => "send data to /dev/null", "<arg>"
 
         info => "get os info", ""
         modes => "get lume modes", ""
-        cds => "fuzzy change directories in histroy", ""
 
         max_syntax => "get/set max syntax recursion","[int]"
         max_runtime=> "get/set max runtime recursion","[int]"
@@ -55,6 +53,42 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         set_strict=> "enable/disable strict mode","<boolean>"
 
     })
+}
+
+// System Directory Functions
+fn dirs(
+    _args: Vec<Expression>,
+    _env: &mut Environment,
+    _ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    let mut dir_tree = BTreeMap::<String, String>::new();
+
+    if let Some(home_dir) = dirs::home_dir() {
+        dir_tree.insert("home".into(), home_dir.to_string_lossy().into());
+    }
+    if let Some(config_dir) = dirs::config_dir() {
+        dir_tree.insert("config".into(), config_dir.to_string_lossy().into());
+    }
+    if let Some(cache_dir) = dirs::cache_dir() {
+        dir_tree.insert("cache".into(), cache_dir.to_string_lossy().into());
+    }
+    if let Some(data_dir) = dirs::data_dir() {
+        dir_tree.insert("data".into(), data_dir.to_string_lossy().into());
+    }
+    if let Some(picture_dir) = dirs::picture_dir() {
+        dir_tree.insert("pic".into(), picture_dir.to_string_lossy().into());
+    }
+    if let Some(desktop_dir) = dirs::desktop_dir() {
+        dir_tree.insert("desk".into(), desktop_dir.to_string_lossy().into());
+    }
+    if let Some(document_dir) = dirs::document_dir() {
+        dir_tree.insert("docs".into(), document_dir.to_string_lossy().into());
+    }
+    if let Some(download_dir) = dirs::download_dir() {
+        dir_tree.insert("down".into(), download_dir.to_string_lossy().into());
+    }
+
+    Ok(Expression::from(dir_tree))
 }
 
 fn info(
@@ -75,39 +109,6 @@ fn modes(
         String::from("strict") => STRICT_ENABLED.with_borrow(|c|c==&true),
         String::from("pdm") => PRINT_DIRECT.with_borrow(|c|c==&true),
     }))
-}
-fn print_tty(
-    args: Vec<Expression>,
-    _env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("print_tty", &args, 1, ctx)?;
-
-    // 判断操作系统
-    let tty_path = if cfg!(windows) {
-        "CON" // Windows控制台
-    } else {
-        "/dev/tty" // Unix
-    };
-
-    let mut tty = OpenOptions::new()
-        .write(true)
-        .open(tty_path)
-        .map_err(|e| RuntimeError::from_io_error(e, "open tty".into(), Expression::None, 0))?;
-    let v = get_string_ref(&args[0], ctx)?;
-    tty.write_all(v.as_bytes())
-        .map_err(|e| RuntimeError::from_io_error(e, "write tty".into(), Expression::None, 0))?;
-
-    Ok(Expression::None)
-}
-
-fn discard(
-    _args: Vec<Expression>,
-    _env: &mut Environment,
-    _ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    // 不用打开任何设备，只是丢弃参数
-    Ok(Expression::None)
 }
 
 fn quote(
@@ -264,15 +265,5 @@ fn set_pdm(
     } else {
         println!("\x1b[38;5;209m[Print Direct Mode: OFF]\x1b[0m");
     }
-    Ok(Expression::None)
-}
-
-fn cds(
-    _args: Vec<Expression>,
-    env: &mut Environment,
-    _ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    let cmd = "ui.pick $PATH_SESSION 'cd to:' ?! | cd _";
-    parse_and_eval(cmd, env);
     Ok(Expression::None)
 }

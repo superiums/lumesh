@@ -1,32 +1,86 @@
-## 近期重点工作与业绩亮点
-- 性能突破
+## lumesh Recent Updates (0.14.x → 0.16.x)
 
-循环性能大幅提升：100万次for循环从1460ms优化到224ms，性能提升84% CHANGELOG.md:40-45
-编译策略优化：选择更快编译而非更小体积，在3.9MB文件大小下实现最佳性能 CHANGELOG.md:92-100
+### Complete Editor Rewrite (0.15.0)
 
-- 核心语言特性
+Version 0.15.0 was a major milestone: **migrated from rustyline to crossterm, editor rewritten from scratch**. Subsequent versions continued refinement:
 
-局部作用域引入：支持块级局部变量，优化变量管理机制 CHANGELOG.md:40-65
-export命令：实现bash兼容的环境变量导出功能 CHANGELOG.md:1-5
-高级printf模板渲染：支持命名和位置参数，替代旧的string.format CHANGELOG.md:25-35
+- **0.15.1**: Editor themes, buffer optimization, custom hotkey bindings
+- **0.15.2**: Multi-line editing mode, input validation, cursor and hint position fixes
+- **0.16.0**: Fixed ONLCR issue, path completion sorting optimization
+- **0.16.2**: Added `ui.editor`, `ui.date_pick`, fixed CapsLock recognition, hotkey modifier mapping, and other bugs
+- **0.16.10**: Editor scrolling support
 
-- 模块系统重构
+---
 
-全面小写化：所有库名称、布尔值和none改为小写 CHANGELOG.md:2-6
-参数顺序调整：库函数基础数据参数从最后移到最前 CHANGELOG.md:2-6
-懒加载优化：提升模块加载效率和查找性能 CHANGELOG.md:34-38
+### Tokenizer Refactoring (0.15.5 onwards)
 
-- 交互体验增强
+- **0.15.5**: **Restructured tokenizer with dispatch mechanism**, dispatching token parsing by priority for clearer and more maintainable parsing logic
+- **0.15.6**: Improved CFM (Command First Mode) symbol handling, unified highlighting logic
+- **0.15.7**: Fixed tokenizer handling of trailing `&`
+- **0.16.2**: Fixed module call tokenizer
+- **0.16.7**: CFM mode enhanced to take whole words (avoiding misparsing `1.1.1.1` as float)
+- **0.16.8**: Switched to static regex for improved tokenization performance
 
-CFM模式扩展：支持点号调用、管道方法、库函数调用 CHANGELOG.md:160-167
-智能补全：支持命令后补全、参数补全和模糊匹配 CHANGELOG.md:139-145
-PTY支持修复：解决ssh、sftp、scp等交互式程序问题 CHANGELOG.md:175
+---
 
-- 开发体验优化
+### History System Evolution
 
-装饰器重构：改为中间件风格，支持before/after钩子 CHANGELOG.md:40-50
-错误处理增强：多种捕获操作符支持灵活错误处理 README-cn.md:90-97
-调试打印优化：为所有表达式提供更好的调试输出 CHANGELOG.md:60
+- **0.16.5**: Added history hint, ESC moves to end in multiline mode and clears hint
+- **0.16.8**: **Introduced slash commands** (`/h`, `/hh`, `/hm` and other slash command system)
+- **0.16.9**: Smarter history weighting and sorting, added `/q` quick exit command
+- **0.16.10**:
+  - Optimized `Ctrl+R` long history display
+  - Multi-line commands automatically ignored from `/h...` history (avoiding screen clutter)
+  - `/h`, `/hh`, `/hm`, `/history` support prefix filtering
 
-## Notes
-这些改进主要集中在Lumesh shell的三个核心方向：性能优化、语言功能完善和用户体验提升。最突出的成就是循环性能的大幅提升和局部作用域的引入，这些改进使Lumesh在保持shell易用性的同时，具备了现代编程语言的强大功能。
+---
+
+### Completion System Enhancements (0.15.3–0.16.3)
+
+- Path completion, external command completion, parameter-aware completion progressively improved
+- Support for lumesh scripts as completion data sources
+- Completion colors and context awareness
+- `ui.pick`/`ui.multi_pick` support `table`/`map` type input
+- `ui.float` supports custom decimal places
+
+---
+
+### AI Integration Deepening
+
+- **0.15.9**: `ALT+i` triggers AI hint
+- **0.16.0**: `ALT+Enter` / `ALT+o` triggers AI generation
+- **0.16.3**: ai-tls enabled by default, ai-https separated as optional feature
+- **0.16.8**: Updated AI skill configuration
+- **0.16.10**: Updated AI documentation
+
+---
+
+### Language Features
+
+- **0.14.0**: Introduced `table` expression and built-in `table` library
+- **0.14.3**: Improved quote semantics (`''` raw string / `""` normal escape / ` `` ` full escape + variable interpolation)
+- **0.16.5**: Added `continue` statement; `match` arrow supports line breaks; **Breaking change: only allow single value in declarations**
+- **0.16.7**: `~` auto-expands in symbols, normal mode supports prefix matching
+
+---
+
+### Standard Library Restructuring (0.16.10)
+
+Module responsibilities reorganized:
+
+| Change | Description |
+|--------|-------------|
+| `fs.dirs` → `sys` | Directory-related functions moved to system library |
+| `sys.print_tty` / `sys.discard` → `console` | Terminal output control moved to console library |
+| Delete `sys.cds` | Cleaned up redundant interfaces |
+| Fix float file size display | `float filesize` formatting fix |
+
+---
+
+### Phase Summary
+
+| Phase | Core Direction |
+|-------|----------------|
+| 0.14.x | Language feature refinement (table, quotes, bug fixes) |
+| 0.15.x | Editor rewrite + tokenizer refactoring + completion system |
+| 0.16.x | Slash commands system + History intelligence + AI integration + module reorganization |

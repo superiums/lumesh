@@ -13,6 +13,7 @@
 | [发布页 1](https://github.com/superiums/lumesh/releases)
 | [发布页 2](https://codeberg.org/santo/lumesh/releases)
 | [语法高亮插件](https://github.com/superiums/tree-sitter-lumesh)
+| [最新动态](NEWS-cn.md)
 
 ```
      ⚡┓

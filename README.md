@@ -13,6 +13,7 @@ English | [简体中文](README-cn.md)
 | [Release Page 1](https://github.com/superiums/lumesh/releases)
 | [Release Page 2](https://codeberg.org/santo/lumesh/releases)
 | [Syntax Highlighting Plugin](https://github.com/superiums/tree-sitter-lumesh)
+| [NEWS](NEWS.md)
 
 ```
      ⚡┓

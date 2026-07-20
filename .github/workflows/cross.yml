@@ -34,7 +34,10 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            This is a new release of lumesh. [Read the changelog here](https://github.com/superiums/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            This is a new release of lumesh.
+            [Read the changelog here](https://github.com/superiums/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            [Read the NEWS here](https://github.com/superiums/lumesh/blob/${{ steps.vars.outputs.tag }}/NEWS.md).
+            [最新动态](https://github.com/superiums/lumesh/blob/${{ steps.vars.outputs.tag }}/NEWS-cn.md).
 
             - for unix user:
               download `install.sh` and install via this script is suggestted.

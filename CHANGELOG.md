@@ -1,15 +1,26 @@
 # Changelog
 
 ## [0.16.10]
+
 - optimize Stringtemplate render
 - update ai doc
+- optimize long history for ctrl+r
+- editor scroll
+- mv fs.dirs to sys; mv sys.print_tty/discard to console; rm sys.cds
+- update into lib
+- update console lib
+- ignore multiline for /h...
+- receive prefix filter for /h,/hh,/hm,/history
+- fix float filesize
 
 ## [0.16.9]
+
 - more clever history
 - add `/q`
 - fix profile param for cli
 
 ## [0.16.8]
+
 - use static regex
 - update ai skills
 - fix strip ansi
@@ -19,6 +30,7 @@
 - **introduce slash commands**
 
 ## [0.16.7]
+
 - expand ~ in sybmo of cmd
 - cfm mode - takes whole word
 - +prefix in normal mode
@@ -26,10 +38,12 @@
 - update doc domain
 
 ## [0.16.6]
+
 - fix `+` in cfm
 - fix `ls -1`
 
 ## [0.16.5]
+
 - **add `continue`**
 - trace map with no value; trace unclosed list; update op-test
 - dispatch statements/desctructure assign
@@ -40,17 +54,20 @@
 - optimize err tracer while parsing bset/match/map/for
 - **histroy hint**
 - clean color theme for hint
-- esc to move to end in multiline mode; clear hint while move 
+- esc to move to end in multiline mode; clear hint while move
 - detailed tracer for map parser
 - update ai config
 
 **Break Changes**
+
 - **only allow one value while declare**
 
 ## [0.16.4]
+
 - use \0 to protect param hint from accept
 
 ## [0.16.3]
+
 - built with ai-tls as default, ai-https as additional
 - sperate ai https
 - fix bare modify-key handle; ai https

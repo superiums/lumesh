@@ -570,15 +570,12 @@ impl PrattParser {
                 ))
             }
             "K" | "M" | "G" | "T" | "P" | "B" => {
-                let size = match lhs {
-                    Expression::Integer(s) => s as u64,
-                    Expression::Float(s) => s as u64,
-                    _ => 0,
+                let fs = match lhs {
+                    Expression::Integer(s) => FileSize::from(s as u64, &op),
+                    Expression::Float(s) => FileSize::from_float(s, &op),
+                    _ => FileSize::from_bytes(0),
                 };
-                Ok((
-                    input.skip_n(1),
-                    Expression::FileSize(FileSize::from(size, &op)),
-                ))
+                Ok((input.skip_n(1), Expression::FileSize(fs)))
             }
             "%" => {
                 let f = match lhs {

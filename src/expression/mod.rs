@@ -158,6 +158,21 @@ impl FileSize {
             unit: SizeUnit::from_str(unit_str),
         }
     }
+    pub fn from_float(size: f64, unit_str: &str) -> Self {
+        let shift: u32 = match SizeUnit::from_str(unit_str) {
+            SizeUnit::None | SizeUnit::B => 0,
+            SizeUnit::K => 10,
+            SizeUnit::M => 20,
+            SizeUnit::G => 30,
+            SizeUnit::T => 40,
+            SizeUnit::P => 50,
+        };
+        // 直接转换为字节数存储，避免截断精度
+        Self {
+            size: (size * (1u64 << shift) as f64) as u64,
+            unit: SizeUnit::B,
+        }
+    }
     pub fn from_bytes(size: u64) -> Self {
         Self {
             size,

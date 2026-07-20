@@ -576,7 +576,7 @@ pub fn run_repl(env: &mut Environment) {
                     "hm" => {
                         let history_multi_dir = editor
                             .history()
-                            .search_local_startswith(arg)
+                            .search_multidir_startswith(arg)
                             .into_iter()
                             .map(Expression::from)
                             .collect::<Vec<_>>();

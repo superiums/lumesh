@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.16.10]
+- optimize Stringtemplate render
+- update ai doc
+
 ## [0.16.9]
 - more clever history
 - add `/q`

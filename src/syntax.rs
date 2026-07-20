@@ -233,7 +233,7 @@ pub fn get_dark_theme() -> HashMap<String, String> {
 
         // 符号和标识符
         String::from("mode") => "\x1b[38;5;200m".to_string(),              // 粉红色
-        String::from("symbol_none") => "\x1b[38;5;203m".to_string(),       // 粉红色
+        // String::from("symbol_none") => "\x1b[38;5;203m".to_string(),       // 粉红色
         String::from("builtin_cmd") => "\x1b[38;5;75m".to_string(),        // 蓝色 (#61AFEF)
         String::from("builtin_lib") => "\x1b[38;5;77m".to_string(),        // 蓝色 (#61AFEF)
         String::from("symbol") => "\x1b[38;5;81m".to_string(),             // 天蓝色
@@ -245,9 +245,9 @@ pub fn get_dark_theme() -> HashMap<String, String> {
 
         // REPL 和交互相关
         String::from("command_valid") => "\x1b[38;5;120m\x1b[1m".to_string(), // 绿色加粗
-        String::from("hint") => "\x1b[38;5;102m".to_string(),               // 深灰色
-        String::from("completion_cmd") => "\x1b[38;5;244m".to_string(),     // 浅灰色
-        String::from("completion_ai") => "\x1b[38;5;111m".to_string(),      // 浅蓝色
+        // String::from("hint") => "\x1b[38;5;102m".to_string(),               // 深灰色
+        // String::from("completion_cmd") => "\x1b[38;5;244m".to_string(),     // 浅灰色
+        // String::from("completion_ai") => "\x1b[38;5;111m".to_string(),      // 浅蓝色
 
         // 新增：Time token 颜色
         // String::from("time_literal") => "\x1b[38;5;180m".to_string(),      // 金黄色 (#E5C07B)
@@ -300,7 +300,7 @@ pub fn get_ayu_dark_theme() -> HashMap<String, String> {
 
         // 符号和标识符
         String::from("mode") => "\x1b[38;5;200m".to_string(),              // 粉红色
-        String::from("symbol_none") => "\x1b[38;5;204m".to_string(),       // 粉红色
+        // String::from("symbol_none") => "\x1b[38;5;204m".to_string(),       // 粉红色
         String::from("builtin_cmd") => "\x1b[38;5;111m".to_string(),       // 蓝色 (#59C2FF)
         String::from("builtin_lib") => "\x1b[38;5;113m".to_string(),        // 蓝色 (#61AFEF)
         String::from("symbol") => "\x1b[38;5;117m".to_string(),            // 淡蓝色
@@ -312,9 +312,9 @@ pub fn get_ayu_dark_theme() -> HashMap<String, String> {
 
         // REPL 和交互相关
         String::from("command_valid") => "\x1b[38;5;107m\x1b[1m".to_string(), // 绿色加粗
-        String::from("hint") => "\x1b[38;5;59m".to_string(),               // 深灰色
-        String::from("completion_cmd") => "\x1b[38;5;244m".to_string(),    // 浅灰色
-        String::from("completion_ai") => "\x1b[38;5;75m".to_string(),      // 浅蓝色
+        // String::from("hint") => "\x1b[38;5;59m".to_string(),               // 深灰色
+        // String::from("completion_cmd") => "\x1b[38;5;244m".to_string(),    // 浅灰色
+        // String::from("completion_ai") => "\x1b[38;5;75m".to_string(),      // 浅蓝色
 
         // Time token 颜色
         // String::from("time_literal") => "\x1b[38;5;186m".to_string(),      // 淡黄色
@@ -368,7 +368,7 @@ pub fn get_light_theme() -> HashMap<String, String> {
 
         // 符号和标识符
         String::from("mode") => "\x1b[38;5;200m".to_string(),              // 粉红色
-        String::from("symbol_none") => "\x1b[38;5;125m".to_string(),       // 深粉色
+        // String::from("symbol_none") => "\x1b[38;5;125m".to_string(),       // 深粉色
         String::from("builtin_cmd") => "\x1b[38;5;26m".to_string(),        // 深蓝色 (#399EE6)
         String::from("builtin_lib") => "\x1b[38;5;28m".to_string(),        // 蓝色 (#61AFEF)
         String::from("symbol") => "\x1b[38;5;32m".to_string(),             // 深青色
@@ -380,9 +380,9 @@ pub fn get_light_theme() -> HashMap<String, String> {
 
         // REPL 和交互相关
         String::from("command_valid") => "\x1b[38;5;64m\x1b[1m".to_string(), // 深绿色加粗
-        String::from("hint") => "\x1b[38;5;244m".to_string(),              // 中灰色
-        String::from("completion_cmd") => "\x1b[38;5;240m".to_string(),    // 深灰色
-        String::from("completion_ai") => "\x1b[38;5;26m".to_string(),      // 深蓝色
+        // String::from("hint") => "\x1b[38;5;244m".to_string(),              // 中灰色
+        // String::from("completion_cmd") => "\x1b[38;5;240m".to_string(),    // 深灰色
+        // String::from("completion_ai") => "\x1b[38;5;26m".to_string(),      // 深蓝色
 
         // Time token 颜色
         // String::from("time_literal") => "\x1b[38;5;136m".to_string(),      // 棕黄色

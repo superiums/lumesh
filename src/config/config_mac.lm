@@ -41,7 +41,7 @@ if IS_INTERACTIVE {
 
     # ## syntax theme modify
     # LUME_THEME_CONFIG = {
-    #    keyword: COLOR.GREEN,
+    #    keyword: "\x1b[38;5;75m",
     #    ...
     # }
 

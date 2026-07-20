@@ -287,6 +287,7 @@ impl History {
                 !e.is_multi_dir
                     && e.last_path == self.current_dir
                     && (prefix.is_empty() || e.command.starts_with(prefix))
+                    && !e.command.contains("\n")
             })
             .collect();
         matched.sort_by_key(|e| e.weight);
@@ -297,7 +298,11 @@ impl History {
         let mut matched: Vec<&HistoryEntry> = self
             .entries
             .iter()
-            .filter(|e| e.is_multi_dir && (prefix.is_empty() || e.command.starts_with(prefix)))
+            .filter(|e| {
+                e.is_multi_dir
+                    && (prefix.is_empty() || e.command.starts_with(prefix))
+                    && !e.command.contains("\n")
+            })
             .collect();
         matched.sort_by_key(|e| e.weight);
         matched.into_iter().map(|e| e.command.clone()).collect()
@@ -310,6 +315,7 @@ impl History {
             .filter(|e| {
                 ((!e.is_multi_dir && e.last_path == self.current_dir) || e.is_multi_dir)
                     && (prefix.is_empty() || e.command.starts_with(prefix))
+                    && !e.command.contains("\n")
             })
             .collect();
         matched.sort_by_key(|e| e.weight);
@@ -519,29 +525,29 @@ impl History {
                     is_multi_dir: *m == "1",
                 },
                 // 旧4字段格式：weight\torder\tpath\tcommand
-                [w, o, p, cmd] => HistoryEntry {
-                    command: unescape_field(cmd),
-                    weight: w.parse().unwrap_or(1),
-                    last_order: o.parse().unwrap_or(0),
-                    last_path: unescape_field(p),
-                    is_multi_dir: false,
-                },
-                // 旧2字段格式：weight\tcommand
-                [w, cmd] => HistoryEntry {
-                    command: unescape_field(cmd),
-                    weight: w.parse().unwrap_or(1),
-                    last_order: 0,
-                    last_path: String::new(),
-                    is_multi_dir: false,
-                },
-                // 纯命令格式
-                [cmd] => HistoryEntry {
-                    command: unescape_field(cmd),
-                    weight: 1,
-                    last_order: 0,
-                    last_path: String::new(),
-                    is_multi_dir: false,
-                },
+                // [w, o, p, cmd] => HistoryEntry {
+                //     command: unescape_field(cmd),
+                //     weight: w.parse().unwrap_or(1),
+                //     last_order: o.parse().unwrap_or(0),
+                //     last_path: unescape_field(p),
+                //     is_multi_dir: false,
+                // },
+                // // 旧2字段格式：weight\tcommand
+                // [w, cmd] => HistoryEntry {
+                //     command: unescape_field(cmd),
+                //     weight: w.parse().unwrap_or(1),
+                //     last_order: 0,
+                //     last_path: String::new(),
+                //     is_multi_dir: false,
+                // },
+                // // 纯命令格式
+                // [cmd] => HistoryEntry {
+                //     command: unescape_field(cmd),
+                //     weight: 1,
+                //     last_order: 0,
+                //     last_path: String::new(),
+                //     is_multi_dir: false,
+                // },
                 _ => continue,
             };
             if entry.last_order > self.global_order {

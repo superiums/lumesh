@@ -12,7 +12,9 @@ use crossterm::event::{
 use crossterm::execute;
 use crossterm::queue;
 use crossterm::style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor};
-use crossterm::terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
+use crossterm::terminal::{
+    self, Clear, ClearType, ScrollUp, disable_raw_mode, enable_raw_mode, size,
+};
 use std::collections::HashMap;
 use std::io::{self, Write, stdout};
 use std::sync::{Arc, mpsc};
@@ -1228,14 +1230,16 @@ impl Editor {
     }
 
     // ---- Rendering ----
+    // ---- Rendering ----
     fn render(&mut self) -> Result<(), ReadlineError> {
+        // 补全弹窗空间不足时，向上滚动腾出空间（修复原来的无效 let _ = 写法）
         if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
             let est_space =
                 (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + 2);
             if est_space < 3 {
-                let _ = terminal::Clear(ClearType::All);
-                let _ = crossterm::queue!(std::io::stdout(), MoveTo(0, 0));
-                self.prompt_row = 0;
+                let scroll: u16 = 3;
+                let _ = crossterm::queue!(std::io::stdout(), ScrollUp(scroll),);
+                self.prompt_row = self.prompt_row.saturating_sub(scroll);
                 self.popup_rendered = None;
             }
         }
@@ -1244,6 +1248,7 @@ impl Editor {
         let line = self.buffer.text();
         let cursor = self.buffer.cursor();
 
+        // 清除上次渲染的补全弹窗
         if let Some((start, end)) = self.popup_rendered {
             for row in start..=end {
                 let _ = queue!(stdout, MoveTo(0, row), Clear(ClearType::CurrentLine));
@@ -1252,26 +1257,42 @@ impl Editor {
         }
 
         if line.contains('\n') {
-            queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
-            self.prompt_row = 0;
+            // 多行输入：计算需要多少行，不足时向上滚动，不清全屏
+            let total_lines = line.matches('\n').count() + 1;
+            let needed_rows = total_lines + 1;
+            let available_rows =
+                (self.terminal_height as usize).saturating_sub(self.prompt_row as usize);
+            if needed_rows > available_rows {
+                let extra = (needed_rows - available_rows) as u16;
+                queue!(stdout, ScrollUp(extra)).map_err(ReadlineError::Io)?;
+                self.prompt_row = self.prompt_row.saturating_sub(extra);
+            }
+            queue!(
+                stdout,
+                MoveTo(0, self.prompt_row),
+                Clear(ClearType::FromCursorDown)
+            )
+            .map_err(ReadlineError::Io)?;
         } else {
             let est_visual_rows =
                 1 + (self.prompt_width + line.len()) / self.terminal_width as usize;
             let available_rows =
                 (self.terminal_height as usize).saturating_sub(self.prompt_row as usize);
             if est_visual_rows > available_rows {
-                queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
-                self.prompt_row = 0;
-            } else {
-                queue!(
-                    stdout,
-                    MoveTo(0, self.prompt_row),
-                    Clear(ClearType::FromCursorDown)
-                )
-                .map_err(ReadlineError::Io)?;
+                // 内容超出底部：向上滚动腾出空间，不清全屏
+                let extra = (est_visual_rows - available_rows) as u16;
+                queue!(stdout, ScrollUp(extra)).map_err(ReadlineError::Io)?;
+                self.prompt_row = self.prompt_row.saturating_sub(extra);
             }
+            queue!(
+                stdout,
+                MoveTo(0, self.prompt_row),
+                Clear(ClearType::FromCursorDown)
+            )
+            .map_err(ReadlineError::Io)?;
         }
 
+        // 渲染输入内容
         if line.contains('\n') {
             let parts: Vec<&str> = line.split('\n').collect();
             for (i, part) in parts.iter().enumerate() {
@@ -1324,13 +1345,10 @@ impl Editor {
             if self.show_hint {
                 if let Some(ref hinter) = self.hinter {
                     if let Some(hint) = hinter.hint(&line, byte_cursor) {
-                        // 命令和参数hint
                         self.current_hint = Some(hint);
                     } else if let Some(hint) = self.history.search_hint(&line) {
-                        // 历史命令hint
                         self.current_hint = Some(hint);
                     } else {
-                        // 清空
                         self.current_hint = None;
                     };
                 }

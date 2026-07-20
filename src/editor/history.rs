@@ -278,16 +278,53 @@ impl History {
             .map(|e| e.command.clone())
     }
 
-    /// 多结果 fuzzy 搜索：使用 dir_score 排序（本目录专属命令排前）
-    pub fn search_fuzzy(&self, query: &str) -> Vec<String> {
+    /// 多结果 本目录专属命令 prefix搜索
+    pub fn search_local_startswith(&self, prefix: &str) -> Vec<String> {
         let mut matched: Vec<&HistoryEntry> = self
             .entries
             .iter()
-            .filter(|e| fuzzy_match(query, &e.command))
+            .filter(|e| {
+                !e.is_multi_dir
+                    && e.last_path == self.current_dir
+                    && (prefix.is_empty() || e.command.starts_with(prefix))
+            })
             .collect();
-        matched.sort_by(|a, b| self.dir_score(b).cmp(&self.dir_score(a)));
+        matched.sort_by_key(|e| e.weight);
         matched.into_iter().map(|e| e.command.clone()).collect()
     }
+    /// 多结果 多目录适用命令 prefix搜索
+    pub fn search_multidir_startswith(&self, prefix: &str) -> Vec<String> {
+        let mut matched: Vec<&HistoryEntry> = self
+            .entries
+            .iter()
+            .filter(|e| e.is_multi_dir && (prefix.is_empty() || e.command.starts_with(prefix)))
+            .collect();
+        matched.sort_by_key(|e| e.weight);
+        matched.into_iter().map(|e| e.command.clone()).collect()
+    }
+    /// 多结果 本目录适用命令 prefix搜索
+    pub fn search_startswith(&self, prefix: &str) -> Vec<String> {
+        let mut matched: Vec<&HistoryEntry> = self
+            .entries
+            .iter()
+            .filter(|e| {
+                ((!e.is_multi_dir && e.last_path == self.current_dir) || e.is_multi_dir)
+                    && (prefix.is_empty() || e.command.starts_with(prefix))
+            })
+            .collect();
+        matched.sort_by_key(|e| e.weight);
+        matched.into_iter().map(|e| e.command.clone()).collect()
+    }
+    /// 多结果 fuzzy 搜索：使用 dir_score 排序（本目录专属命令排前）
+    // pub fn search_fuzzy(&self, query: &str) -> Vec<String> {
+    //     let mut matched: Vec<&HistoryEntry> = self
+    //         .entries
+    //         .iter()
+    //         .filter(|e| fuzzy_match(query, &e.command))
+    //         .collect();
+    //     matched.sort_by(|a, b| self.dir_score(b).cmp(&self.dir_score(a)));
+    //     matched.into_iter().map(|e| e.command.clone()).collect()
+    // }
 
     // ── Ctrl+R 搜索（按 dir_score 排序）─────────────────────────
 

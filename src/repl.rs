@@ -542,37 +542,77 @@ pub fn run_repl(env: &mut Environment) {
                 }
             } else if rest == "q" {
                 break;
-            } else if rest == "history" {
-                // history
-                for (i, entry) in editor.history().iter().enumerate() {
-                    println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
-                }
-            } else if rest == "hist" {
-                // history
-                let hist = editor
-                    .history()
-                    .cmdstr_by_weight()
-                    .iter()
-                    .map(|h| Expression::String(h.to_string()))
-                    .collect::<Vec<_>>();
-                let mut forked_env = shared_env.lock().unwrap().fork();
-                forked_env.define("HISTORY", Expression::from(hist));
-                let cmd = format!("$HISTORY | ui.pick('select history') | eval_str()");
-                parse_and_eval(&cmd, &mut forked_env);
             } else if rest == "cds" {
                 let cmd = "ui.pick $PATH_SESSION 'cd to:' ?! | cd _";
                 parse_and_eval(&cmd, &mut shared_env.lock().unwrap());
             } else {
                 // slash bindings
                 let (key, arg) = rest.split_once(' ').unwrap_or((rest, ""));
-                if let Some(r) = slash_bindings.clone().and_then(|m| {
-                    m.as_ref()
-                        .get(key)
-                        .and_then(|exp| Some(exp.apply(vec![Expression::String(arg.to_string())])))
-                }) {
-                    let _ = r.eval(&mut shared_env.lock().unwrap());
-                } else {
-                    eprintln!("\x1b[31mundefined slash cmd\x1b[0m");
+                match key {
+                    "h" => {
+                        let history = editor
+                            .history()
+                            .search_startswith(arg)
+                            .into_iter()
+                            .map(Expression::from)
+                            .collect::<Vec<_>>();
+                        let mut forked_env = shared_env.lock().unwrap().fork();
+                        forked_env.define("HISTORY", Expression::from(history));
+                        let cmd = format!("$HISTORY | ui.pick('select history') | eval_str()");
+                        parse_and_eval(&cmd, &mut forked_env);
+                    }
+                    "hh" => {
+                        let history_here = editor
+                            .history()
+                            .search_local_startswith(arg)
+                            .into_iter()
+                            .map(Expression::from)
+                            .collect::<Vec<_>>();
+                        let mut forked_env = shared_env.lock().unwrap().fork();
+                        forked_env.define("HISTORY", Expression::from(history_here));
+                        let cmd = format!("$HISTORY | ui.pick('select history') | eval_str()");
+                        parse_and_eval(&cmd, &mut forked_env);
+                    }
+                    "hm" => {
+                        let history_multi_dir = editor
+                            .history()
+                            .search_local_startswith(arg)
+                            .into_iter()
+                            .map(Expression::from)
+                            .collect::<Vec<_>>();
+                        let mut forked_env = shared_env.lock().unwrap().fork();
+                        forked_env.define("HISTORY", Expression::from(history_multi_dir));
+                        let cmd = format!("$HISTORY | ui.pick('select history') | eval_str()");
+                        parse_and_eval(&cmd, &mut forked_env);
+                    }
+                    "history" => {
+                        if arg.is_empty() {
+                            for (i, entry) in editor.history().iter().enumerate() {
+                                println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
+                            }
+                        } else {
+                            for (i, entry) in editor
+                                .history()
+                                .iter()
+                                .filter(|e| e.starts_with(arg))
+                                .enumerate()
+                            {
+                                println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
+                            }
+                        }
+                    }
+                    // custom slash bindings
+                    _ => {
+                        if let Some(r) = slash_bindings.clone().and_then(|m| {
+                            m.as_ref().get(key).and_then(|exp| {
+                                Some(exp.apply(vec![Expression::String(arg.to_string())]))
+                            })
+                        }) {
+                            let _ = r.eval(&mut shared_env.lock().unwrap());
+                        } else {
+                            eprintln!("\x1b[31mundefined slash cmd\x1b[0m");
+                        }
+                    }
                 }
             }
         } else {

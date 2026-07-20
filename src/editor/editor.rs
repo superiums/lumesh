@@ -975,7 +975,17 @@ impl Editor {
                 let completions: Vec<CompletionItem> = all
                     .iter()
                     .filter(|e| fuzzy_match(query, e))
-                    .map(|s| CompletionItem::with_display(s.clone(), s.clone()))
+                    .map(|s| {
+                        let mut it = s.lines();
+                        CompletionItem::with_display(
+                            format!(
+                                "{}{}",
+                                it.next().unwrap_or(""),
+                                it.next().map_or("", |_| "...")
+                            ),
+                            s.clone(),
+                        )
+                    })
                     .collect();
                 if !completions.is_empty() {
                     self.mode = EditorMode::CompletionSelect {

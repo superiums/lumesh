@@ -1,8 +1,9 @@
 use crate::{Environment, Expression};
 use std::collections::BTreeMap;
+use std::fs::OpenOptions;
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_args_len, check_exact_args_len};
+use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_ref};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, reg_info, reg_lazy};
 
@@ -30,7 +31,9 @@ pub fn regist_lazy() -> LazyModule {
         cursor_to, cursor_up, cursor_down, cursor_left, cursor_right, cursor_save, cursor_restore, cursor_hide, cursor_show,
         // Input control
         read_line, read_password, read_key,
-        keys
+        keys,
+        // Output control
+        print_tty, discard
     })
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
@@ -66,9 +69,12 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         read_line => "read line from keyboard", "[prompt]"
         read_password => "read password from keyboard", "[prompt]"
         read_key => "read key from keyboard", ""
-
-
         keys => "list keys", ""
+
+        // Output control
+        print_tty => "print control sequence to tty", "<arg>"
+        discard => "send data to /dev/null", "<arg>"
+
     })
 }
 
@@ -400,42 +406,42 @@ fn read_line(
 }
 
 // Key mapping constants shared between read_key and keys
-const SPECIAL_KEY_MAPPINGS: &[(&str, KeyCode, &str)] = &[
-    ("enter", KeyCode::Enter, "\n"),
-    ("backspace", KeyCode::Backspace, "\x08"),
-    ("delete", KeyCode::Delete, "\x7f"),
-    ("left", KeyCode::Left, "\x1b[D"),
-    ("right", KeyCode::Right, "\x1b[C"),
-    ("up", KeyCode::Up, "\x1b[A"),
-    ("down", KeyCode::Down, "\x1b[B"),
-    ("home", KeyCode::Home, "\x1b[H"),
-    ("end", KeyCode::End, "\x1b[F"),
-    ("page_up", KeyCode::PageUp, "\x1b[5~"),
-    ("page_down", KeyCode::PageDown, "\x1b[6~"),
-    ("tab", KeyCode::Tab, "\t"),
-    ("esc", KeyCode::Esc, "\x1b"),
-    ("insert", KeyCode::Insert, "\x1b[2~"),
-    ("f1", KeyCode::F(1), "\x1b[11~"),
-    ("f2", KeyCode::F(2), "\x1b[12~"),
-    ("f3", KeyCode::F(3), "\x1b[13~"),
-    ("f4", KeyCode::F(4), "\x1b[14~"),
-    ("f5", KeyCode::F(5), "\x1b[15~"),
-    ("f6", KeyCode::F(6), "\x1b[17~"),
-    ("f7", KeyCode::F(7), "\x1b[18~"),
-    ("f8", KeyCode::F(8), "\x1b[19~"),
-    ("f9", KeyCode::F(9), "\x1b[20~"),
-    ("f10", KeyCode::F(10), "\x1b[21~"),
-    ("f11", KeyCode::F(11), "\x1b[23~"),
-    ("f12", KeyCode::F(12), "\x1b[24~"),
-    ("null", KeyCode::Null, "\x00"),
-    ("back_tab", KeyCode::BackTab, "\x1b[Z"),
+const SPECIAL_KEY_MAPPINGS: &[(&str, KeyCode)] = &[
+    ("enter", KeyCode::Enter),
+    ("backspace", KeyCode::Backspace),
+    ("delete", KeyCode::Delete),
+    ("left", KeyCode::Left),
+    ("right", KeyCode::Right),
+    ("up", KeyCode::Up),
+    ("down", KeyCode::Down),
+    ("home", KeyCode::Home),
+    ("end", KeyCode::End),
+    ("page_up", KeyCode::PageUp),
+    ("page_down", KeyCode::PageDown),
+    ("tab", KeyCode::Tab),
+    ("esc", KeyCode::Esc),
+    ("insert", KeyCode::Insert),
+    ("f1", KeyCode::F(1)),
+    ("f2", KeyCode::F(2)),
+    ("f3", KeyCode::F(3)),
+    ("f4", KeyCode::F(4)),
+    ("f5", KeyCode::F(5)),
+    ("f6", KeyCode::F(6)),
+    ("f7", KeyCode::F(7)),
+    ("f8", KeyCode::F(8)),
+    ("f9", KeyCode::F(9)),
+    ("f10", KeyCode::F(10)),
+    ("f11", KeyCode::F(11)),
+    ("f12", KeyCode::F(12)),
+    ("null", KeyCode::Null),
+    ("back_tab", KeyCode::BackTab),
 ];
 
-fn key_code_str(code: KeyCode) -> Option<&'static str> {
+fn key_code_name(code: KeyCode) -> Option<&'static str> {
     SPECIAL_KEY_MAPPINGS
         .iter()
-        .find(|(_, k, _)| *k == code)
-        .map(|(_, _, s)| *s)
+        .find(|(_, k)| *k == code)
+        .map(|(name, _)| *name)
 }
 
 fn keys(
@@ -446,8 +452,8 @@ fn keys(
     Ok(Expression::from(
         SPECIAL_KEY_MAPPINGS
             .iter()
-            .map(|(name, _, s)| (name.to_string(), Expression::String(s.to_string())))
-            .collect::<BTreeMap<_, _>>(),
+            .map(|(name, _)| Expression::String(name.to_string()))
+            .collect::<Vec<_>>(),
     ))
 }
 
@@ -480,29 +486,64 @@ fn read_key(
     enable_raw_mode()
         .map_err(|_| RuntimeError::common("Failed to enable raw mode".into(), ctx.clone(), 0))?;
 
-    let key = read().map_err(|e| {
-        RuntimeError::common(format!("Failed to read key: {e}").into(), ctx.clone(), 0)
-    });
+    let result = loop {
+        match read() {
+            Ok(Event::Key(event)) => {
+                let key_str = key_code_name(event.code)
+                    .map(|s| s.to_string())
+                    .unwrap_or_else(|| match event.code {
+                        KeyCode::Char(c) => c.to_string(),
+                        _ => format!("{:?}", event.code),
+                    });
+                break Ok(Expression::String(key_str));
+            }
+            Ok(_) => continue, // 忽略鼠标、resize 等非 Key 事件，继续等待
+            Err(e) => {
+                break Err(RuntimeError::common(
+                    format!("Failed to read key: {e}").into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        }
+    };
 
     disable_raw_mode()
         .map_err(|_| RuntimeError::common("Failed to disable raw mode".into(), ctx.clone(), 0))?;
 
-    let key = key?;
+    result
+}
 
-    match key {
-        Event::Key(event) => {
-            let key_str = key_code_str(event.code)
-                .map(|s| s.to_string())
-                .unwrap_or_else(|| match event.code {
-                    KeyCode::Char(c) => c.to_string(),
-                    _ => format!("{:?}", event.code),
-                });
-            Ok(Expression::String(key_str))
-        }
-        _ => Err(RuntimeError::common(
-            "Expected key event".into(),
-            ctx.clone(),
-            0,
-        )),
-    }
+fn print_tty(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("print_tty", &args, 1, ctx)?;
+
+    // 判断操作系统
+    let tty_path = if cfg!(windows) {
+        "CON" // Windows控制台
+    } else {
+        "/dev/tty" // Unix
+    };
+
+    let mut tty = OpenOptions::new()
+        .write(true)
+        .open(tty_path)
+        .map_err(|e| RuntimeError::from_io_error(e, "open tty".into(), Expression::None, 0))?;
+    let v = get_string_ref(&args[0], ctx)?;
+    tty.write_all(v.as_bytes())
+        .map_err(|e| RuntimeError::from_io_error(e, "write tty".into(), Expression::None, 0))?;
+
+    Ok(Expression::None)
+}
+
+fn discard(
+    _args: Vec<Expression>,
+    _env: &mut Environment,
+    _ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    // 不用打开任何设备，只是丢弃参数
+    Ok(Expression::None)
 }

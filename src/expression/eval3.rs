@@ -688,9 +688,9 @@ impl Expression {
                         } else {
                             Err(RuntimeError::new(
                                 RuntimeErrorKind::TypeError {
-                                    expected: "symbol for Function/Builtin".into(),
+                                    expected: "Symbol for Function/Builtin".into(),
                                     sym: cmd_sym.to_string(),
-                                    found: "Symbol with no meaning".to_string(),
+                                    found: "invalid Symbol".to_string(),
                                 },
                                 self.clone(),
                                 depth,

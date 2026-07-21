@@ -1,3 +1,4 @@
+**Output lumesh code instead of markdown**
 Lumesh is a modern shell and scripting language with JavaScript-like syntax and Bash-like functionality.
 
 ## Core Syntax

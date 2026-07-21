@@ -1218,7 +1218,7 @@ fn whole_word(prefix: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
         if input.starts_with(prefix) {
             let len = input
                 .chars()
-                .take_while(|c| !matches!(c, ' ' | '\n' | '\t' | '\r' | ')' | ']' | '}'))
+                .take_while(|c| !matches!(c, ' ' | ';' | '\n' | '\t' | '\r' | ')' | ']' | '}'))
                 .map(char::len_utf8)
                 .sum();
             Ok(input.split_at(len))
@@ -1295,8 +1295,8 @@ fn is_symbol_char_cfm(c: char, is_param_ctx: bool, is_cmd_ctx: bool) -> bool {
         );
     }
     if is_param_ctx {
-        // eat `.` only on space_ctx, for 'git tag v0.0.1'
-        // eat `:` only on space_ctx, for 'cut -d:'
+        // eat `.` only on param_ctx, for 'git tag v0.0.1'
+        // eat `:` only on param_ctx, for 'cut -d:'
         // eat `+` for `cmd arg+`
         // eat `=` for `dd if=/dev`
         return matches!(

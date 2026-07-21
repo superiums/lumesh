@@ -532,7 +532,7 @@ pub fn run_repl(env: &mut Environment) {
                 };
             } else if let Some(query) = rest.strip_prefix(' ') {
                 // quick jump
-                if let Some(cd_cmd) = editor.history().search_fuzzy_one(query) {
+                if let Some(cd_cmd) = editor.history().search_fuzzy_one_cd(query) {
                     if parse_and_eval(&cd_cmd, &mut shared_env.lock().unwrap()) {
                         editor.history_mut().add(cd_cmd);
                         // update current dir in history

@@ -251,11 +251,10 @@ impl History {
                 !e.is_multi_dir
                     && e.last_path == self.current_dir
                     && e.command.starts_with("cd ")
-                    && !e.command.contains("\n")
                     && fuzzy_match(query, &e.command)
             })
             .max_by_key(|e| e.weight)
-            .map(|e| e.command.clone());
+            .map(|e| e.command.lines().next().unwrap_or_default().to_string());
 
         if local.is_some() {
             return local;
@@ -265,34 +264,34 @@ impl History {
         self.entries
             .iter()
             .filter(|e| {
-                e.command.starts_with("cd ") && e.is_multi_dir && fuzzy_match(query, &e.command)
+                e.is_multi_dir && e.command.starts_with("cd ") && fuzzy_match(query, &e.command)
             })
             .max_by_key(|e| e.weight)
-            .map(|e| e.command.clone())
+            .map(|e| e.command.lines().next().unwrap_or_default().to_string())
     }
 
-    pub fn search_fuzzy_one(&self, query: &str) -> Option<String> {
-        // 阶段1：本目录专属命令
-        let local = self
-            .entries
-            .iter()
-            .filter(|e| {
-                !e.is_multi_dir && e.last_path == self.current_dir && fuzzy_match(query, &e.command)
-            })
-            .max_by_key(|e| e.weight)
-            .map(|e| e.command.clone());
+    // pub fn search_fuzzy_one(&self, query: &str) -> Option<String> {
+    //     // 阶段1：本目录专属命令
+    //     let local = self
+    //         .entries
+    //         .iter()
+    //         .filter(|e| {
+    //             !e.is_multi_dir && e.last_path == self.current_dir && fuzzy_match(query, &e.command)
+    //         })
+    //         .max_by_key(|e| e.weight)
+    //         .map(|e| e.command.clone());
 
-        if local.is_some() {
-            return local;
-        }
+    //     if local.is_some() {
+    //         return local;
+    //     }
 
-        // 阶段2：全局命令
-        self.entries
-            .iter()
-            .filter(|e| e.is_multi_dir && fuzzy_match(query, &e.command))
-            .max_by_key(|e| e.weight)
-            .map(|e| e.command.clone())
-    }
+    //     // 阶段2：全局命令
+    //     self.entries
+    //         .iter()
+    //         .filter(|e| e.is_multi_dir && fuzzy_match(query, &e.command))
+    //         .max_by_key(|e| e.weight)
+    //         .map(|e| e.command.clone())
+    // }
 
     /// 多结果 本目录专属命令 prefix搜索
     pub fn search_local_startswith(&self, prefix: &str) -> Vec<String> {

@@ -1240,7 +1240,6 @@ impl Editor {
     }
 
     // ---- Rendering ----
-    // ---- Rendering ----
     fn render(&mut self) -> Result<(), ReadlineError> {
         // 补全弹窗空间不足时，向上滚动腾出空间（修复原来的无效 let _ = 写法）
         if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
@@ -1270,8 +1269,9 @@ impl Editor {
             // 多行输入：计算需要多少行，不足时向上滚动，不清全屏
             let total_lines = line.matches('\n').count() + 1;
             let needed_rows = total_lines + 1;
+            // 多保留一行，以供hint使用
             let available_rows =
-                (self.terminal_height as usize).saturating_sub(self.prompt_row as usize);
+                (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + 1);
             if needed_rows > available_rows {
                 let extra = (needed_rows - available_rows) as u16;
                 queue!(stdout, ScrollUp(extra)).map_err(ReadlineError::Io)?;
@@ -1287,7 +1287,7 @@ impl Editor {
             let est_visual_rows =
                 1 + (self.prompt_width + line.len()) / self.terminal_width as usize;
             let available_rows =
-                (self.terminal_height as usize).saturating_sub(self.prompt_row as usize);
+                (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + 1);
             if est_visual_rows > available_rows {
                 // 内容超出底部：向上滚动腾出空间，不清全屏
                 let extra = (est_visual_rows - available_rows) as u16;

@@ -213,8 +213,16 @@ impl History {
             })
             .max_by_key(|e| e.weight);
 
+        // only return first line to prevent screen over take.
         if let Some(e) = local {
-            return Some(e.command.trim_start_matches(current_line).to_string());
+            return Some(
+                e.command
+                    .trim_start_matches(current_line)
+                    .lines()
+                    .next()
+                    .unwrap_or_default()
+                    .to_string(),
+            );
         }
 
         // 阶段2：全局命令（按权重）
@@ -222,7 +230,14 @@ impl History {
             .iter()
             .filter(|e| e.is_multi_dir && e.command.starts_with(current_line))
             .max_by_key(|e| e.weight)
-            .map(|e| e.command.trim_start_matches(current_line).to_string())
+            .map(|e| {
+                e.command
+                    .trim_start_matches(current_line)
+                    .lines()
+                    .next()
+                    .unwrap_or_default()
+                    .to_string()
+            })
     }
 
     // ── Fuzzy 搜索（两阶段：本目录专属优先，再全局）─────────────
@@ -236,6 +251,7 @@ impl History {
                 !e.is_multi_dir
                     && e.last_path == self.current_dir
                     && e.command.starts_with("cd ")
+                    && !e.command.contains("\n")
                     && fuzzy_match(query, &e.command)
             })
             .max_by_key(|e| e.weight)

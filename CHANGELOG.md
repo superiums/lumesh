@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.16.11]
+- fix fuzzy cd
+- improve ai tip and uncallable err tip
+- no multiline in hint/fuzzy cd
+- leave one line for hint
+- fix whole world eat ';'
+- rm unused theme key
+
 ## [0.16.10]
 
 - optimize Stringtemplate render
